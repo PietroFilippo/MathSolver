@@ -13,9 +13,9 @@ import {
 import { solvers, educationalLevels } from '../data/resolvedores';
 
 // Placeholders até que os resolvers sejam implementados
-const PercentageSolver = () => <div>Resolvedor de Porcentagem</div>;
+import ResolvedorPorcentagem from '../resolvedores/ResolvedorPorcentagem';
+import ResolvedorMediaAritmetica from '../resolvedores/ResolvedorMediaAritmetica';
 const FractionAddSubSolver = () => <div>Resolvedor de Adição e Subtração de Frações</div>;
-const ArithmeticMeanSolver = () => <div>Resolvedor de Média Aritmética</div>;
 const ProportionSolver = () => <div>Resolvedor de Proporções</div>;
 const FractionMultDivSolver = () => <div>Resolvedor de Multiplicação e Divisão de Frações</div>;
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
@@ -59,11 +59,11 @@ const SolverPage: React.FC = () => {
   const renderSolver = () => {
     switch (selectedSolver) {
       case 'percentage':
-        return <PercentageSolver />;
+        return <ResolvedorPorcentagem />;
       case 'fraction-add-sub':
         return <FractionAddSubSolver />;
       case 'arithmetic-mean':
-        return <ArithmeticMeanSolver />;
+        return <ResolvedorMediaAritmetica />;
       case 'proportion':
         return <ProportionSolver />;
       case 'fraction-mult-div':
