@@ -6,7 +6,7 @@ import ResolvedorPage from './pages/ResolvedorPage';
 import SobrePage from './pages/SobrePage';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('sobre');
+  const [currentPage, setCurrentPage] = useState('home');
 
   const renderPage = () => {
     switch (currentPage) {
