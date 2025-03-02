@@ -16,13 +16,13 @@ import { solvers, educationalLevels } from '../data/resolvedores';
 import ResolvedorPorcentagem from '../resolvedores/ResolvedorPorcentagem';
 import ResolvedorMediaAritmetica from '../resolvedores/ResolvedorMediaAritmetica';
 const FractionAddSubSolver = () => <div>Resolvedor de Adição e Subtração de Frações</div>;
-const ProportionSolver = () => <div>Resolvedor de Proporções</div>;
+import ResolvedorProporcao from '../resolvedores/ResolvedorProporcao';
 const FractionMultDivSolver = () => <div>Resolvedor de Multiplicação e Divisão de Frações</div>;
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
 const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
 const LinearSystemSolver = () => <div>Resolvedor de Sistemas Lineares</div>;
 const TrigonometricSolver = () => <div>Resolvedor de Funções Trigonométricas</div>;
-const LogarithmSolver = () => <div>Resolvedor de Logaritmos</div>;
+import ResolvedorLogaritmo from '../resolvedores/ResolvedorLogaritmo';
 
 const SolverPage: React.FC = () => {
   const [selectedSolver, setSelectedSolver] = useState<string | null>(null);
@@ -65,7 +65,7 @@ const SolverPage: React.FC = () => {
       case 'arithmetic-mean':
         return <ResolvedorMediaAritmetica />;
       case 'proportion':
-        return <ProportionSolver />;
+        return <ResolvedorProporcao />;
       case 'fraction-mult-div':
         return <FractionMultDivSolver />;
       case 'linear-equation':
@@ -77,7 +77,7 @@ const SolverPage: React.FC = () => {
       case 'trigonometric':
         return <TrigonometricSolver />;
       case 'logarithm':
-        return <LogarithmSolver />;
+        return <ResolvedorLogaritmo />;
       default:
         return (
           <div className="text-center p-8">
