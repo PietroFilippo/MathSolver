@@ -11,12 +11,14 @@ const ResolvedorProporcao: React.FC = () => {
     const [result, setResult] = useState<number | null>(null);
     const [steps, setSteps] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
     const handleSolve = () => {
         // Reseta os resultados anteriores e erros
         setResult(null);
         setSteps([]);
         setErrorMessage('');
+        setShowExplanation(false);
 
         let numA = parseFloat(a);
         let numB = parseFloat(b);
@@ -97,152 +99,155 @@ const ResolvedorProporcao: React.FC = () => {
 
         setResult(arredondarParaDecimais(calculatedValue, 2));
         setSteps(calculationSteps);
+        setShowExplanation(true);
     };
 
     return (
-        <div>
+        <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
                 <HiCalculator className="h-6 w-6 text-indigo-600 mr-2" />
                 <h2 className="text-2xl font-bold">Calculadora de Proporções</h2>
             </div>
 
-            <div className="mb-8">
-                <p className="text-gray-700 mb-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
+                <p className="text-gray-700 mb-6">
                     A proporção é uma equação que afirma que duas razões são iguais: a/b = c/d.
                     Essa calculadora ajuda você a resolver a proporção para qualquer valor desconhecido.
                 </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center">
-                    <input
-                    type="number"
-                    value={solveFor === 'a' ? '' : a}
-                    onChange={(e) => setA(e.target.value)}
-                    disabled={solveFor === 'a'}
-                    className={`w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'a' ? 'bg-gray-100' : ''}`}
-                    placeholder="a"
-                    />
-                    <div className="mx-2 text-lg">/</div>
-                    <input
-                    type="number"
-                    value={solveFor === 'b' ? '' : b}
-                    onChange={(e) => setB(e.target.value)}
-                    disabled={solveFor === 'b'}
-                    className={`w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'b' ? 'bg-gray-100' : ''}`}
-                    placeholder="b"
-                    />
-                </div>
-
-                <div className="flex items-center">
-                    <input
-                    type="number"
-                    value={solveFor === 'c' ? '' : c}
-                    onChange={(e) => setC(e.target.value)}
-                    disabled={solveFor === 'c'}
-                    className={`w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'c' ? 'bg-gray-100' : ''}`}
-                    placeholder="c"
-                    />
-                    <div className="mx-2 text-lg">/</div>
-                    <input
-                    type="number"
-                    value={solveFor === 'd' ? '' : d}
-                    onChange={(e) => setD(e.target.value)}
-                    disabled={solveFor === 'd'}
-                    className={`w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'd' ? 'bg-gray-100' : ''}`}
-                    placeholder="d"
-                    />
-                </div>
-            </div>
-
-            <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Resolver para:
-                </label>
-                <div className="grid grid-cols-4 gap-2">
-                    <label className="inline-flex items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div className="flex items-center">
                         <input
-                        type="radio"
-                        checked={solveFor === 'a'}
-                        onChange={() => setSolveFor('a')}
-                        className="form-radio h-4 w-4 text-indigo-600"
+                        type="number"
+                        value={solveFor === 'a' ? '' : a}
+                        onChange={(e) => setA(e.target.value)}
+                        disabled={solveFor === 'a'}
+                        className={`w-full p-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'a' ? 'bg-gray-100' : ''}`}
+                        placeholder="a"
                         />
-                        <span className="ml-2">a</span>
-                    </label>
-                    <label className="inline-flex items-center">
+                        <div className="mx-2 text-lg">/</div>
                         <input
-                        type="radio"
-                        checked={solveFor === 'b'}
-                        onChange={() => setSolveFor('b')}
-                        className="form-radio h-4 w-4 text-indigo-600"
+                        type="number"
+                        value={solveFor === 'b' ? '' : b}
+                        onChange={(e) => setB(e.target.value)}
+                        disabled={solveFor === 'b'}
+                        className={`w-full p-2 border border-gray-300 rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'b' ? 'bg-gray-100' : ''}`}
+                        placeholder="b"
                         />
-                        <span className="ml-2">b</span>
-                    </label>
-                    <label className="inline-flex items-center">
+                    </div>
+
+                    <div className="flex items-center">
                         <input
-                        type="radio"
-                        checked={solveFor === 'c'}
-                        onChange={() => setSolveFor('c')}
-                        className="form-radio h-4 w-4 text-indigo-600"
-                        />  
-                        <span className="ml-2">c</span>
-                    </label>
-                    <label className="inline-flex items-center">
-                        <input
-                        type="radio"
-                        checked={solveFor === 'd'}
-                        onChange={() => setSolveFor('d')}
-                        className="form-radio h-4 w-4 text-indigo-600"
+                        type="number"
+                        value={solveFor === 'c' ? '' : c}
+                        onChange={(e) => setC(e.target.value)}
+                        disabled={solveFor === 'c'}
+                        className={`w-full p-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'c' ? 'bg-gray-100' : ''}`}
+                        placeholder="c"
                         />
-                        <span className="ml-2">d</span>
-                    </label>
+                        <div className="mx-2 text-lg">/</div>
+                        <input
+                        type="number"
+                        value={solveFor === 'd' ? '' : d}
+                        onChange={(e) => setD(e.target.value)}
+                        disabled={solveFor === 'd'}
+                        className={`w-full p-2 border border-gray-300 rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 ${solveFor === 'd' ? 'bg-gray-100' : ''}`}
+                        placeholder="d"
+                        />
+                    </div>
                 </div>
+
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Resolver para:
+                    </label>
+                    <div className="grid grid-cols-4 gap-2">
+                        <label className="inline-flex items-center">
+                            <input
+                            type="radio"
+                            checked={solveFor === 'a'}
+                            onChange={() => setSolveFor('a')}
+                            className="form-radio h-4 w-4 text-indigo-600"
+                            />
+                            <span className="ml-2">a</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                            <input
+                            type="radio"
+                            checked={solveFor === 'b'}
+                            onChange={() => setSolveFor('b')}
+                            className="form-radio h-4 w-4 text-indigo-600"
+                            />
+                            <span className="ml-2">b</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                            <input
+                            type="radio"
+                            checked={solveFor === 'c'}
+                            onChange={() => setSolveFor('c')}
+                            className="form-radio h-4 w-4 text-indigo-600"
+                            />  
+                            <span className="ml-2">c</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                            <input
+                            type="radio"
+                            checked={solveFor === 'd'}
+                            onChange={() => setSolveFor('d')}
+                            className="form-radio h-4 w-4 text-indigo-600"
+                            />
+                            <span className="ml-2">d</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button
+                onClick={handleSolve}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
+                >
+                    Calcular
+                </button>
+
+                {errorMessage && (
+                    <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
+                        {errorMessage}
+                    </div>
+                )}
             </div>
-
-            <button
-            onClick={handleSolve}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mt-4"
-            >
-                Calcular
-            </button>
-
-            {errorMessage && (
-                <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
-                    {errorMessage}
-                </div>
-            )}
 
             {result !== null && (
-                <div className="mt-8">
-                    <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
+                <div className="space-y-6">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                         <p className="text-xl">
                             {solveFor.toUpperCase()} = <span className="font-bold">{result}</span>
                         </p>
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-                        <h3 className="text-lg font-medium text-blue-800 mb-2">Solução passo a passo</h3>
-                        <div className="space-y-2">
-                            {steps.map((step, index) => (
-                                <p key={index}>{step}</p>
-                            ))}
-                        </div>
+                    {showExplanation && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                            <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                            <div className="space-y-2">
+                                {steps.map((step, index) => (
+                                    <p key={index} className="text-gray-700">{step}</p>
+                                ))}
+                            </div>
 
-                        <div className="mt-4">
-                        <h4 className="font-medium text-blue-800">Aplicações no dia a dia:</h4>
-                        <p className="mt-1">
-                            Proporções são amplamente utilizadas em várias áreas, como:
-                        </p>
-                        <ul className="list-disc list-inside mt-2 space-y-1">
-                            <li>Converter entre diferentes unidades de medida</li>
-                            <li>Ajustar receitas para diferentes porções</li>
-                            <li>Calcular preços (ex.: "se 3 maçãs custam R$2, quanto custam 7 maçãs?")</li>
-                            <li>Escalas de mapas (ex.: "se 1 polegada no mapa representa 10 milhas, quantas milhas são representadas por 3,5 polegadas?")</li>  
-                        </ul>
-                    </div>
+                            <div className="mt-5 pt-4 border-t border-blue-200">
+                                <h4 className="font-medium text-blue-800 mb-2">Aplicações no dia a dia:</h4>
+                                <p className="mt-1 text-gray-700">
+                                    Proporções são amplamente utilizadas em várias áreas, como:
+                                </p>
+                                <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
+                                    <li>Converter entre diferentes unidades de medida</li>
+                                    <li>Ajustar receitas para diferentes porções</li>
+                                    <li>Calcular preços (ex.: "se 3 maçãs custam R$2, quanto custam 7 maçãs?")</li>
+                                    <li>Escalas de mapas (ex.: "se 1 polegada no mapa representa 10 milhas, quantas milhas são representadas por 3,5 polegadas?")</li>  
+                                </ul>
+                            </div>
+                        </div>
+                    )}
                 </div>
-            </div>
             )}
         </div>
     );

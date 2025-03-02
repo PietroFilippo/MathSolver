@@ -15,8 +15,8 @@ import { solvers, educationalLevels } from '../data/resolvedores';
 // Placeholders até que os resolvers sejam implementados
 import ResolvedorPorcentagem from '../resolvedores/ResolvedorPorcentagem';
 import ResolvedorMediaAritmetica from '../resolvedores/ResolvedorMediaAritmetica';
-const FractionAddSubSolver = () => <div>Resolvedor de Adição e Subtração de Frações</div>;
 import ResolvedorProporcao from '../resolvedores/ResolvedorProporcao';
+import ResolvedorAddSubFracao from '../resolvedores/ResolvedorAddSubFracao';
 const FractionMultDivSolver = () => <div>Resolvedor de Multiplicação e Divisão de Frações</div>;
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
 const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
@@ -61,7 +61,7 @@ const SolverPage: React.FC = () => {
       case 'percentage':
         return <ResolvedorPorcentagem />;
       case 'fraction-add-sub':
-        return <FractionAddSubSolver />;
+        return <ResolvedorAddSubFracao />;
       case 'arithmetic-mean':
         return <ResolvedorMediaAritmetica />;
       case 'proportion':
@@ -200,7 +200,7 @@ const SolverPage: React.FC = () => {
     <div className="flex flex-col md:flex-row gap-6">
       {/* Sidebar */}
       <div className="md:w-1/4 bg-white rounded-lg shadow-md p-4 h-fit">
-        <h2 className="text-xl font-bold mb-4">Resolvedores Matemáticos</h2>
+        <h2 className="text-xl font-bold mb-4">Solucionadores Matemáticos</h2>
 
         {/* View Toggle */}
         <div className="flex bg-gray-100 p-1 rounded-lg mb-4">

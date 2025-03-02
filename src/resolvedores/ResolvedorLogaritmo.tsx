@@ -10,22 +10,24 @@ const ResolvedorLogaritmo: React.FC = () => {
     const [customBase, setCustomBase] = useState<string>('');
     const [result, setResult] = useState<number | null>(null);
     const [steps, setSteps] = useState<string[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
     const handleSolve = () => {
-      setError(null);
+      setErrorMessage(null);
       setResult(null);
       setSteps([]);
+      setShowExplanation(false);
 
       const numValue = parseFloat(value);
 
       if (isNaN(numValue)) {
-        setError('Insira um número válido');
+        setErrorMessage('Insira um número válido');
         return;
       }
 
       if (numValue <= 0) {
-        setError('O logaritmo é definido apenas para números positivos');
+        setErrorMessage('O logaritmo é definido apenas para números positivos');
         return;
       }
 
@@ -46,12 +48,12 @@ const ResolvedorLogaritmo: React.FC = () => {
         const numBase = parseFloat(customBase);
 
         if (isNaN(numBase)) {
-            setError('A base personalizada deve ser um número válido.');
+            setErrorMessage('A base personalizada deve ser um número válido.');
             return;
         }
 
         if (numBase <= 0 || numBase === 1) {
-            setError('A base personalizada deve ser um número positivo e diferente de 1.');
+            setErrorMessage('A base personalizada deve ser um número positivo e diferente de 1.');
             return;
         }
 
@@ -106,24 +108,23 @@ const ResolvedorLogaritmo: React.FC = () => {
 
       setResult(arredondarParaDecimais(calculatedResult, 6));
       setSteps(calculationSteps);
+      setShowExplanation(true);
     };
 
     return (
-      <div>
+      <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <HiCalculator className="h-6 w-6 text-indigo-600 mr-2" />
           <h2 className="text-2xl font-bold">Calculadora de Logaritmos</h2>
         </div>
 
-        <div className="mb-8">
-            <p className="text-gray-700 mb-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
+            <p className="text-gray-700 mb-6">
                 Essa calculadora ajuda a resolver problemas de logaritmos de diferentes bases.
                 O logaritmo de um número é o expoente ao qual uma base deve ser elevada para produzir esse número.
             </p>
-        </div>
 
-        <div className="bg-gray-50 p-4 rounded-md border border-gray-200 mb-6">
-            <div className="mb-4">
+            <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                     Tipo de logaritmo:
                 </label>
@@ -158,9 +159,9 @@ const ResolvedorLogaritmo: React.FC = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                         Valor
                     </label>
                     <input
@@ -175,7 +176,7 @@ const ResolvedorLogaritmo: React.FC = () => {
 
                 {logType === 'custom' && (
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Base
                         </label>
                         <input
@@ -192,21 +193,21 @@ const ResolvedorLogaritmo: React.FC = () => {
 
             <button
                 onClick={handleSolve}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 mt-4"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
             >
                 Calcular
             </button>
 
-            {error && (
+            {errorMessage && (
                 <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
-                    {error}
+                    {errorMessage}
                 </div>
             )}
         </div>
 
         {result !== null && (
-            <div className="mt-8">
-                <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
+            <div className="space-y-6">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                     <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                     <p className="text-xl">
                         {logType === 'natural' && `ln(${value})`}
@@ -217,38 +218,40 @@ const ResolvedorLogaritmo: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Solução passo a passo</h3>
-                    <div className="space-y-2">
-                        {steps.map((step, index) => (
-                            <p key={index}>{step}</p>
-                        ))}
-                    </div>
+                {showExplanation && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                        <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                        <div className="space-y-2">
+                            {steps.map((step, index) => (
+                                <p key={index} className="text-gray-700">{step}</p>
+                            ))}
+                        </div>
 
-                    <div className="mt-4">
-                        <h4 className="font-medium text-blue-800">Propriedades dos Logaritmos:</h4>
-                        <ul className="list-disc list-inside mt-2 space-y-1">
-                            <li>log_b(xy) = log_b(x) + log_b(y)</li>
-                            <li>log_b(x/y) = log_b(x) - log_b(y)</li>
-                            <li>log_b(x^k) = n * log_b(x)</li>
-                            <li>log_b(1) = 0</li>
-                            <li>log_b(b) = 1</li>
-                            <li>b^log_b(x) = x</li>
-                            <li>log_a(x) = log_b(x) / log_b(a) (fórmula de mudança de base)</li>
-                        </ul>
+                        <div className="mt-5 pt-4 border-t border-blue-200">
+                            <h4 className="font-medium text-blue-800 mb-2">Propriedades dos Logaritmos:</h4>
+                            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
+                                <li>log_b(xy) = log_b(x) + log_b(y)</li>
+                                <li>log_b(x/y) = log_b(x) - log_b(y)</li>
+                                <li>log_b(x^k) = n * log_b(x)</li>
+                                <li>log_b(1) = 0</li>
+                                <li>log_b(b) = 1</li>
+                                <li>b^log_b(x) = x</li>
+                                <li>log_a(x) = log_b(x) / log_b(a) (fórmula de mudança de base)</li>
+                            </ul>
 
-                        <p className="mt-3">
-                            <strong>Aplicações de Logaritmos:</strong> Logaritmos são amplamente utilizados em diversas áreas, como:
-                        </p>
-                        <ul className="list-disc list-inside mt-2 space-y-1">
-                            <li>Resolução de equações exponenciais</li>
-                            <li>Calcular quantidades que variam a longas escalas (pH, decibéis, escala Richter)</li>
-                            <li>Análise de crescimento exponencial (crescimento populacional, juros compostos)</li>
-                            <li>Teoria da informação e compactação de dados</li>
-                            <li>Estatística e probabilidade (funções de verossimilhança logarítmica)</li>
-                        </ul>
+                            <p className="mt-3 text-gray-700">
+                                <strong>Aplicações de Logaritmos:</strong> Logaritmos são amplamente utilizados em diversas áreas, como:
+                            </p>
+                            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
+                                <li>Resolução de equações exponenciais</li>
+                                <li>Calcular quantidades que variam a longas escalas (pH, decibéis, escala Richter)</li>
+                                <li>Análise de crescimento exponencial (crescimento populacional, juros compostos)</li>
+                                <li>Teoria da informação e compactação de dados</li>
+                                <li>Estatística e probabilidade (funções de verossimilhança logarítmica)</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         )}
       </div>
