@@ -20,7 +20,7 @@ import ResolvedorAddSubFracao from '../resolvedores/ResolvedorAddSubFracao';
 import ResolvedorMultDivFracao from '../resolvedores/ResolvedorMultDivFracao';
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
 const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
-const LinearSystemSolver = () => <div>Resolvedor de Sistemas Lineares</div>;
+import ResolvedorSistemasLineares from '../resolvedores/ResolvedorSistemasLineares';
 const TrigonometricSolver = () => <div>Resolvedor de Funções Trigonométricas</div>;
 import ResolvedorLogaritmo from '../resolvedores/ResolvedorLogaritmo';
 
@@ -73,7 +73,7 @@ const SolverPage: React.FC = () => {
       case 'quadratic-equation':
         return <QuadraticEquationSolver />;
       case 'linear-system':
-        return <LinearSystemSolver />;
+        return <ResolvedorSistemasLineares />;
       case 'trigonometric':
         return <TrigonometricSolver />;
       case 'logarithm':

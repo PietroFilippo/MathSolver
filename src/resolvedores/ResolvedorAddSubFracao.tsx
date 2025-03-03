@@ -59,7 +59,8 @@ const ResolvedorAddSubFracao: React.FC = () => {
             resultNumerator = newNumerator1 - newNumerator2;
         }
 
-        // Corrige o tipo de erro ao desestruturar o objeto corretamente
+        // Simplificação da fração
+        const mdcValue = mdc(resultNumerator, commonDenominator);
         const simplified = simplificarFracao(resultNumerator, commonDenominator);
         const simplifiedNum = simplified.numerador;
         const simplifiedDen = simplified.denominador;
@@ -75,25 +76,32 @@ const ResolvedorAddSubFracao: React.FC = () => {
         calculationSteps.push(`MMC(${den1}, ${den2}) = ${commonDenominator}`);
         
         calculationSteps.push(`Passo 2: Converter as frações para o denominador comum.`);
+        calculationSteps.push(`Multiplicar a primeira fração por ${factor1}/${factor1}:`);
         calculationSteps.push(<>
             <FractionDisplay numerator={num1} denominator={den1} /> = 
+            <FractionDisplay numerator={num1} denominator={den1} /> × 
+            <FractionDisplay numerator={factor1} denominator={factor1} /> = 
             <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} />
-            {" "}(multiplicando numerador e denominador por {commonDenominator / den1})
         </>);
+        
+        calculationSteps.push(`Multiplicar a segunda fração por ${factor2}/${factor2}:`);
         calculationSteps.push(<>
             <FractionDisplay numerator={num2} denominator={den2} /> = 
+            <FractionDisplay numerator={num2} denominator={den2} /> × 
+            <FractionDisplay numerator={factor2} denominator={factor2} /> = 
             <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} />
-            {" "}(multiplicando numerador e denominador por {commonDenominator / den2})
         </>);
         
         calculationSteps.push(`Passo 3: ${operation === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
         if (operation === 'add') {
+            calculationSteps.push(`Calculando ${newNumerator1} + ${newNumerator2} = ${resultNumerator}`);
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> + 
                 <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} />
             </>);
         } else {
+            calculationSteps.push(`Calculando ${newNumerator1} - ${newNumerator2} = ${resultNumerator}`);
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> - 
                 <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
@@ -102,16 +110,26 @@ const ResolvedorAddSubFracao: React.FC = () => {
         }
 
         if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
-            calculationSteps.push(`Passo 4: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC`);
-            calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdc(resultNumerator, commonDenominator)}`);
+            calculationSteps.push(`Passo 4: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC (Máximo Divisor Comum).`);
+            calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdcValue}`);
+            calculationSteps.push(`Dividindo o numerador: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
+            calculationSteps.push(`Dividindo o denominador: ${commonDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
             calculationSteps.push(<>
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> = 
+                <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> ÷ 
+                <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
                 <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
             </>);
         } else {
-            calculationSteps.push(<>
-                Passo 4: A fração <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> já está simplificada.
-            </>);
+            calculationSteps.push(`Passo 4: Verificar se a fração pode ser simplificada.`);
+            calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdcValue}`);
+            calculationSteps.push(`Como o MDC é 1, a fração já está na forma mais simplificada.`);
+        }
+
+        // Se o resultado for um número inteiro, adicione uma explicação adicional
+        if (simplifiedNum % simplifiedDen === 0) {
+            calculationSteps.push(`Passo 5: Converter a fração para um número inteiro.`);
+            calculationSteps.push(`${simplifiedNum} ÷ ${simplifiedDen} = ${simplifiedNum / simplifiedDen}`);
         }
 
         setSteps(calculationSteps);
@@ -478,42 +496,90 @@ const ResolvedorAddSubFracao: React.FC = () => {
                     </div>
 
                     {showExplanation && (
-                        <div className="bg-white shadow-md rounded-lg p-5">
+                        <div className="mt-8 bg-white shadow-md rounded-lg p-5">
                             <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                                    <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
+                                    Solução passo a passo
+                                </h3>
                             </div>
-                            
                             <div className="space-y-4">
-                                {steps.map((step, stepIndex) => (
-                                    <div key={stepIndex} className="p-3 bg-gray-50 rounded-md">
-                                        <p className="text-gray-800">{step}</p>
-                                        
-                                        {stepIndex === 1 && (
-                                            <button 
-                                                onClick={() => setShowMMCDetails(!showMMCDetails)}
-                                                className="flex items-center text-sm text-indigo-600 hover:text-indigo-800 transition-colors duration-200 mt-2"
-                                            >
-                                                <HiInformationCircle className="h-4 w-4 mr-1" />
-                                                {showMMCDetails ? 'Ocultar detalhes do cálculo do MMC' : 'Ver detalhes do cálculo do MMC'}
-                                            </button>
-                                        )}
-                                        
-                                        {stepIndex === 1 && showMMCDetails && MMCDetails()}
-                                    </div>
-                                ))}
+                                {steps.map((step, stepIndex) => {
+                                    // Check if step starts with a step number pattern like "Passo X:"
+                                    const stepStr = String(step); // Ensure step is treated as string
+                                    const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
+                                    
+                                    if (stepMatch) {
+                                        // If it's a step with number, extract and highlight it
+                                        const [_, stepNumber, stepContent] = stepMatch;
+                                        return (
+                                            <div key={stepIndex} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                                <div className="flex flex-col sm:flex-row">
+                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                                        {stepNumber}
+                                                    </span>
+                                                    <p className="text-gray-800">{stepContent}</p>
+                                                </div>
+                                                
+                                                {stepNumber === "Passo 1:" && mmcSteps && (
+                                                    <button
+                                                        onClick={() => setShowMMCDetails(!showMMCDetails)}
+                                                        className="mt-2 flex items-center text-indigo-600 hover:text-indigo-800"
+                                                    >
+                                                        <HiInformationCircle className="h-5 w-5 mr-1" />
+                                                        {showMMCDetails ? "Ocultar detalhes do cálculo do MMC" : "Ver detalhes do cálculo do MMC"}
+                                                    </button>
+                                                )}
+                                                
+                                                {stepNumber === "Passo 1:" && mmcSteps && showMMCDetails && MMCDetails()}
+                                            </div>
+                                        );
+                                    } else {
+                                        // Regular content without step number
+                                        return (
+                                            <div key={stepIndex} className="p-3 bg-gray-50 rounded-md ml-4">
+                                                <p className="text-gray-800">{step}</p>
+                                            </div>
+                                        );
+                                    }
+                                })}
                             </div>
-                            
+
+                            {/* Mathematical Concept Section */}
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                <p className="text-gray-700">
-                                    Para {operation === 'add' ? 'adicionar' : 'subtrair'} frações com denominadores diferentes, precisamos:
-                                </p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
-                                    <li>Encontrar um denominador comum (geralmente o MMC)</li>
-                                    <li>Converter as frações para equivalentes com o mesmo denominador</li>
-                                    <li>{operation === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum</li>
-                                    <li>Simplificar a fração resultante, se possível</li>
-                                </ul>
+                                <h4 className="text-lg font-semibold text-gray-800 mb-2">Conceito Matemático</h4>
+                                <div className="space-y-2 text-gray-700">
+                                    <p>
+                                        <span className="font-semibold">Adição e Subtração de Frações:</span> Para somar ou subtrair frações, precisamos de denominadores iguais. Seguimos estes passos:
+                                    </p>
+                                    <ol className="list-decimal pl-5 mt-2 space-y-1">
+                                        <li>Encontrar o Mínimo Múltiplo Comum (MMC) dos denominadores</li>
+                                        <li>Converter cada fração para denominadores iguais, multiplicando o numerador e denominador pelo fator necessário</li>
+                                        <li>Somar ou subtrair os numeradores, mantendo o denominador comum</li>
+                                        <li>Simplificar a fração resultante, encontrando o Máximo Divisor Comum (MDC) entre o numerador e denominador</li>
+                                    </ol>
+                                    
+                                    <p className="mt-2">
+                                        <span className="font-semibold">Fórmula:</span> Para frações <span className="italic">a/b</span> e <span className="italic">c/d</span>:
+                                    </p>
+                                    <div className="bg-white p-2 rounded border border-gray-200 text-center my-2">
+                                        <span className="italic">a/b ± c/d = (a·(mmc/b) ± c·(mmc/d))/mmc</span>
+                                    </div>
+                                    
+                                    <p className="mt-2">
+                                        <span className="font-semibold">Simplificação:</span> Para simplificar uma fração <span className="italic">n/d</span>, encontramos o MDC entre <span className="italic">n</span> e <span className="italic">d</span> e dividimos ambos por ele.
+                                    </p>
+                                    
+                                    <p className="mt-2">
+                                        <span className="font-semibold">Aplicações:</span> Esta operação é fundamental para cálculos em:
+                                    </p>
+                                    <ul className="list-disc pl-5 mt-1">
+                                        <li>Álgebra e resolução de equações</li>
+                                        <li>Receitas culinárias (ajustes de quantidades)</li>
+                                        <li>Finanças (divisão de despesas)</li>
+                                        <li>Estatística (cálculo de proporções)</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     )}

@@ -225,11 +225,32 @@ const ResolvedorLogaritmo: React.FC = () => {
                         </div>
                         
                         <div className="space-y-4">
-                            {steps.map((step, index) => (
-                                <div key={index} className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">{step}</p>
-                                </div>
-                            ))}
+                            {steps.map((step, index) => {
+                                // Check if step starts with a step number pattern like "Passo X:"
+                                const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                                
+                                if (stepMatch) {
+                                    // If it's a step with number, extract and highlight it
+                                    const [_, stepNumber, stepContent] = stepMatch;
+                                    return (
+                                        <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                            <div className="flex flex-col sm:flex-row">
+                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                                    {stepNumber}
+                                                </span>
+                                                <p className="text-gray-800">{stepContent}</p>
+                                            </div>
+                                        </div>
+                                    );
+                                } else {
+                                    // Regular content without step number
+                                    return (
+                                        <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                            <p className="text-gray-800">{step}</p>
+                                        </div>
+                                    );
+                                }
+                            })}
                         </div>
                         
                         <div className="mt-6 p-4 bg-blue-50 rounded-md">

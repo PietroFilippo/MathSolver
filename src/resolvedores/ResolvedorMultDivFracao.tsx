@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { simplificarFracao, FractionDisplay } from '../utils/mathUtils';
+import { simplificarFracao, FractionDisplay, mdc } from '../utils/mathUtils';
 
 type Operation = 'multiply' | 'divide';
 
@@ -70,48 +70,52 @@ const ResolvedorMultDivFracao: React.FC = () => {
     // Gerar os passos da explicação
     const calculationSteps = [];
     
+    calculationSteps.push(`Passo 1: ${operation === 'multiply' ? 'Multiplicar' : 'Dividir'} as frações.`);
+    
     if (operation === 'multiply') {
-      calculationSteps.push('Passo 1: Na multiplicação de frações, multiplicamos os numeradores e denominadores entre si.');
       calculationSteps.push(<>
-        <FractionDisplay numerator={num1} denominator={den1} /> × <FractionDisplay numerator={num2} denominator={den2} /> = 
+        <FractionDisplay numerator={num1} denominator={den1} /> × 
+        <FractionDisplay numerator={num2} denominator={den2} /> = 
         <FractionDisplay numerator={num1 * num2} denominator={den1 * den2} />
       </>);
-      
-      if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-        calculationSteps.push('Passo 2: Simplificar a fração resultante.');
-        calculationSteps.push(<>
-          <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> = 
-          <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
-        </>);
-      } else {
-        calculationSteps.push(<>
-          Passo 2: A fração <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> já está simplificada.
-        </>);
-      }
+      calculationSteps.push(`Para multiplicar frações, multiplique os numeradores (${num1} × ${num2} = ${num1 * num2}) e multiplique os denominadores (${den1} × ${den2} = ${den1 * den2}).`);
     } else {
-      calculationSteps.push('Passo 1: Na divisão de frações, multiplicamos a primeira fração pelo inverso da segunda.');
       calculationSteps.push(<>
-        <FractionDisplay numerator={num1} denominator={den1} /> ÷ <FractionDisplay numerator={num2} denominator={den2} /> = 
-        <FractionDisplay numerator={num1} denominator={den1} /> × <FractionDisplay numerator={den2} denominator={num2} />
-      </>);
-      
-      calculationSteps.push('Passo 2: Multiplicamos os numeradores e denominadores.');
-      calculationSteps.push(<>
-        <FractionDisplay numerator={num1} denominator={den1} /> × <FractionDisplay numerator={den2} denominator={num2} /> = 
+        <FractionDisplay numerator={num1} denominator={den1} /> ÷ 
+        <FractionDisplay numerator={num2} denominator={den2} /> = 
+        <FractionDisplay numerator={num1} denominator={den1} /> × 
+        <FractionDisplay numerator={den2} denominator={num2} /> = 
         <FractionDisplay numerator={num1 * den2} denominator={den1 * num2} />
       </>);
-      
-      if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-        calculationSteps.push('Passo 3: Simplificar a fração resultante.');
-        calculationSteps.push(<>
-          <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> = 
-          <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
-        </>);
-      } else {
-        calculationSteps.push(<>
-          Passo 3: A fração <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> já está simplificada.
-        </>);
-      }
+      calculationSteps.push(`Para dividir frações, multiplique a primeira fração pelo inverso da segunda fração.`);
+      calculationSteps.push(`${num1}/${den1} ÷ ${num2}/${den2} = ${num1}/${den1} × ${den2}/${num2} = (${num1} × ${den2})/(${den1} × ${num2}) = ${num1 * den2}/${den1 * num2}`);
+    }
+    
+    // Enhanced explanation for simplification
+    const mdcValue = mdc(resultNumerator, resultDenominator);
+    if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
+      calculationSteps.push(`Passo 2: Simplificar a fração resultante dividindo o numerador e o denominador pelo Máximo Divisor Comum (MDC).`);
+      calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
+      calculationSteps.push(<>
+        <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> = 
+        <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> ÷ 
+        <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
+        <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
+      </>);
+      calculationSteps.push(`Dividindo o numerador ${resultNumerator} por ${mdcValue} = ${simplifiedNum}`);
+      calculationSteps.push(`Dividindo o denominador ${resultDenominator} por ${mdcValue} = ${simplifiedDen}`);
+    } else {
+      calculationSteps.push(`Passo 2: Verificar se a fração pode ser simplificada.`);
+      calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
+      calculationSteps.push(<>
+        Como o MDC é 1, a fração <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> já está na forma mais simplificada.
+      </>);
+    }
+    
+    // If the result is a whole number, add an additional explanation
+    if (simplifiedNum % simplifiedDen === 0) {
+      calculationSteps.push(`Passo 3: Converter a fração para um número inteiro.`);
+      calculationSteps.push(`${simplifiedNum} ÷ ${simplifiedDen} = ${simplifiedNum / simplifiedDen}`);
     }
     
     setSteps(calculationSteps);
@@ -252,11 +256,33 @@ const ResolvedorMultDivFracao: React.FC = () => {
               </div>
               
               <div className="space-y-4">
-                {steps.map((step, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded-md">
-                    <p className="text-gray-800">{step}</p>
-                  </div>
-                ))}
+                {steps.map((step, index) => {
+                  // Check if step starts with a step number pattern like "Passo X:"
+                  const stepStr = String(step); // Ensure step is treated as string
+                  const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
+                  
+                  if (stepMatch) {
+                    // If it's a step with number, extract and highlight it
+                    const [_, stepNumber, stepContent] = stepMatch;
+                    return (
+                      <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                          <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                            {stepNumber}
+                          </span>
+                          <p className="text-gray-800">{stepContent}</p>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    // Regular content without step number
+                    return (
+                      <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                        <p className="text-gray-800">{step}</p>
+                      </div>
+                    );
+                  }
+                })}
               </div>
               
               <div className="mt-6 p-4 bg-blue-50 rounded-md">

@@ -100,17 +100,51 @@ const ResolvedorPorcentagem: React.FC = () => {
                             </div>
                             
                             <div className="space-y-4">
-                                <div className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">Para achar a porcentagem de um número, usamos a fórmula:</p>
+                                <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                    <div className="flex flex-col sm:flex-row">
+                                        <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                            Passo 1:
+                                        </span>
+                                        <p className="text-gray-800">Compreender a fórmula para calcular a porcentagem de um número.</p>
+                                    </div>
                                     <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
                                         <p className="font-medium">Porcentagem de um número = (Valor x Porcentagem) / 100</p>
                                     </div>
                                 </div>
                                 
-                                <div className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">Substituindo os valores, temos:</p>
+                                <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                    <div className="flex flex-col sm:flex-row">
+                                        <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                            Passo 2:
+                                        </span>
+                                        <p className="text-gray-800">Substituir os valores na fórmula.</p>
+                                    </div>
                                     <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                        <p>({value} x {percentage}) / 100 = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)} / 100 = {result}</p>
+                                        <p>({value} x {percentage}) / 100</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                    <div className="flex flex-col sm:flex-row">
+                                        <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                            Passo 3:
+                                        </span>
+                                        <p className="text-gray-800">Multiplicar o valor pela porcentagem.</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p>{value} x {percentage} = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)}</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                    <div className="flex flex-col sm:flex-row">
+                                        <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                            Passo 4:
+                                        </span>
+                                        <p className="text-gray-800">Dividir o resultado por 100.</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p>{(parseFloat(value) * parseFloat(percentage)).toFixed(2)} / 100 = {result}</p>
                                     </div>
                                 </div>
                             </div>
