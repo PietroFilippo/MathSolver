@@ -219,16 +219,22 @@ const ResolvedorLogaritmo: React.FC = () => {
                 </div>
 
                 {showExplanation && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                        <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
-                        <div className="space-y-2">
+                    <div className="bg-white shadow-md rounded-lg p-5">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                        </div>
+                        
+                        <div className="space-y-4">
                             {steps.map((step, index) => (
-                                <p key={index} className="text-gray-700">{step}</p>
+                                <div key={index} className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">{step}</p>
+                                </div>
                             ))}
                         </div>
-
-                        <div className="mt-5 pt-4 border-t border-blue-200">
-                            <h4 className="font-medium text-blue-800 mb-2">Propriedades dos Logaritmos:</h4>
+                        
+                        <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                            <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
+                            <p className="text-gray-700 mb-2"><strong>Propriedades dos Logaritmos:</strong></p>
                             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
                                 <li>log_b(xy) = log_b(x) + log_b(y)</li>
                                 <li>log_b(x/y) = log_b(x) - log_b(y)</li>

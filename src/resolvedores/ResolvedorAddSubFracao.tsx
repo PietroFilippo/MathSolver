@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { mmc, mdc, simplificarFracao, formatarFracao } from '../utils/mathUtils';
-import { HiCalculator } from 'react-icons/hi';
+import React, { useState, ReactNode } from 'react';
+import { mmc, mdc, simplificarFracao, FractionDisplay } from '../utils/mathUtils';
+import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
 
 type Operation = 'add' | 'sub';
 
@@ -10,17 +10,22 @@ const ResolvedorAddSubFracao: React.FC = () => {
     const [numerator2, setNumerator2] = useState<string>('');
     const [denominator2, setDenominator2] = useState<string>('');
     const [operation, setOperation] = useState<Operation>('add');
-    const [result, setResult] = useState<{ numerator: number, denominator: number } | null>(null);
-    const [steps, setSteps] = useState<string[]>([]);
+    const [resultadoNum, setResultadoNum] = useState<number | null>(null);
+    const [resultadoDen, setResultadoDen] = useState<number | null>(null);
+    const [resultado, setResultado] = useState(false);
+    const [steps, setSteps] = useState<(string | ReactNode)[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
+    const [showMMCDetails, setShowMMCDetails] = useState<boolean>(false);
+    const [mmcSteps, setMmcSteps] = useState<{ den1: number, den2: number, mmc: number }>({ den1: 0, den2: 0, mmc: 0 });
 
     const handleSolve = () => {
         // Resetar os valores anteriores e erros
-        setResult(null);
+        setResultado(false);
         setSteps([]);
         setErrorMessage('');
         setShowExplanation(false);
+        setShowMMCDetails(false);
 
         const num1 = parseInt(numerator1);
         const den1 = parseInt(denominator1);
@@ -42,6 +47,8 @@ const ResolvedorAddSubFracao: React.FC = () => {
         const factor1 = commonDenominator / den1;
         const factor2 = commonDenominator / den2;
 
+        setMmcSteps({ den1, den2, mmc: commonDenominator });
+
         const newNumerator1 = num1 * factor1;
         const newNumerator2 = num2 * factor2;
 
@@ -57,34 +64,289 @@ const ResolvedorAddSubFracao: React.FC = () => {
         const simplifiedNum = simplified.numerador;
         const simplifiedDen = simplified.denominador;
         
-        setResult({ numerator: simplifiedNum, denominator: simplifiedDen });
+        setResultadoNum(simplifiedNum);
+        setResultadoDen(simplifiedDen);
+        setResultado(true);
         setShowExplanation(true);
 
         // Gera os passos
         const calculationSteps = [];
-            calculationSteps.push(`Passo 1: Encontrar o MMC dos denominadores ${den1} e ${den2}`);
-            calculationSteps.push(`MMC(${den1}, ${den2}) = ${commonDenominator}`);
+        calculationSteps.push(`Passo 1: Encontrar o mínimo múltiplo comum (MMC) dos denominadores.`);
+        calculationSteps.push(`MMC(${den1}, ${den2}) = ${commonDenominator}`);
+        
+        calculationSteps.push(`Passo 2: Converter as frações para o denominador comum.`);
+        calculationSteps.push(<>
+            <FractionDisplay numerator={num1} denominator={den1} /> = 
+            <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} />
+            {" "}(multiplicando numerador e denominador por {commonDenominator / den1})
+        </>);
+        calculationSteps.push(<>
+            <FractionDisplay numerator={num2} denominator={den2} /> = 
+            <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} />
+            {" "}(multiplicando numerador e denominador por {commonDenominator / den2})
+        </>);
+        
+        calculationSteps.push(`Passo 3: ${operation === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
+        if (operation === 'add') {
+            calculationSteps.push(<>
+                <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> + 
+                <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
+                <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} />
+            </>);
+        } else {
+            calculationSteps.push(<>
+                <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> - 
+                <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
+                <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} />
+            </>);
+        }
 
-            calculationSteps.push(`Passo 2: Converter cada fração para ter uma fração equivalente com o denominador comum`);
-            calculationSteps.push(`${num1}/${den1} = ${num1} × ${factor1}/${den1} × ${factor1} = ${newNumerator1}/${commonDenominator}`);
-            calculationSteps.push(`${num2}/${den2} = ${num2} × ${factor2}/${den2} × ${factor2} = ${newNumerator2}/${commonDenominator}`);
-
-            calculationSteps.push(`Passo 3: ${operation === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
-            if (operation === 'add') {
-                calculationSteps.push(`${newNumerator1}/${commonDenominator} + ${newNumerator2}/${commonDenominator} = ${resultNumerator}/${commonDenominator}`);
-            } else {
-                calculationSteps.push(`${newNumerator1}/${commonDenominator} - ${newNumerator2}/${commonDenominator} = ${resultNumerator}/${commonDenominator}`);
-            }
-
-            if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
+        if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
             calculationSteps.push(`Passo 4: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC`);
             calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdc(resultNumerator, commonDenominator)}`);
-            calculationSteps.push(`${resultNumerator}/${commonDenominator} = ${simplifiedNum}/${simplifiedDen}`);
-            } else {
-                calculationSteps.push(`Passo 4: A fração ${resultNumerator}/${commonDenominator} já está simplificada.`);
-            }
+            calculationSteps.push(<>
+                <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> = 
+                <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
+            </>);
+        } else {
+            calculationSteps.push(<>
+                Passo 4: A fração <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> já está simplificada.
+            </>);
+        }
 
         setSteps(calculationSteps);
+    };
+
+    // Função para renderizar os detalhes do cálculo do MMC
+    const MMCDetails = () => {
+        if (!mmcSteps.den1 || !mmcSteps.den2) return null;
+        
+        const { den1, den2, mmc: resultado } = mmcSteps;
+        
+        // Decomposição em fatores primos
+        const decomposeInPrimeFactors = (num: number): number[] => {
+            const factors: number[] = [];
+            let n = num;
+            let divisor = 2;
+            
+            while (n > 1) {
+                while (n % divisor === 0) {
+                    factors.push(divisor);
+                    n = n / divisor;
+                }
+                divisor++;
+            }
+            
+            return factors;
+        };
+        
+        // Obter os fatores primos
+        const factors1 = decomposeInPrimeFactors(den1);
+        const factors2 = decomposeInPrimeFactors(den2);
+        
+        // Função para gerar os passos da decomposição
+        const generateDecompositionSteps = (num: number): { divisor: number, quotient: number, result: number }[] => {
+            const steps: { divisor: number, quotient: number, result: number }[] = [];
+            let n = num;
+            let divisor = 2;
+            
+            while (n > 1) {
+                while (n % divisor === 0) {
+                    steps.push({ divisor, quotient: Math.floor(n / divisor), result: n });
+                    n = n / divisor;
+                }
+                divisor++;
+            }
+            
+            return steps;
+        };
+        
+        const decompositionSteps1 = generateDecompositionSteps(den1);
+        const decompositionSteps2 = generateDecompositionSteps(den2);
+        
+        // Calcular MMC pelo método de fatoração
+        const calculateMMCByFactorization = (a: number, b: number): number[] => {
+            const factorsA = decomposeInPrimeFactors(a);
+            const factorsB = decomposeInPrimeFactors(b);
+            
+            // Criar um mapa de fatores com suas potências máximas
+            const factorMap = new Map<number, number>();
+            
+            // Contar ocorrências em factorsA
+            factorsA.forEach(factor => {
+                const count = factorMap.get(factor) || 0;
+                factorMap.set(factor, count + 1);
+            });
+            
+            // Contar ocorrências em factorsB e atualizar se necessário
+            const factorMapB = new Map<number, number>();
+            factorsB.forEach(factor => {
+                const count = factorMapB.get(factor) || 0;
+                factorMapB.set(factor, count + 1);
+            });
+            
+            // Garantir que temos a potência máxima de cada fator
+            factorMapB.forEach((count, factor) => {
+                const countA = factorMap.get(factor) || 0;
+                if (count > countA) {
+                    factorMap.set(factor, count);
+                }
+            });
+            
+            // Converter o mapa de volta para um array de fatores
+            const resultFactors: number[] = [];
+            factorMap.forEach((count, factor) => {
+                for (let i = 0; i < count; i++) {
+                    resultFactors.push(factor);
+                }
+            });
+            
+            resultFactors.sort((a, b) => a - b);
+            return resultFactors;
+        };
+        
+        const mmcFactors = calculateMMCByFactorization(den1, den2);
+        
+        // Passos do algoritmo de Euclides para calcular o MDC
+        const gcdSteps = (a: number, b: number): { a: number, b: number, remainder: number }[] => {
+            const steps: { a: number, b: number, remainder: number }[] = [];
+            
+            let x = Math.max(a, b);
+            let y = Math.min(a, b);
+            
+            while (y !== 0) {
+                const remainder = x % y;
+                steps.push({ a: x, b: y, remainder });
+                x = y;
+                y = remainder;
+            }
+            
+            return steps;
+        };
+        
+        const mdcSteps = gcdSteps(den1, den2);
+        const mdcValue = mdc(den1, den2);
+        
+        return (
+            <div className="bg-white p-5 rounded-md border border-blue-200 mt-3">
+                <h4 className="font-medium text-blue-800 mb-3">Cálculo detalhado do MMC({den1}, {den2})</h4>
+                
+                <div className="space-y-4">
+                    <div>
+                        <p className="text-gray-700 font-medium mb-2">
+                            Método 1: Decomposição em fatores primos
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-3 rounded-md">
+                            <div className="space-y-2">
+                                <p className="text-gray-700 font-medium">Decomposição de {den1}:</p>
+                                
+                                {decompositionSteps1.length > 0 ? (
+                                    <div className="space-y-1">
+                                        {decompositionSteps1.map((step, index) => (
+                                            <div key={index} className="flex items-center">
+                                                <div className="w-10 text-center">{step.divisor}</div>
+                                                <div className="w-6 text-center">|</div>
+                                                <div>{step.result}</div>
+                                            </div>
+                                        ))}
+                                        <div className="text-gray-700 mt-1">
+                                            Portanto, {den1} = {factors1.join(' × ') || den1}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700">{den1} é um número primo</p>
+                                )}
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <p className="text-gray-700 font-medium">Decomposição de {den2}:</p>
+                                
+                                {decompositionSteps2.length > 0 ? (
+                                    <div className="space-y-1">
+                                        {decompositionSteps2.map((step, index) => (
+                                            <div key={index} className="flex items-center">
+                                                <div className="w-10 text-center">{step.divisor}</div>
+                                                <div className="w-6 text-center">|</div>
+                                                <div>{step.result}</div>
+                                            </div>
+                                        ))}
+                                        <div className="text-gray-700 mt-1">
+                                            Portanto, {den2} = {factors2.join(' × ') || den2}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700">{den2} é um número primo</p>
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div className="mt-3 bg-gray-50 p-3 rounded-md">
+                            <p className="text-gray-700 font-medium">Para encontrar o MMC pelos fatores primos:</p>
+                            <p className="text-gray-700 mt-1">
+                                1. Pegamos cada fator primo que aparece em pelo menos um dos números.
+                            </p>
+                            <p className="text-gray-700">
+                                2. Para cada fator, usamos a maior potência em que ele aparece.
+                            </p>
+                            
+                            <div className="mt-2">
+                                <p className="text-gray-700">Fatores de {den1}: {factors1.join(' × ') || den1}</p>
+                                <p className="text-gray-700">Fatores de {den2}: {factors2.join(' × ') || den2}</p>
+                                <p className="text-gray-700 font-medium mt-1">
+                                    MMC = {mmcFactors.join(' × ')} = {resultado}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-4">
+                        <p className="text-gray-700 font-medium mb-2">
+                            Método 2: Utilizando a relação com o MDC
+                        </p>
+                        
+                        <div className="bg-gray-50 p-3 rounded-md">
+                            <p className="text-gray-700">A fórmula relaciona o MMC e o MDC:</p>
+                            <p className="text-gray-700 font-medium my-1">
+                                MMC(a, b) = (a × b) ÷ MDC(a, b)
+                            </p>
+                            
+                            <div className="mt-3">
+                                <p className="text-gray-700 font-medium">Cálculo do MDC({den1}, {den2}) pelo algoritmo de Euclides:</p>
+                                
+                                {mdcSteps.map((step, index) => (
+                                    <div key={index} className="mt-1 flex items-center text-gray-700">
+                                        <span>{step.a} = {step.b} × {Math.floor(step.a / step.b)} + {step.remainder}</span>
+                                    </div>
+                                ))}
+                                
+                                <p className="text-gray-700 mt-2">
+                                    MDC({den1}, {den2}) = {mdcValue}
+                                </p>
+                                
+                                <p className="text-gray-700 mt-3 font-medium">Aplicando a fórmula:</p>
+                                <p className="text-gray-700">
+                                    MMC({den1}, {den2}) = ({den1} × {den2}) ÷ {mdcValue}
+                                </p>
+                                <p className="text-gray-700">
+                                    MMC({den1}, {den2}) = {den1 * den2} ÷ {mdcValue} = {resultado}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="bg-blue-50 p-3 rounded-md mt-3">
+                        <p className="text-gray-700 font-medium">Por que precisamos do MMC para somar frações?</p>
+                        <p className="text-gray-700 mt-1">
+                            O MMC nos dá o menor denominador comum que podemos usar para converter as frações. 
+                            Ao converter frações com denominadores diferentes para terem o mesmo denominador, 
+                            podemos {operation === 'add' ? 'somar' : 'subtrair'} apenas os numeradores, mantendo o denominador comum. 
+                            Isso é uma propriedade fundamental da aritmética de frações.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -192,28 +454,57 @@ const ResolvedorAddSubFracao: React.FC = () => {
                 )}
             </div>
 
-            {result && (
+            {resultado && (
                 <div className="space-y-6">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                         <p className="text-xl">
-                        {numerator1}/{denominator1} {operation === 'add' ? '+' : '-'} {numerator2}/{denominator2} = <span className="font-bold">{formatarFracao(result.numerator, result.denominator)}</span>
+                            <FractionDisplay numerator={parseInt(numerator1)} denominator={parseInt(denominator1)} /> 
+                            {operation === 'add' ? ' + ' : ' - '} 
+                            <FractionDisplay numerator={parseInt(numerator2)} denominator={parseInt(denominator2)} /> 
+                            = <span className="font-bold">
+                                {resultadoNum !== null && resultadoDen !== null && (
+                                    <FractionDisplay 
+                                        numerator={resultadoNum} 
+                                        denominator={resultadoDen} 
+                                        className="text-xl"
+                                    />
+                                )}
+                                {resultadoNum !== null && resultadoDen !== null && resultadoNum % resultadoDen === 0 && (
+                                    <span className="ml-3">= {resultadoNum / resultadoDen}</span>
+                                )}
+                            </span>
                         </p>
                     </div>
 
                     {showExplanation && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                            <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
-                            <div className="space-y-3">
-                                {steps.map((step, index) => (
-                                    <p key={index} className="text-gray-700">
-                                        {step}
-                                    </p>
+                        <div className="bg-white shadow-md rounded-lg p-5">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                {steps.map((step, stepIndex) => (
+                                    <div key={stepIndex} className="p-3 bg-gray-50 rounded-md">
+                                        <p className="text-gray-800">{step}</p>
+                                        
+                                        {stepIndex === 1 && (
+                                            <button 
+                                                onClick={() => setShowMMCDetails(!showMMCDetails)}
+                                                className="flex items-center text-sm text-indigo-600 hover:text-indigo-800 transition-colors duration-200 mt-2"
+                                            >
+                                                <HiInformationCircle className="h-4 w-4 mr-1" />
+                                                {showMMCDetails ? 'Ocultar detalhes do cálculo do MMC' : 'Ver detalhes do cálculo do MMC'}
+                                            </button>
+                                        )}
+                                        
+                                        {stepIndex === 1 && showMMCDetails && MMCDetails()}
+                                    </div>
                                 ))}
                             </div>
                             
-                            <div className="mt-5 pt-4 border-t border-blue-200">
-                                <h4 className="font-medium text-blue-800 mb-2">Por que isso funciona:</h4>
+                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
                                 <p className="text-gray-700">
                                     Para {operation === 'add' ? 'adicionar' : 'subtrair'} frações com denominadores diferentes, precisamos:
                                 </p>

@@ -17,7 +17,7 @@ import ResolvedorPorcentagem from '../resolvedores/ResolvedorPorcentagem';
 import ResolvedorMediaAritmetica from '../resolvedores/ResolvedorMediaAritmetica';
 import ResolvedorProporcao from '../resolvedores/ResolvedorProporcao';
 import ResolvedorAddSubFracao from '../resolvedores/ResolvedorAddSubFracao';
-const FractionMultDivSolver = () => <div>Resolvedor de Multiplicação e Divisão de Frações</div>;
+import ResolvedorMultDivFracao from '../resolvedores/ResolvedorMultDivFracao';
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
 const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
 const LinearSystemSolver = () => <div>Resolvedor de Sistemas Lineares</div>;
@@ -67,7 +67,7 @@ const SolverPage: React.FC = () => {
       case 'proportion':
         return <ResolvedorProporcao />;
       case 'fraction-mult-div':
-        return <FractionMultDivSolver />;
+        return <ResolvedorMultDivFracao />;
       case 'linear-equation':
         return <LinearEquationSolver />;
       case 'quadratic-equation':

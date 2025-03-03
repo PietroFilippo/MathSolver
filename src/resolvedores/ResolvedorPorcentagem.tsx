@@ -94,26 +94,34 @@ const ResolvedorPorcentagem: React.FC = () => {
                     </div>
 
                     {showExplanation && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                            <h3 className="text-lg font-medium text-blue-800 mb-3">Explicação</h3>
-                            <div className="space-y-2">
-                                <p className="text-gray-700">Para achar a porcentagem de um número, usamos a fórmula:</p>
-                                <div className="bg-white p-3 rounded-md border border-gray-200">
-                                    <p className="font-medium">Porcentagem de um número = (Valor x Porcentagem) / 100</p>
-                                </div>
-                                <p className="text-gray-700">Substituindo os valores, temos:</p>
-                                <div className="bg-white p-3 rounded-md border border-gray-200">
-                                    <p>({value} x {percentage}) / 100 = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)} / 100 = {result}</p>
+                        <div className="bg-white shadow-md rounded-lg p-5">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">Para achar a porcentagem de um número, usamos a fórmula:</p>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p className="font-medium">Porcentagem de um número = (Valor x Porcentagem) / 100</p>
+                                    </div>
                                 </div>
                                 
-                                <div className="mt-5 pt-4 border-t border-blue-200">
-                                    <h4 className="font-medium text-blue-800 mb-2">Por que isso funciona:</h4>
-                                    <p className="text-gray-700">
-                                        Porcentagens representam partes por cem. Quando dizemos "{percentage}%", 
-                                        queremos dizer "{percentage} partes de 100". Para encontrar essa parte do nosso valor, 
-                                        multiplicamos pela porcentagem e dividimos por 100.
-                                    </p>
+                                <div className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">Substituindo os valores, temos:</p>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p>({value} x {percentage}) / 100 = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)} / 100 = {result}</p>
+                                    </div>
                                 </div>
+                            </div>
+                            
+                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
+                                <p className="text-gray-700">
+                                    Porcentagens representam partes por cem. Quando dizemos "{percentage}%", 
+                                    queremos dizer "{percentage} partes de 100". Para encontrar essa parte do nosso valor, 
+                                    multiplicamos pela porcentagem e dividimos por 100.
+                                </p>
                             </div>
                         </div>
                     )}

@@ -103,31 +103,40 @@ const ResolvedorMediaAritmetica: React.FC = () => {
                     </div>
 
                     {showExplanation && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                            <h3 className="text-lg font-medium text-blue-800 mb-3">Explicação</h3>
-                            <div className="space-y-2">
-                                <p className="text-gray-700">Para calcular a média aritmética, usamos a fórmula:</p>
-                                <div className="bg-white p-3 rounded-md border border-gray-200">
-                                    <p className="font-medium">Média Aritmética = Soma dos valores ÷ Quantidade de valores</p>
+                        <div className="bg-white shadow-md rounded-lg p-5">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">Para calcular a média aritmética, usamos a fórmula:</p>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p className="font-medium">Média Aritmética = Soma dos valores ÷ Quantidade de valores</p>
+                                    </div>
                                 </div>
                                 
-                                <p className="text-gray-700">Valores utilizados: {parsedNumbers.join(', ')}</p>
-                                
-                                <p className="text-gray-700">Substituindo os valores, temos:</p>
-                                <div className="bg-white p-3 rounded-md border border-gray-200">
-                                    <p>Soma dos valores = {parsedNumbers.join(' + ')} = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)}</p>
-                                    <p>Quantidade de valores = {parsedNumbers.length}</p>
-                                    <p>Média = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)} ÷ {parsedNumbers.length} = {result}</p>
+                                <div className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">Valores utilizados: {parsedNumbers.join(', ')}</p>
                                 </div>
                                 
-                                <div className="mt-5 pt-4 border-t border-blue-200">
-                                    <h4 className="font-medium text-blue-800 mb-2">Por que isso funciona:</h4>
-                                    <p className="text-gray-700">
-                                        A média aritmética representa o valor central de um conjunto de números. 
-                                        Ela é calculada somando todos os valores e dividindo pelo número total de elementos.
-                                        A média é uma medida de tendência central que nos dá uma ideia do valor "típico" do conjunto.
-                                    </p>
+                                <div className="p-3 bg-gray-50 rounded-md">
+                                    <p className="text-gray-800">Substituindo os valores, temos:</p>
+                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                                        <p>Soma dos valores = {parsedNumbers.join(' + ')} = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)}</p>
+                                        <p>Quantidade de valores = {parsedNumbers.length}</p>
+                                        <p>Média = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)} ÷ {parsedNumbers.length} = {result}</p>
+                                    </div>
                                 </div>
+                            </div>
+                            
+                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
+                                <p className="text-gray-700">
+                                    A média aritmética representa o valor central de um conjunto de números. 
+                                    Ela é calculada somando todos os valores e dividindo pelo número total de elementos.
+                                    A média é uma medida de tendência central que nos dá uma ideia do valor "típico" do conjunto.
+                                </p>
                             </div>
                         </div>
                     )}
