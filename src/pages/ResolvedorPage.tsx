@@ -21,7 +21,7 @@ import ResolvedorMultDivFracao from '../resolvedores/ResolvedorMultDivFracao';
 const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
 const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
 import ResolvedorSistemasLineares from '../resolvedores/ResolvedorSistemasLineares';
-const TrigonometricSolver = () => <div>Resolvedor de Funções Trigonométricas</div>;
+import ResolvedorTrigonometria from '../resolvedores/ResolvedorTrigonometria';
 import ResolvedorLogaritmo from '../resolvedores/ResolvedorLogaritmo';
 
 const SolverPage: React.FC = () => {
@@ -75,7 +75,7 @@ const SolverPage: React.FC = () => {
       case 'linear-system':
         return <ResolvedorSistemasLineares />;
       case 'trigonometric':
-        return <TrigonometricSolver />;
+        return <ResolvedorTrigonometria />;
       case 'logarithm':
         return <ResolvedorLogaritmo />;
       default:

@@ -4,6 +4,15 @@ export const arredondarParaDecimais = (num: number, decimais: number = 2): numbe
     return Math.round(num * factor) / factor;
 };
 
+// Converte graus para radianos
+export const grausParaRadianos = (graus: number): number => {
+    return graus * (Math.PI / 180);
+};
+
+// Converte radianos para graus 
+export const radianosParaGraus = (radianos: number): number => {
+    return radianos * (180 / Math.PI);
+};
 
 // Checa se dois números são aproximadamente iguais
 export const aproximadamenteIguais = (a: number, b: number, precisao: number = 1e-10): boolean => {
