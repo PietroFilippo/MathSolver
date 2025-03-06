@@ -16,7 +16,9 @@ export const solvers = {
       icon: 'PieChart',
       solvers: [
         { id: 'fraction-add-sub', name: 'Adição e Subtração de Frações' },
-        { id: 'fraction-mult-div', name: 'Multiplicação e Divisão de Frações' }
+        { id: 'fraction-mult-div', name: 'Multiplicação e Divisão de Frações' },
+        { id: 'fraction-simplification', name: 'Simplificação de Frações' },
+        { id: 'mixed-fractions', name: 'Frações Mistas' }
       ]
     },
     'algebra': {
@@ -25,34 +27,74 @@ export const solvers = {
       solvers: [
         { id: 'linear-equation', name: 'Equações de Primeiro Grau' },
         { id: 'quadratic-equation', name: 'Equações Quadráticas' },
-        { id: 'linear-system', name: 'Sistemas Lineares' }
+        { id: 'linear-system', name: 'Sistemas Lineares' },
+        { id: 'logarithm', name: 'Logaritmos' },
+        { id: 'algebraic-expressions', name: 'Expressões Algébricas' },
+        { id: 'inequations', name: 'Inequações' },
+        { id: 'matrices', name: 'Matrizes' }
       ]
     },
-    'advanced': {
-      name: 'Matemática Avançada',
+    'trigonometria': {
+      name: 'Trigonometria',
       icon: 'TrendingUp',
       solvers: [
         { id: 'trigonometric', name: 'Funções Trigonométricas' },
-        { id: 'logarithm', name: 'Logaritmos' }
+        { id: 'trigonometric-equations', name: 'Equações Trigonométricas' },
+        { id: 'trigonometric-graphs', name: 'Gráficos Trigonométricos' }
       ]
     },
     // Categorias futuras já preparadas
-    'geometry': {
+    'geometria': {
       name: 'Geometria',
       icon: 'Square',
-      solvers: [] // A ser preenchido futuramente
+      solvers: [
+        { id: 'plane-figures-area', name: 'Área de Figuras Planas' },
+        { id: 'perimeters', name: 'Perímetros' },
+        { id: 'solids-volume', name: 'Volume de Sólidos' }
+      ]
     },
-    'statistics': {
+    'estatistica': {
       name: 'Estatística',
       icon: 'BarChart',
-      solvers: [] // A ser preenchido futuramente
+      solvers: [
+        { id: 'means', name: 'Médias' },
+        { id: 'mode-median', name: 'Moda e Mediana' }
+      ]
+    },
+    'calculo': {
+      name: 'Cálculo',
+      icon: 'ChartLine',
+      solvers: [
+        { id: 'derivatives', name: 'Derivadas' },
+        { id: 'integrals', name: 'Integrais' },
+        { id: 'limits', name: 'Limites' }
+      ]
     }
   };
   
   // Mapeamento dos solvers para nível educacional (para filtros futuros)
   export const educationalLevels = {
-    'elementary': ['percentage', 'arithmetic-mean', 'proportion', 'fraction-add-sub', 'fraction-mult-div', 'mmc-mdc', 'fatorizacao'],
-    'high-school': ['linear-equation', 'quadratic-equation', 'linear-system', 'trigonometric', 'logarithm']
+    'elementary': [
+      // Aritmética
+      'percentage', 'arithmetic-mean', 'proportion', 'mmc-mdc', 'fatorizacao',
+      // Frações
+      'fraction-add-sub', 'fraction-mult-div', 'fraction-simplification', 'mixed-fractions',
+      // Estatística básica
+      'means', 'mode-median',
+      // Geometria básica
+      'plane-figures-area', 'perimeters'
+    ],
+    'high-school': [
+      // Álgebra
+      'linear-equation', 'quadratic-equation', 'linear-system', 'logarithm', 
+      'algebraic-expressions', 'inequations', 'matrices',
+      // Trigonometria
+      'trigonometric', 'trigonometric-equations', 'trigonometric-graphs',
+      // Cálculo
+      'derivatives', 'integrals', 'limits',
+      // Geometria avançada
+      'solids-volume'
+    ]
   };
   
   // Interface para uso com TypeScript

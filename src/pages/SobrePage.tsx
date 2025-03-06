@@ -17,7 +17,7 @@ const SobrePage: React.FC = () => {
             seu histórico ou nível atual de habilidade.
           </p>
           <p className="text-gray-700">
-            Nosso objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos 
+            O principal objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos 
             matemáticos. Ao oferecer explicações passo a passo ao lado das soluções, ajudamos os alunos e a qualquer um
             a construir confiança e desenvolver habilidades de resolução de problemas que os acompanharão durante sua jornada 
             acadêmica e além.
@@ -31,11 +31,11 @@ const SobrePage: React.FC = () => {
           </h2>
           <p className="text-gray-700 mb-4">
             No MathSolver, acreditamos que entender o "porquê" por trás dos processos matemáticos é tão importante 
-            quanto saber o "como". Nossa abordagem enfatiza a compreensão conceitual juntamente com a fluência 
+            quanto saber o "como". Essa abordagem enfatiza a compreensão conceitual juntamente com a fluência 
             procedimental.
           </p>
           <p className="text-gray-700 mb-4">
-            Nossas explicações são projetadas para ser claras, concisas e acessíveis a pessoas de diferentes níveis 
+            As explicações são projetadas para ser claras, concisas e acessíveis a pessoas de diferentes níveis 
             de proficiência matemática. Ao dividir problemas complexos em etapas manejáveis, os ajudamos a 
             desenvolver confiança e uma mentalidade de crescimento em relação à matemática.
           </p>

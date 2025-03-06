@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sistemaLinear, aproximadamenteIguais, arredondarParaDecimais } from '../utils/mathUtils';
+import { sistemaLinear, aproximadamenteIguais, arredondarParaDecimais } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorSistemasLineares: React.FC = () => {

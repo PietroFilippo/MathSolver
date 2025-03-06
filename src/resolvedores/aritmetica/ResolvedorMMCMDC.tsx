@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { mmc, mdc } from '../utils/mathUtils';
+import { mmc, mdc } from '../../utils/mathUtils';
 
 const ResolvedorMMCMDC: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');

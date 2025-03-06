@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { numPrimo, proximoPrimo, fatorarNumeroEmPrimos } from '../utils/mathUtils';
+import { numPrimo, proximoPrimo, fatorarNumeroEmPrimos } from '../../utils/mathUtils';
 
 const ResolvedorFatorizacao: React.FC = () => {
     const [number, setNumber] = useState<string>('');

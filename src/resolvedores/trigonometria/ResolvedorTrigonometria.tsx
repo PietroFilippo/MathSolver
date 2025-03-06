@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { radianosParaGraus, grausParaRadianos, arredondarParaDecimais } from '../utils/mathUtils';
+import { radianosParaGraus, grausParaRadianos, arredondarParaDecimais } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 type TrigFunction = 'sin' | 'cos' | 'tan' | 'asin' | 'acos' | 'atan';

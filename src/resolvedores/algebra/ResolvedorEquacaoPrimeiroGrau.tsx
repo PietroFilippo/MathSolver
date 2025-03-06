@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../utils/mathUtils';
+import { arredondarParaDecimais } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {

@@ -6,7 +6,8 @@ import {
   HiAcademicCap, 
   HiChartPie, 
   HiCode, 
-  HiChartBar
+  HiChartBar,
+  HiViewGrid
 } from 'react-icons/hi';
 
 interface HomePageProps {
@@ -77,6 +78,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Porcentagem</li>
               <li>Média Aritmética</li>
               <li>Proporções</li>
+              <li>MMC e MDC</li>
             </ul>
             <button 
               onClick={() => onSelectSolver('arithmetic')}
@@ -92,8 +94,10 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <h3 className="text-2xl font-bold">Frações</h3>
             </div>
             <ul className="list-disc list-inside space-y-1 mb-4">
-              <li>Adição e Subtração de Frações</li>
-              <li>Multiplicação e Divisão de Frações</li>
+              <li>Adição e Subtração</li>
+              <li>Multiplicação e Divisão</li>
+              <li>Simplificação</li>
+              <li>Frações Mistas</li>
             </ul>
             <button 
               onClick={() => onSelectSolver('fractions')}
@@ -112,6 +116,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Equações de Primeiro Grau</li>
               <li>Equações Quadráticas</li>
               <li>Sistemas Lineares</li>
+              <li>Expressões Algébricas</li>
             </ul>
             <button 
               onClick={() => onSelectSolver('algebra')}
@@ -122,21 +127,77 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
           </div>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-6 rounded-lg shadow-md text-white">
             <div className="flex items-center mb-4">
               <HiTrendingUp className="h-8 w-8 mr-3" />
-              <h3 className="text-2xl font-bold">Matemática Avançada</h3>
+              <h3 className="text-2xl font-bold">Trigonometria</h3>
             </div>
             <ul className="list-disc list-inside space-y-1 mb-4">
               <li>Funções Trigonométricas</li>
-              <li>Logaritmos</li>
+              <li>Equações Trigonométricas</li>
+              <li>Gráficos Trigonométricos</li>
             </ul>
             <button 
-              onClick={() => onSelectSolver('advanced')}
+              onClick={() => onSelectSolver('trigonometria')}
               className="bg-white text-yellow-600 hover:bg-yellow-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
-              Explorar Avançado
+              Explorar Trigonometria
+            </button>
+          </div>
+          
+          <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-6 rounded-lg shadow-md text-white">
+            <div className="flex items-center mb-4">
+              <HiChartBar className="h-8 w-8 mr-3" />
+              <h3 className="text-2xl font-bold">Estatística</h3>
+            </div>
+            <ul className="list-disc list-inside space-y-1 mb-4">
+              <li>Tipos de Médias</li>
+              <li>Moda e Mediana</li>
+            </ul>
+            <button 
+              onClick={() => onSelectSolver('estatistica')}
+              className="bg-white text-pink-600 hover:bg-pink-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+              Explorar Estatística
+            </button>
+          </div>
+          
+          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 p-6 rounded-lg shadow-md text-white">
+            <div className="flex items-center mb-4">
+              <HiTrendingUp className="h-8 w-8 mr-3" />
+              <h3 className="text-2xl font-bold">Cálculo</h3>
+            </div>
+            <ul className="list-disc list-inside space-y-1 mb-4">
+              <li>Derivadas</li>
+              <li>Integrais</li>
+              <li>Limites</li>
+            </ul>
+            <button 
+              onClick={() => onSelectSolver('calculo')}
+              className="bg-white text-indigo-600 hover:bg-indigo-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+              Explorar Cálculo
+            </button>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-6 rounded-lg shadow-md text-white">
+            <div className="flex items-center mb-4">
+              <HiViewGrid className="h-8 w-8 mr-3" />
+              <h3 className="text-2xl font-bold">Geometria</h3>
+            </div>
+            <ul className="list-disc list-inside space-y-1 mb-4">
+              <li>Área de Figuras Planas</li>
+              <li>Perímetros</li>
+              <li>Volume de Sólidos</li>
+            </ul>
+            <button 
+              onClick={() => onSelectSolver('geometria')}
+              className="bg-white text-teal-600 hover:bg-teal-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+              Explorar Geometria
             </button>
           </div>
           
@@ -160,20 +221,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               className="bg-white text-red-600 hover:bg-red-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Ver Níveis Escolares
-            </button>
-          </div>
-          
-          <div className="bg-gradient-to-r from-gray-600 to-gray-700 p-6 rounded-lg shadow-md text-white">
-            <div className="flex items-center mb-4">
-              <HiChartBar className="h-8 w-8 mr-3" />
-              <h3 className="text-2xl font-bold">Em Breve</h3>
-            </div>
-            <p className="mb-4">Estaremos adicionando novas categorias em um futuro próximo!</p>
-            <button 
-              className="bg-white text-gray-600 hover:bg-gray-200 font-medium py-2 px-4 rounded-lg transition-colors duration-300 cursor-not-allowed opacity-75"
-              disabled
-            >
-              Em Desenvolvimento
             </button>
           </div>
         </div>
