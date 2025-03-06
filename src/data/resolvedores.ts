@@ -6,7 +6,9 @@ export const solvers = {
       solvers: [
         { id: 'percentage', name: 'Porcentagem' },
         { id: 'arithmetic-mean', name: 'Média Aritmética' },
-        { id: 'proportion', name: 'Proporções' }
+        { id: 'proportion', name: 'Proporções' },
+        { id: 'mmc-mdc', name: 'MMC e MDC' },
+        { id: 'fatorizacao', name: 'Fatoração em Primos' }
       ]
     },
     'fractions': {
@@ -49,7 +51,7 @@ export const solvers = {
   
   // Mapeamento dos solvers para nível educacional (para filtros futuros)
   export const educationalLevels = {
-    'elementary': ['percentage', 'arithmetic-mean', 'proportion', 'fraction-add-sub', 'fraction-mult-div'],
+    'elementary': ['percentage', 'arithmetic-mean', 'proportion', 'fraction-add-sub', 'fraction-mult-div', 'mmc-mdc', 'fatorizacao'],
     'high-school': ['linear-equation', 'quadratic-equation', 'linear-system', 'trigonometric', 'logarithm']
   };
   

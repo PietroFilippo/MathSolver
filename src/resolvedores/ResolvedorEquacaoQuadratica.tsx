@@ -40,19 +40,24 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
         const discriminant = numB * numB - 4 * numA * numC;
 
         const calculationSteps = [];
-        calculationSteps.push(`Passo 1: Escrever a equação quadrática na forma padrão`);
+        let stepCount = 1;
+        
+        calculationSteps.push(`Passo ${stepCount}: Escrever a equação quadrática na forma padrão`);
         calculationSteps.push(`A equação quadrática padrão tem o formato ax² + bx + c = 0, onde a, b e c são constantes.`);
         calculationSteps.push(`Com os valores fornecidos: ${numA}x² + ${numB}x + ${numC} = 0`);
+        stepCount++;
         
-        calculationSteps.push(`Passo 2: Calcular o discriminante (b² - 4ac)`);
+        calculationSteps.push(`Passo ${stepCount}: Calcular o discriminante (b² - 4ac)`);
         calculationSteps.push(`O discriminante determina quantas soluções reais a equação possui.`);
         calculationSteps.push(`Discriminante = b² - 4ac`);
         calculationSteps.push(`Discriminante = ${numB}² - 4 × ${numA} × ${numC}`);
         calculationSteps.push(`Discriminante = ${numB * numB} - ${4 * numA * numC}`);
         calculationSteps.push(`Discriminante = ${discriminant}`);
+        stepCount++;
         
-        calculationSteps.push(`Passo 3: Usar a fórmula de Bhaskara para encontrar as raízes`);
+        calculationSteps.push(`Passo ${stepCount}: Usar a fórmula de Bhaskara para encontrar as raízes`);
         calculationSteps.push(`A fórmula de Bhaskara (ou fórmula quadrática) é: x = (-b ± √(discriminante)) / (2a)`);
+        stepCount++;
 
         if (discriminant > 0) {
             // Duas raízes reais e distintas
@@ -60,7 +65,7 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             const x1 = (-numB + sqrtDiscriminant) / (2 * numA);
             const x2 = (-numB - sqrtDiscriminant) / (2 * numA);
 
-            calculationSteps.push(`Passo 4: Como o discriminante (${discriminant}) é positivo, temos duas raízes reais e distintas`);
+            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é positivo, temos duas raízes reais e distintas`);
             
             calculationSteps.push(`Calculando x₁ (usando o sinal + na fórmula):`);
             calculationSteps.push(`x₁ = (-${numB} + √${discriminant}) / (2 × ${numA})`);
@@ -80,7 +85,7 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             // Uma raiz real repetida
             const x = -numB / (2 * numA);
             
-            calculationSteps.push(`Passo 4: Como o discriminante (${discriminant}) é igual a zero, temos uma raiz real repetida`);
+            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é igual a zero, temos uma raiz real repetida`);
             calculationSteps.push(`Quando o discriminante é zero, a fórmula se simplifica para: x = -b / (2a)`);
             calculationSteps.push(`x = -${numB} / (2 × ${numA})`);
             calculationSteps.push(`x = ${-numB} / ${2 * numA}`);
@@ -89,22 +94,71 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             setSolution({ x1: x, x2: x });
             setSolutionType('repeated');
         } else {
-            // Soluções complexas
+            // Duas raízes complexas
             const realPart = -numB / (2 * numA);
-            const imaginaryPart = Math.sqrt(Math.abs(discriminant)) / (2 * numA);
-
-            calculationSteps.push(`Passo 4: Como o discriminante (${discriminant}) é negativo, temos duas raízes complexas conjugadas`);
-            calculationSteps.push(`Para números complexos, usamos a forma: a + bi, onde i é a unidade imaginária (√-1).`);
-            calculationSteps.push(`Parte real = -b / (2a) = ${-numB} / (2 × ${numA}) = ${arredondarParaDecimais(realPart, 4)}`);
-            calculationSteps.push(`Parte imaginária = √|discriminante| / (2a) = √${Math.abs(discriminant)} / (2 × ${numA}) = ${arredondarParaDecimais(imaginaryPart, 4)}`);
+            const imaginaryPart = Math.sqrt(-discriminant) / (2 * numA);
+            
+            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é negativo, temos duas raízes complexas conjugadas`);
+            calculationSteps.push(`Para raízes complexas, a parte real é -b / (2a) e a parte imaginária é √(-discriminante) / (2a)`);
+            
+            calculationSteps.push(`Calculando a parte real:`);
+            calculationSteps.push(`Parte real = -${numB} / (2 × ${numA})`);
+            calculationSteps.push(`Parte real = ${-numB} / ${2 * numA}`);
+            calculationSteps.push(`Parte real = ${arredondarParaDecimais(realPart, 4)}`);
+            
+            calculationSteps.push(`Calculando a parte imaginária:`);
+            calculationSteps.push(`Parte imaginária = √(${-discriminant}) / (2 × ${numA})`);
+            calculationSteps.push(`Parte imaginária = ${arredondarParaDecimais(Math.sqrt(-discriminant), 4)} / ${2 * numA}`);
+            calculationSteps.push(`Parte imaginária = ${arredondarParaDecimais(imaginaryPart, 4)}`);
+            
             calculationSteps.push(`x₁ = ${arredondarParaDecimais(realPart, 4)} + ${arredondarParaDecimais(imaginaryPart, 4)}i`);
             calculationSteps.push(`x₂ = ${arredondarParaDecimais(realPart, 4)} - ${arredondarParaDecimais(imaginaryPart, 4)}i`);
-
-            setSolution({ 
-                x1: null, 
-                x2: null 
-            });
+            
+            setSolution({ x1: null, x2: null });
             setSolutionType('complex');
+        }
+        
+        // Adicionar passo de verificação para soluções reais
+        if (discriminant >= 0) {
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: Verificação das soluções`);
+            
+            // Aguardar até que a solução seja definida para verificar
+            if (solution !== null) {
+                const x1 = solution.x1;
+                const x2 = solution.x2;
+                
+                if (x1 !== null) {
+                    calculationSteps.push(`Substituindo x = ${arredondarParaDecimais(x1, 4)} na equação original:`);
+                    const check1 = numA * (x1 * x1) + numB * x1 + numC;
+                    calculationSteps.push(`${numA} × (${arredondarParaDecimais(x1, 4)})² + ${numB} × (${arredondarParaDecimais(x1, 4)}) + ${numC}`);
+                    calculationSteps.push(`${numA} × ${arredondarParaDecimais(x1 * x1, 4)} + ${numB} × ${arredondarParaDecimais(x1, 4)} + ${numC}`);
+                    calculationSteps.push(`${arredondarParaDecimais(numA * (x1 * x1), 4)} + ${arredondarParaDecimais(numB * x1, 4)} + ${numC}`);
+                    calculationSteps.push(`= ${arredondarParaDecimais(check1, 4)}`);
+                    
+                    if (Math.abs(check1) < 0.001) {
+                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${arredondarParaDecimais(x1, 4)} está correta.`);
+                    } else {
+                        calculationSteps.push(`Nota: A diferença de ${arredondarParaDecimais(check1, 4)} se deve a arredondamentos.`);
+                    }
+                }
+                
+                if (x2 !== null && x1 !== x2) {
+                    calculationSteps.push(`Substituindo x = ${arredondarParaDecimais(x2, 4)} na equação original:`);
+                    const check2 = numA * (x2 * x2) + numB * x2 + numC;
+                    calculationSteps.push(`${numA} × (${arredondarParaDecimais(x2, 4)})² + ${numB} × (${arredondarParaDecimais(x2, 4)}) + ${numC}`);
+                    calculationSteps.push(`${numA} × ${arredondarParaDecimais(x2 * x2, 4)} + ${numB} × ${arredondarParaDecimais(x2, 4)} + ${numC}`);
+                    calculationSteps.push(`${arredondarParaDecimais(numA * (x2 * x2), 4)} + ${arredondarParaDecimais(numB * x2, 4)} + ${numC}`);
+                    calculationSteps.push(`= ${arredondarParaDecimais(check2, 4)}`);
+                    
+                    if (Math.abs(check2) < 0.001) {
+                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${arredondarParaDecimais(x2, 4)} está correta.`);
+                    } else {
+                        calculationSteps.push(`Nota: A diferença de ${arredondarParaDecimais(check2, 4)} se deve a arredondamentos.`);
+                    }
+                }
+            }
         }
             
         setSteps(calculationSteps);
@@ -257,7 +311,7 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                             </div>
                             
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="text-lg font-semibold text-gray-800 mb-2">Conceito Matemático</h4>
+                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
                                 <div className="space-y-2 text-gray-700">
                                     <p>
                                         <span className="font-semibold">Equação Quadrática:</span> Uma equação de segundo grau na forma 

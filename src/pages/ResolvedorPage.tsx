@@ -22,6 +22,8 @@ import ResolvedorEquacaoQuadratica from '../resolvedores/ResolvedorEquacaoQuadra
 import ResolvedorSistemasLineares from '../resolvedores/ResolvedorSistemasLineares';
 import ResolvedorTrigonometria from '../resolvedores/ResolvedorTrigonometria';
 import ResolvedorLogaritmo from '../resolvedores/ResolvedorLogaritmo';
+import ResolvedorMMCMDC from '../resolvedores/ResolvedorMMCMDC';
+import ResolvedorFatorizacao from '../resolvedores/ResolvedorFatorizacao';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -40,10 +42,10 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
   const [filterMode, setFilterMode] = useState<'subject' | 'level'>('subject');
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
 
-  // Open the category specified by initialCategory on first render
+  // Abrir a categoria especificada por initialCategory na primeira renderização
   useEffect(() => {
     if (initialCategory) {
-      // If initial category exists in our list, expand it
+      // Se a categoria inicial existir na nossa lista, expanda-a
       if (Object.keys(expandedCategories).includes(initialCategory)) {
         setExpandedCategories(prev => ({
           ...prev,
@@ -51,7 +53,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         }));
       }
 
-      // If we're in level mode but there's a category specified, switch to subject mode
+      // Se estiver no modo de nível e houver uma categoria especificada, troque para o modo de assunto
       if (filterMode === 'level') {
         setFilterMode('subject');
       }
@@ -78,34 +80,35 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
   };
 
   const renderSolver = () => {
+    if (!selectedSolver) return null;
+
     switch (selectedSolver) {
       case 'percentage':
         return <ResolvedorPorcentagem />;
-      case 'fraction-add-sub':
-        return <ResolvedorAddSubFracao />;
       case 'arithmetic-mean':
         return <ResolvedorMediaAritmetica />;
       case 'proportion':
         return <ResolvedorProporcao />;
+      case 'fraction-add-sub':
+        return <ResolvedorAddSubFracao />;
       case 'fraction-mult-div':
         return <ResolvedorMultDivFracao />;
       case 'linear-equation':
         return <ResolvedorEquacaoPrimeiroGrau />;
-      case 'quadratic-equation':
-        return <ResolvedorEquacaoQuadratica />;
       case 'linear-system':
         return <ResolvedorSistemasLineares />;
+      case 'quadratic-equation':
+        return <ResolvedorEquacaoQuadratica />;
       case 'trigonometric':
         return <ResolvedorTrigonometria />;
       case 'logarithm':
         return <ResolvedorLogaritmo />;
+      case 'mmc-mdc':
+        return <ResolvedorMMCMDC />;
+      case 'fatorizacao':
+        return <ResolvedorFatorizacao />;
       default:
-        return (
-          <div className="text-center p-8">
-            <h3 className="text-xl font-medium text-gray-700">Selecione um resolvedor na barra lateral para começar</h3>
-            <p className="mt-4 text-gray-500">Escolha um problema matemático para obter uma solução detalhada e passo a passo.</p>
-          </div>
-        );
+        return <div>Selecione um resolvedor</div>;
     }
   };
 

@@ -38,17 +38,24 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
 
         // Gera os passos
         const calculationSteps = [];
-        calculationSteps.push(`Passo 1: Começamos com a equação ${numA}x + ${numB} = ${numC}`);
-        calculationSteps.push(`Passo 2: Subtraímos ${numB} de ambos os lados para isolar o termo com x:`);
+        let stepCount = 1;
+        
+        calculationSteps.push(`Passo ${stepCount}: Começamos com a equação ${numA}x + ${numB} = ${numC}`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Subtraímos ${numB} de ambos os lados para isolar o termo com x:`);
         calculationSteps.push(`${numA}x + ${numB} - ${numB} = ${numC} - ${numB}`);
         calculationSteps.push(`${numA}x = ${numC - numB}`);
-        calculationSteps.push(`Passo 3: Dividimos ambos os lados pelo coeficiente de x (${numA})`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Dividimos ambos os lados pelo coeficiente de x (${numA})`);
         calculationSteps.push(`${numA}x / ${numA} = (${numC - numB}) / ${numA}`);
         calculationSteps.push(`x = ${roundedResult}`);
+        stepCount++;
 
         // Passo de verificação
         const verification = numA * roundedResult + numB;
-        calculationSteps.push(`Passo 4: Verifica a solução substituindo x = ${roundedResult} na equação original:`);
+        calculationSteps.push(`Passo ${stepCount}: Verifica a solução substituindo x = ${roundedResult} na equação original:`);
         calculationSteps.push(`${numA} * ${roundedResult} + ${numB} = ${arredondarParaDecimais(verification, 4)}`);
 
         if (Math.abs(verification - numC) < 0.0001) {

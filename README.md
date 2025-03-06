@@ -13,7 +13,7 @@ O MathSolver é uma plataforma web desenvolvida para tornar a matemática acess�
 
 ### 🎯 Objetivo Principal
 
-Nosso objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos matemáticos. Ao oferecer explicações detalhadas ao lado das soluções, ajudamos os usuários a construir confiança e desenvolver habilidades de resolução de problemas.
+O principal objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos matemáticos. Ao oferecer explicações detalhadas ao lado das soluções, ajudamos os usuários a construir confiança e desenvolver habilidades de resolução de problemas.
 
 ## 🧮 Funcionalidades
 

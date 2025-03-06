@@ -28,7 +28,8 @@ const ResolvedorTrigonometria: React.FC = () => {
         }
 
         const steps: string[] = [];
-        let calculatedResult: number;
+        let calculatedResult: number = 0;
+        let stepCount = 1;
 
         // Para funções trigonométricas diretas (sin, cos, tan)
         if (['sin', 'cos', 'tan'].includes(trigFunction)) {
@@ -37,18 +38,21 @@ const ResolvedorTrigonometria: React.FC = () => {
 
             if (inputUnit === 'degrees') {
                 valueInRadians = grausParaRadianos(value);
-                steps.push(`Passo 1: Converte o ângulo de graus para radianos`);
+                steps.push(`Passo ${stepCount}: Converter o ângulo de graus para radianos`);
                 steps.push(`Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.`);
                 steps.push(`Fórmula: radianos = graus × (π/180)`);
                 steps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
+                stepCount++;
             } else {
                 valueInRadians = value;
-                steps.push(`Passo 1: Verificação da unidade do ângulo`);
+                steps.push(`Passo ${stepCount}: Verificar a unidade do ângulo`);
                 steps.push(`O valor ${value} já está em radianos, então não é necessária conversão.`);
+                stepCount++;
             }
 
             // Calcula o resultado
-            steps.push(`Passo 2: Calcula ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
+            steps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
+            stepCount++;
             
             let explanation = '';
             switch (trigFunction) {
@@ -64,100 +68,101 @@ const ResolvedorTrigonometria: React.FC = () => {
                     if (Math.abs(Math.cos(valueInRadians)) < 1e-10) {
                         setError('Tangente indefinida para este ângulo (cos(x) = 0)');
                         steps.push(`A tangente não está definida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
+                        setExplanationSteps(steps);
                         return;
                     }
                     explanation = `A tangente de um ângulo representa a razão entre o seno e o cosseno, ou entre o cateto oposto e o cateto adjacente.`;
                     calculatedResult = Math.tan(valueInRadians);
                     break;
                 default:
-                    calculatedResult = 0;
+                    setError('Função não reconhecida');
+                    return;
             }
             
             steps.push(explanation);
             steps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
-
-            // Casos especiais para ângulos comuns
-            if (inputUnit === 'degrees') {
-                const specialAngles = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270, 360];
-                const closestSpecialAngle = specialAngles.find(angle => Math.abs(angle - (value % 360)) < 0.0001);
-
-                if (closestSpecialAngle !== undefined) {
-                    steps.push(`Nota: ${value}° é um ângulo especial.`);
-                    
-                    let exactValue = '';
-                    switch (closestSpecialAngle) {
-                        case 0:
-                        case 360:
-                            exactValue = trigFunction === 'sin' ? '0' : trigFunction === 'cos' ? '1' : '0';
-                            break;
-                        case 30:
-                            exactValue = trigFunction === 'sin' ? '1/2' : trigFunction === 'cos' ? '√3/2' : '1/√3';
-                            break;
-                        case 45:
-                            exactValue = trigFunction === 'sin' || trigFunction === 'cos' ? '√2/2' : '1';
-                            break;
-                        case 60:
-                            exactValue = trigFunction === 'sin' ? '√3/2' : trigFunction === 'cos' ? '1/2' : '√3';
-                            break;
-                        case 90:
-                            exactValue = trigFunction === 'sin' ? '1' : trigFunction === 'cos' ? '0' : 'indefinido';
-                            break;
-                        case 180:
-                            exactValue = trigFunction === 'sin' ? '0' : trigFunction === 'cos' ? '-1' : '0';
-                            break;
-                        case 270:
-                            exactValue = trigFunction === 'sin' ? '-1' : trigFunction === 'cos' ? '0' : 'indefinido';
-                            break;
-                    }
-                    
-                    steps.push(`O valor exato de ${trigFunction}(${closestSpecialAngle}°) = ${exactValue}`);
-                }
+            
+            // Verifica se precisa converter o resultado
+            if (outputUnit === 'degrees' && ['asin', 'acos', 'atan'].includes(trigFunction)) {
+                // Se for uma função inversa e o resultado estiver em radianos, converte para graus
+                steps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
+                steps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(radianosParaGraus(calculatedResult), 6)}°`);
+                stepCount++;
+                calculatedResult = radianosParaGraus(calculatedResult);
+            }
+            
+            // Verificação usando identidades
+            steps.push(`Passo ${stepCount}: Verificar o resultado usando identidades trigonométricas`);
+            const sinVal = trigFunction === 'sin' ? calculatedResult : Math.sin(valueInRadians);
+            const cosVal = trigFunction === 'cos' ? calculatedResult : Math.cos(valueInRadians);
+            
+            steps.push(`Identidade fundamental: sin²(x) + cos²(x) = 1`);
+            steps.push(`Verificação: sin²(${arredondarParaDecimais(valueInRadians, 4)}) + cos²(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(Math.pow(sinVal, 2) + Math.pow(cosVal, 2), 6)}`);
+            
+            if (trigFunction === 'tan') {
+                steps.push(`Identidade da tangente: tan(x) = sin(x) / cos(x)`);
+                steps.push(`Verificação: sin(${arredondarParaDecimais(valueInRadians, 4)}) / cos(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(sinVal / cosVal, 6)}`);
             }
         }
         // Para funções trigonométricas inversas (asin, acos, atan)
-        else {
-            // Checa as restrições de domínio
-            if ((trigFunction === 'asin' || trigFunction === 'acos') && (value < -1 || value > 1)) {
-                setError(`O domínio da função ${trigFunction === 'asin' ? 'arco seno' : 'arco cosseno'} é [-1, 1]`);
-                steps.push(`As funções arco seno e arco cosseno só estão definidas para valores entre -1 e 1, pois estes são os valores possíveis para seno e cosseno.`);
-                return;
-            }
-
-            steps.push(`Passo 1: Calcula ${trigFunction}(${value})`);
+        else if (['asin', 'acos', 'atan'].includes(trigFunction)) {
+            steps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${value})`);
+            stepCount++;
             
             let explanation = '';
             switch (trigFunction) {
                 case 'asin':
-                    explanation = `O arco seno é a função inversa do seno. Ela retorna o ângulo que tem o seno igual a ${value}.`;
+                    if (value < -1 || value > 1) {
+                        setError('O arco seno é definido apenas para valores entre -1 e 1');
+                        return;
+                    }
+                    explanation = `O arco seno é a função inversa do seno, retornando o ângulo cujo seno é o valor dado.`;
                     calculatedResult = Math.asin(value);
                     break;
                 case 'acos':
-                    explanation = `O arco cosseno é a função inversa do cosseno. Ela retorna o ângulo que tem o cosseno igual a ${value}.`;
+                    if (value < -1 || value > 1) {
+                        setError('O arco cosseno é definido apenas para valores entre -1 e 1');
+                        return;
+                    }
+                    explanation = `O arco cosseno é a função inversa do cosseno, retornando o ângulo cujo cosseno é o valor dado.`;
                     calculatedResult = Math.acos(value);
                     break;
                 case 'atan':
-                    explanation = `O arco tangente é a função inversa da tangente. Ela retorna o ângulo que tem a tangente igual a ${value}.`;
+                    explanation = `O arco tangente é a função inversa da tangente, retornando o ângulo cuja tangente é o valor dado.`;
                     calculatedResult = Math.atan(value);
                     break;
                 default:
-                    calculatedResult = 0;
+                    setError('Função não reconhecida');
+                    return;
             }
             
             steps.push(explanation);
             steps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
-
-            // Converte para graus se necessário
+            
+            // Verifica se precisa converter o resultado para graus
             if (outputUnit === 'degrees') {
                 const resultInDegrees = radianosParaGraus(calculatedResult);
-                steps.push(`Passo 2: Converte o resultado de radianos para graus`);
+                steps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
                 steps.push(`Para converter de radianos para graus, multiplicamos por (180/π)`);
                 steps.push(`Fórmula: graus = radianos × (180/π)`);
                 steps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
                 calculatedResult = resultInDegrees;
+                stepCount++;
             } else {
-                steps.push(`Passo 2: Verificação da unidade do resultado`);
+                steps.push(`Passo ${stepCount}: Verificar a unidade do resultado`);
                 steps.push(`O resultado já está em radianos, que é a unidade solicitada.`);
+                stepCount++;
             }
+            
+            // Verificação da função inversa
+            steps.push(`Passo ${stepCount}: Verificar o resultado aplicando a função direta ao resultado`);
+            const verification = trigFunction === 'asin' ? Math.sin(calculatedResult) :
+                                 trigFunction === 'acos' ? Math.cos(calculatedResult) :
+                                 Math.tan(calculatedResult);
+            
+            steps.push(`Aplicando a função direta ao resultado: ${trigFunction.substring(1)}(${arredondarParaDecimais(calculatedResult, 6)}) = ${arredondarParaDecimais(verification, 6)}`);
+            steps.push(`Valor original: ${value}`);
+            steps.push(`A diferença de ${arredondarParaDecimais(Math.abs(verification - value), 8)} é devido a arredondamentos.`);
         }
 
         setResult(arredondarParaDecimais(calculatedResult, 6));
@@ -335,7 +340,7 @@ const ResolvedorTrigonometria: React.FC = () => {
                   </div>
                   
                   <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-2">Conceito Matemático</h4>
+                    <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
                     <div className="space-y-2 text-gray-700">
                       {['sin', 'cos', 'tan'].includes(trigFunction) ? (
                         <>

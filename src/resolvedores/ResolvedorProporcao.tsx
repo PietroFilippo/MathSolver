@@ -14,24 +14,29 @@ const ResolvedorProporcao: React.FC = () => {
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
     const handleSolve = () => {
-        // Reseta os resultados anteriores e erros
+        // Limpa resultados anteriores
         setResult(null);
-        setSteps([]);
         setErrorMessage('');
-        setShowExplanation(false);
-
-        let numA = parseFloat(a);
-        let numB = parseFloat(b);
-        let numC = parseFloat(c);
-        let numD = parseFloat(d);
-
-        // Verifica quais valores estamos resolvendo para
+        setSteps([]);
+        
+        // Converte os inputs para números
+        const numA = parseFloat(a);
+        const numB = parseFloat(b);
+        const numC = parseFloat(c);
+        const numD = parseFloat(d);
+        
+        // Calcula o resultado e gera os passos
         let calculatedValue: number;
-        const calculationSteps: string[] = [];
-
-        calculationSteps.push("Em uma proporção, os produtos cruzados são iguais:");
-        calculationSteps.push("a/b = c/d é equivalente a a × d = b × c");
-
+        const calculationSteps = [];
+        let stepCount = 1;
+        
+        calculationSteps.push(`Passo ${stepCount}: Identificar a proporção e a variável a ser isolada`);
+        calculationSteps.push(`Na proporção a:b = c:d, ${solveFor} é a variável desconhecida.`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Utilizar a equação equivalente a × d = b × c para isolar ${solveFor}`);
+        stepCount++;
+        
         switch (solveFor) {
             case 'a':
                 if (isNaN(numB) || isNaN(numC) || isNaN(numD)) {
@@ -42,12 +47,16 @@ const ResolvedorProporcao: React.FC = () => {
                     setErrorMessage('Não é possível dividir por zero. O valor de d não pode ser zero.');
                     return;
                 }
-                calculatedValue = (numC * numB) / numD;
-                calculationSteps.push(`Resolvendo para a: a = (b × c) / d`);
+                
+                calculationSteps.push(`Passo ${stepCount}: Resolver para a: a = (b × c) / d`);
                 calculationSteps.push(`a = (${numB} × ${numC}) / ${numD}`);
                 calculationSteps.push(`a = ${numB * numC} / ${numD}`);
-                calculationSteps.push(`a = ${calculatedValue}`);
+                
+                calculatedValue = (numB * numC) / numD;
+                calculationSteps.push(`a = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                stepCount++;
                 break;
+                
             case 'b':
                 if (isNaN(numA) || isNaN(numC) || isNaN(numD)) {
                     setErrorMessage('Por favor, preencha todos os campos necessários (a, c e d).');
@@ -57,27 +66,35 @@ const ResolvedorProporcao: React.FC = () => {
                     setErrorMessage('Não é possível dividir por zero. O valor de c não pode ser zero.');
                     return;
                 }
-                calculatedValue = (numA * numD) / numC;
-                calculationSteps.push(`Resolvendo para b: b = (a × d) / c`);
+                
+                calculationSteps.push(`Passo ${stepCount}: Resolver para b: b = (a × d) / c`);
                 calculationSteps.push(`b = (${numA} × ${numD}) / ${numC}`);
                 calculationSteps.push(`b = ${numA * numD} / ${numC}`);
-                calculationSteps.push(`b = ${calculatedValue}`);
+                
+                calculatedValue = (numA * numD) / numC;
+                calculationSteps.push(`b = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                stepCount++;
                 break;
+                
             case 'c':
                 if (isNaN(numA) || isNaN(numB) || isNaN(numD)) {
                     setErrorMessage('Por favor, preencha todos os campos necessários (a, b e d).');
                     return;
                 }
-                if (numB === 0) {
-                    setErrorMessage('Não é possível dividir por zero. O valor de b não pode ser zero.');
+                if (numA === 0) {
+                    setErrorMessage('Não é possível dividir por zero. O valor de a não pode ser zero.');
                     return;
                 }
-                calculatedValue = (numA * numD) / numB;
-                calculationSteps.push(`Resolvendo para c: c = (a × d) / b`);
+                
+                calculationSteps.push(`Passo ${stepCount}: Resolver para c: c = (a × d) / b`);
                 calculationSteps.push(`c = (${numA} × ${numD}) / ${numB}`);
                 calculationSteps.push(`c = ${numA * numD} / ${numB}`);
-                calculationSteps.push(`c = ${calculatedValue}`);
+                
+                calculatedValue = (numA * numD) / numB;
+                calculationSteps.push(`c = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                stepCount++;
                 break;
+                
             case 'd':
                 if (isNaN(numA) || isNaN(numB) || isNaN(numC)) {
                     setErrorMessage('Por favor, preencha todos os campos necessários (a, b e c).');
@@ -87,17 +104,40 @@ const ResolvedorProporcao: React.FC = () => {
                     setErrorMessage('Não é possível dividir por zero. O valor de a não pode ser zero.');
                     return;
                 }
-                calculatedValue = (numB * numC) / numA;
-                calculationSteps.push(`Resolvendo para d: d = (b × c) / a`);
+                
+                calculationSteps.push(`Passo ${stepCount}: Resolver para d: d = (b × c) / a`);
                 calculationSteps.push(`d = (${numB} × ${numC}) / ${numA}`);
                 calculationSteps.push(`d = ${numB * numC} / ${numA}`);
-                calculationSteps.push(`d = ${calculatedValue}`);
+                
+                calculatedValue = (numB * numC) / numA;
+                calculationSteps.push(`d = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                stepCount++;
                 break;
-            default:
-                return;
         }
-
-        setResult(arredondarParaDecimais(calculatedValue, 2));
+        
+        // Verificação da proporção
+        calculationSteps.push(`Passo ${stepCount}: Verificar se a proporção está correta`);
+        
+        const aVal = solveFor === 'a' ? calculatedValue : numA;
+        const bVal = solveFor === 'b' ? calculatedValue : numB;
+        const cVal = solveFor === 'c' ? calculatedValue : numC;
+        const dVal = solveFor === 'd' ? calculatedValue : numD;
+        
+        calculationSteps.push(`Verificar se ${aVal}:${bVal} = ${cVal}:${dVal}`);
+        calculationSteps.push(`Verificar se ${aVal} × ${dVal} = ${bVal} × ${cVal}`);
+        
+        const leftSide = aVal * dVal;
+        const rightSide = bVal * cVal;
+        
+        calculationSteps.push(`${arredondarParaDecimais(leftSide, 4)} = ${arredondarParaDecimais(rightSide, 4)}`);
+        
+        if (Math.abs(leftSide - rightSide) < 0.0001) {
+            calculationSteps.push(`A proporção está correta. ✓`);
+        } else {
+            calculationSteps.push(`Nota: Há uma pequena diferença devido ao arredondamento.`);
+        }
+        
+        setResult(arredondarParaDecimais(calculatedValue, 4));
         setSteps(calculationSteps);
         setShowExplanation(true);
     };

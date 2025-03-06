@@ -43,57 +43,66 @@ const ResolvedorAddSubFracao: React.FC = () => {
             return;
         }
 
-        const commonDenominator = mmc(den1, den2);
-        const factor1 = commonDenominator / den1;
-        const factor2 = commonDenominator / den2;
-
-        setMmcSteps({ den1, den2, mmc: commonDenominator });
-
-        const newNumerator1 = num1 * factor1;
-        const newNumerator2 = num2 * factor2;
-
-        let resultNumerator: number;
-        if (operation === 'add') {
-            resultNumerator = newNumerator1 + newNumerator2;
-        } else {
-            resultNumerator = newNumerator1 - newNumerator2;
-        }
-
-        // Simplificação da fração
-        const mdcValue = mdc(resultNumerator, commonDenominator);
-        const simplified = simplificarFracao(resultNumerator, commonDenominator);
-        const simplifiedNum = simplified.numerador;
-        const simplifiedDen = simplified.denominador;
+        const { calculationSteps, resultNumerator, resultDenominator } = calcularAddicaoSubtracao(num1, den1, num2, den2, operation);
         
-        setResultadoNum(simplifiedNum);
-        setResultadoDen(simplifiedDen);
+        setResultadoNum(resultNumerator);
+        setResultadoDen(resultDenominator);
         setResultado(true);
         setShowExplanation(true);
 
-        // Gera os passos
-        const calculationSteps = [];
-        calculationSteps.push(`Passo 1: Encontrar o mínimo múltiplo comum (MMC) dos denominadores.`);
+        setSteps(calculationSteps);
+    };
+
+    const calcularAddicaoSubtracao = (
+        num1: number, 
+        den1: number, 
+        num2: number, 
+        den2: number, 
+        operacao: Operation
+    ): { calculationSteps: (string | ReactNode)[], resultNumerator: number, resultDenominator: number } => {
+        const calculationSteps: (string | ReactNode)[] = [];
+        let stepCount = 1;
+
+        calculationSteps.push(`Passo ${stepCount}: Encontrar o denominador comum (MMC) entre ${den1} e ${den2}.`);
+        stepCount++;
+        
+        // Calcular o MMC dos denominadores
+        const commonDenominator = mmc(den1, den2);
         calculationSteps.push(`MMC(${den1}, ${den2}) = ${commonDenominator}`);
         
-        calculationSteps.push(`Passo 2: Converter as frações para o denominador comum.`);
-        calculationSteps.push(`Multiplicar a primeira fração por ${factor1}/${factor1}:`);
+        // Armazenar os passos do MMC para exibição detalhada opcional
+        setMmcSteps({ den1, den2, mmc: commonDenominator });
+        
+        // Conversão para o denominador comum
+        calculationSteps.push(`Passo ${stepCount}: Converter as frações para o denominador comum.`);
+        stepCount++;
+        
+        const factor1 = commonDenominator / den1;
+        const factor2 = commonDenominator / den2;
+        
+        const newNumerator1 = num1 * factor1;
+        const newNumerator2 = num2 * factor2;
+        
+        calculationSteps.push(`Para a primeira fração: Multiplique o numerador e o denominador por ${factor1}`);
         calculationSteps.push(<>
-            <FractionDisplay numerator={num1} denominator={den1} /> = 
             <FractionDisplay numerator={num1} denominator={den1} /> × 
             <FractionDisplay numerator={factor1} denominator={factor1} /> = 
             <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} />
         </>);
         
-        calculationSteps.push(`Multiplicar a segunda fração por ${factor2}/${factor2}:`);
+        calculationSteps.push(`Para a segunda fração: Multiplique o numerador e o denominador por ${factor2}`);
         calculationSteps.push(<>
-            <FractionDisplay numerator={num2} denominator={den2} /> = 
             <FractionDisplay numerator={num2} denominator={den2} /> × 
             <FractionDisplay numerator={factor2} denominator={factor2} /> = 
             <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} />
         </>);
         
-        calculationSteps.push(`Passo 3: ${operation === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
-        if (operation === 'add') {
+        calculationSteps.push(`Passo ${stepCount}: ${operacao === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
+        stepCount++;
+        
+        let resultNumerator;
+        if (operacao === 'add') {
+            resultNumerator = newNumerator1 + newNumerator2;
             calculationSteps.push(`Calculando ${newNumerator1} + ${newNumerator2} = ${resultNumerator}`);
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> + 
@@ -101,6 +110,7 @@ const ResolvedorAddSubFracao: React.FC = () => {
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} />
             </>);
         } else {
+            resultNumerator = newNumerator1 - newNumerator2;
             calculationSteps.push(`Calculando ${newNumerator1} - ${newNumerator2} = ${resultNumerator}`);
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> - 
@@ -108,10 +118,15 @@ const ResolvedorAddSubFracao: React.FC = () => {
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} />
             </>);
         }
-
+        
+        // Simplificar a fração resultante, se possível
+        const { numerador: simplifiedNum, denominador: simplifiedDen } = simplificarFracao(resultNumerator, commonDenominator);
+        
         if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
-            calculationSteps.push(`Passo 4: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC (Máximo Divisor Comum).`);
-            calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdcValue}`);
+            calculationSteps.push(`Passo ${stepCount}: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC (Máximo Divisor Comum).`);
+            
+            const mdcValue = mdc(Math.abs(resultNumerator), commonDenominator);
+            calculationSteps.push(`MDC(${Math.abs(resultNumerator)}, ${commonDenominator}) = ${mdcValue}`);
             calculationSteps.push(`Dividindo o numerador: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
             calculationSteps.push(`Dividindo o denominador: ${commonDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
             calculationSteps.push(<>
@@ -120,19 +135,19 @@ const ResolvedorAddSubFracao: React.FC = () => {
                 <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
                 <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
             </>);
-        } else {
-            calculationSteps.push(`Passo 4: Verificar se a fração pode ser simplificada.`);
-            calculationSteps.push(`MDC(${resultNumerator}, ${commonDenominator}) = ${mdcValue}`);
-            calculationSteps.push(`Como o MDC é 1, a fração já está na forma mais simplificada.`);
+            
+            return {
+                calculationSteps,
+                resultNumerator: simplifiedNum,
+                resultDenominator: simplifiedDen
+            };
         }
-
-        // Se o resultado for um número inteiro, adicione uma explicação adicional
-        if (simplifiedNum % simplifiedDen === 0) {
-            calculationSteps.push(`Passo 5: Converter a fração para um número inteiro.`);
-            calculationSteps.push(`${simplifiedNum} ÷ ${simplifiedDen} = ${simplifiedNum / simplifiedDen}`);
-        }
-
-        setSteps(calculationSteps);
+        
+        return {
+            calculationSteps,
+            resultNumerator,
+            resultDenominator: commonDenominator
+        };
     };
 
     // Função para renderizar os detalhes do cálculo do MMC
@@ -551,7 +566,7 @@ const ResolvedorAddSubFracao: React.FC = () => {
                             </div>
 
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="text-lg font-semibold text-gray-800 mb-2">Conceito Matemático</h4>
+                            <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
                                 <div className="space-y-2 text-gray-700">
                                     <p>
                                         <span className="font-semibold">Adição e Subtração de Frações:</span> Para somar ou subtrair frações, precisamos de denominadores iguais. Seguimos estes passos:

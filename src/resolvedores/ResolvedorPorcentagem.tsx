@@ -44,6 +44,148 @@ const ResolvedorPorcentagem: React.FC = () => {
         setShowExplanation(true);
     };
 
+    // Função que gera os passos com numeração dinâmica
+    const gerarPassosExplicacao = () => {
+        let stepCount = 1;
+        
+        if (operationType === 'percentage') {
+            return (
+                <>
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Compreender a fórmula para calcular a porcentagem de um número.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p className="font-medium">Porcentagem de um número = (Valor x Porcentagem) / 100</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Substituir os valores na fórmula.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>({value} x {percentage}) / 100</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Multiplicar o valor pela porcentagem.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>{value} x {percentage} = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Dividir o resultado por 100 para obter a porcentagem.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>{(parseFloat(value) * parseFloat(percentage)).toFixed(2)} ÷ 100 = {result}</p>
+                        </div>
+                    </div>
+                </>
+            );
+        } 
+        else if (operationType === 'percentageChange') {
+            return (
+                <>
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Compreender a fórmula para calcular a variação percentual.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p className="font-medium">Variação Percentual = ((Valor Final - Valor Inicial) / Valor Inicial) × 100</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Substitua os valores na fórmula.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>((${percentage} - ${value}) / ${value}) × 100</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Realize o cálculo da variação percentual.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>({parseFloat(percentage) - parseFloat(value)}) / {parseFloat(value)} × 100 = {result}%</p>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+        else {
+            return (
+                <>
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Compreender a fórmula para calcular o valor original com base na porcentagem.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p className="font-medium">Valor Original = (Valor conhecido × 100) / Porcentagem</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Substituir os valores na fórmula.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>({value} × 100) / {percentage}</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                Passo {stepCount++}:
+                            </span>
+                            <p className="text-gray-800">Realizar o cálculo.</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
+                            <p>{parseFloat(value)} × 100 = {parseFloat(value) * 100}</p>
+                            <p>{parseFloat(value) * 100} / {parseFloat(percentage)} = {result}</p>
+                        </div>
+                    </div>
+                </>
+            );
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
@@ -165,149 +307,7 @@ const ResolvedorPorcentagem: React.FC = () => {
                             </div>
                             
                             <div className="space-y-4">
-                                {operationType === 'percentage' && (
-                                    <>
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 1:
-                                                </span>
-                                                <p className="text-gray-800">Compreender a fórmula para calcular a porcentagem de um número.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p className="font-medium">Porcentagem de um número = (Valor x Porcentagem) / 100</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 2:
-                                                </span>
-                                                <p className="text-gray-800">Substituir os valores na fórmula.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>({value} x {percentage}) / 100</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 3:
-                                                </span>
-                                                <p className="text-gray-800">Multiplicar o valor pela porcentagem.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{value} x {percentage} = {(parseFloat(value) * parseFloat(percentage)).toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 4:
-                                                </span>
-                                                <p className="text-gray-800">Dividir o resultado por 100.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{(parseFloat(value) * parseFloat(percentage)).toFixed(2)} / 100 = {result}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-                                {operationType === 'percentageChange' && (
-                                    <>
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 1:
-                                                </span>
-                                                <p className="text-gray-800">Compreender a fórmula para calcular a variação percentual.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p className="font-medium">Variação percentual = ((Valor Final - Valor Inicial) / Valor Inicial) x 100</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 2:
-                                                </span>
-                                                <p className="text-gray-800">Calcular a diferença entre o valor final e o valor inicial.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{percentage} - {value} = {(parseFloat(percentage) - parseFloat(value)).toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 3:
-                                                </span>
-                                                <p className="text-gray-800">Dividir a diferença pelo valor inicial.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{(parseFloat(percentage) - parseFloat(value)).toFixed(2)} / {value} = {((parseFloat(percentage) - parseFloat(value)) / parseFloat(value)).toFixed(4)}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 4:
-                                                </span>
-                                                <p className="text-gray-800">Multiplicar o resultado por 100 para obter a percentagem.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{((parseFloat(percentage) - parseFloat(value)) / parseFloat(value)).toFixed(4)} x 100 = {result}%</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-
-                                {operationType === 'reversePercentage' && (
-                                    <>
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 1:
-                                                </span>
-                                                <p className="text-gray-800">Compreender a fórmula para o cálculo reverso de porcentagem.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p className="font-medium">Se X é Y% de Z, então Z = (X * 100) / Y</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 2:
-                                                </span>
-                                                <p className="text-gray-800">Multiplicar o valor conhecido por 100.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{value} x 100 = {(parseFloat(value) * 100).toFixed(2)}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="p-3 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    Passo 3:
-                                                </span>
-                                                <p className="text-gray-800">Dividir pelo valor da porcentagem.</p>
-                                            </div>
-                                            <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                                <p>{(parseFloat(value) * 100).toFixed(2)} / {percentage} = {result}</p>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                                {gerarPassosExplicacao()}
                             </div>
                             
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">

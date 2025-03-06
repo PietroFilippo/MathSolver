@@ -69,53 +69,52 @@ const ResolvedorMultDivFracao: React.FC = () => {
     
     // Gerar os passos da explicação
     const calculationSteps = [];
+    let stepCount = 1;
     
-    calculationSteps.push(`Passo 1: ${operation === 'multiply' ? 'Multiplicar' : 'Dividir'} as frações.`);
+    calculationSteps.push(`Passo ${stepCount}: Identificar as frações e a operação`);
+    calculationSteps.push(<>
+        {operation === 'multiply' ? (
+            <>Multiplicação: <FractionDisplay numerator={num1} denominator={den1} /> × <FractionDisplay numerator={num2} denominator={den2} /></>
+        ) : (
+            <>Divisão: <FractionDisplay numerator={num1} denominator={den1} /> ÷ <FractionDisplay numerator={num2} denominator={den2} /></>
+        )}
+    </>);
+    stepCount++;
     
     if (operation === 'multiply') {
-      calculationSteps.push(<>
-        <FractionDisplay numerator={num1} denominator={den1} /> × 
-        <FractionDisplay numerator={num2} denominator={den2} /> = 
-        <FractionDisplay numerator={num1 * num2} denominator={den1 * den2} />
-      </>);
-      calculationSteps.push(`Para multiplicar frações, multiplique os numeradores (${num1} × ${num2} = ${num1 * num2}) e multiplique os denominadores (${den1} × ${den2} = ${den1 * den2}).`);
+        calculationSteps.push(`Passo ${stepCount}: Multiplicar os numeradores`);
+        calculationSteps.push(`${num1} × ${num2} = ${resultNumerator}`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Multiplicar os denominadores`);
+        calculationSteps.push(`${den1} × ${den2} = ${resultDenominator}`);
+        stepCount++;
     } else {
-      calculationSteps.push(<>
-        <FractionDisplay numerator={num1} denominator={den1} /> ÷ 
-        <FractionDisplay numerator={num2} denominator={den2} /> = 
-        <FractionDisplay numerator={num1} denominator={den1} /> × 
-        <FractionDisplay numerator={den2} denominator={num2} /> = 
-        <FractionDisplay numerator={num1 * den2} denominator={den1 * num2} />
-      </>);
-      calculationSteps.push(`Para dividir frações, multiplique a primeira fração pelo inverso da segunda fração.`);
-      calculationSteps.push(`${num1}/${den1} ÷ ${num2}/${den2} = ${num1}/${den1} × ${den2}/${num2} = (${num1} × ${den2})/(${den1} × ${num2}) = ${num1 * den2}/${den1 * num2}`);
+        calculationSteps.push(`Passo ${stepCount}: Inverter a segunda fração`);
+        calculationSteps.push(<>
+            <FractionDisplay numerator={num1} denominator={den1} /> ÷ <FractionDisplay numerator={num2} denominator={den2} /> = 
+            <FractionDisplay numerator={num1} denominator={den1} /> × <FractionDisplay numerator={den2} denominator={num2} />
+        </>);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Multiplicar os numeradores`);
+        calculationSteps.push(`${num1} × ${den2} = ${resultNumerator}`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Multiplicar os denominadores`);
+        calculationSteps.push(`${den1} × ${num2} = ${resultDenominator}`);
+        stepCount++;
     }
     
-    // Explicação aprimorada para simplificação
-    const mdcValue = mdc(resultNumerator, resultDenominator);
     if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-      calculationSteps.push(`Passo 2: Simplificar a fração resultante dividindo o numerador e o denominador pelo Máximo Divisor Comum (MDC).`);
-      calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
-      calculationSteps.push(<>
-        <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> = 
-        <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> ÷ 
-        <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
-        <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
-      </>);
-      calculationSteps.push(`Dividindo o numerador ${resultNumerator} por ${mdcValue} = ${simplifiedNum}`);
-      calculationSteps.push(`Dividindo o denominador ${resultDenominator} por ${mdcValue} = ${simplifiedDen}`);
-    } else {
-      calculationSteps.push(`Passo 2: Verificar se a fração pode ser simplificada.`);
-      calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
-      calculationSteps.push(<>
-        Como o MDC é 1, a fração <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> já está na forma mais simplificada.
-      </>);
-    }
-    
-    // Se o resultado é um número inteiro, adicione uma explicação adicional
-    if (simplifiedNum % simplifiedDen === 0) {
-      calculationSteps.push(`Passo 3: Converter a fração para um número inteiro.`);
-      calculationSteps.push(`${simplifiedNum} ÷ ${simplifiedDen} = ${simplifiedNum / simplifiedDen}`);
+        const mdcValue = mdc(resultNumerator, resultDenominator);
+        calculationSteps.push(`Passo ${stepCount}: Simplificar a fração resultante`);
+        calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
+        calculationSteps.push(<>
+            <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> ÷ 
+            <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
+            <FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />
+        </>);
     }
     
     setSteps(calculationSteps);

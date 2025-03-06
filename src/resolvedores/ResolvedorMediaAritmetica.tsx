@@ -7,14 +7,14 @@ const ResolvedorMediaAritmetica: React.FC = () => {
     const [result, setResult] = useState<number | null>(null);
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [parsedNumbers, setParsedNumbers] = useState<number[]>([]);
+    const [steps, setSteps] = useState<string[]>([]);
 
     const handleSolve = () => {
         // Reseta os resultados anteriores e erros
         setResult(null);
         setShowExplanation(false);
         setErrorMessage('');
-        setParsedNumbers([]);
+        setSteps([]);
 
         // Verifica se o campo está vazio
         if (!numbers.trim()) {
@@ -30,25 +30,35 @@ const ResolvedorMediaAritmetica: React.FC = () => {
         for (const num of numbersArray) {
             const parsed = parseFloat(num);
             if (isNaN(parsed)) {
-                setErrorMessage('Um ou mais valores não são números válidos. Use vírgulas para separar os números.');
+                setErrorMessage(`"${num}" não é um número válido.`);
                 return;
             }
             parsedArray.push(parsed);
         }
 
-        if (parsedArray.length === 0) {
-            setErrorMessage('Digite pelo menos um número para calcular a média.');
-            return;
-        }
-
         // Calcula a média aritmética
         const sum = parsedArray.reduce((acc, curr) => acc + curr, 0);
-        const mean = sum / parsedArray.length;
+        const result = sum / parsedArray.length;
         
-        // Armazena os números processados para exibição
-        setParsedNumbers(parsedArray);
-        setResult(arredondarParaDecimais(mean, 2));
+        setResult(arredondarParaDecimais(result, 2));
         setShowExplanation(true);
+
+        // Calcula o resultado e os passos
+        const calculationSteps = [];
+        let stepCount = 1;
+        
+        calculationSteps.push(`Passo ${stepCount}: Identificar todos os valores da série`);
+        calculationSteps.push(`Valores: ${parsedArray.join(', ')}`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Somar todos os valores`);
+        calculationSteps.push(`${parsedArray.join(' + ')} = ${sum}`);
+        stepCount++;
+        
+        calculationSteps.push(`Passo ${stepCount}: Dividir a soma pelo número de valores (${parsedArray.length})`);
+        calculationSteps.push(`${sum} ÷ ${parsedArray.length} = ${result}`);
+        
+        setSteps(calculationSteps);
     };
 
     return (
@@ -119,25 +129,32 @@ const ResolvedorMediaAritmetica: React.FC = () => {
                             </div>
                             
                             <div className="space-y-4">
-                                <div className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">Para calcular a média aritmética, usamos a fórmula:</p>
-                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                        <p className="font-medium">Média Aritmética = Soma dos valores ÷ Quantidade de valores</p>
-                                    </div>
-                                </div>
-                                
-                                <div className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">Valores utilizados: {parsedNumbers.join(', ')}</p>
-                                </div>
-                                
-                                <div className="p-3 bg-gray-50 rounded-md">
-                                    <p className="text-gray-800">Substituindo os valores, temos:</p>
-                                    <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                                        <p>Soma dos valores = {parsedNumbers.join(' + ')} = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)}</p>
-                                        <p>Quantidade de valores = {parsedNumbers.length}</p>
-                                        <p>Média = {parsedNumbers.reduce((acc, curr) => acc + curr, 0)} ÷ {parsedNumbers.length} = {result}</p>
-                                    </div>
-                                </div>
+                                {steps.map((step, index) => {
+                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
+                                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                                    
+                                    if (stepMatch) {
+                                        // Se for um passo com número, extrai e destaca o número
+                                        const [_, stepNumber, stepContent] = stepMatch;
+                                        return (
+                                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                                <div className="flex flex-col sm:flex-row">
+                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                                        {stepNumber}
+                                                    </span>
+                                                    <p className="text-gray-800">{stepContent}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    } else {
+                                        // Conteúdo regular sem número de passo
+                                        return (
+                                            <div key={index} className="p-3 bg-white border border-gray-200 rounded-md ml-4">
+                                                <p className="text-gray-800">{step}</p>
+                                            </div>
+                                        );
+                                    }
+                                })}
                             </div>
                             
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">

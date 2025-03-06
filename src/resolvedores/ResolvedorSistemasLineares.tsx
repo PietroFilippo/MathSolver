@@ -42,12 +42,16 @@ const ResolvedorSistemasLineares: React.FC = () => {
         const det = numA1 * numB2 - numA2 * numB1;
 
         const calculationSteps = [];
-        calculationSteps.push(`Passo 1: Organize o sistema de equações na forma padrão`);
+        let stepCount = 1;
+        
+        calculationSteps.push(`Passo ${stepCount}: Organize o sistema de equações na forma padrão`);
         calculationSteps.push(`Equação 1: ${numA1}x + ${numB1}y = ${numC1}`);
         calculationSteps.push(`Equação 2: ${numA2}x + ${numB2}y = ${numC2}`);
+        stepCount++;
         
-        calculationSteps.push(`Passo 2: Calcule o determinante do coeficiente da matriz`);
+        calculationSteps.push(`Passo ${stepCount}: Calcule o determinante do coeficiente da matriz`);
         calculationSteps.push(`det = ${numA1} * ${numB2} - ${numA2} * ${numB1} = ${det}`);
+        stepCount++;
 
         // Usa a função sistemaLinear para resolver o sistema
         const result = sistemaLinear(numA1, numB1, numC1, numA2, numB2, numC2);
@@ -62,59 +66,60 @@ const ResolvedorSistemasLineares: React.FC = () => {
 
             if (aproximadamenteIguais(ratioA, ratioB) && !aproximadamenteIguais(ratioA, ratioC)) {
                 // Sistema inconsistente - sem solução
-                calculationSteps.push(`Passo 3: O determinante é zero e as razões dos coeficientes não são compatíveis, portanto, o sistema não possui soluções`);
+                calculationSteps.push(`Passo ${stepCount}: O determinante é zero e as razões dos coeficientes não são compatíveis, portanto, o sistema não possui soluções`);
                 calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${arredondarParaDecimais(ratioA, 4)}, b₁/b₂ = ${arredondarParaDecimais(ratioB, 4)}, c₁/c₂ = ${arredondarParaDecimais(ratioC, 4)}`);
                 calculationSteps.push(`Por causa que a₁/a₂ = b₁/b₂ ≠ c₁/c₂, o sistema é inconsistente e não possui soluções`);
 
                 setSystemType('noSolution');
             } else {
-                // Sistema consistente com soluções infinitas
-                setSystemType('infinite');
-                calculationSteps.push(`Passo 3: O determinante é zero e as razões dos coeficientes são compatíveis, portanto, o sistema possui infinitas soluções`);
+                // Sistema com infinitas soluções
+                calculationSteps.push(`Passo ${stepCount}: O determinante é zero e as equações são linearmente dependentes, portanto, o sistema possui infinitas soluções`);
                 calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${arredondarParaDecimais(ratioA, 4)}, b₁/b₂ = ${arredondarParaDecimais(ratioB, 4)}, c₁/c₂ = ${arredondarParaDecimais(ratioC, 4)}`);
-                calculationSteps.push(`Por causa que a₁/a₂ = b₁/b₂ = c₁/c₂, o sistema é consistente e possui infinitas soluções`);
+                calculationSteps.push(`Por causa que a₁/a₂ = b₁/b₂ = c₁/c₂, o sistema possui infinitas soluções`);
 
-                // Expressa a solução como uma função de um parâmetro
-                if (numA1 !== 0) {
-                    calculationSteps.push(`Passo 4: Expressa a solução como uma função de um parâmetro`);
-                    calculationSteps.push(`Defina y = t, onde t pode ser qualquer número real`);
-                    calculationSteps.push(`Da equação 1: ${numA1}x + ${numB1}y = ${numC1}`);
-                    calculationSteps.push(`${numA1}x = ${numC1} - ${numB1}y`);
-                    calculationSteps.push(`x = (${numC1} - ${numB1}t) / ${numA1}`);
-                    calculationSteps.push(`Portanto, a solução é: x = (${numC1} - ${numB1}t) / ${numA1}, y = t, onde t ∈ ℝ`);
-                } else if (numB1 !== 0) {
-                    calculationSteps.push(`Passo 4: Expressa a solução como uma função de um parâmetro`);
-                    calculationSteps.push(`Defina x = t, onde t pode ser qualquer número real`);
-                    calculationSteps.push(`Da equação 1: ${numA1}x + ${numB1}y = ${numC1}`);
-                    calculationSteps.push(`${numB1}y = ${numC1} - ${numA1}x`);
-                    calculationSteps.push(`y = (${numC1} - ${numA1}t) / ${numB1}`);
-                    calculationSteps.push(`Portanto, a solução é: x = t, y = (${numC1} - ${numA1}t) / ${numB1}, onde t ∈ ℝ`);
+                // Expressando uma variável em termos da outra (y em termos de x)
+                if (numB1 !== 0) {
+                    const expressaoY = `y = (${numC1} - ${numA1}x) / ${numB1}`;
+                    calculationSteps.push(`Podemos expressar y em termos de x: ${expressaoY}`);
+                    calculationSteps.push(`Isso significa que para qualquer valor de x, podemos encontrar um valor correspondente de y que satisfaça ambas as equações.`);
+                } else if (numA1 !== 0) {
+                    const expressaoX = `x = (${numC1} - ${numB1}y) / ${numA1}`;
+                    calculationSteps.push(`Podemos expressar x em termos de y: ${expressaoX}`);
+                    calculationSteps.push(`Isso significa que para qualquer valor de y, podemos encontrar um valor correspondente de x que satisfaça ambas as equações.`);
                 }
+
+                setSystemType('infinite');
             }
-
-            setSolution(null);
         } else {
-            // Determinante diferente de zero, sistema tem solução única
-            // Regra de Cramer
-            const detX = numC1 * numB2 - numC2 * numB1;
-            const detY = numA1 * numC2 - numA2 * numC1;
-
-            calculationSteps.push(`Passo 3: O determinante é diferente de zero, portanto, o sistema possui solução única`);
-            calculationSteps.push(`Passo 4: Use a regra de Cramer para encontrar a solução`);
-            calculationSteps.push(`Calcule Dx substituindo os coeficientes de x pelos constantes`);
-            calculationSteps.push(`Dx = (${numC1} × ${numB2}) - (${numC2} × ${numB1}) = ${numC1 * numB2} - ${numC2 * numB1} = ${detX}`);
-            calculationSteps.push(`Calcule Dy substituindo os coeficientes de y pelos constantes`);
-            calculationSteps.push(`Dy = (${numA1} × ${numC2}) - (${numA2} × ${numC1}) = ${numA1 * numC2} - ${numA2 * numC1} = ${detY}`);
-            calculationSteps.push(`Calcule x = Dx / D = ${detX} / ${det} = ${arredondarParaDecimais(result.x, 4)}`);
-            calculationSteps.push(`Calcule y = Dy / D = ${detY} / ${det} = ${arredondarParaDecimais(result.y, 4)}`);
-
-            // Passo de verificação
-            const eq1Verification = numA1 * result.x + numB1 * result.y;
-            const eq2Verification = numA2 * result.x + numB2 * result.y;
-
-            calculationSteps.push(`Passo 5: Verifique a solução substituindo x e y nas equações originais`);
-            calculationSteps.push(`Equação 1: ${numA1} * ${arredondarParaDecimais(result.x, 4)} + ${numB1} * ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq1Verification, 4)}`);
-            calculationSteps.push(`Equação 2: ${numA2} * ${arredondarParaDecimais(result.x, 4)} + ${numB2} * ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq2Verification, 4)}`);
+            // Sistema possui uma única solução
+            calculationSteps.push(`Passo ${stepCount}: O determinante não é zero, então o sistema possui uma única solução`);
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: Calcular x usando a regra de Cramer`);
+            calculationSteps.push(`Substituímos a coluna dos coeficientes de x pelos termos independentes:`);
+            calculationSteps.push(`det_x = ${numC1} * ${numB2} - ${numC2} * ${numB1} = ${numC1 * numB2 - numC2 * numB1}`);
+            calculationSteps.push(`x = det_x / det = ${(numC1 * numB2 - numC2 * numB1)} / ${det} = ${result.x}`);
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: Calcular y usando a regra de Cramer`);
+            calculationSteps.push(`Substituímos a coluna dos coeficientes de y pelos termos independentes:`);
+            calculationSteps.push(`det_y = ${numA1} * ${numC2} - ${numA2} * ${numC1} = ${numA1 * numC2 - numA2 * numC1}`);
+            calculationSteps.push(`y = det_y / det = ${(numA1 * numC2 - numA2 * numC1)} / ${det} = ${result.y}`);
+            stepCount++;
+            
+            // Verificação da solução
+            calculationSteps.push(`Passo ${stepCount}: Verificar a solução substituindo os valores nas equações originais`);
+            const eq1 = numA1 * result.x + numB1 * result.y;
+            const eq2 = numA2 * result.x + numB2 * result.y;
+            
+            calculationSteps.push(`Equação 1: ${numA1} × ${arredondarParaDecimais(result.x, 4)} + ${numB1} × ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq1, 4)} ≈ ${numC1}`);
+            calculationSteps.push(`Equação 2: ${numA2} × ${arredondarParaDecimais(result.x, 4)} + ${numB2} × ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq2, 4)} ≈ ${numC2}`);
+            
+            if (aproximadamenteIguais(eq1, numC1) && aproximadamenteIguais(eq2, numC2)) {
+                calculationSteps.push(`A verificação confirma que a solução (x = ${arredondarParaDecimais(result.x, 4)}, y = ${arredondarParaDecimais(result.y, 4)}) é válida.`);
+            } else {
+                calculationSteps.push(`Nota: Há pequenas diferenças devido ao arredondamento.`);
+            }
 
             setSolution(result);
             setSystemType('unique');

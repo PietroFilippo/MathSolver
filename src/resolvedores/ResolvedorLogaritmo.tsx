@@ -5,7 +5,7 @@ import { HiCalculator } from 'react-icons/hi';
 type LogType = 'natural' | 'base10' | 'custom';
 
 const ResolvedorLogaritmo: React.FC = () => {
-const [logType, setLogType] = useState<LogType>('natural');
+    const [logType, setLogType] = useState<LogType>('natural');
     const [value, setValue] = useState<string>('');
     const [customBase, setCustomBase] = useState<string>('');
     const [result, setResult] = useState<number | null>(null);
@@ -14,101 +14,125 @@ const [logType, setLogType] = useState<LogType>('natural');
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
 
     const handleSolve = () => {
-      setErrorMessage(null);
-      setResult(null);
-      setSteps([]);
-      setShowExplanation(false);
+        // Limpa resultados e erros anteriores
+        setResult(null);
+        setSteps([]);
+        setErrorMessage('');
+        setShowExplanation(false);
 
-      const numValue = parseFloat(value);
+        const numValue = parseFloat(value);
 
-      if (isNaN(numValue)) {
-        setErrorMessage('Insira um número válido');
-        return;
-      }
-
-      if (numValue <= 0) {
-        setErrorMessage('O logaritmo é definido apenas para números positivos');
-        return;
-      }
-
-      const calculationSteps: string[] = [];
-      let calculatedResult = 0;
-
-      if (logType === 'natural') {
-        calculationSteps.push(`Passo 1: Calcular o logaritmo natural (base e) de ${numValue}`);
-        calculatedResult = Math.log(numValue);
-        calculationSteps.push(`ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
-      }
-      else if (logType === 'base10') {
-        calculationSteps.push(`Passo 1: Calcular o logaritmo comum (base 10) de ${numValue}`);
-        calculatedResult = Math.log10(numValue);
-        calculationSteps.push(`log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
-      }
-      else if (logType === 'custom') {
-        const numBase = parseFloat(customBase);
-
-        if (isNaN(numBase)) {
-            setErrorMessage('A base personalizada deve ser um número válido.');
+        if (isNaN(numValue)) {
+            setErrorMessage('O valor para o logaritmo deve ser um número válido.');
             return;
         }
 
-        if (numBase <= 0 || numBase === 1) {
-            setErrorMessage('A base personalizada deve ser um número positivo e diferente de 1.');
+        if (numValue <= 0) {
+            setErrorMessage('O logaritmo só é definido para valores positivos.');
             return;
         }
 
-        calculationSteps.push(`Passo 1: Calcular o logaritmo com a base personalizada ${numBase} de ${numValue}`);
-        calculationSteps.push('Podemos usar a fórmula de mudança de base: log_b(x) = ln(x) / ln(b)');
+        let calculatedResult: number;
+        const calculationSteps: string[] = [];
+        let stepCount = 1;
 
-        const lnValue = Math.log(numValue);
-        const lnBase = Math.log(numBase);
-        calculatedResult = lnValue / lnBase;
-
-        calculationSteps.push(`log_${numBase}(${numValue}) = ln(${numValue}) / ln(${numBase})`);
-        calculationSteps.push(`log_${numBase}(${numValue}) = ${arredondarParaDecimais(lnValue, 6)} / ${arredondarParaDecimais(lnBase, 6)} = ${arredondarParaDecimais(calculatedResult, 6)}`);
-      }
-      
-      // Casos e propriedades especiais 
-      if (numValue === 1) {
-        calculationSteps.push('O logaritmo de 1 em qualquer base é 0');
-      }
-
-      if (logType === 'base10') {
-        if (numValue === 10) {
-            calculationSteps.push('log₁₀(10) = 1 porque 10¹ = 10.');
+        if (logType === 'natural') {
+            calculationSteps.push(`Passo ${stepCount}: Calcular o logaritmo natural (base e) de ${numValue}`);
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: Logaritmo natural é o logaritmo com base e (número de Euler, aproximadamente 2.71828...)`);
+            calculatedResult = Math.log(numValue);
+            calculationSteps.push(`ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            stepCount++;
+            
+            // Verificação do resultado
+            calculationSteps.push(`Passo ${stepCount}: Verificar o resultado usando a definição de logaritmo`);
+            calculationSteps.push(`Se ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então e^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
+            const verification = Math.exp(calculatedResult);
+            calculationSteps.push(`e^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
+            
+            // Casos especiais
+            if (Math.abs(numValue - Math.E) < 0.0001) {
+                stepCount++;
+                calculationSteps.push(`Passo ${stepCount}: Nota sobre propriedades especiais`);
+                calculationSteps.push(`ln(e) = 1 porque e^1 = e. Este é um caso especial importante do logaritmo natural.`);
+            } else if (numValue === 1) {
+                stepCount++;
+                calculationSteps.push(`Passo ${stepCount}: Nota sobre propriedades especiais`);
+                calculationSteps.push(`ln(1) = 0 porque e^0 = 1. O logaritmo de 1 em qualquer base é sempre 0.`);
+            }
         }
-        else if (numValue === 100) {
-            calculationSteps.push('log₁₀(100) = 2 porque 10² = 100.');
+        else if (logType === 'base10') {
+            calculationSteps.push(`Passo ${stepCount}: Calcular o logaritmo de base 10 (logaritmo comum) de ${numValue}`);
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: O logaritmo de base 10 é frequentemente usado em aplicações científicas e de engenharia`);
+            calculatedResult = Math.log10(numValue);
+            calculationSteps.push(`log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            stepCount++;
+            
+            // Verificação do resultado
+            calculationSteps.push(`Passo ${stepCount}: Verificar o resultado usando a definição de logaritmo`);
+            calculationSteps.push(`Se log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então 10^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
+            const verification = Math.pow(10, calculatedResult);
+            calculationSteps.push(`10^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
+            
+            // Casos especiais
+            if (numValue === 10) {
+                stepCount++;
+                calculationSteps.push(`Passo ${stepCount}: Nota sobre propriedades especiais`);
+                calculationSteps.push(`log₁₀(10) = 1 porque 10^1 = 10. Este é um caso especial importante.`);
+            } else if (numValue === 100) {
+                stepCount++;
+                calculationSteps.push(`Passo ${stepCount}: Nota sobre propriedades especiais`);
+                calculationSteps.push(`log₁₀(100) = 2 porque 10^2 = 100. Note que log₁₀(10^n) = n para qualquer n.`);
+            } else if (numValue === 1) {
+                stepCount++;
+                calculationSteps.push(`Passo ${stepCount}: Nota sobre propriedades especiais`);
+                calculationSteps.push(`log₁₀(1) = 0 porque 10^0 = 1. O logaritmo de 1 em qualquer base é sempre 0.`);
+            }
         }
-        else if (numValue === 1000) {
-            calculationSteps.push('log₁₀(1000) = 3 porque 10³ = 1000.');
-        }
-      } else if (logType === 'natural') {
-        if (Math.abs(numValue - Math.E) < 0.0001) {
-            calculationSteps.push('ln(e) = 1 porque e¹ = e.');
-        }
-      }
-    
-      calculationSteps.push('Passo 2: Verificar o resultado usando a definição de logaritmo');
+        else if (logType === 'custom') {
+            const numBase = parseFloat(customBase);
 
-      if (logType === 'natural') {
-        calculationSteps.push(`Se ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então e^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
-        const verification = Math.exp(calculatedResult);
-        calculationSteps.push(`e^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
-      } else if (logType === 'base10') {
-        calculationSteps.push(`Se log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então 10^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
-        const verification = Math.pow(10, calculatedResult);
-        calculationSteps.push(`10^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
-      } else if (logType === 'custom') {
-        const numBase = parseFloat(customBase);
-        calculationSteps.push(`Se log_${numBase}(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então ${numBase}^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
-        const verification = Math.pow(numBase, calculatedResult);
-        calculationSteps.push(`${numBase}^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
-      }
+            if (isNaN(numBase)) {
+                setErrorMessage('A base personalizada deve ser um número válido.');
+                return;
+            }
 
-      setResult(arredondarParaDecimais(calculatedResult, 6));
-      setSteps(calculationSteps);
-      setShowExplanation(true);
+            if (numBase <= 0 || numBase === 1) {
+                setErrorMessage('A base personalizada deve ser um número positivo e diferente de 1.');
+                return;
+            }
+
+            calculationSteps.push(`Passo ${stepCount}: Calcular o logaritmo com a base personalizada ${numBase} de ${numValue}`);
+            stepCount++;
+            
+            calculationSteps.push(`Passo ${stepCount}: Usamos a fórmula de mudança de base: log_b(x) = ln(x) / ln(b)`);
+            stepCount++;
+
+            const lnValue = Math.log(numValue);
+            const lnBase = Math.log(numBase);
+            
+            calculationSteps.push(`Passo ${stepCount}: Calculamos os valores de ln(${numValue}) e ln(${numBase})`);
+            calculationSteps.push(`ln(${numValue}) = ${arredondarParaDecimais(lnValue, 6)}`);
+            calculationSteps.push(`ln(${numBase}) = ${arredondarParaDecimais(lnBase, 6)}`);
+            stepCount++;
+            
+            calculatedResult = lnValue / lnBase;
+            
+            calculationSteps.push(`Passo ${stepCount}: Aplicamos a fórmula de mudança de base`);
+            calculationSteps.push(`log_${numBase}(${numValue}) = ln(${numValue}) / ln(${numBase})`);
+            calculationSteps.push(`log_${numBase}(${numValue}) = ${arredondarParaDecimais(lnValue, 6)} / ${arredondarParaDecimais(lnBase, 6)} = ${arredondarParaDecimais(calculatedResult, 6)}`);
+        }
+        else {
+            setErrorMessage('Tipo de logaritmo não reconhecido.');
+            return;
+        }
+
+        setResult(calculatedResult);
+        setSteps(calculationSteps);
+        setShowExplanation(true);
     };
 
     return (
