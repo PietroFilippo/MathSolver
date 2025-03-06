@@ -476,23 +476,28 @@ const ResolvedorAddSubFracao: React.FC = () => {
                 <div className="space-y-6">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
-                        <p className="text-xl">
-                            <FractionDisplay numerator={parseInt(numerator1)} denominator={parseInt(denominator1)} /> 
-                            {operation === 'add' ? ' + ' : ' - '} 
-                            <FractionDisplay numerator={parseInt(numerator2)} denominator={parseInt(denominator2)} /> 
-                            = <span className="font-bold">
-                                {resultadoNum !== null && resultadoDen !== null && (
-                                    <FractionDisplay 
-                                        numerator={resultadoNum} 
-                                        denominator={resultadoDen} 
-                                        className="text-xl"
-                                    />
-                                )}
-                                {resultadoNum !== null && resultadoDen !== null && resultadoNum % resultadoDen === 0 && (
-                                    <span className="ml-3">= {resultadoNum / resultadoDen}</span>
-                                )}
-                            </span>
-                        </p>
+                        <div className="flex items-center">
+                            <p className="text-xl mr-2">
+                                {operation === 'add' ? 'O resultado da adição é: ' : 'O resultado da subtração é: '}
+                            </p>
+                            {resultadoNum !== null && resultadoDen !== null && (
+                                <FractionDisplay 
+                                    numerator={resultadoNum} 
+                                    denominator={resultadoDen} 
+                                    className="text-xl"
+                                />
+                            )}
+                            {resultadoNum !== null && resultadoDen !== null && resultadoNum % resultadoDen === 0 && (
+                                <span className="ml-3">= {resultadoNum / resultadoDen}</span>
+                            )}
+                        </div>
+                        
+                        <button 
+                            onClick={() => setShowExplanation(!showExplanation)}
+                            className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                        >
+                            {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                        </button>
                     </div>
 
                     {showExplanation && (
@@ -505,12 +510,12 @@ const ResolvedorAddSubFracao: React.FC = () => {
                             </div>
                             <div className="space-y-4">
                                 {steps.map((step, stepIndex) => {
-                                    // Check if step starts with a step number pattern like "Passo X:"
-                                    const stepStr = String(step); // Ensure step is treated as string
+                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
+                                    const stepStr = String(step); // Garante que step seja tratado como string
                                     const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
                                     
                                     if (stepMatch) {
-                                        // If it's a step with number, extract and highlight it
+                                        // Se for um passo com número, extrai e destaca o número
                                         const [_, stepNumber, stepContent] = stepMatch;
                                         return (
                                             <div key={stepIndex} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
@@ -535,7 +540,7 @@ const ResolvedorAddSubFracao: React.FC = () => {
                                             </div>
                                         );
                                     } else {
-                                        // Regular content without step number
+                                        // Conteúdo regular sem número de passo
                                         return (
                                             <div key={stepIndex} className="p-3 bg-gray-50 rounded-md ml-4">
                                                 <p className="text-gray-800">{step}</p>
@@ -545,7 +550,6 @@ const ResolvedorAddSubFracao: React.FC = () => {
                                 })}
                             </div>
 
-                            {/* Mathematical Concept Section */}
                             <div className="mt-6 p-4 bg-blue-50 rounded-md">
                                 <h4 className="text-lg font-semibold text-gray-800 mb-2">Conceito Matemático</h4>
                                 <div className="space-y-2 text-gray-700">

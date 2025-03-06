@@ -10,27 +10,25 @@ import {
 } from 'react-icons/hi';
 
 interface HomePageProps {
-  onSelectSolver: () => void;
+  onSelectSolver: (category?: string) => void;
 }
 
 const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
   return (
     <div className="space-y-12">
-      {/* Hero Section */}
       <section className="text-center py-12 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">Masterize Matemática com o MathSolver</h1>
         <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
           Resolva problemas matemáticos de forma fácil e eficiente com o MathSolver
         </p>
         <button 
-          onClick={onSelectSolver}
+          onClick={() => onSelectSolver()}
           className="bg-white text-indigo-600 hover:bg-indigo-100 font-bold py-3 px-8 rounded-full text-lg transition-colors duration-300"
         >
           Comece a resolver agora
         </button>
       </section>
 
-      {/* Features Section */}
       <section className="py-8">
         <h2 className="text-3xl font-bold text-center mb-12">Por que usar o MathSolver?</h2>
         
@@ -66,8 +64,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
           </div>
         </div>
       </section>
-
-      {/* Categories Preview */}
       <section className="py-8">
         <h2 className="text-3xl font-bold text-center mb-8">Categorias de Problemas</h2>
         
@@ -83,7 +79,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Proporções</li>
             </ul>
             <button 
-              onClick={onSelectSolver}
+              onClick={() => onSelectSolver('arithmetic')}
               className="bg-white text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Explorar Aritmética
@@ -100,7 +96,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Multiplicação e Divisão de Frações</li>
             </ul>
             <button 
-              onClick={onSelectSolver}
+              onClick={() => onSelectSolver('fractions')}
               className="bg-white text-green-600 hover:bg-green-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Explorar Frações
@@ -118,7 +114,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Sistemas Lineares</li>
             </ul>
             <button 
-              onClick={onSelectSolver}
+              onClick={() => onSelectSolver('algebra')}
               className="bg-white text-purple-600 hover:bg-purple-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Explorar Álgebra
@@ -137,7 +133,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
               <li>Logaritmos</li>
             </ul>
             <button 
-              onClick={onSelectSolver}
+              onClick={() => onSelectSolver('advanced')}
               className="bg-white text-yellow-600 hover:bg-yellow-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Explorar Avançado
@@ -151,7 +147,16 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver }) => {
             </div>
             <p className="mb-4">Filtre problemas por nível escolar para encontrar exercícios apropriados para sua série.</p>
             <button 
-              onClick={onSelectSolver}
+              onClick={() => {
+                onSelectSolver();
+                // Set filter mode to level in the next render cycle
+                setTimeout(() => {
+                  const levelButton = document.querySelector('[data-filter="level"]');
+                  if (levelButton instanceof HTMLElement) {
+                    levelButton.click();
+                  }
+                }, 100);
+              }}
               className="bg-white text-red-600 hover:bg-red-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Ver Níveis Escolares

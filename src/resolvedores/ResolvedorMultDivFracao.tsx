@@ -91,7 +91,7 @@ const ResolvedorMultDivFracao: React.FC = () => {
       calculationSteps.push(`${num1}/${den1} ÷ ${num2}/${den2} = ${num1}/${den1} × ${den2}/${num2} = (${num1} × ${den2})/(${den1} × ${num2}) = ${num1 * den2}/${den1 * num2}`);
     }
     
-    // Enhanced explanation for simplification
+    // Explicação aprimorada para simplificação
     const mdcValue = mdc(resultNumerator, resultDenominator);
     if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
       calculationSteps.push(`Passo 2: Simplificar a fração resultante dividindo o numerador e o denominador pelo Máximo Divisor Comum (MDC).`);
@@ -112,7 +112,7 @@ const ResolvedorMultDivFracao: React.FC = () => {
       </>);
     }
     
-    // If the result is a whole number, add an additional explanation
+    // Se o resultado é um número inteiro, adicione uma explicação adicional
     if (simplifiedNum % simplifiedDen === 0) {
       calculationSteps.push(`Passo 3: Converter a fração para um número inteiro.`);
       calculationSteps.push(`${simplifiedNum} ÷ ${simplifiedDen} = ${simplifiedNum / simplifiedDen}`);
@@ -230,39 +230,47 @@ const ResolvedorMultDivFracao: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-green-50 border border-green-200 rounded-lg p-5">
             <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
-            <p className="text-xl">
-              <FractionDisplay numerator={parseInt(numerator1)} denominator={parseInt(denominator1)} /> 
-              {operation === 'multiply' ? ' × ' : ' ÷ '} 
-              <FractionDisplay numerator={parseInt(numerator2)} denominator={parseInt(denominator2)} /> 
-              = <span className="font-bold">
-                {resultadoNum !== null && resultadoDen !== null && (
-                  <FractionDisplay 
-                    numerator={resultadoNum} 
-                    denominator={resultadoDen} 
-                    className="text-xl"
-                  />
-                )}
-                {resultadoNum !== null && resultadoDen !== null && resultadoNum % resultadoDen === 0 && (
-                  <span className="ml-3">= {resultadoNum / resultadoDen}</span>
-                )}
-              </span>
-            </p>
+            <div className="flex items-center">
+              <p className="text-xl mr-2">
+                {operation === 'multiply' ? 'O resultado da multiplicação é: ' : 'O resultado da divisão é: '}
+              </p>
+              {resultadoNum !== null && resultadoDen !== null && (
+                <FractionDisplay 
+                  numerator={resultadoNum} 
+                  denominator={resultadoDen} 
+                  className="text-xl"
+                />
+              )}
+              {resultadoNum !== null && resultadoDen !== null && resultadoNum % resultadoDen === 0 && (
+                <span className="ml-3">= {resultadoNum / resultadoDen}</span>
+              )}
+            </div>
+            
+            <button 
+                onClick={() => setShowExplanation(!showExplanation)}
+                className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+            >
+                {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+            </button>
           </div>
           
           {showExplanation && (
             <div className="bg-white shadow-md rounded-lg p-5">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                  <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
+                  Solução passo a passo
+                </h3>
               </div>
               
               <div className="space-y-4">
                 {steps.map((step, index) => {
-                  // Check if step starts with a step number pattern like "Passo X:"
-                  const stepStr = String(step); // Ensure step is treated as string
+                  // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
+                  const stepStr = String(step); // Garante que step seja tratado como string
                   const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
                   
                   if (stepMatch) {
-                    // If it's a step with number, extract and highlight it
+                    // Se for um passo com número, extrai e destaca o número
                     const [_, stepNumber, stepContent] = stepMatch;
                     return (
                       <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
@@ -275,7 +283,7 @@ const ResolvedorMultDivFracao: React.FC = () => {
                       </div>
                     );
                   } else {
-                    // Regular content without step number
+                    // Conteúdo regular sem número de passo
                     return (
                       <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
                         <p className="text-gray-800">{step}</p>

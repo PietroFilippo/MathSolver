@@ -12,11 +12,12 @@ const ResolvedorTrigonometria: React.FC = () => {
     const [outputUnit, setOutputUnit] = useState<AngleUnit>('degrees');
     const [result, setResult] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [showExplanation, setShowExplanation] = useState<string[]>([]);
+    const [explanationSteps, setExplanationSteps] = useState<string[]>([]);
+    const [showExplanation, setShowExplanation] = useState<boolean>(true);
 
     const handleSolve = () => {
         setError(null);
-        setShowExplanation([]);
+        setExplanationSteps([]);
         setResult(null);
        
         const value = parseFloat(inputValue);
@@ -26,7 +27,7 @@ const ResolvedorTrigonometria: React.FC = () => {
             return;
         }
 
-        const explanationSteps: string[] = [];
+        const steps: string[] = [];
         let calculatedResult: number;
 
         // Para funções trigonométricas diretas (sin, cos, tan)
@@ -36,86 +37,131 @@ const ResolvedorTrigonometria: React.FC = () => {
 
             if (inputUnit === 'degrees') {
                 valueInRadians = grausParaRadianos(value);
-                explanationSteps.push(`Passo 1: Converte o ângulo de graus para radianos`);
-                explanationSteps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
+                steps.push(`Passo 1: Converte o ângulo de graus para radianos`);
+                steps.push(`Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.`);
+                steps.push(`Fórmula: radianos = graus × (π/180)`);
+                steps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
             } else {
                 valueInRadians = value;
-                explanationSteps.push(`Passo 1: O valor já está em radianos.`);
+                steps.push(`Passo 1: Verificação da unidade do ângulo`);
+                steps.push(`O valor ${value} já está em radianos, então não é necessária conversão.`);
             }
 
             // Calcula o resultado
-            explanationSteps.push(`Passo 2: Calcula ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
-
+            steps.push(`Passo 2: Calcula ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
+            
+            let explanation = '';
             switch (trigFunction) {
                 case 'sin':
+                    explanation = `O seno de um ângulo representa a razão entre o cateto oposto e a hipotenusa em um triângulo retângulo.`;
                     calculatedResult = Math.sin(valueInRadians);
                     break;
                 case 'cos':
+                    explanation = `O cosseno de um ângulo representa a razão entre o cateto adjacente e a hipotenusa em um triângulo retângulo.`;
                     calculatedResult = Math.cos(valueInRadians);
                     break;
                 case 'tan':
                     if (Math.abs(Math.cos(valueInRadians)) < 1e-10) {
                         setError('Tangente indefinida para este ângulo (cos(x) = 0)');
+                        steps.push(`A tangente não está definida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
                         return;
                     }
+                    explanation = `A tangente de um ângulo representa a razão entre o seno e o cosseno, ou entre o cateto oposto e o cateto adjacente.`;
                     calculatedResult = Math.tan(valueInRadians);
                     break;
                 default:
                     calculatedResult = 0;
             }
-
-            explanationSteps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            
+            steps.push(explanation);
+            steps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
 
             // Casos especiais para ângulos comuns
-            if (inputUnit == 'degrees') {
+            if (inputUnit === 'degrees') {
                 const specialAngles = [0, 30, 45, 60, 90, 120, 135, 150, 180, 270, 360];
                 const closestSpecialAngle = specialAngles.find(angle => Math.abs(angle - (value % 360)) < 0.0001);
 
                 if (closestSpecialAngle !== undefined) {
-                    explanationSteps.push(`Nota: ${value}° é um ângulo especial. O valor exato de ${trigFunction}(${closestSpecialAngle}°) pode ser expressado desta exata forma`);
+                    steps.push(`Nota: ${value}° é um ângulo especial.`);
+                    
+                    let exactValue = '';
+                    switch (closestSpecialAngle) {
+                        case 0:
+                        case 360:
+                            exactValue = trigFunction === 'sin' ? '0' : trigFunction === 'cos' ? '1' : '0';
+                            break;
+                        case 30:
+                            exactValue = trigFunction === 'sin' ? '1/2' : trigFunction === 'cos' ? '√3/2' : '1/√3';
+                            break;
+                        case 45:
+                            exactValue = trigFunction === 'sin' || trigFunction === 'cos' ? '√2/2' : '1';
+                            break;
+                        case 60:
+                            exactValue = trigFunction === 'sin' ? '√3/2' : trigFunction === 'cos' ? '1/2' : '√3';
+                            break;
+                        case 90:
+                            exactValue = trigFunction === 'sin' ? '1' : trigFunction === 'cos' ? '0' : 'indefinido';
+                            break;
+                        case 180:
+                            exactValue = trigFunction === 'sin' ? '0' : trigFunction === 'cos' ? '-1' : '0';
+                            break;
+                        case 270:
+                            exactValue = trigFunction === 'sin' ? '-1' : trigFunction === 'cos' ? '0' : 'indefinido';
+                            break;
+                    }
+                    
+                    steps.push(`O valor exato de ${trigFunction}(${closestSpecialAngle}°) = ${exactValue}`);
                 }
             }
         }
         // Para funções trigonométricas inversas (asin, acos, atan)
         else {
             // Checa as restrições de domínio
-            if ((trigFunction == 'asin' || trigFunction == 'acos') && (value < -1 || value > 1)) {
-                setError(`O domínio da função ${trigFunction === 'asin' ? 'arcsine' : 'arccosine'} é [-1, 1]`);
+            if ((trigFunction === 'asin' || trigFunction === 'acos') && (value < -1 || value > 1)) {
+                setError(`O domínio da função ${trigFunction === 'asin' ? 'arco seno' : 'arco cosseno'} é [-1, 1]`);
+                steps.push(`As funções arco seno e arco cosseno só estão definidas para valores entre -1 e 1, pois estes são os valores possíveis para seno e cosseno.`);
                 return;
             }
 
-            explanationSteps.push(`Passo 1: Calcula ${trigFunction}(${value})`);
-
-            // Calcula o resultado em radianos
+            steps.push(`Passo 1: Calcula ${trigFunction}(${value})`);
+            
+            let explanation = '';
             switch (trigFunction) {
                 case 'asin':
+                    explanation = `O arco seno é a função inversa do seno. Ela retorna o ângulo que tem o seno igual a ${value}.`;
                     calculatedResult = Math.asin(value);
                     break;
                 case 'acos':
+                    explanation = `O arco cosseno é a função inversa do cosseno. Ela retorna o ângulo que tem o cosseno igual a ${value}.`;
                     calculatedResult = Math.acos(value);
                     break;
                 case 'atan':
+                    explanation = `O arco tangente é a função inversa da tangente. Ela retorna o ângulo que tem a tangente igual a ${value}.`;
                     calculatedResult = Math.atan(value);
                     break;
                 default:
                     calculatedResult = 0;
             }
-
-            explanationSteps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
+            
+            steps.push(explanation);
+            steps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
 
             // Converte para graus se necessário
             if (outputUnit === 'degrees') {
                 const resultInDegrees = radianosParaGraus(calculatedResult);
-                explanationSteps.push(`Passo 2: Converte o resultado de radianos para graus`);
-                explanationSteps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
+                steps.push(`Passo 2: Converte o resultado de radianos para graus`);
+                steps.push(`Para converter de radianos para graus, multiplicamos por (180/π)`);
+                steps.push(`Fórmula: graus = radianos × (180/π)`);
+                steps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
                 calculatedResult = resultInDegrees;
             } else {
-                explanationSteps.push(`Passo 2: O resultado já está em radianos`);
+                steps.push(`Passo 2: Verificação da unidade do resultado`);
+                steps.push(`O resultado já está em radianos, que é a unidade solicitada.`);
             }
         }
 
         setResult(arredondarParaDecimais(calculatedResult, 6));
-        setShowExplanation(explanationSteps);
+        setExplanationSteps(steps);
     };
 
     return (
@@ -241,9 +287,16 @@ const ResolvedorTrigonometria: React.FC = () => {
                 <p className="text-xl">
                   {trigFunction}({inputValue}{['sin', 'cos', 'tan'].includes(trigFunction) && inputUnit === 'degrees' ? '°' : ''}) = <span className="font-bold">{result}{['asin', 'acos', 'atan'].includes(trigFunction) && outputUnit === 'degrees' ? '°' : ''}</span>
                 </p>
+                
+                <button 
+                    onClick={() => setShowExplanation(!showExplanation)}
+                    className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                >
+                    {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                </button>
               </div>
               
-              {showExplanation.length > 0 && (
+              {showExplanation && explanationSteps.length > 0 && (
                 <div className="bg-white shadow-md rounded-lg p-5">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold text-gray-800 flex items-center">
@@ -253,7 +306,7 @@ const ResolvedorTrigonometria: React.FC = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    {showExplanation.map((step, index) => {
+                    {explanationSteps.map((step, index) => {
                       // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
                       const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
                       

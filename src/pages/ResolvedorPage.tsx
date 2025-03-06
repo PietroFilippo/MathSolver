@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   HiChevronDown, 
   HiChevronUp, 
@@ -12,22 +12,25 @@ import {
 } from 'react-icons/hi';
 import { solvers, educationalLevels } from '../data/resolvedores';
 
-// Placeholders até que os resolvers sejam implementados
 import ResolvedorPorcentagem from '../resolvedores/ResolvedorPorcentagem';
 import ResolvedorMediaAritmetica from '../resolvedores/ResolvedorMediaAritmetica';
 import ResolvedorProporcao from '../resolvedores/ResolvedorProporcao';
 import ResolvedorAddSubFracao from '../resolvedores/ResolvedorAddSubFracao';
 import ResolvedorMultDivFracao from '../resolvedores/ResolvedorMultDivFracao';
-const LinearEquationSolver = () => <div>Resolvedor de Equações Lineares</div>;
-const QuadraticEquationSolver = () => <div>Resolvedor de Equações Quadráticas</div>;
+import ResolvedorEquacaoPrimeiroGrau from '../resolvedores/ResolvedorEquacaoPrimeiroGrau';
+import ResolvedorEquacaoQuadratica from '../resolvedores/ResolvedorEquacaoQuadratica';
 import ResolvedorSistemasLineares from '../resolvedores/ResolvedorSistemasLineares';
 import ResolvedorTrigonometria from '../resolvedores/ResolvedorTrigonometria';
 import ResolvedorLogaritmo from '../resolvedores/ResolvedorLogaritmo';
 
-const SolverPage: React.FC = () => {
+interface SolverPageProps {
+  initialCategory?: string | null;
+}
+
+const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
   const [selectedSolver, setSelectedSolver] = useState<string | null>(null);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    'arithmetic': true,
+    'arithmetic': false,
     'fractions': false,
     'algebra': false,
     'advanced': false,
@@ -36,6 +39,24 @@ const SolverPage: React.FC = () => {
   });
   const [filterMode, setFilterMode] = useState<'subject' | 'level'>('subject');
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+
+  // Open the category specified by initialCategory on first render
+  useEffect(() => {
+    if (initialCategory) {
+      // If initial category exists in our list, expand it
+      if (Object.keys(expandedCategories).includes(initialCategory)) {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [initialCategory]: true
+        }));
+      }
+
+      // If we're in level mode but there's a category specified, switch to subject mode
+      if (filterMode === 'level') {
+        setFilterMode('subject');
+      }
+    }
+  }, [initialCategory]);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => ({
@@ -69,9 +90,9 @@ const SolverPage: React.FC = () => {
       case 'fraction-mult-div':
         return <ResolvedorMultDivFracao />;
       case 'linear-equation':
-        return <LinearEquationSolver />;
+        return <ResolvedorEquacaoPrimeiroGrau />;
       case 'quadratic-equation':
-        return <QuadraticEquationSolver />;
+        return <ResolvedorEquacaoQuadratica />;
       case 'linear-system':
         return <ResolvedorSistemasLineares />;
       case 'trigonometric':
@@ -198,17 +219,16 @@ const SolverPage: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
-      {/* Sidebar */}
       <div className="md:w-1/4 bg-white rounded-lg shadow-md p-4 h-fit">
         <h2 className="text-xl font-bold mb-4">Solucionadores Matemáticos</h2>
 
-        {/* View Toggle */}
         <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
           <button
             className={`flex-1 py-2 text-sm font-medium rounded-md ${
               filterMode === 'subject' ? 'bg-white shadow-sm' : 'text-gray-600 hover:bg-gray-200'
             }`}
             onClick={() => setFilterMode('subject')}
+            data-filter="subject"
           >
             Por Assunto
           </button>
@@ -217,6 +237,7 @@ const SolverPage: React.FC = () => {
               filterMode === 'level' ? 'bg-white shadow-sm' : 'text-gray-600 hover:bg-gray-200'
             }`}
             onClick={() => setFilterMode('level')}
+            data-filter="level"
           >
             Por Nível
           </button>
@@ -224,8 +245,7 @@ const SolverPage: React.FC = () => {
         
         {filterMode === 'subject' ? renderBySubject() : renderByLevel()}
       </div>
-      
-      {/* Main Content */}
+
       <div className="md:w-3/4 bg-white rounded-lg shadow-md p-6">
         {renderSolver()}
       </div>

@@ -7,17 +7,25 @@ import SobrePage from './pages/SobrePage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const navigateToSolver = (category?: string) => {
+    if (category) {
+      setSelectedCategory(category);
+    }
+    setCurrentPage('resolvedor');
+  };
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onSelectSolver={() => setCurrentPage('resolvedor')} />;
+        return <HomePage onSelectSolver={navigateToSolver} />;
       case 'resolvedor':
-        return <ResolvedorPage />;
+        return <ResolvedorPage initialCategory={selectedCategory} />;
       case 'sobre':
         return <SobrePage />;
       default:
-        return <HomePage onSelectSolver={() => setCurrentPage('resolvedor')} />;
+        return <HomePage onSelectSolver={navigateToSolver} />;
     }
   };
 

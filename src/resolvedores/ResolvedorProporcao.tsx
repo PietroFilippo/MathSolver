@@ -222,21 +222,31 @@ const ResolvedorProporcao: React.FC = () => {
                         <p className="text-xl">
                             {solveFor.toUpperCase()} = <span className="font-bold">{result}</span>
                         </p>
+                        
+                        <button 
+                            onClick={() => setShowExplanation(!showExplanation)}
+                            className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                        >
+                            {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                        </button>
                     </div>
 
                     {showExplanation && (
                         <div className="bg-white shadow-md rounded-lg p-5">
                             <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                                    <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
+                                    Solução passo a passo
+                                </h3>
                             </div>
                             
                             <div className="space-y-4">
                                 {steps.map((step, index) => {
-                                    // Check if step starts with a step number pattern like "Passo X:"
+                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
                                     const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
                                     
                                     if (stepMatch) {
-                                        // If it's a step with number, extract and highlight it
+                                        // Se for um passo com número, extrai e destaca o número
                                         const [_, stepNumber, stepContent] = stepMatch;
                                         return (
                                             <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
@@ -249,7 +259,7 @@ const ResolvedorProporcao: React.FC = () => {
                                             </div>
                                         );
                                     } else {
-                                        // Regular content without step number
+                                        // Conteúdo regular sem número de passo
                                         return (
                                             <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
                                                 <p className="text-gray-800">{step}</p>

@@ -100,12 +100,22 @@ const ResolvedorMediaAritmetica: React.FC = () => {
                         <p className="text-xl">
                             A média aritmética é: <span className="font-bold">{result}</span>
                         </p>
+                        
+                        <button 
+                            onClick={() => setShowExplanation(!showExplanation)}
+                            className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+                        >
+                            {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                        </button>
                     </div>
 
                     {showExplanation && (
                         <div className="bg-white shadow-md rounded-lg p-5">
                             <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-medium text-blue-800 mb-3">Solução passo a passo</h3>
+                            <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                                    <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
+                                    Solução passo a passo
+                                </h3>
                             </div>
                             
                             <div className="space-y-4">

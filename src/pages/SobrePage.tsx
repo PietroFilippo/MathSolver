@@ -77,7 +77,7 @@ const SobrePage: React.FC = () => {
             frequentemente é necessário um conhecimento mais profundo sobre o assunto para resolver exercícios de forma eficiente.
           </p>
           <p className="text-gray-700">
-            O MathSolver é aqui para ajudar, mas o verdadeiro sucesso na matemática vem da prática contínua e da compreensão sólida 
+            O MathSolver é para ajudar, mas o verdadeiro sucesso na matemática vem da prática contínua e da compreensão sólida 
             dos conceitos. Não se esqueça de estudar, praticar e buscar a compreensão profunda para realmente dominar os desafios 
             matemáticos que você enfrentará.
           </p>
