@@ -205,4 +205,4 @@ export const FractionDisplay: React.FC<FractionDisplayProps> = ({
             <span className="text-center px-1">{displayDenominator}</span>
         </span>
     );
-}; 
+};
