@@ -26,8 +26,6 @@ import ResolvedorTrigonometria from '../resolvedores/trigonometria/ResolvedorTri
 import ResolvedorLogaritmo from '../resolvedores/algebra/ResolvedorLogaritmo';
 import ResolvedorMMCMDC from '../resolvedores/aritmetica/ResolvedorMMCMDC';
 import ResolvedorFatorizacao from '../resolvedores/aritmetica/ResolvedorFatorizacao';
-import ResolvedorExpressoesAlgebricas from '../resolvedores/algebra/ResolvedorExpressoesAlgebricas';
-import ResolvedorInequacoes from '../resolvedores/algebra/ResolvedorInequacoes';
 import ResolvedorSimplificacaoFracoes from '../resolvedores/fracoes/ResolvedorSimplificacaoFracoes';
 import ResolvedorFracoesMistas from '../resolvedores/fracoes/ResolvedorFracoesMistas';
 
@@ -155,10 +153,6 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorMMCMDC />;
       case 'fatorizacao':
         return <ResolvedorFatorizacao />;
-      case 'algebraic-expressions':
-        return <ResolvedorExpressoesAlgebricas />;
-      case 'inequations':
-        return <ResolvedorInequacoes />;
       default:
         return <div>Solucionador não encontrado.</div>;
     }
