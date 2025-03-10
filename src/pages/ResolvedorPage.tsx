@@ -15,7 +15,7 @@ import {
 import { solvers, educationalLevels } from '../data/resolvedores';
 
 import ResolvedorPorcentagem from '../resolvedores/aritmetica/ResolvedorPorcentagem';
-import ResolvedorMediaAritmetica from '../resolvedores/aritmetica/ResolvedorMediaAritmetica';
+import ResolvedorMediaModaMediana from '../resolvedores/estatistica/ResolvedorMediaModaMediana';
 import ResolvedorProporcao from '../resolvedores/aritmetica/ResolvedorProporcao';
 import ResolvedorAddSubFracao from '../resolvedores/fracoes/ResolvedorAddSubFracao';
 import ResolvedorMultDivFracao from '../resolvedores/fracoes/ResolvedorMultDivFracao';
@@ -28,6 +28,9 @@ import ResolvedorMMCMDC from '../resolvedores/aritmetica/ResolvedorMMCMDC';
 import ResolvedorFatorizacao from '../resolvedores/aritmetica/ResolvedorFatorizacao';
 import ResolvedorSimplificacaoFracoes from '../resolvedores/fracoes/ResolvedorSimplificacaoFracoes';
 import ResolvedorFracoesMistas from '../resolvedores/fracoes/ResolvedorFracoesMistas';
+import ResolvedorMediaPonderada from '../resolvedores/estatistica/ResolvedorMediaPonderada';
+import ResolvedorDispersoes from '../resolvedores/estatistica/ResolvedorDispersoes';
+import ResolvedorVariacaoCoeficiente from '../resolvedores/estatistica/ResolvedorVariacaoCoeficiente';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -127,8 +130,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     switch (selectedSolver) {
       case 'percentage':
         return <ResolvedorPorcentagem />;
-      case 'arithmetic-mean':
-        return <ResolvedorMediaAritmetica />;
+      case 'mean-mode-median':
+        return <ResolvedorMediaModaMediana />;
       case 'proportion':
         return <ResolvedorProporcao />;
       case 'fraction-add-sub':
@@ -153,6 +156,12 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorMMCMDC />;
       case 'fatorizacao':
         return <ResolvedorFatorizacao />;
+      case 'weighted-mean':
+        return <ResolvedorMediaPonderada />;
+      case 'dispersions':
+        return <ResolvedorDispersoes />;
+      case 'variation-coefficient':
+        return <ResolvedorVariacaoCoeficiente />;
       default:
         return <div>Solucionador não encontrado.</div>;
     }

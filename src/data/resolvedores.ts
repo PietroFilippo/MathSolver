@@ -5,7 +5,6 @@ export const solvers = {
       icon: 'Calculator',
       solvers: [
         { id: 'percentage', name: 'Porcentagem' },
-        { id: 'arithmetic-mean', name: 'Média Aritmética' },
         { id: 'proportion', name: 'Proporções' },
         { id: 'mmc-mdc', name: 'MMC e MDC' },
         { id: 'fatorizacao', name: 'Fatoração em Primos' }
@@ -43,7 +42,6 @@ export const solvers = {
         { id: 'trigonometric-graphs', name: 'Gráficos Trigonométricos' }
       ]
     },
-    // Categorias futuras já preparadas
     'geometria': {
       name: 'Geometria',
       icon: 'Square',
@@ -57,8 +55,10 @@ export const solvers = {
       name: 'Estatística',
       icon: 'BarChart',
       solvers: [
-        { id: 'means', name: 'Médias' },
-        { id: 'mode-median', name: 'Moda e Mediana' }
+        { id: 'mean-mode-median', name: 'Média, Moda e Mediana' },
+        { id: 'weighted-mean', name: 'Média Ponderada' },
+        { id: 'dispersions', name: 'Dispersões' },
+        { id: 'variation-coefficient', name: 'Coeficiente de Variação' }
       ]
     },
     'calculo': {
@@ -80,7 +80,7 @@ export const solvers = {
       // Frações
       'fraction-add-sub', 'fraction-mult-div', 'fraction-simplification', 'mixed-fractions',
       // Estatística básica
-      'means', 'mode-median',
+      'mean-mode-median',
       // Geometria básica
       'plane-figures-area', 'perimeters'
     ],
