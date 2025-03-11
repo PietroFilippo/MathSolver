@@ -31,6 +31,9 @@ import ResolvedorFracoesMistas from '../resolvedores/fracoes/ResolvedorFracoesMi
 import ResolvedorMediaPonderada from '../resolvedores/estatistica/ResolvedorMediaPonderada';
 import ResolvedorDispersoes from '../resolvedores/estatistica/ResolvedorDispersoes';
 import ResolvedorVariacaoCoeficiente from '../resolvedores/estatistica/ResolvedorVariacaoCoeficiente';
+import ResolvedorAreaFigurasPlanas from '../resolvedores/geometria/ResolvedorAreaFigurasPlanas';
+import ResolvedorPerimetros from '../resolvedores/geometria/ResolvedorPerimetros';
+import ResolvedorVolumeSolidos from '../resolvedores/geometria/ResolvedorVolumeSolidos';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -162,8 +165,14 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorDispersoes />;
       case 'variation-coefficient':
         return <ResolvedorVariacaoCoeficiente />;
+      case 'plane-figures-area':
+        return <ResolvedorAreaFigurasPlanas />;
+      case 'perimeters':
+        return <ResolvedorPerimetros />;
+      case 'solid-volumes':
+        return <ResolvedorVolumeSolidos />;
       default:
-        return <div>Solucionador não encontrado.</div>;
+        return <div>Em breve.</div>;
     }
   };
 

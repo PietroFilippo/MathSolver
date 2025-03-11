@@ -163,9 +163,10 @@ const ResolvedorFatorizacao: React.FC = () => {
                 )}
             </div>
 
-            {result && (
+            {result !== null && (
                 <div className="space-y-6">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5">
+                        <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                         <p className="text-xl">
                             A fatoração de {number} em números primos é: <span className="font-bold"dangerouslySetInnerHTML={{ __html: formatResult() }} />
                        </p>

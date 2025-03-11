@@ -48,7 +48,7 @@ export const solvers = {
       solvers: [
         { id: 'plane-figures-area', name: 'Área de Figuras Planas' },
         { id: 'perimeters', name: 'Perímetros' },
-        { id: 'solids-volume', name: 'Volume de Sólidos' }
+        { id: 'solid-volumes', name: 'Volume de Sólidos' }
       ]
     },
     'estatistica': {
