@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { sistemaLinear, aproximadamenteIguais, arredondarParaDecimais } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
+import ResolvedorSmartRecognition from '../../components/ResolvedorSmartRecognition';
 
 const ResolvedorSistemasLineares: React.FC = () => {
     const [a1, setA1] = useState<string>('');
@@ -129,12 +130,99 @@ const ResolvedorSistemasLineares: React.FC = () => {
         setShowExplanation(true);
     };
 
+    const handleProblemRecognized = (problem: string) => {
+        console.log('Raw recognized text:', problem);
+        
+        try {
+            // Split into equations and clean up
+            const cleanedText = problem
+                .replace(/\*/g, '')  // Remove multiplication symbols
+                .replace(/={2,}/g, '=') // Replace multiple = with single =
+                .replace(/=+$/g, ''); // Remove trailing equals signs
+
+            // Split into individual equations
+            const equations = cleanedText.split('=');
+            console.log('Split equations:', equations);
+
+            // Reconstruct the system properly
+            const reconstructedSystem = [];
+            for (let i = 0; i < equations.length; i += 2) {
+                if (i + 1 < equations.length) {
+                    const equation = `${equations[i]}=${equations[i + 1]}`;
+                    reconstructedSystem.push(equation);
+                }
+            }
+
+            console.log('Reconstructed system:', reconstructedSystem);
+
+            if (reconstructedSystem.length >= 2) {
+                // Parse first equation
+                const eq1Parts = reconstructedSystem[0].split('=');
+                const eq1 = eq1Parts[0];
+                const constant1 = Number(eq1Parts[1]);
+
+                // Parse second equation
+                const eq2Parts = reconstructedSystem[1].split('=');
+                const eq2 = eq2Parts[0];
+                const constant2 = Number(eq2Parts[1]);
+
+                // Parse coefficients
+                const xCoeff1 = parseCoefficient(eq1, 'x');
+                const yCoeff1 = parseCoefficient(eq1, 'y');
+                const xCoeff2 = parseCoefficient(eq2, 'x');
+                const yCoeff2 = parseCoefficient(eq2, 'y');
+
+                console.log('Parsed coefficients:', {
+                    eq1: { x: xCoeff1, y: yCoeff1, c: constant1 },
+                    eq2: { x: xCoeff2, y: yCoeff2, c: constant2 }
+                });
+
+                // Set the coefficients
+                setA1(xCoeff1.toString());
+                setB1(yCoeff1.toString());
+                setC1(constant1.toString());
+                setA2(xCoeff2.toString());
+                setB2(yCoeff2.toString());
+                setC2(constant2.toString());
+
+                // Automatically solve the system
+                handleSolve();
+            } else {
+                setErrorMessage('Não foi possível identificar um sistema de equações válido.');
+            }
+        } catch (error) {
+            console.error('Error parsing equations:', error);
+            setErrorMessage('Não foi possível reconhecer o sistema de equações. Por favor, verifique o formato.');
+        }
+    };
+
+    const parseCoefficient = (equation: string, variable: string): number => {
+        // Remove spaces and handle negative signs
+        const cleanedEq = equation.replace(/\s+/g, '');
+        
+        // Find the term with the variable
+        const regex = new RegExp(`[+-]?\\d*${variable}`);
+        const match = cleanedEq.match(regex);
+        
+        if (!match) return 0;
+        
+        const term = match[0];
+        if (term === variable) return 1;
+        if (term === `-${variable}`) return -1;
+        return Number(term.replace(variable, '')) || 1; // Default to 1 if coefficient is empty
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
                 <HiCalculator className="h-6 w-6 text-indigo-600 mr-2" />
                 <h2 className="text-2xl font-bold">Sistema de Equações Lineares</h2>
             </div>
+
+            <ResolvedorSmartRecognition 
+                onProblemRecognized={handleProblemRecognized}
+                placeholder="um sistema de equações lineares escrito em papel"
+            />
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
                 <p className="text-gray-700 mb-6">
