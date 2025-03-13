@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { arredondarParaDecimais, calcularMediana, calcularModa } from '../../utils/mathUtils';
+import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { calcularMediana, calcularModa } from '../../utils/mathUtilsEstatistica';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorMediaModaMediana: React.FC = () => {

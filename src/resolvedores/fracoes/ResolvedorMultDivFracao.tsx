@@ -1,6 +1,7 @@
 import React, { useState, ReactNode } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { simplificarFracao, FractionDisplay, mdc } from '../../utils/mathUtils';
+import { mdc } from '../../utils/mathUtils';
+import { simplificarFracao, FractionDisplay } from '../../utils/mathUtilsFracoes';
 
 type Operation = 'multiply' | 'divide';
 

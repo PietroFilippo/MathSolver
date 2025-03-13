@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { arredondarParaDecimais, calcularMediaPonderada } from '../../utils/mathUtils';
+import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { calcularMediaPonderada } from '../../utils/mathUtilsEstatistica';
 
 interface ValorPeso {
     valor: string;

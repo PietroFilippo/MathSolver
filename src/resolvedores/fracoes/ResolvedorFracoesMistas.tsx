@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import { FractionDisplay } from '../../utils/mathUtils';
+import { FractionDisplay } from '../../utils/mathUtilsFracoes';
 import { HiCalculator } from 'react-icons/hi';
 
 type Operation = 'toFraction' | 'toMixed';

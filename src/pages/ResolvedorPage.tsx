@@ -22,7 +22,6 @@ import ResolvedorMultDivFracao from '../resolvedores/fracoes/ResolvedorMultDivFr
 import ResolvedorEquacaoPrimeiroGrau from '../resolvedores/algebra/ResolvedorEquacaoPrimeiroGrau';
 import ResolvedorEquacaoQuadratica from '../resolvedores/algebra/ResolvedorEquacaoQuadratica';
 import ResolvedorSistemasLineares from '../resolvedores/algebra/ResolvedorSistemasLineares';
-import ResolvedorTrigonometria from '../resolvedores/trigonometria/ResolvedorTrigonometria';
 import ResolvedorLogaritmo from '../resolvedores/algebra/ResolvedorLogaritmo';
 import ResolvedorMMCMDC from '../resolvedores/aritmetica/ResolvedorMMCMDC';
 import ResolvedorFatorizacao from '../resolvedores/aritmetica/ResolvedorFatorizacao';
@@ -34,6 +33,8 @@ import ResolvedorVariacaoCoeficiente from '../resolvedores/estatistica/Resolvedo
 import ResolvedorAreaFigurasPlanas from '../resolvedores/geometria/ResolvedorAreaFigurasPlanas';
 import ResolvedorPerimetros from '../resolvedores/geometria/ResolvedorPerimetros';
 import ResolvedorVolumeSolidos from '../resolvedores/geometria/ResolvedorVolumeSolidos';
+import ResolvedorFuncoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorFuncoesTrigonometricas';
+import ResolvedorEquacoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorEquacoesTrigonometricas';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -151,8 +152,10 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorSistemasLineares />;
       case 'quadratic-equation':
         return <ResolvedorEquacaoQuadratica />;
-      case 'trigonometric':
-        return <ResolvedorTrigonometria />;
+      case 'trigonometric-functions':
+        return <ResolvedorFuncoesTrigonometricas />;
+      case 'trigonometric-equations':
+        return <ResolvedorEquacoesTrigonometricas />;
       case 'logarithm':
         return <ResolvedorLogaritmo />;
       case 'mmc-mdc':

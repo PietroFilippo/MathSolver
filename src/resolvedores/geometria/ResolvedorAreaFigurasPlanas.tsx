@@ -8,7 +8,7 @@ import {
     areaTrapezio,
     areaLosango,
     areaHexagono,
-} from '../../utils/mathUtils';
+} from '../../utils/mathUtilsGeometria';
 
 type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
 

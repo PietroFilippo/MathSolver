@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { 
-    arredondarParaDecimais,
-    calcularDesvioMedio,
-    calcularVariancia,
-    calcularDesvioPadrao
-} from '../../utils/mathUtils';
+import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { calcularDesvioMedio, calcularVariancia, calcularDesvioPadrao } from '../../utils/mathUtilsEstatistica';
 
 const ResolvedorDispersoes: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');

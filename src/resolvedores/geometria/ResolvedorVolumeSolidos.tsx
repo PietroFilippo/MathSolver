@@ -7,7 +7,7 @@ import {
     volumeCone,
     volumePiramide,
     volumePrisma,
-} from '../../utils/mathUtils';
+} from '../../utils/mathUtilsGeometria';
 import { HiCalculator } from 'react-icons/hi';
 
 type Solido = 'cubo' | 'paralelepipedo' | 'esfera' | 'cilindro' | 'cone' | 'piramide' | 'prisma';

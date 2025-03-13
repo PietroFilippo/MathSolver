@@ -1,5 +1,6 @@
 import React, { useState, ReactNode } from 'react';
-import { mmc, mdc, simplificarFracao, FractionDisplay } from '../../utils/mathUtils';
+import { mdc, mmc } from '../../utils/mathUtils';
+import { simplificarFracao, FractionDisplay } from '../../utils/mathUtilsFracoes';
 import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
 
 type Operation = 'add' | 'sub';

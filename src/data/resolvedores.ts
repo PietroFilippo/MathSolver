@@ -37,7 +37,7 @@ export const solvers = {
       name: 'Trigonometria',
       icon: 'TrendingUp',
       solvers: [
-        { id: 'trigonometric', name: 'Funções Trigonométricas' },
+        { id: 'trigonometric-functions', name: 'Funções Trigonométricas' },
         { id: 'trigonometric-equations', name: 'Equações Trigonométricas' },
         { id: 'trigonometric-graphs', name: 'Gráficos Trigonométricos' }
       ]
@@ -89,7 +89,7 @@ export const solvers = {
       'linear-equation', 'quadratic-equation', 'linear-system', 'logarithm', 
       'algebraic-expressions', 'inequations', 'matrices',
       // Trigonometria
-      'trigonometric', 'trigonometric-equations', 'trigonometric-graphs',
+      'trigonometric-functions', 'trigonometric-equations', 'trigonometric-graphs',
       // Cálculo
       'derivatives', 'integrals', 'limits',
       // Geometria avançada
