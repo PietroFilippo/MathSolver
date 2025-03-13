@@ -35,6 +35,7 @@ import ResolvedorPerimetros from '../resolvedores/geometria/ResolvedorPerimetros
 import ResolvedorVolumeSolidos from '../resolvedores/geometria/ResolvedorVolumeSolidos';
 import ResolvedorFuncoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorFuncoesTrigonometricas';
 import ResolvedorEquacoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorEquacoesTrigonometricas';
+import ResolvedorGraficosTrigonometricos from '../resolvedores/trigonometria/ResolvedorGraficosTrigonometricos';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -174,6 +175,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorPerimetros />;
       case 'solid-volumes':
         return <ResolvedorVolumeSolidos />;
+      case 'trigonometric-graphs':
+        return <ResolvedorGraficosTrigonometricos />;
       default:
         return <div>Em breve.</div>;
     }

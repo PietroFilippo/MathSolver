@@ -28,7 +28,7 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             return;
         }
 
-        const steps: string[] = [];
+        const calculationSteps: string[] = [];
         let calculatedResult: number = 0;
         let stepCount = 1;
 
@@ -39,20 +39,20 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
 
             if (inputUnit === 'degrees') {
                 valueInRadians = grausParaRadianos(value);
-                steps.push(`Passo ${stepCount}: Converter o ângulo de graus para radianos`);
-                steps.push(`Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.`);
-                steps.push(`Fórmula: radianos = graus × (π/180)`);
-                steps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
+                calculationSteps.push(`Passo ${stepCount}: Converter o ângulo de graus para radianos`);
+                calculationSteps.push(`Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.`);
+                calculationSteps.push(`Fórmula: radianos = graus × (π/180)`);
+                calculationSteps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
                 stepCount++;
             } else {
                 valueInRadians = value;
-                steps.push(`Passo ${stepCount}: Verificar a unidade do ângulo`);
-                steps.push(`O valor ${value} já está em radianos, então não é necessária conversão.`);
+                calculationSteps.push(`Passo ${stepCount}: Verificar a unidade do ângulo`);
+                calculationSteps.push(`O valor ${value} já está em radianos, então não é necessária conversão.`);
                 stepCount++;
             }
 
             // Calcula o resultado
-            steps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
+            calculationSteps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value})`);
             stepCount++;
             
             let explanation = '';
@@ -68,8 +68,8 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                 case 'tan':
                     if (Math.abs(Math.cos(valueInRadians)) < 1e-10) {
                         setError('Tangente indefinida para este ângulo (cos(x) = 0)');
-                        steps.push(`A tangente não está definida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
-                        setExplanationSteps(steps);
+                        calculationSteps.push(`A tangente não está definida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
+                        setExplanationSteps(calculationSteps);
                         return;
                     }
                     explanation = `A tangente de um ângulo representa a razão entre o seno e o cosseno, ou entre o cateto oposto e o cateto adjacente.`;
@@ -80,34 +80,34 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                     return;
             }
             
-            steps.push(explanation);
-            steps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            calculationSteps.push(explanation);
+            calculationSteps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
             
             // Verifica se precisa converter o resultado
             if (outputUnit === 'degrees' && ['asin', 'acos', 'atan'].includes(trigFunction)) {
                 // Se for uma função inversa e o resultado estiver em radianos, converte para graus
-                steps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
-                steps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(radianosParaGraus(calculatedResult), 6)}°`);
+                calculationSteps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
+                calculationSteps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(radianosParaGraus(calculatedResult), 6)}°`);
                 stepCount++;
                 calculatedResult = radianosParaGraus(calculatedResult);
             }
             
             // Verificação usando identidades
-            steps.push(`Passo ${stepCount}: Verificar o resultado usando identidades trigonométricas`);
+            calculationSteps.push(`Passo ${stepCount}: Verificar o resultado usando identidades trigonométricas`);
             const sinVal = trigFunction === 'sin' ? calculatedResult : Math.sin(valueInRadians);
             const cosVal = trigFunction === 'cos' ? calculatedResult : Math.cos(valueInRadians);
             
-            steps.push(`Identidade fundamental: sin²(x) + cos²(x) = 1`);
-            steps.push(`Verificação: sin²(${arredondarParaDecimais(valueInRadians, 4)}) + cos²(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(Math.pow(sinVal, 2) + Math.pow(cosVal, 2), 6)}`);
+            calculationSteps.push(`Identidade fundamental: sin²(x) + cos²(x) = 1`);
+            calculationSteps.push(`Verificação: sin²(${arredondarParaDecimais(valueInRadians, 4)}) + cos²(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(Math.pow(sinVal, 2) + Math.pow(cosVal, 2), 6)}`);
             
             if (trigFunction === 'tan') {
-                steps.push(`Identidade da tangente: tan(x) = sin(x) / cos(x)`);
-                steps.push(`Verificação: sin(${arredondarParaDecimais(valueInRadians, 4)}) / cos(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(sinVal / cosVal, 6)}`);
+                calculationSteps.push(`Identidade da tangente: tan(x) = sin(x) / cos(x)`);
+                calculationSteps.push(`Verificação: sin(${arredondarParaDecimais(valueInRadians, 4)}) / cos(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(sinVal / cosVal, 6)}`);
             }
         }
         // Para funções trigonométricas inversas (asin, acos, atan)
         else if (['asin', 'acos', 'atan'].includes(trigFunction)) {
-            steps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${value})`);
+            calculationSteps.push(`Passo ${stepCount}: Calcular ${trigFunction}(${value})`);
             stepCount++;
             
             let explanation = '';
@@ -137,37 +137,37 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                     return;
             }
             
-            steps.push(explanation);
-            steps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
+            calculationSteps.push(explanation);
+            calculationSteps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
             
             // Verifica se precisa converter o resultado para graus
             if (outputUnit === 'degrees') {
                 const resultInDegrees = radianosParaGraus(calculatedResult);
-                steps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
-                steps.push(`Para converter de radianos para graus, multiplicamos por (180/π)`);
-                steps.push(`Fórmula: graus = radianos × (180/π)`);
-                steps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
+                calculationSteps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
+                calculationSteps.push(`Para converter de radianos para graus, multiplicamos por (180/π)`);
+                calculationSteps.push(`Fórmula: graus = radianos × (180/π)`);
+                calculationSteps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
                 calculatedResult = resultInDegrees;
                 stepCount++;
             } else {
-                steps.push(`Passo ${stepCount}: Verificar a unidade do resultado`);
-                steps.push(`O resultado já está em radianos, que é a unidade solicitada.`);
+                calculationSteps.push(`Passo ${stepCount}: Verificar a unidade do resultado`);
+                calculationSteps.push(`O resultado já está em radianos, que é a unidade solicitada.`);
                 stepCount++;
             }
             
             // Verificação da função inversa
-            steps.push(`Passo ${stepCount}: Verificar o resultado aplicando a função direta ao resultado`);
+            calculationSteps.push(`Passo ${stepCount}: Verificar o resultado aplicando a função direta ao resultado`);
             const verification = trigFunction === 'asin' ? Math.sin(calculatedResult) :
                                  trigFunction === 'acos' ? Math.cos(calculatedResult) :
                                  Math.tan(calculatedResult);
             
-            steps.push(`Aplicando a função direta ao resultado: ${trigFunction.substring(1)}(${arredondarParaDecimais(calculatedResult, 6)}) = ${arredondarParaDecimais(verification, 6)}`);
-            steps.push(`Valor original: ${value}`);
-            steps.push(`A diferença de ${arredondarParaDecimais(Math.abs(verification - value), 8)} é devido a arredondamentos.`);
+            calculationSteps.push(`Aplicando a função direta ao resultado: ${trigFunction.substring(1)}(${arredondarParaDecimais(calculatedResult, 6)}) = ${arredondarParaDecimais(verification, 6)}`);
+            calculationSteps.push(`Valor original: ${value}`);
+            calculationSteps.push(`A diferença de ${arredondarParaDecimais(Math.abs(verification - value), 8)} é devido a arredondamentos.`);
         }
 
         setResult(arredondarParaDecimais(calculatedResult, 6));
-        setExplanationSteps(steps);
+        setExplanationSteps(calculationSteps);
     };
 
     return (
