@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
-import { radianosParaGraus, grausParaRadianos } from '../../utils/mathUtilsTrigonometria';
+import { roundToDecimals } from '../../utils/mathUtils';
+import { radiansToDegrees, degreesToRadians } from '../../utils/mathUtilsTrigonometria';
 import { HiCalculator } from 'react-icons/hi';
 
 type TrigFunction = 'sin' | 'cos' | 'tan' | 'asin' | 'acos' | 'atan';
@@ -38,11 +38,11 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             let valueInRadians = value;
 
             if (inputUnit === 'degrees') {
-                valueInRadians = grausParaRadianos(value);
+                valueInRadians = degreesToRadians(value);
                 calculationSteps.push(`Passo ${stepCount}: Converter o ângulo de graus para radianos`);
                 calculationSteps.push(`Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.`);
-                calculationSteps.push(`Fórmula: radianos = graus × (π/180)`);
-                calculationSteps.push(`${value}° = ${value} × (π/180) = ${arredondarParaDecimais(valueInRadians, 6)} radianos`);
+                calculationSteps.push(`Fórmula: radians = degrees × (π/180)`);
+                calculationSteps.push(`${value}° = ${value} × (π/180) = ${roundToDecimals(valueInRadians, 6)} radianos`);
                 stepCount++;
             } else {
                 valueInRadians = value;
@@ -68,7 +68,7 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                 case 'tan':
                     if (Math.abs(Math.cos(valueInRadians)) < 1e-10) {
                         setError('Tangente indefinida para este ângulo (cos(x) = 0)');
-                        calculationSteps.push(`A tangente não está definida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
+                        calculationSteps.push(`A tangente é indefinida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.`);
                         setExplanationSteps(calculationSteps);
                         return;
                     }
@@ -81,15 +81,15 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             }
             
             calculationSteps.push(explanation);
-            calculationSteps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            calculationSteps.push(`${trigFunction}(${inputUnit === 'degrees' ? value + '°' : value}) = ${roundToDecimals(calculatedResult, 6)}`);
             
             // Verifica se precisa converter o resultado
             if (outputUnit === 'degrees' && ['asin', 'acos', 'atan'].includes(trigFunction)) {
                 // Se for uma função inversa e o resultado estiver em radianos, converte para graus
                 calculationSteps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
-                calculationSteps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(radianosParaGraus(calculatedResult), 6)}°`);
+                calculationSteps.push(`${roundToDecimals(calculatedResult, 6)} radianos = ${roundToDecimals(calculatedResult, 6)} × (180/π) = ${roundToDecimals(radiansToDegrees(calculatedResult), 6)}°`);
                 stepCount++;
-                calculatedResult = radianosParaGraus(calculatedResult);
+                calculatedResult = radiansToDegrees(calculatedResult);
             }
             
             // Verificação usando identidades
@@ -98,11 +98,11 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             const cosVal = trigFunction === 'cos' ? calculatedResult : Math.cos(valueInRadians);
             
             calculationSteps.push(`Identidade fundamental: sin²(x) + cos²(x) = 1`);
-            calculationSteps.push(`Verificação: sin²(${arredondarParaDecimais(valueInRadians, 4)}) + cos²(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(Math.pow(sinVal, 2) + Math.pow(cosVal, 2), 6)}`);
+            calculationSteps.push(`Verificação: sin²(${roundToDecimals(valueInRadians, 4)}) + cos²(${roundToDecimals(valueInRadians, 4)}) = ${roundToDecimals(Math.pow(sinVal, 2) + Math.pow(cosVal, 2), 6)}`);
             
             if (trigFunction === 'tan') {
                 calculationSteps.push(`Identidade da tangente: tan(x) = sin(x) / cos(x)`);
-                calculationSteps.push(`Verificação: sin(${arredondarParaDecimais(valueInRadians, 4)}) / cos(${arredondarParaDecimais(valueInRadians, 4)}) = ${arredondarParaDecimais(sinVal / cosVal, 6)}`);
+                calculationSteps.push(`Verificação: sin(${roundToDecimals(valueInRadians, 4)}) / cos(${roundToDecimals(valueInRadians, 4)}) = ${roundToDecimals(sinVal / cosVal, 6)}`);
             }
         }
         // Para funções trigonométricas inversas (asin, acos, atan)
@@ -138,15 +138,15 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             }
             
             calculationSteps.push(explanation);
-            calculationSteps.push(`${trigFunction}(${value}) = ${arredondarParaDecimais(calculatedResult, 6)} radianos`);
+            calculationSteps.push(`${trigFunction}(${value}) = ${roundToDecimals(calculatedResult, 6)} radianos`);
             
             // Verifica se precisa converter o resultado para graus
             if (outputUnit === 'degrees') {
-                const resultInDegrees = radianosParaGraus(calculatedResult);
+                const resultInDegrees = radiansToDegrees(calculatedResult);
                 calculationSteps.push(`Passo ${stepCount}: Converter o resultado de radianos para graus`);
                 calculationSteps.push(`Para converter de radianos para graus, multiplicamos por (180/π)`);
-                calculationSteps.push(`Fórmula: graus = radianos × (180/π)`);
-                calculationSteps.push(`${arredondarParaDecimais(calculatedResult, 6)} radianos = ${arredondarParaDecimais(calculatedResult, 6)} × (180/π) = ${arredondarParaDecimais(resultInDegrees, 6)}°`);
+                calculationSteps.push(`Fórmula: degrees = radians × (180/π)`);
+                calculationSteps.push(`${roundToDecimals(calculatedResult, 6)} radianos = ${roundToDecimals(calculatedResult, 6)} × (180/π) = ${roundToDecimals(resultInDegrees, 6)}°`);
                 calculatedResult = resultInDegrees;
                 stepCount++;
             } else {
@@ -161,12 +161,12 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                                  trigFunction === 'acos' ? Math.cos(calculatedResult) :
                                  Math.tan(calculatedResult);
             
-            calculationSteps.push(`Aplicando a função direta ao resultado: ${trigFunction.substring(1)}(${arredondarParaDecimais(calculatedResult, 6)}) = ${arredondarParaDecimais(verification, 6)}`);
+            calculationSteps.push(`Aplicando a função direta ao resultado: ${trigFunction.substring(1)}(${roundToDecimals(calculatedResult, 6)}) = ${roundToDecimals(verification, 6)}`);
             calculationSteps.push(`Valor original: ${value}`);
-            calculationSteps.push(`A diferença de ${arredondarParaDecimais(Math.abs(verification - value), 8)} é devido a arredondamentos.`);
+            calculationSteps.push(`A diferença de ${roundToDecimals(Math.abs(verification - value), 8)} é devido ao arredondamento.`);
         }
 
-        setResult(arredondarParaDecimais(calculatedResult, 6));
+        setResult(roundToDecimals(calculatedResult, 6));
         setExplanationSteps(calculationSteps);
     };
 
@@ -219,7 +219,7 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             {['sin', 'cos', 'tan'].includes(trigFunction) && (
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Unidade do Ângulo de Entrada
+                  Unidade de Ângulo da Entrada
                 </label>
                 <div className="flex space-x-4">
                   <label className="inline-flex items-center">
@@ -247,7 +247,7 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
             {['asin', 'acos', 'atan'].includes(trigFunction) && (
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Unidade do Ângulo de Saída
+                  Unidade de Ângulo da Saída
                 </label>
                 <div className="flex space-x-4">
                   <label className="inline-flex items-center">
@@ -364,12 +364,12 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                           </ul>
                           
                           <p className="mt-2">
-                            <span className="font-semibold">Aplicações:</span> As funções trigonométricas são fundamentais em:
+                            <span className="font-semibold">Aplicações:</span> Funções trigonométricas são fundamentais em:
                           </p>
                           <ul className="list-disc pl-5 mt-1">
                             <li>Física (movimento ondulatório, oscilações)</li>
                             <li>Engenharia (análise de circuitos, processamento de sinais)</li>
-                            <li>Astronomia (cálculo de órbitas e posições)</li>
+                            <li>Astronomia (cálculos de órbita e posição)</li>
                             <li>Navegação (GPS, sistemas de posicionamento)</li>
                           </ul>
                         </>
@@ -388,14 +388,14 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                             <span className="font-semibold">Aplicações das Funções Inversas:</span>
                           </p>
                           <ul className="list-disc pl-5 mt-1">
-                            <li>Cálculo de ângulos em geometria e trigonometria</li>
-                            <li>Navegação e sistemas de orientação</li>
+                            <li>Cálculos de ângulos em geometria e trigonometria</li>
+                            <li>Sistemas de navegação e orientação</li>
                             <li>Processamento de imagens e visão computacional</li>
                             <li>Robótica (cinemática inversa)</li>
                           </ul>
                           
                           <p className="mt-2">
-                            <span className="font-semibold">Observação:</span> As funções trigonométricas inversas são multivalentes, mas por convenção, 
+                            <span className="font-semibold">Observação:</span> Funções trigonométricas são multivalentes, mas por convenção, 
                             retornam apenas um valor específico no intervalo principal.
                           </p>
                         </>

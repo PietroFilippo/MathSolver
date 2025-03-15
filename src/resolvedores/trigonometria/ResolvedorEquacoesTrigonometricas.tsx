@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { arredondarParaDecimais, aproximadamenteIguais } from '../../utils/mathUtils';
+import { roundToDecimals, approximatelyEqual, formatInterval } from '../../utils/mathUtils';
 import { 
-  radianosParaGraus, 
-  parseIntervalo, 
-  formatarIntervalo,
-  avaliarExpressaoTrigonometrica 
+  radiansToDegrees, 
+  evaluateTrigonometricExpression,
+  parseInterval
 } from '../../utils/mathUtilsTrigonometria';
 import { HiCalculator } from 'react-icons/hi';
 
@@ -47,7 +46,7 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
     try {
       // Verifica primeiro se o intervalo é válido antes de continuar
       try {
-        const [testStart, testEnd] = parseIntervalo(interval);
+        const [testStart, testEnd] = parseInterval(interval);
         if (isNaN(testStart) || isNaN(testEnd)) {
           throw new Error('Os limites do intervalo devem ser valores numéricos válidos.');
         }
@@ -72,8 +71,8 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
       // Retorna NaN em caso de erro para evitar travamentos
       const difFunction = (x: number): number => {
         try {
-          const leftValue = avaliarExpressaoTrigonometrica(left, x);
-          const rightValue = avaliarExpressaoTrigonometrica(right, x);
+          const leftValue = evaluateTrigonometricExpression(left, x);
+          const rightValue = evaluateTrigonometricExpression(right, x);
           return leftValue - rightValue;
         } catch (error) {
           // Silenciosamente retorna NaN em caso de erro
@@ -83,20 +82,20 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
 
       // Analisa o intervalo
       try {
-        let [start, end] = parseIntervalo(interval);
+        let [start, end] = parseInterval(interval);
         
         // Inicia os passos da solução
         const calculationSteps: string[] = [];
         let stepCount = 1;
 
-        calculationSteps.push(`Passo ${stepCount}: Analisar a equação trigonométrica`);
+        calculationSteps.push(`Step ${stepCount}: Analisar a equação trigonométrica`);
         calculationSteps.push(`Equação: ${equation}`);
         calculationSteps.push(`Reescrevendo como: ${left} - (${right}) = 0`);
         
         stepCount++;
         // Usa a função de formatação específica para o intervalo
-        calculationSteps.push(`Passo ${stepCount}: Definir o intervalo de busca`);
-        calculationSteps.push(`Intervalo: [${formatarIntervalo(start)}, ${formatarIntervalo(end)}]`);
+        calculationSteps.push(`Step ${stepCount}: Definir o intervalo de busca`);
+        calculationSteps.push(`Intervalo: [${formatInterval(start)}, ${formatInterval(end)}]`);
         calculationSteps.push(`Valores originais do intervalo: [${start}, ${end}]`);
         
         // Método de busca de raízes: divide o intervalo em pequenos segmentos e procura por mudanças de sinal da função diferença
@@ -104,7 +103,7 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
         const segmentSize = (end - start) / numSegments;
         
         stepCount++;
-        calculationSteps.push(`Passo ${stepCount}: Buscar soluções no intervalo`);
+        calculationSteps.push(`Step ${stepCount}: Buscar soluções no intervalo`);
         calculationSteps.push(`Método: Busca por mudanças de sinal da função diferença em ${numSegments} segmentos`);
         
         const solutions: number[] = [];
@@ -159,16 +158,16 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
               
               // Verifica se a solução já foi encontrada (para evitar duplicatas)
               const alreadyExists = solutions.some(s => {
-                return aproximadamenteIguais(s, solution, 1e-6) || 
-                       aproximadamenteIguais(s, solution + 2 * Math.PI, 1e-6) || 
-                       aproximadamenteIguais(s, solution - 2 * Math.PI, 1e-6);
+                return approximatelyEqual(s, solution, 1e-6) ||
+                       approximatelyEqual(s, solution + 2 * Math.PI, 1e-6) ||
+                       approximatelyEqual(s, solution - 2 * Math.PI, 1e-6);
               });
               
               if (!alreadyExists) {
                 // Verifica novamente se a solução é válida antes de adicioná-la
                 try {
-                  const leftValue = avaliarExpressaoTrigonometrica(left, solution);
-                  const rightValue = avaliarExpressaoTrigonometrica(right, solution);
+                  const leftValue = evaluateTrigonometricExpression(left, solution);
+                  const rightValue = evaluateTrigonometricExpression(right, solution);
                   const difference = Math.abs(leftValue - rightValue);
                   
                   if (difference < 1e-5) {  // Tolerância razoável para considerar uma solução válida
@@ -197,19 +196,19 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
           
           // Formata as soluções
           const formattedSols: FormattedSolution[] = solutions.map((solution, index) => {
-            const solutionRadians = formatarIntervalo(solution);
-            const solutionDegrees = arredondarParaDecimais(radianosParaGraus(solution), 4);
+            const solutionRadians = formatInterval(solution);
+            const solutionDegrees = roundToDecimals(radiansToDegrees(solution), 4);
             
             calculationSteps.push(`Solução ${index + 1}: x = ${solutionRadians} rad = ${solutionDegrees}°`);
             
             // Verifica a solução
             try {
-              const leftValue = avaliarExpressaoTrigonometrica(left, solution);
-              const rightValue = avaliarExpressaoTrigonometrica(right, solution);
+              const leftValue = evaluateTrigonometricExpression(left, solution);
+              const rightValue = evaluateTrigonometricExpression(right, solution);
               const difference = Math.abs(leftValue - rightValue);
               
-              calculationSteps.push(`Verificação: ${left} = ${arredondarParaDecimais(leftValue, 6)}, ${right} = ${arredondarParaDecimais(rightValue, 6)}`);
-              calculationSteps.push(`Diferença: ${arredondarParaDecimais(difference, 10)} (deve ser próxima de zero)`);
+              calculationSteps.push(`Verificação: ${left} = ${roundToDecimals(leftValue, 6)}, ${right} = ${roundToDecimals(rightValue, 6)}`);
+              calculationSteps.push(`Diferença: ${roundToDecimals(difference, 10)} (deve ser próxima de zero)`);
               
               // Adiciona observação sobre a periodicidade
               if (equation.includes('sen') || equation.includes('sin') || equation.includes('cos')) {
@@ -236,7 +235,7 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
         
         // Adiciona explicação sobre equações trigonométricas
         stepCount++;
-        calculationSteps.push(`Passo ${stepCount}: Entendendo equações trigonométricas`);
+        calculationSteps.push(`Step ${stepCount}: Entendendo equações trigonométricas`);
         calculationSteps.push(`As equações trigonométricas geralmente têm infinitas soluções devido à natureza periódica das funções trigonométricas.`);
         calculationSteps.push(`Por exemplo, se x = α é uma solução de sen(x) = k, então x = α + 2nπ também é uma solução para qualquer inteiro n.`);
         calculationSteps.push(`Para cos(x) = k, se x = α é uma solução, então x = ±α + 2nπ também é uma solução.`);
@@ -247,13 +246,13 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
         setShowExplanation(true);
         
         if (solutions.length > 0) {
-          calculationSteps.push(`Passo ${stepCount}: Formatar e verificar as soluções encontradas`);
+          calculationSteps.push(`Step ${stepCount}: Formatar e verificar as soluções encontradas`);
           calculationSteps.push(`Formato numérico das soluções: ${solutions.map(s => s.toFixed(4)).join(', ')}`);
-          calculationSteps.push(`Formato radiano das soluções: ${solutions.map(s => formatarIntervalo(s)).join(', ')}`);
+          calculationSteps.push(`Formato radiano das soluções: ${solutions.map(s => formatInterval(s)).join(', ')}`);
           
           // Formatar as soluções para exibição
           const formattedSols = solutions.map(solution => {
-            const radians = formatarIntervalo(solution);
+            const radians = formatInterval(solution);
             const degrees = parseFloat((solution * 180 / Math.PI).toFixed(2));
             return { radians, degrees };
           });
@@ -261,7 +260,7 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
           setFormattedSolutions(formattedSols);
           
           // Texto para exibir o resultado final
-          setResult(`Soluções encontradas no intervalo [${formatarIntervalo(start)}, ${formatarIntervalo(end)}]:`);
+          setResult(`Soluções encontradas no intervalo [${formatInterval(start)}, ${formatInterval(end)}]:`);
         }
         
       } catch (error) {
@@ -421,8 +420,8 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
               
               <div className="space-y-4">
                 {explanationSteps.map((step, index) => {
-                  // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                  const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                  // Verifica se o passo começa com um padrão de número de passo como "Step X:"
+                  const stepMatch = step.match(/^(Step \d+:)(.*)$/);
                   
                   if (stepMatch) {
                     // Se for um passo com número, extrair e destacar

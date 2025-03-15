@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { aproximadamenteIguais, arredondarParaDecimais } from '../../utils/mathUtils';
-import { sistemaLinear } from '../../utils/mathUtilsAlgebra';
+import React, { useState } from 'react';
+import { approximatelyEqual, roundToDecimals } from '../../utils/mathUtils';
+import { linearSystem } from '../../utils/mathUtilsAlgebra';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorSistemasLineares: React.FC = () => {
@@ -54,8 +54,8 @@ const ResolvedorSistemasLineares: React.FC = () => {
         calculationSteps.push(`det = ${numA1} * ${numB2} - ${numA2} * ${numB1} = ${det}`);
         stepCount++;
 
-        // Usa a função sistemaLinear para resolver o sistema
-        const result = sistemaLinear(numA1, numB1, numC1, numA2, numB2, numC2);
+        // Usa a função linearSystem para resolver o sistema
+        const result = linearSystem(numA1, numB1, numC1, numA2, numB2, numC2);
 
         if (result === null) {
             // Sistema não tem solução única ou tem infinitas soluções
@@ -65,17 +65,17 @@ const ResolvedorSistemasLineares: React.FC = () => {
             const ratioB = numB1 / numB2;
             const ratioC = numC1 / numC2;
 
-            if (aproximadamenteIguais(ratioA, ratioB) && !aproximadamenteIguais(ratioA, ratioC)) {
+            if (approximatelyEqual(ratioA, ratioB) && !approximatelyEqual(ratioA, ratioC)) {
                 // Sistema inconsistente - sem solução
                 calculationSteps.push(`Passo ${stepCount}: O determinante é zero e as razões dos coeficientes não são compatíveis, portanto, o sistema não possui soluções`);
-                calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${arredondarParaDecimais(ratioA, 4)}, b₁/b₂ = ${arredondarParaDecimais(ratioB, 4)}, c₁/c₂ = ${arredondarParaDecimais(ratioC, 4)}`);
+                calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${roundToDecimals(ratioA, 4)}, b₁/b₂ = ${roundToDecimals(ratioB, 4)}, c₁/c₂ = ${roundToDecimals(ratioC, 4)}`);
                 calculationSteps.push(`Por causa que a₁/a₂ = b₁/b₂ ≠ c₁/c₂, o sistema é inconsistente e não possui soluções`);
 
                 setSystemType('noSolution');
             } else {
                 // Sistema com infinitas soluções
                 calculationSteps.push(`Passo ${stepCount}: O determinante é zero e as equações são linearmente dependentes, portanto, o sistema possui infinitas soluções`);
-                calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${arredondarParaDecimais(ratioA, 4)}, b₁/b₂ = ${arredondarParaDecimais(ratioB, 4)}, c₁/c₂ = ${arredondarParaDecimais(ratioC, 4)}`);
+                calculationSteps.push(`A razão dos coeficientes é: a₁/a₂ = ${roundToDecimals(ratioA, 4)}, b₁/b₂ = ${roundToDecimals(ratioB, 4)}, c₁/c₂ = ${roundToDecimals(ratioC, 4)}`);
                 calculationSteps.push(`Por causa que a₁/a₂ = b₁/b₂ = c₁/c₂, o sistema possui infinitas soluções`);
 
                 // Expressando uma variável em termos da outra (y em termos de x)
@@ -113,11 +113,11 @@ const ResolvedorSistemasLineares: React.FC = () => {
             const eq1 = numA1 * result.x + numB1 * result.y;
             const eq2 = numA2 * result.x + numB2 * result.y;
             
-            calculationSteps.push(`Equação 1: ${numA1} × ${arredondarParaDecimais(result.x, 4)} + ${numB1} × ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq1, 4)} ≈ ${numC1}`);
-            calculationSteps.push(`Equação 2: ${numA2} × ${arredondarParaDecimais(result.x, 4)} + ${numB2} × ${arredondarParaDecimais(result.y, 4)} = ${arredondarParaDecimais(eq2, 4)} ≈ ${numC2}`);
+            calculationSteps.push(`Equação 1: ${numA1} × ${roundToDecimals(result.x, 4)} + ${numB1} × ${roundToDecimals(result.y, 4)} = ${roundToDecimals(eq1, 4)} ≈ ${numC1}`);
+            calculationSteps.push(`Equação 2: ${numA2} × ${roundToDecimals(result.x, 4)} + ${numB2} × ${roundToDecimals(result.y, 4)} = ${roundToDecimals(eq2, 4)} ≈ ${numC2}`);
             
-            if (aproximadamenteIguais(eq1, numC1) && aproximadamenteIguais(eq2, numC2)) {
-                calculationSteps.push(`A verificação confirma que a solução (x = ${arredondarParaDecimais(result.x, 4)}, y = ${arredondarParaDecimais(result.y, 4)}) é válida.`);
+            if (approximatelyEqual(eq1, numC1) && approximatelyEqual(eq2, numC2)) {
+                calculationSteps.push(`A verificação confirma que a solução (x = ${roundToDecimals(result.x, 4)}, y = ${roundToDecimals(result.y, 4)}) é válida.`);
             } else {
                 calculationSteps.push(`Nota: Há pequenas diferenças devido ao arredondamento.`);
             }
@@ -251,8 +251,8 @@ const ResolvedorSistemasLineares: React.FC = () => {
                         {systemType === 'unique' && solution && (
                             <div>
                                 <p className="text-xl">O sistema possui uma única solução:</p>
-                                <p className="text-xl font-bold mt-2">x = {arredondarParaDecimais(solution.x, 4)}</p>
-                                <p className="text-xl font-bold">y = {arredondarParaDecimais(solution.y, 4)}</p>
+                                <p className="text-xl font-bold mt-2">x = {roundToDecimals(solution.x, 4)}</p>
+                                <p className="text-xl font-bold">y = {roundToDecimals(solution.y, 4)}</p>
                             </div>
                         )}
                         

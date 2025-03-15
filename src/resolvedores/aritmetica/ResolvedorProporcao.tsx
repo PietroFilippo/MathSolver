@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorProporcao: React.FC = () => {
@@ -53,7 +53,7 @@ const ResolvedorProporcao: React.FC = () => {
                 calculationSteps.push(`a = ${numB * numC} / ${numD}`);
                 
                 calculatedValue = (numB * numC) / numD;
-                calculationSteps.push(`a = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                calculationSteps.push(`a = ${roundToDecimals(calculatedValue, 4)}`);
                 stepCount++;
                 break;
                 
@@ -72,7 +72,7 @@ const ResolvedorProporcao: React.FC = () => {
                 calculationSteps.push(`b = ${numA * numD} / ${numC}`);
                 
                 calculatedValue = (numA * numD) / numC;
-                calculationSteps.push(`b = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                calculationSteps.push(`b = ${roundToDecimals(calculatedValue, 4)}`);
                 stepCount++;
                 break;
                 
@@ -91,7 +91,7 @@ const ResolvedorProporcao: React.FC = () => {
                 calculationSteps.push(`c = ${numA * numD} / ${numB}`);
                 
                 calculatedValue = (numA * numD) / numB;
-                calculationSteps.push(`c = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                calculationSteps.push(`c = ${roundToDecimals(calculatedValue, 4)}`);
                 stepCount++;
                 break;
                 
@@ -110,7 +110,7 @@ const ResolvedorProporcao: React.FC = () => {
                 calculationSteps.push(`d = ${numB * numC} / ${numA}`);
                 
                 calculatedValue = (numB * numC) / numA;
-                calculationSteps.push(`d = ${arredondarParaDecimais(calculatedValue, 4)}`);
+                calculationSteps.push(`d = ${roundToDecimals(calculatedValue, 4)}`);
                 stepCount++;
                 break;
         }
@@ -129,7 +129,7 @@ const ResolvedorProporcao: React.FC = () => {
         const leftSide = aVal * dVal;
         const rightSide = bVal * cVal;
         
-        calculationSteps.push(`${arredondarParaDecimais(leftSide, 4)} = ${arredondarParaDecimais(rightSide, 4)}`);
+        calculationSteps.push(`${roundToDecimals(leftSide, 4)} = ${roundToDecimals(rightSide, 4)}`);
         
         if (Math.abs(leftSide - rightSide) < 0.0001) {
             calculationSteps.push(`A proporção está correta. ✓`);
@@ -137,7 +137,7 @@ const ResolvedorProporcao: React.FC = () => {
             calculationSteps.push(`Nota: Há uma pequena diferença devido ao arredondamento.`);
         }
         
-        setResult(arredondarParaDecimais(calculatedValue, 4));
+        setResult(roundToDecimals(calculatedValue, 4));
         setSteps(calculationSteps);
         setShowExplanation(true);
     };

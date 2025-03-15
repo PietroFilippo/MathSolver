@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
-import { calcularDesvioMedio, calcularVariancia, calcularDesvioPadrao } from '../../utils/mathUtilsEstatistica';
+import { roundToDecimals } from '../../utils/mathUtils';
+import { 
+    calculateMeanDeviation, 
+    calculateVariance, 
+    calculateStandardDeviation,
+} from '../../utils/mathUtilsEstatistica';
 
 const ResolvedorDispersoes: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');
@@ -38,16 +42,12 @@ const ResolvedorDispersoes: React.FC = () => {
         }
 
         let calculatedResult: number;
-        switch (operationType) {
-            case 'desvioMedio':
-                calculatedResult = calcularDesvioMedio(parsedArray);
-                break;
-            case 'variancia':
-                calculatedResult = calcularVariancia(parsedArray);
-                break;
-            case 'desvioPadrao':
-                calculatedResult = calcularDesvioPadrao(parsedArray);
-                break;
+        if (operationType === 'desvioMedio') {
+            calculatedResult = calculateMeanDeviation(parsedArray);
+        } else if (operationType === 'variancia') {
+            calculatedResult = calculateVariance(parsedArray);
+        } else {
+            calculatedResult = calculateStandardDeviation(parsedArray);
         }
 
         setResult(calculatedResult);
@@ -58,7 +58,7 @@ const ResolvedorDispersoes: React.FC = () => {
         if (!numbers.trim()) return null;
 
         const numbersArray = numbers.split(',').map(num => parseFloat(num.trim()));
-        const media = arredondarParaDecimais(
+        const media = roundToDecimals(
             numbersArray.reduce((acc, curr) => acc + curr, 0) / numbersArray.length,
             4
         );
@@ -88,7 +88,7 @@ const ResolvedorDispersoes: React.FC = () => {
                         </div>
                         <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
                             {numbersArray.map((num, index) => (
-                                <p key={index}>|{num} - {media}| = {arredondarParaDecimais(Math.abs(num - media), 4)}</p>
+                                <p key={index}>|{num} - {media}| = {roundToDecimals(Math.abs(num - media), 4)}</p>
                             ))}
                         </div>
                     </div>
@@ -130,7 +130,7 @@ const ResolvedorDispersoes: React.FC = () => {
                         </div>
                         <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
                             {numbersArray.map((num, index) => (
-                                <p key={index}>({num} - {media})² = {arredondarParaDecimais(Math.pow(num - media, 2), 4)}</p>
+                                <p key={index}>({num} - {media})² = {roundToDecimals(Math.pow(num - media, 2), 4)}</p>
                             ))}
                         </div>
                     </div>
@@ -143,7 +143,7 @@ const ResolvedorDispersoes: React.FC = () => {
                             <p className="text-gray-800">Calcular a média dos quadrados dos desvios.</p>
                         </div>
                         <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                            <p>Variância = {result}</p>
+                            <p>Variância = {roundToDecimals(calculateVariance(numbersArray), 4)}</p>
                         </div>
                     </div>
                 </>
@@ -159,7 +159,7 @@ const ResolvedorDispersoes: React.FC = () => {
                             <p className="text-gray-800">Calcular a variância dos valores.</p>
                         </div>
                         <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                            <p>Variância = {arredondarParaDecimais(calcularVariancia(numbersArray), 4)}</p>
+                            <p>Variância = {roundToDecimals(calculateVariance(numbersArray), 4)}</p>
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@ const ResolvedorDispersoes: React.FC = () => {
                             <p className="text-gray-800">Calcular a raiz quadrada da variância.</p>
                         </div>
                         <div className="bg-white p-3 rounded-md border border-gray-200 mt-2">
-                            <p>Desvio Padrão = √{arredondarParaDecimais(calcularVariancia(numbersArray), 4)} = {result}</p>
+                            <p>Desvio Padrão = √{roundToDecimals(calculateStandardDeviation(numbersArray), 4)} = {result}</p>
                         </div>
                     </div>
                 </>

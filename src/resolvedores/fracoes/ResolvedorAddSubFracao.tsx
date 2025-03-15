@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
-import { mdc, mmc } from '../../utils/mathUtils';
-import { simplificarFracao, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { lcm, gcd } from '../../utils/mathUtils';
+import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
 import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
 
 type Operation = 'add' | 'sub';
@@ -68,7 +68,7 @@ const ResolvedorAddSubFracao: React.FC = () => {
         stepCount++;
         
         // Calcular o MMC dos denominadores
-        const commonDenominator = mmc(den1, den2);
+        const commonDenominator = lcm(den1, den2);
         calculationSteps.push(`MMC(${den1}, ${den2}) = ${commonDenominator}`);
         
         // Armazenar os passos do MMC para exibição detalhada opcional
@@ -121,12 +121,12 @@ const ResolvedorAddSubFracao: React.FC = () => {
         }
         
         // Simplificar a fração resultante, se possível
-        const { numerador: simplifiedNum, denominador: simplifiedDen } = simplificarFracao(resultNumerator, commonDenominator);
+        const { numerador: simplifiedNum, denominador: simplifiedDen } = simplifyFraction(resultNumerator, commonDenominator);
         
         if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
             calculationSteps.push(`Passo ${stepCount}: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC (Máximo Divisor Comum).`);
             
-            const mdcValue = mdc(Math.abs(resultNumerator), commonDenominator);
+            const mdcValue = gcd(Math.abs(resultNumerator), commonDenominator);
             calculationSteps.push(`MDC(${Math.abs(resultNumerator)}, ${commonDenominator}) = ${mdcValue}`);
             calculationSteps.push(`Dividindo o numerador: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
             calculationSteps.push(`Dividindo o denominador: ${commonDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
@@ -259,7 +259,7 @@ const ResolvedorAddSubFracao: React.FC = () => {
         };
         
         const mdcSteps = gcdSteps(den1, den2);
-        const mdcValue = mdc(den1, den2);
+        const mdcValue = gcd(den1, den2);
         
         return (
             <div className="bg-white p-5 rounded-md border border-blue-200 mt-3">

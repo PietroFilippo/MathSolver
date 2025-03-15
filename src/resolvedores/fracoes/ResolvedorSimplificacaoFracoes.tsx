@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
-import { mdc } from '../../utils/mathUtils';
-import { simplificarFracao, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { gcd } from '../../utils/mathUtils';
+import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorSimplificacaoFracoes: React.FC = () => {
@@ -35,8 +35,8 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
     }
 
     // Calcular o MDC e simplificar a fração
-    const mdcValue = mdc(Math.abs(num), Math.abs(den));
-    const simplified = simplificarFracao(num, den);
+    const mdcValue = gcd(Math.abs(num), Math.abs(den));
+    const simplified = simplifyFraction(num, den);
     
     setResultadoNum(simplified.numerador);
     setResultadoDen(simplified.denominador);

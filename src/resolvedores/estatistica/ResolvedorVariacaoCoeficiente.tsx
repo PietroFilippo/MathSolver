@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
-import { calcularCoeficienteVariacao, calcularDesvioPadrao } from '../../utils/mathUtilsEstatistica';
+import { roundToDecimals } from '../../utils/mathUtils';
+import { calculateCoefficientOfVariation, calculateStandardDeviation } from '../../utils/mathUtilsEstatistica';
 
 const ResolvedorVariacaoCoeficiente: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');
@@ -37,7 +37,7 @@ const ResolvedorVariacaoCoeficiente: React.FC = () => {
         }
 
         try {
-            const calculatedResult = calcularCoeficienteVariacao(parsedArray);
+            const calculatedResult = calculateCoefficientOfVariation(parsedArray);
             setResult(calculatedResult);
             setShowExplanation(true);
         } catch (error) {
@@ -51,11 +51,11 @@ const ResolvedorVariacaoCoeficiente: React.FC = () => {
         if (!numbers.trim()) return null;
 
         const numbersArray = numbers.split(',').map(num => parseFloat(num.trim()));
-        const media = arredondarParaDecimais(
+        const media = roundToDecimals(
             numbersArray.reduce((acc, curr) => acc + curr, 0) / numbersArray.length,
             4
         );
-        const desvioPadrao = arredondarParaDecimais(calcularDesvioPadrao(numbersArray), 4);
+        const desvioPadrao = roundToDecimals(calculateStandardDeviation(numbersArray), 4);
         let stepCount = 1;
 
         return (

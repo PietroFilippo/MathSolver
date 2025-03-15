@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-    volumeCubo,
-    volumeParalelepipedo,
-    volumeEsfera,
-    volumeCilindro,
-    volumeCone,
-    volumePiramide,
-    volumePrisma,
+    cubeVolume,
+    cuboidVolume,
+    sphereVolume,
+    cylinderVolume,
+    coneVolume,
+    pyramidVolume,
+    prismVolume,
 } from '../../utils/mathUtilsGeometria';
 import { HiCalculator } from 'react-icons/hi';
 
@@ -45,7 +45,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                 case 'cubo':
                     if (!aresta) throw new Error('Por favor, insira o valor da aresta do cubo.');
                     const arestaNum = Number(aresta);
-                    volume = volumeCubo(arestaNum);
+                    volume = cubeVolume(arestaNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume do cubo, usamos a fórmula V = a³`,
                         `Passo ${stepCount++}: Substituindo a aresta: V = ${arestaNum}³`,
@@ -59,7 +59,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                     const compNum = Number(comprimento);
                     const largNum = Number(largura);
                     const altNum = Number(altura);
-                    volume = volumeParalelepipedo(compNum, largNum, altNum);
+                    volume = cuboidVolume(compNum, largNum, altNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume do paralelepípedo, usamos a fórmula V = c × l × h`,
                         `Passo ${stepCount++}: Substituindo os valores: V = ${compNum} × ${largNum} × ${altNum}`,
@@ -70,7 +70,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                 case 'esfera':
                     if (!raio) throw new Error('Por favor, insira o raio da esfera.');
                     const raioNum = Number(raio);
-                    volume = volumeEsfera(raioNum);
+                    volume = sphereVolume(raioNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume da esfera, usamos a fórmula V = (4/3)πr³`,
                         `Passo ${stepCount++}: Substituindo o raio: V = (4/3)π × ${raioNum}³`,
@@ -83,7 +83,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         throw new Error('Por favor, insira o raio da base e a altura do cilindro.');
                     const raioBaseNum = Number(raioBase);
                     const altCilNum = Number(altura);
-                    volume = volumeCilindro(raioBaseNum, altCilNum);
+                    volume = cylinderVolume(raioBaseNum, altCilNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume do cilindro, usamos a fórmula V = πr²h`,
                         `Passo ${stepCount++}: Substituindo os valores: V = π × ${raioBaseNum}² × ${altCilNum}`,
@@ -96,7 +96,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         throw new Error('Por favor, insira o raio da base e a altura do cone.');
                     const raioBaseConNum = Number(raioBase);
                     const altConNum = Number(altura);
-                    volume = volumeCone(raioBaseConNum, altConNum);
+                    volume = coneVolume(raioBaseConNum, altConNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume do cone, usamos a fórmula V = (1/3)πr²h`,
                         `Passo ${stepCount++}: Substituindo os valores: V = (1/3)π × ${raioBaseConNum}² × ${altConNum}`,
@@ -109,7 +109,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         throw new Error('Por favor, insira a área da base e a altura da pirâmide.');
                     const areaBaseNum = Number(areaBase);
                     const altPirNum = Number(altura);
-                    volume = volumePiramide(areaBaseNum, altPirNum);
+                    volume = pyramidVolume(areaBaseNum, altPirNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume da pirâmide, usamos a fórmula V = (1/3)Abh`,
                         `Passo ${stepCount++}: Substituindo os valores: V = (1/3) × ${areaBaseNum} × ${altPirNum}`,
@@ -122,7 +122,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         throw new Error('Por favor, insira a área da base e a altura do prisma.');
                     const areaBasePrismaNum = Number(areaBase);
                     const altPrismaNum = Number(altura);
-                    volume = volumePrisma(areaBasePrismaNum, altPrismaNum);
+                    volume = prismVolume(areaBasePrismaNum, altPrismaNum);
                     calculationSteps.push(
                         `Passo ${stepCount++}: Para calcular o volume do prisma, usamos a fórmula V = Abh`,
                         `Passo ${stepCount++}: Substituindo os valores: V = ${areaBasePrismaNum} × ${altPrismaNum}`,

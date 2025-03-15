@@ -36,6 +36,7 @@ import ResolvedorVolumeSolidos from '../resolvedores/geometria/ResolvedorVolumeS
 import ResolvedorFuncoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorFuncoesTrigonometricas';
 import ResolvedorEquacoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorEquacoesTrigonometricas';
 import ResolvedorGraficosTrigonometricos from '../resolvedores/trigonometria/ResolvedorGraficosTrigonometricos';
+import ResolvedorDerivadas from '../resolvedores/calculo/ResolvedorDerivadas';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -177,6 +178,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorVolumeSolidos />;
       case 'trigonometric-graphs':
         return <ResolvedorGraficosTrigonometricos />;
+      case 'derivatives':
+        return <ResolvedorDerivadas />;
       default:
         return <div>Em breve.</div>;
     }

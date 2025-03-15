@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
-import { calcularMediana, calcularModa } from '../../utils/mathUtilsEstatistica';
+import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
+import { roundToDecimals } from '../../utils/mathUtils';
+import { calculateMedian, calculateMode } from '../../utils/mathUtilsEstatistica';
 
 const ResolvedorMediaModaMediana: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');
@@ -42,10 +42,9 @@ const ResolvedorMediaModaMediana: React.FC = () => {
         }
 
         // Calcula todas as medidas
-        const sum = parsedArray.reduce((acc, curr) => acc + curr, 0);
-        const media = arredondarParaDecimais(sum / parsedArray.length, 2);
-        const mediana = arredondarParaDecimais(calcularMediana(parsedArray), 2);
-        const moda = calcularModa(parsedArray);
+        const media = roundToDecimals(parsedArray.reduce((a, b) => a + b, 0) / parsedArray.length, 2);
+        const mediana = roundToDecimals(calculateMedian(parsedArray), 2);
+        const moda = calculateMode(parsedArray);
 
         setResults({
             media,
@@ -64,8 +63,8 @@ const ResolvedorMediaModaMediana: React.FC = () => {
         stepCount++;
         
         calculationSteps.push(`Passo ${stepCount}: Cálculo da Média`);
-        calculationSteps.push(`- Soma dos valores: ${parsedArray.join(' + ')} = ${sum}`);
-        calculationSteps.push(`- Média = ${sum} ÷ ${parsedArray.length} = ${media}`);
+        calculationSteps.push(`- Soma dos valores: ${parsedArray.join(' + ')} = ${parsedArray.reduce((a, b) => a + b, 0)}`);
+        calculationSteps.push(`- Média = ${parsedArray.join(' + ')} ÷ ${parsedArray.length} = ${media}`);
         stepCount++;
         
         // Passos para mediana

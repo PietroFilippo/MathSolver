@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
 import {
-    areaQuadrado,
-    areaRetangulo,
-    areaTriangulo,
-    areaCirculo,
-    areaTrapezio,
-    areaLosango,
-    areaHexagono,
+    squareArea,
+    rectangleArea,
+    triangleArea,
+    circleArea,
+    trapezoidArea,
+    rhombusArea,
+    hexagonArea,
 } from '../../utils/mathUtilsGeometria';
 
 type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
@@ -58,7 +58,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
           
-          area = areaQuadrado(l);
+          area = squareArea(l);
           calculationSteps.push(`Passo ${stepCount++}: A área do quadrado é calculada pela fórmula: A = l²`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo o lado ${l} na fórmula:`);
           calculationSteps.push(`A = ${l} × ${l}`);
@@ -78,7 +78,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaRetangulo(c, l);
+          area = rectangleArea(c, l);
           calculationSteps.push(`Passo ${stepCount++}: A área do retângulo é calculada pela fórmula: A = c × l`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo o comprimento ${c} e a largura ${l} na fórmula:`);
           calculationSteps.push(`A = ${c} × ${l}`);
@@ -98,7 +98,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaTriangulo(b, h);
+          area = triangleArea(b, h);
           calculationSteps.push(`Passo ${stepCount++}: A área do triângulo é calculada pela fórmula: A = (b × h) ÷ 2`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo a base ${b} e a altura ${h} na fórmula:`);
           calculationSteps.push(`A = (${b} × ${h}) ÷ 2`);
@@ -117,7 +117,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaCirculo(r);
+          area = circleArea(r);
           calculationSteps.push(`Passo ${stepCount++}: A área do círculo é calculada pela fórmula: A = πr²`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo o raio ${r} na fórmula:`);
           calculationSteps.push(`A = π × ${r}²`);
@@ -142,7 +142,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaTrapezio(B, b, h);
+          area = trapezoidArea(B, b, h);
           calculationSteps.push(`Passo ${stepCount++}: A área do trapézio é calculada pela fórmula: A = [(B + b) × h] ÷ 2`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo a base maior ${B}, base menor ${b} e altura ${h} na fórmula:`);
           calculationSteps.push(`A = [(${B} + ${b}) × ${h}] ÷ 2`);
@@ -166,7 +166,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaLosango(D, d);
+          area = rhombusArea(D, d);
           calculationSteps.push(`Passo ${stepCount++}: A área do losango é calculada pela fórmula: A = (D × d) ÷ 2`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo a diagonal maior ${D} e diagonal menor ${d} na fórmula:`);
           calculationSteps.push(`A = (${D} × ${d}) ÷ 2`);
@@ -185,7 +185,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             return;
           }
 
-          area = areaHexagono(l);
+          area = hexagonArea(l);
           calculationSteps.push(`Passo ${stepCount++}: A área do hexágono regular é calculada pela fórmula: A = (3 × √3 × l²) ÷ 2`);
           calculationSteps.push(`Passo ${stepCount++}: Substituindo o lado ${l} na fórmula:`);
           calculationSteps.push(`A = (3 × √3 × ${l}²) ÷ 2`);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorPorcentagem: React.FC = () => {
@@ -40,7 +40,7 @@ const ResolvedorPorcentagem: React.FC = () => {
                 break;
         }
         
-        setResult(arredondarParaDecimais(calculatedResult, 2));
+        setResult(roundToDecimals(calculatedResult, 2));
         setShowExplanation(true);
     };
 

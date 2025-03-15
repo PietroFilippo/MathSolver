@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
 import {
-    perimetroQuadrado,
-    perimetroRetangulo,
-    perimetroTriangulo,
-    perimetroCirculo,
-    perimetroTrapezio,
-    perimetroLosango,
-    perimetroHexagono,
+    squarePerimeter,
+    rectanglePerimeter,
+    trianglePerimeter,
+    circlePerimeter,
+    trapezoidPerimeter,
+    rhombusPerimeter,
+    hexagonPerimeter,
 } from '../../utils/mathUtilsGeometria';
 
 type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
@@ -59,7 +59,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroQuadrado(l);
+                    perimetro = squarePerimeter(l);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do quadrado é calculado pela fórmula: P = 4l`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo o lado ${l} na fórmula:`);
                     calculationSteps.push(`P = 4 × ${l}`);
@@ -79,7 +79,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroRetangulo(c, l);
+                    perimetro = rectanglePerimeter(c, l);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do retângulo é calculado pela fórmula: P = 2(c + l)`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo o comprimento ${c} e a largura ${l} na fórmula:`);
                     calculationSteps.push(`P = 2(${c} + ${l})`);
@@ -105,7 +105,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroTriangulo(a, b, c);
+                    perimetro = trianglePerimeter(a, b, c);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do triângulo é calculado pela fórmula: P = a + b + c`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo os lados ${a}, ${b} e ${c} na fórmula:`);
                     calculationSteps.push(`P = ${a} + ${b} + ${c}`);
@@ -124,7 +124,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroCirculo(r);
+                    perimetro = circlePerimeter(r);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do círculo é calculado pela fórmula: P = 2πr`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo o raio ${r} na fórmula:`);
                     calculationSteps.push(`P = 2π × ${r}`);
@@ -147,7 +147,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroTrapezio(lp1, lp2, lo1, lo2);
+                    perimetro = trapezoidPerimeter(lp1, lp2, lo1, lo2);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do trapézio é calculado pela fórmula: P = a + b + c + d`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo os lados ${lp1}, ${lp2}, ${lo1} e ${lo2} na fórmula:`);
                     calculationSteps.push(`P = ${lp1} + ${lp2} + ${lo1} + ${lo2}`);
@@ -166,7 +166,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroLosango(l);
+                    perimetro = rhombusPerimeter(l);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do losango é calculado pela fórmula: P = 4l`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo o lado ${l} na fórmula:`);
                     calculationSteps.push(`P = 4 × ${l}`);
@@ -185,7 +185,7 @@ const ResolvedorPerimetros: React.FC = () => {
                         return;
                     }
 
-                    perimetro = perimetroHexagono(l);
+                    perimetro = hexagonPerimeter(l);
                     calculationSteps.push(`Passo ${stepCount++}: O perímetro do hexágono regular é calculado pela fórmula: P = 6l`);
                     calculationSteps.push(`Passo ${stepCount++}: Substituindo o lado ${l} na fórmula:`);
                     calculationSteps.push(`P = 6 × ${l}`);

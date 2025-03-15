@@ -3,11 +3,11 @@ import { HiCalculator, HiX } from 'react-icons/hi';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine 
 } from 'recharts';
+import { formatInterval } from '../../utils/mathUtils';
 import { 
-  parseIntervalo, 
-  formatarIntervalo, 
-  gerarPontosFuncaoTrigonometrica, 
-  gerarPassosExplicativosGraficos 
+  generateTrigonometricFunctionPoints,
+  generateGraphExplanationSteps,
+  parseInterval
 } from '../../utils/mathUtilsTrigonometria';
 
 // Função auxiliar para processar valores com pi
@@ -16,7 +16,7 @@ const processPiValue = (value: string): number => {
     // Se o valor contém π ou pi, processá-lo com a função parseIntervalo
     if (value.includes('π') || value.toLowerCase().includes('pi')) {
       // Encapsular em um intervalo temporário para usar parseIntervalo
-      const result = parseIntervalo(`0,${value}`);
+      const result = parseInterval(`0,${value}`);
       return result[1]; // Retornar o segundo valor do intervalo
     }
     // Caso contrário, converter normalmente para número
@@ -96,17 +96,10 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
       }
       
       // Verificar e processar o intervalo
-      let numericInterval: [number, number];
+      let [start, end] = parseInterval(interval);
       
-      try {
-        numericInterval = parseIntervalo(interval);
-        
-        if (numericInterval[0] >= numericInterval[1]) {
-          setError('O limite inferior do intervalo deve ser menor que o limite superior.');
-          return;
-        }
-      } catch (error) {
-        setError(`Erro no intervalo: ${error instanceof Error ? error.message : String(error)}`);
+      if (start >= end) {
+        setError('O limite inferior do intervalo deve ser menor que o limite superior.');
         return;
       }
       
@@ -116,9 +109,9 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
       const c = processPiValue(phaseShift);
       const d = processPiValue(verticalShift);
       
-      const pontosFuncao = gerarPontosFuncaoTrigonometrica(
+      const pontosFuncao = generateTrigonometricFunctionPoints(
         graphType,
-        numericInterval,
+        [start, end],
         a,
         b,
         c,
@@ -132,9 +125,9 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
       }
       
       // Gerar passos explicativos
-      const steps = gerarPassosExplicativosGraficos(
+      const steps = generateGraphExplanationSteps(
         graphType,
-        numericInterval,
+        [start, end],
         a,
         b,
         c,
@@ -153,7 +146,7 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
         resultText += ` Parâmetros: Amplitude=${a}, Período=${b}, Defasagem=${c}, Deslocamento Vertical=${d}.`;
       }
       
-      resultText += ` Intervalo: [${formatarIntervalo(numericInterval[0])}, ${formatarIntervalo(numericInterval[1])}].`;
+      resultText += ` Intervalo: [${formatInterval(start)}, ${formatInterval(end)}].`;
       
       setResult(resultText);
     } catch (error) {
@@ -164,7 +157,7 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
 
   // Função para formatar os valores do eixo X
   const formatAxisX = (valor: number) => {
-    return formatarIntervalo(valor);
+    return formatInterval(valor);
   };
 
   // Função para obter domínio do eixo Y (min e max)

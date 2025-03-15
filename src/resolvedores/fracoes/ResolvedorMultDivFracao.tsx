@@ -1,7 +1,7 @@
 import React, { useState, ReactNode } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { mdc } from '../../utils/mathUtils';
-import { simplificarFracao, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { gcd } from '../../utils/mathUtils';
+import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
 
 type Operation = 'multiply' | 'divide';
 
@@ -59,7 +59,7 @@ const ResolvedorMultDivFracao: React.FC = () => {
     }
     
     // Simplificar a fração resultante
-    const simplified = simplificarFracao(resultNumerator, resultDenominator);
+    const simplified = simplifyFraction(resultNumerator, resultDenominator);
     const simplifiedNum = simplified.numerador;
     const simplifiedDen = simplified.denominador;
     
@@ -108,7 +108,7 @@ const ResolvedorMultDivFracao: React.FC = () => {
     }
     
     if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-        const mdcValue = mdc(resultNumerator, resultDenominator);
+        const mdcValue = gcd(resultNumerator, resultDenominator);
         calculationSteps.push(`Passo ${stepCount}: Simplificar a fração resultante`);
         calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
         calculationSteps.push(<>

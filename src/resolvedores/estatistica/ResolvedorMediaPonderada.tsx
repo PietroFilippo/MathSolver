@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
-import { calcularMediaPonderada } from '../../utils/mathUtilsEstatistica';
+import { roundToDecimals } from '../../utils/mathUtils';
+import { calculateWeightedMean } from '../../utils/mathUtilsEstatistica';
 
 interface ValorPeso {
     valor: string;
@@ -64,8 +64,8 @@ const ResolvedorMediaPonderada: React.FC = () => {
         }
 
         try {
-            const mediaPonderada = calcularMediaPonderada(valores, pesos);
-            const resultadoArredondado = arredondarParaDecimais(mediaPonderada, 2);
+            const mediaPonderada = calculateWeightedMean(valores, pesos);
+            const resultadoArredondado = roundToDecimals(mediaPonderada, 2);
             setResult(resultadoArredondado);
 
             // Gerar passos com numeração
@@ -80,20 +80,20 @@ const ResolvedorMediaPonderada: React.FC = () => {
             calculationSteps.push(`Passo ${stepCount++}: Multiplicar cada valor por seu respectivo peso`);
             const produtos = valores.map((v, idx) => v * pesos[idx]);
             produtos.forEach((prod, idx) => {
-                calculationSteps.push(`- ${valores[idx]} × ${pesos[idx]} = ${arredondarParaDecimais(prod, 2)}`);
+                calculationSteps.push(`- ${valores[idx]} × ${pesos[idx]} = ${roundToDecimals(prod, 2)}`);
             });
 
             const somaProdutos = produtos.reduce((acc, curr) => acc + curr, 0);
             const somaPesos = pesos.reduce((acc, curr) => acc + curr, 0);
 
             calculationSteps.push(`Passo ${stepCount++}: Somar todos os produtos`);
-            calculationSteps.push(`- Soma dos produtos: ${arredondarParaDecimais(somaProdutos, 2)}`);
+            calculationSteps.push(`- Soma dos produtos: ${roundToDecimals(somaProdutos, 2)}`);
 
             calculationSteps.push(`Passo ${stepCount++}: Somar todos os pesos`);
             calculationSteps.push(`- Soma dos pesos: ${somaPesos}`);
 
             calculationSteps.push(`Passo ${stepCount++}: Dividir a soma dos produtos pela soma dos pesos`);
-            calculationSteps.push(`- ${arredondarParaDecimais(somaProdutos, 2)} ÷ ${somaPesos} = ${resultadoArredondado}`);
+            calculationSteps.push(`- ${roundToDecimals(somaProdutos, 2)} ÷ ${somaPesos} = ${resultadoArredondado}`);
 
             setSteps(calculationSteps);
             setShowExplanation(true);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
@@ -32,7 +32,7 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
         }
 
         const result = (numC - numB) / numA;
-        const roundedResult = arredondarParaDecimais(result, 4);
+        const roundedResult = roundToDecimals(result, 4);
 
         setSolution(roundedResult);
 
@@ -56,10 +56,10 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
         // Passo de verificação
         const verification = numA * roundedResult + numB;
         calculationSteps.push(`Passo ${stepCount}: Verifica a solução substituindo x = ${roundedResult} na equação original:`);
-        calculationSteps.push(`${numA} * ${roundedResult} + ${numB} = ${arredondarParaDecimais(verification, 4)}`);
+        calculationSteps.push(`${numA} * ${roundedResult} + ${numB} = ${roundToDecimals(verification, 4)}`);
 
         if (Math.abs(verification - numC) < 0.0001) {
-            calculationSteps.push(`${arredondarParaDecimais(verification, 4)} = ${numC} ✓`);
+            calculationSteps.push(`${roundToDecimals(verification, 4)} = ${numC} ✓`);
         } else {
             calculationSteps.push(`Nota: A solução pode ter uma pequena diferença devido ao arredondamento.`);
         }

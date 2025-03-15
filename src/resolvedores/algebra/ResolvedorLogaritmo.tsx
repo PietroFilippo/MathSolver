@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 type LogType = 'natural' | 'base10' | 'custom';
@@ -42,14 +42,14 @@ const ResolvedorLogaritmo: React.FC = () => {
             
             calculationSteps.push(`Passo ${stepCount}: Logaritmo natural é o logaritmo com base e (número de Euler, aproximadamente 2.71828...)`);
             calculatedResult = Math.log(numValue);
-            calculationSteps.push(`ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            calculationSteps.push(`ln(${numValue}) = ${roundToDecimals(calculatedResult, 6)}`);
             stepCount++;
             
             // Verificação do resultado
             calculationSteps.push(`Passo ${stepCount}: Verificar o resultado usando a definição de logaritmo`);
-            calculationSteps.push(`Se ln(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então e^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
+            calculationSteps.push(`Se ln(${numValue}) = ${roundToDecimals(calculatedResult, 6)}, então e^(${roundToDecimals(calculatedResult, 6)}) deve ser igual a ${numValue}`);
             const verification = Math.exp(calculatedResult);
-            calculationSteps.push(`e^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
+            calculationSteps.push(`e^${roundToDecimals(calculatedResult, 6)} = ${roundToDecimals(verification, 6)} ≈ ${numValue}`);
             
             // Casos especiais
             if (Math.abs(numValue - Math.E) < 0.0001) {
@@ -68,14 +68,14 @@ const ResolvedorLogaritmo: React.FC = () => {
             
             calculationSteps.push(`Passo ${stepCount}: O logaritmo de base 10 é frequentemente usado em aplicações científicas e de engenharia`);
             calculatedResult = Math.log10(numValue);
-            calculationSteps.push(`log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            calculationSteps.push(`log₁₀(${numValue}) = ${roundToDecimals(calculatedResult, 6)}`);
             stepCount++;
             
             // Verificação do resultado
             calculationSteps.push(`Passo ${stepCount}: Verificar o resultado usando a definição de logaritmo`);
-            calculationSteps.push(`Se log₁₀(${numValue}) = ${arredondarParaDecimais(calculatedResult, 6)}, então 10^(${arredondarParaDecimais(calculatedResult, 6)}) deve ser igual a ${numValue}`);
+            calculationSteps.push(`Se log₁₀(${numValue}) = ${roundToDecimals(calculatedResult, 6)}, então 10^(${roundToDecimals(calculatedResult, 6)}) deve ser igual a ${numValue}`);
             const verification = Math.pow(10, calculatedResult);
-            calculationSteps.push(`10^${arredondarParaDecimais(calculatedResult, 6)} = ${arredondarParaDecimais(verification, 6)} ≈ ${numValue}`);
+            calculationSteps.push(`10^${roundToDecimals(calculatedResult, 6)} = ${roundToDecimals(verification, 6)} ≈ ${numValue}`);
             
             // Casos especiais
             if (numValue === 10) {
@@ -115,15 +115,15 @@ const ResolvedorLogaritmo: React.FC = () => {
             const lnBase = Math.log(numBase);
             
             calculationSteps.push(`Passo ${stepCount}: Calculamos os valores de ln(${numValue}) e ln(${numBase})`);
-            calculationSteps.push(`ln(${numValue}) = ${arredondarParaDecimais(lnValue, 6)}`);
-            calculationSteps.push(`ln(${numBase}) = ${arredondarParaDecimais(lnBase, 6)}`);
+            calculationSteps.push(`ln(${numValue}) = ${roundToDecimals(lnValue, 6)}`);
+            calculationSteps.push(`ln(${numBase}) = ${roundToDecimals(lnBase, 6)}`);
             stepCount++;
             
             calculatedResult = lnValue / lnBase;
             
             calculationSteps.push(`Passo ${stepCount}: Aplicamos a fórmula de mudança de base`);
             calculationSteps.push(`log_${numBase}(${numValue}) = ln(${numValue}) / ln(${numBase})`);
-            calculationSteps.push(`log_${numBase}(${numValue}) = ${arredondarParaDecimais(lnValue, 6)} / ${arredondarParaDecimais(lnBase, 6)} = ${arredondarParaDecimais(calculatedResult, 6)}`);
+            calculationSteps.push(`log_${numBase}(${numValue}) = ${roundToDecimals(lnValue, 6)} / ${roundToDecimals(lnBase, 6)} = ${roundToDecimals(calculatedResult, 6)}`);
         }
         else {
             setErrorMessage('Tipo de logaritmo não reconhecido.');

@@ -1,13 +1,18 @@
 import React from 'react';
-import { mdc } from './mathUtils';
+import { gcd } from './mathUtils';
 
-// Simplifica uma fração
-export const simplificarFracao = (numerador: number, denominador: number): {numerador: number, denominador: number} => {
+// ===================================================
+// ========== OPERAÇÕES COM FRAÇÕES =================
+// ===================================================
+
+// Simplifica uma fração para sua forma irredutível
+// Inverte sinais se o denominador for negativo
+export const simplifyFraction = (numerador: number, denominador: number): {numerador: number, denominador: number} => {
     if (denominador === 0) {
         throw new Error('Denominador não pode ser zero');
     }
 
-    const divisor = mdc(numerador, denominador);
+    const divisor = gcd(numerador, denominador);
 
     // Se o denominador for negativo, inverte o sinal para o numerador
     if (denominador < 0) {
@@ -21,8 +26,9 @@ export const simplificarFracao = (numerador: number, denominador: number): {nume
     };
 };
 
-// Formata uma fração como string
-export const formatarFracao = (numerador: number, denominador: number): string => {
+// Converte uma fração em uma representação textual
+// Trata casos especiais como denominador 0, 1 ou numerador 0
+export const formatFraction = (numerador: number, denominador: number): string => {
     if (denominador === 0) {
         return 'Indeterminado';
     }
@@ -31,7 +37,7 @@ export const formatarFracao = (numerador: number, denominador: number): string =
         return '0';
     }
 
-    const { numerador: numSimplificado, denominador: denSimplificado } = simplificarFracao(numerador, denominador);
+    const { numerador: numSimplificado, denominador: denSimplificado } = simplifyFraction(numerador, denominador);
 
     if (denSimplificado === 1) {
         return `${numSimplificado}`;
@@ -39,6 +45,10 @@ export const formatarFracao = (numerador: number, denominador: number): string =
 
     return `${numSimplificado}/${denSimplificado}`;
 };
+
+// ===================================================
+// ========== COMPONENTES VISUAIS ===================
+// ===================================================
 
 // Interface para o componente FractionDisplay
 interface FractionDisplayProps {
@@ -48,7 +58,8 @@ interface FractionDisplayProps {
     simplify?: boolean;
 }
 
-// Componente para mostrar frações de forma visual
+// Componente React que apresenta frações visualmente estilizadas
+// Exibe o numerador sobre o denominador com barra divisória
 export const FractionDisplay: React.FC<FractionDisplayProps> = ({ 
     numerator, 
     denominator, 
@@ -60,7 +71,7 @@ export const FractionDisplay: React.FC<FractionDisplayProps> = ({
     
     // Se a opção de simplificar estiver ativada, use a função simplificarFracao
     if (simplify && denominator !== 0) {
-        const simplified = simplificarFracao(numerator, denominator);
+        const simplified = simplifyFraction(numerator, denominator);
         displayNumerator = simplified.numerador;
         displayDenominator = simplified.denominador;
     }

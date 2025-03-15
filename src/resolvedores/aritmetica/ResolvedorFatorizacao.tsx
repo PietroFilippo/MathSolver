@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { numPrimo, proximoPrimo, fatorarNumeroEmPrimos } from '../../utils/mathUtilsTeoriaNumeros';
+import { isPrime, nextPrime, factorNumberIntoPrimes } from '../../utils/mathUtilsTeoriaNumeros';
 
 const ResolvedorFatorizacao: React.FC = () => {
     const [number, setNumber] = useState<string>('');
@@ -29,15 +29,15 @@ const ResolvedorFatorizacao: React.FC = () => {
         }
 
         // Calcula a fatoração
-        const factorization = fatorarNumeroEmPrimos(num);
+        const factorization = factorNumberIntoPrimes(num);
         setResult(factorization);
 
         // Gera os passos
-        setCalculationSteps(gerarPassosFatoracao(num));
+        setCalculationSteps(generateFactorizationSteps(num));
     };
 
     // Função para gerar os passos da fatoração
-    const gerarPassosFatoracao = (num: number): string[] => {
+    const generateFactorizationSteps = (num: number): string[] => {
         const calculationSteps: string[] = [];
         
         if (num <= 1) {
@@ -47,7 +47,7 @@ const ResolvedorFatorizacao: React.FC = () => {
         
         calculationSteps.push(`Passo 1: Vamos fatorar o número ${num} em seus fatores primos.`);
         
-        if (numPrimo(num)) {
+        if (isPrime(num)) {
             calculationSteps.push(`Passo 2: O número ${num} é primo, portanto sua fatoração é ${num} = ${num}.`);
             return calculationSteps;
         }
@@ -72,7 +72,7 @@ const ResolvedorFatorizacao: React.FC = () => {
                 currentNumber /= divisor;
                 stepCount++;
             } else {
-                divisor = proximoPrimo(divisor);
+                divisor = nextPrime(divisor);
                 
                 if (divisor * divisor > num && currentNumber > 1) {
                     // Se o próximo divisor for maior que a raiz quadrada do número,
@@ -93,7 +93,7 @@ const ResolvedorFatorizacao: React.FC = () => {
         }
         
         // Mostrar o resultado final em notação de potência
-        const { factors, exponents } = fatorarNumeroEmPrimos(num);
+        const { factors, exponents } = factorNumberIntoPrimes(num);
         let factorizationPower = `${num} = `;
         
         for (let i = 0; i < factors.length; i++) {

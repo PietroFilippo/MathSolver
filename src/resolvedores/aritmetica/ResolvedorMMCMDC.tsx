@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
-import { mmc, mdc } from '../../utils/mathUtils';
+import { lcm, gcd } from '../../utils/mathUtils';
 
 const ResolvedorMMCMDC: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');
@@ -54,7 +54,7 @@ const ResolvedorMMCMDC: React.FC = () => {
         
         let result = nums[0];
         for (let i = 1; i < nums.length; i++) {
-            result = mdc(result, nums[i]);
+            result = gcd(result, nums[i]);
         }
         return result;
     };
@@ -66,7 +66,7 @@ const ResolvedorMMCMDC: React.FC = () => {
         
         let result = nums[0];
         for (let i = 1; i < nums.length; i++) {
-            result = mmc(result, nums[i]);
+            result = lcm(result, nums[i]);
         }
         return result;
     };
@@ -119,7 +119,7 @@ const ResolvedorMMCMDC: React.FC = () => {
             
             if (tipo === 'mmc') {
                 calculationSteps.push(`Passo 2: Para calcular o MMC de ${a} e ${b}, usaremos a fórmula: MMC(a,b) = (a * b) / MDC(a,b).`);
-                const mdcValue = mdc(a, b);
+                const mdcValue = gcd(a, b);
                 const mmcValue = (a * b) / mdcValue;
                 calculationSteps.push(`Passo 3: Calculamos o MDC de ${a} e ${b}, que é ${mdcValue}.`);
                 calculationSteps.push(`Passo 4: Aplicamos a fórmula: MMC(${a},${b}) = (${a} * ${b}) / ${mdcValue} = ${a * b} / ${mdcValue} = ${mmcValue}.`);
@@ -139,7 +139,7 @@ const ResolvedorMMCMDC: React.FC = () => {
                 for (let i = 1; i < nums.length; i++) {
                     calculationSteps.push(`Passo ${i + 2}: Calculamos o MMC de ${currentMMC} e ${nums[i]}.`);
                     
-                    const mdcValue = mdc(currentMMC, nums[i]);
+                    const mdcValue = gcd(currentMMC, nums[i]);
                     const mmcValue = (currentMMC * nums[i]) / mdcValue;
                     
                     calculationSteps.push(`  - O MDC de ${currentMMC} e ${nums[i]} é ${mdcValue}.`);

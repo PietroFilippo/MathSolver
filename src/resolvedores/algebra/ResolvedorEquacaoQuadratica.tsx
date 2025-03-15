@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { arredondarParaDecimais } from '../../utils/mathUtils';
+import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorEquacaoQuadratica: React.FC = () => {
@@ -69,15 +69,15 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             
             calculationSteps.push(`Calculando x₁ (usando o sinal + na fórmula):`);
             calculationSteps.push(`x₁ = (-${numB} + √${discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`x₁ = (${-numB} + ${arredondarParaDecimais(sqrtDiscriminant, 4)}) / ${2 * numA}`);
-            calculationSteps.push(`x₁ = ${arredondarParaDecimais(-numB + sqrtDiscriminant, 4)} / ${2 * numA}`);
-            calculationSteps.push(`x₁ = ${arredondarParaDecimais(x1, 4)}`);
+            calculationSteps.push(`x₁ = (${-numB} + ${roundToDecimals(sqrtDiscriminant, 4)}) / ${2 * numA}`);
+            calculationSteps.push(`x₁ = ${roundToDecimals(-numB + sqrtDiscriminant, 4)} / ${2 * numA}`);
+            calculationSteps.push(`x₁ = ${roundToDecimals(x1, 4)}`);
             
             calculationSteps.push(`Calculando x₂ (usando o sinal - na fórmula):`);
             calculationSteps.push(`x₂ = (-${numB} - √${discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`x₂ = (${-numB} - ${arredondarParaDecimais(sqrtDiscriminant, 4)}) / ${2 * numA}`);
-            calculationSteps.push(`x₂ = ${arredondarParaDecimais(-numB - sqrtDiscriminant, 4)} / ${2 * numA}`);
-            calculationSteps.push(`x₂ = ${arredondarParaDecimais(x2, 4)}`);
+            calculationSteps.push(`x₂ = (${-numB} - ${roundToDecimals(sqrtDiscriminant, 4)}) / ${2 * numA}`);
+            calculationSteps.push(`x₂ = ${roundToDecimals(-numB - sqrtDiscriminant, 4)} / ${2 * numA}`);
+            calculationSteps.push(`x₂ = ${roundToDecimals(x2, 4)}`);
 
             setSolution({ x1: x1, x2: x2});
             setSolutionType('real');
@@ -89,7 +89,7 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             calculationSteps.push(`Quando o discriminante é zero, a fórmula se simplifica para: x = -b / (2a)`);
             calculationSteps.push(`x = -${numB} / (2 × ${numA})`);
             calculationSteps.push(`x = ${-numB} / ${2 * numA}`);
-            calculationSteps.push(`x = ${arredondarParaDecimais(x, 4)}`);
+            calculationSteps.push(`x = ${roundToDecimals(x, 4)}`);
             
             setSolution({ x1: x, x2: x });
             setSolutionType('repeated');
@@ -104,15 +104,15 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
             calculationSteps.push(`Calculando a parte real:`);
             calculationSteps.push(`Parte real = -${numB} / (2 × ${numA})`);
             calculationSteps.push(`Parte real = ${-numB} / ${2 * numA}`);
-            calculationSteps.push(`Parte real = ${arredondarParaDecimais(realPart, 4)}`);
+            calculationSteps.push(`Parte real = ${roundToDecimals(realPart, 4)}`);
             
             calculationSteps.push(`Calculando a parte imaginária:`);
             calculationSteps.push(`Parte imaginária = √(${-discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`Parte imaginária = ${arredondarParaDecimais(Math.sqrt(-discriminant), 4)} / ${2 * numA}`);
-            calculationSteps.push(`Parte imaginária = ${arredondarParaDecimais(imaginaryPart, 4)}`);
+            calculationSteps.push(`Parte imaginária = ${roundToDecimals(Math.sqrt(-discriminant), 4)} / ${2 * numA}`);
+            calculationSteps.push(`Parte imaginária = ${roundToDecimals(imaginaryPart, 4)}`);
             
-            calculationSteps.push(`x₁ = ${arredondarParaDecimais(realPart, 4)} + ${arredondarParaDecimais(imaginaryPart, 4)}i`);
-            calculationSteps.push(`x₂ = ${arredondarParaDecimais(realPart, 4)} - ${arredondarParaDecimais(imaginaryPart, 4)}i`);
+            calculationSteps.push(`x₁ = ${roundToDecimals(realPart, 4)} + ${roundToDecimals(imaginaryPart, 4)}i`);
+            calculationSteps.push(`x₂ = ${roundToDecimals(realPart, 4)} - ${roundToDecimals(imaginaryPart, 4)}i`);
             
             setSolution({ x1: null, x2: null });
             setSolutionType('complex');
@@ -130,32 +130,32 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                 const x2 = solution.x2;
                 
                 if (x1 !== null) {
-                    calculationSteps.push(`Substituindo x = ${arredondarParaDecimais(x1, 4)} na equação original:`);
+                    calculationSteps.push(`Substituindo x = ${roundToDecimals(x1, 4)} na equação original:`);
                     const check1 = numA * (x1 * x1) + numB * x1 + numC;
-                    calculationSteps.push(`${numA} × (${arredondarParaDecimais(x1, 4)})² + ${numB} × (${arredondarParaDecimais(x1, 4)}) + ${numC}`);
-                    calculationSteps.push(`${numA} × ${arredondarParaDecimais(x1 * x1, 4)} + ${numB} × ${arredondarParaDecimais(x1, 4)} + ${numC}`);
-                    calculationSteps.push(`${arredondarParaDecimais(numA * (x1 * x1), 4)} + ${arredondarParaDecimais(numB * x1, 4)} + ${numC}`);
-                    calculationSteps.push(`= ${arredondarParaDecimais(check1, 4)}`);
+                    calculationSteps.push(`${numA} × (${roundToDecimals(x1, 4)})² + ${numB} × (${roundToDecimals(x1, 4)}) + ${numC}`);
+                    calculationSteps.push(`${numA} × ${roundToDecimals(x1 * x1, 4)} + ${numB} × ${roundToDecimals(x1, 4)} + ${numC}`);
+                    calculationSteps.push(`${roundToDecimals(numA * (x1 * x1), 4)} + ${roundToDecimals(numB * x1, 4)} + ${numC}`);
+                    calculationSteps.push(`= ${roundToDecimals(check1, 4)}`);
                     
                     if (Math.abs(check1) < 0.001) {
-                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${arredondarParaDecimais(x1, 4)} está correta.`);
+                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${roundToDecimals(x1, 4)} está correta.`);
                     } else {
-                        calculationSteps.push(`Nota: A diferença de ${arredondarParaDecimais(check1, 4)} se deve a arredondamentos.`);
+                        calculationSteps.push(`Nota: A diferença de ${roundToDecimals(check1, 4)} se deve a arredondamentos.`);
                     }
                 }
                 
                 if (x2 !== null && x1 !== x2) {
-                    calculationSteps.push(`Substituindo x = ${arredondarParaDecimais(x2, 4)} na equação original:`);
+                    calculationSteps.push(`Substituindo x = ${roundToDecimals(x2, 4)} na equação original:`);
                     const check2 = numA * (x2 * x2) + numB * x2 + numC;
-                    calculationSteps.push(`${numA} × (${arredondarParaDecimais(x2, 4)})² + ${numB} × (${arredondarParaDecimais(x2, 4)}) + ${numC}`);
-                    calculationSteps.push(`${numA} × ${arredondarParaDecimais(x2 * x2, 4)} + ${numB} × ${arredondarParaDecimais(x2, 4)} + ${numC}`);
-                    calculationSteps.push(`${arredondarParaDecimais(numA * (x2 * x2), 4)} + ${arredondarParaDecimais(numB * x2, 4)} + ${numC}`);
-                    calculationSteps.push(`= ${arredondarParaDecimais(check2, 4)}`);
+                    calculationSteps.push(`${numA} × (${roundToDecimals(x2, 4)})² + ${numB} × (${roundToDecimals(x2, 4)}) + ${numC}`);
+                    calculationSteps.push(`${numA} × ${roundToDecimals(x2 * x2, 4)} + ${numB} × ${roundToDecimals(x2, 4)} + ${numC}`);
+                    calculationSteps.push(`${roundToDecimals(numA * (x2 * x2), 4)} + ${roundToDecimals(numB * x2, 4)} + ${numC}`);
+                    calculationSteps.push(`= ${roundToDecimals(check2, 4)}`);
                     
                     if (Math.abs(check2) < 0.001) {
-                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${arredondarParaDecimais(x2, 4)} está correta.`);
+                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${roundToDecimals(x2, 4)} está correta.`);
                     } else {
-                        calculationSteps.push(`Nota: A diferença de ${arredondarParaDecimais(check2, 4)} se deve a arredondamentos.`);
+                        calculationSteps.push(`Nota: A diferença de ${roundToDecimals(check2, 4)} se deve a arredondamentos.`);
                     }
                 }
             }
@@ -246,14 +246,14 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                         
                         {solutionType === 'real' && solution.x1 !== null && solution.x2 !== null && (
                             <div className="mt-2">
-                                <p className="text-xl font-bold">x₁ = {arredondarParaDecimais(solution.x1, 4)}</p>
-                                <p className="text-xl font-bold">x₂ = {arredondarParaDecimais(solution.x2, 4)}</p>
+                                <p className="text-xl font-bold">x₁ = {roundToDecimals(solution.x1, 4)}</p>
+                                <p className="text-xl font-bold">x₂ = {roundToDecimals(solution.x2, 4)}</p>
                             </div>
                         )}
                         
                         {solutionType === 'repeated' && solution.x1 !== null && (
                             <p className="text-xl font-bold mt-2">
-                                x = {arredondarParaDecimais(solution.x1, 4)} (raiz repetida)
+                                x = {roundToDecimals(solution.x1, 4)} (raiz repetida)
                             </p>
                         )}
                         
