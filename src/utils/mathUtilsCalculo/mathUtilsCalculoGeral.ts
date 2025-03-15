@@ -573,3 +573,25 @@ export const evaluateExpressionWithVariable = (expression: string, variable: str
     throw new Error(`Erro ao avaliar expressão ${expression} para ${variable}=${value}: ${error}`);
   }
 };
+
+// ===================================================
+// ================= EXEMPLOS ÚTEIS =================
+// ===================================================
+
+// Retorna exemplos de funções matemáticas para cálculo de derivadas
+export const getDerivativesExamples = (): string[] => {
+  return [
+    'x^2 + 3x',
+    'x^3 - 2x^2 + 5x - 3',
+    'sin(x)',
+    'cos(x)',
+    'e^(x)',
+    'ln(x)',
+    'ln(x^2)',
+    'x / (x^2 + 1)',
+    'sin(x) * cos(x)',
+    'e^(x) * sin(x)',
+    'x^2 * ln(x)',
+    '(x^2 + 1) / (x - 1)'
+  ];
+};

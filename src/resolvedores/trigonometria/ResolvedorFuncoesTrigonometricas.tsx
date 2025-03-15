@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { roundToDecimals } from '../../utils/mathUtils';
-import { radiansToDegrees, degreesToRadians } from '../../utils/mathUtilsTrigonometria';
+import { 
+    radiansToDegrees, 
+    degreesToRadians,
+    getTrigonometricFunctionExamples
+} from '../../utils/mathUtilsTrigonometria';
 import { HiCalculator } from 'react-icons/hi';
 
 type TrigFunction = 'sin' | 'cos' | 'tan' | 'asin' | 'acos' | 'atan';
@@ -16,15 +20,63 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
     const [explanationSteps, setExplanationSteps] = useState<string[]>([]);
     const [showExplanation, setShowExplanation] = useState<boolean>(true);
 
+    // Função para aplicar um exemplo selecionado
+    const applyExample = (example: any) => {
+        setTrigFunction(example.type);
+        setInputValue(example.inputValue);
+        
+        if (example.inputUnit) {
+            setInputUnit(example.inputUnit as AngleUnit);
+        }
+        
+        if (example.outputUnit) {
+            setOutputUnit(example.outputUnit as AngleUnit);
+        }
+        
+        // Limpar resultados anteriores
+        setResult(null);
+        setExplanationSteps([]);
+        setError(null);
+    };
+
+    // Filtra exemplos baseados no tipo de função selecionado
+    const getFilteredExamples = () => {
+        return getTrigonometricFunctionExamples().filter(example => 
+            example.type === trigFunction || 
+            (trigFunction === 'sin' && example.type === 'asin') ||
+            (trigFunction === 'cos' && example.type === 'acos') ||
+            (trigFunction === 'tan' && example.type === 'atan')
+        );
+    };
+
     const handleSolve = () => {
         setError(null);
         setExplanationSteps([]);
         setResult(null);
        
-        const value = parseFloat(inputValue);
-
-        if (isNaN(value)) {
-            setError('Por favor, insira um valor numérico válido');
+        // Processar o valor da entrada para permitir expressões como π/6
+        let value: number;
+        try {
+            // Verificar se o valor contém um símbolo de divisão
+            if (inputValue.includes('/')) {
+                const [numerator, denominator] = inputValue.split('/').map(part => {
+                    // Substituir π por Math.PI
+                    return part.trim().replace(/π|pi/gi, `${Math.PI}`);
+                });
+                
+                // Avaliar a expressão
+                value = eval(numerator) / eval(denominator);
+            } else {
+                // Substituir π por Math.PI para valores sem divisão
+                const processedValue = inputValue.replace(/π|pi/gi, `${Math.PI}`);
+                value = eval(processedValue);
+            }
+            
+            if (isNaN(value)) {
+                throw new Error('Valor inválido');
+            }
+        } catch (error) {
+            setError('Por favor, insira um valor numérico válido ou uma expressão como π/6');
             return;
         }
 
@@ -170,6 +222,90 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
         setExplanationSteps(calculationSteps);
     };
 
+    // Função para renderizar os passos de explicação com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {explanationSteps.map((step, index) => {
+                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verifica se contém informação sobre fórmula
+                    const formulaMatch = step.includes('Fórmula:') || step.includes('fundamental:') || step.includes('tangente:');
+                    
+                    // Verifica se é um passo de conversão
+                    const conversionMatch = step.includes('Converter') || step.includes('conversão') || step.includes('convertir');
+                    
+                    // Verifica se é definição/explicação
+                    const definitionMatch = step.includes('representa') || step.includes('é a função') || step.includes('definido');
+                    
+                    // Verifica se é um cálculo
+                    const calculationMatch = step.includes('=') && !step.includes('Fórmula:') && !definitionMatch;
+                    
+                    // Verifica se é uma verificação
+                    const verificationMatch = step.includes('Verificação:') || step.includes('Aplicando a função');
+                    
+                    if (stepMatch) {
+                        // Se for um passo numerado, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (formulaMatch) {
+                        // Se for uma fórmula
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <p className="text-blue-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (conversionMatch) {
+                        // Se for um passo de conversão
+                        return (
+                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                                <p className="text-purple-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (definitionMatch) {
+                        // Se for uma definição ou explicação
+                        return (
+                            <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                                <p className="text-indigo-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (calculationMatch) {
+                        // Se for um cálculo
+                        return (
+                            <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                                <p className="text-amber-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (verificationMatch) {
+                        // Se for uma verificação
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Outros passos
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center mb-6">
@@ -206,7 +342,7 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                   {['sin', 'cos', 'tan'].includes(trigFunction) ? 'Ângulo' : 'Valor'}
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
@@ -272,6 +408,24 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
               </div>
             )}
             
+            {/* Exemplos */}
+            <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Exemplos
+                </label>
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {getFilteredExamples().map((exemplo, index) => (
+                        <button
+                            key={index}
+                            onClick={() => applyExample(exemplo)}
+                            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                        >
+                            {exemplo.description}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            
             <button
               onClick={handleSolve}
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300"
@@ -311,95 +465,130 @@ const ResolvedorFuncoesTrigonometricas: React.FC = () => {
                     </h3>
                   </div>
                   
-                  <div className="space-y-4">
-                    {explanationSteps.map((step, index) => {
-                      // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                      const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                      
-                      if (stepMatch) {
-                        // Se for um passo com número, extrair e destacar
-                        const [_, stepNumber, stepContent] = stepMatch;
-                        return (
-                          <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                            <div className="flex flex-col sm:flex-row">
-                              <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                {stepNumber}
-                              </span>
-                              <p className="text-gray-800">{stepContent}</p>
-                            </div>
-                          </div>
-                        );
-                      } else {
-                        // Conteúdo sem número de passo
-                        return (
-                          <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                            <p className="text-gray-800">{step}</p>
-                          </div>
-                        );
-                      }
-                    })}
-                  </div>
+                  {renderExplanationSteps()}
                   
-                  <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                    <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                    <div className="space-y-2 text-gray-700">
-                      {['sin', 'cos', 'tan'].includes(trigFunction) ? (
-                        <>
-                          <p>
-                            <span className="font-semibold">Funções Trigonométricas:</span> Relacionam ângulos com as razões dos lados em um triângulo retângulo:
-                          </p>
-                          <ul className="list-disc pl-5 mt-1">
-                            <li><strong>Seno (sin):</strong> Cateto oposto / Hipotenusa</li>
-                            <li><strong>Cosseno (cos):</strong> Cateto adjacente / Hipotenusa</li>
-                            <li><strong>Tangente (tan):</strong> Cateto oposto / Cateto adjacente (ou sin/cos)</li>
-                          </ul>
-                          
-                          <p className="mt-2">
-                            <span className="font-semibold">Domínio e Imagem:</span>
-                          </p>
-                          <ul className="list-disc pl-5 mt-1">
-                            <li><strong>sin(x):</strong> Domínio: Todos os números reais, Imagem: [-1, 1]</li>
-                            <li><strong>cos(x):</strong> Domínio: Todos os números reais, Imagem: [-1, 1]</li>
-                            <li><strong>tan(x):</strong> Domínio: Todos os números reais exceto x = (n + 1/2)π, Imagem: Todos os números reais</li>
-                          </ul>
-                          
-                          <p className="mt-2">
-                            <span className="font-semibold">Aplicações:</span> Funções trigonométricas são fundamentais em:
-                          </p>
-                          <ul className="list-disc pl-5 mt-1">
-                            <li>Física (movimento ondulatório, oscilações)</li>
-                            <li>Engenharia (análise de circuitos, processamento de sinais)</li>
-                            <li>Astronomia (cálculos de órbita e posição)</li>
-                            <li>Navegação (GPS, sistemas de posicionamento)</li>
-                          </ul>
-                        </>
-                      ) : (
-                        <>
-                          <p>
-                            <span className="font-semibold">Funções Trigonométricas Inversas:</span> Encontram o ângulo correspondente a uma razão trigonométrica:
-                          </p>
-                          <ul className="list-disc pl-5 mt-1">
-                            <li><strong>Arco Seno (arcsin):</strong> Domínio: [-1, 1], Imagem: [-π/2, π/2] ou [-90°, 90°]</li>
-                            <li><strong>Arco Cosseno (arccos):</strong> Domínio: [-1, 1], Imagem: [0, π] ou [0°, 180°]</li>
-                            <li><strong>Arco Tangente (arctan):</strong> Domínio: Todos os números reais, Imagem: (-π/2, π/2) ou (-90°, 90°)</li>
-                          </ul>
-                          
-                          <p className="mt-2">
-                            <span className="font-semibold">Aplicações das Funções Inversas:</span>
-                          </p>
-                          <ul className="list-disc pl-5 mt-1">
-                            <li>Cálculos de ângulos em geometria e trigonometria</li>
-                            <li>Sistemas de navegação e orientação</li>
-                            <li>Processamento de imagens e visão computacional</li>
-                            <li>Robótica (cinemática inversa)</li>
-                          </ul>
-                          
-                          <p className="mt-2">
-                            <span className="font-semibold">Observação:</span> Funções trigonométricas são multivalentes, mas por convenção, 
-                            retornam apenas um valor específico no intervalo principal.
-                          </p>
-                        </>
-                      )}
+                  <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                    <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                      <h4 className="font-semibold text-blue-800 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Conceito Matemático
+                      </h4>
+                    </div>
+                    <div className="p-4">
+                      <div className="space-y-4 text-gray-700">
+                        {['sin', 'cos', 'tan'].includes(trigFunction) ? (
+                          <>
+                            <div className="flex flex-col md:flex-row gap-4">
+                              <div className="flex-1">
+                                <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição</h5>
+                                <p>
+                                  <span className="font-semibold">Funções Trigonométricas:</span> Relacionam ângulos com as razões dos lados em um triângulo retângulo:
+                                </p>
+                                <ul className="list-disc pl-5 mt-2 space-y-2">
+                                  <li className="p-1 hover:bg-blue-50 rounded transition-colors"><strong>Seno (sin):</strong> Cateto oposto / Hipotenusa</li>
+                                  <li className="p-1 hover:bg-blue-50 rounded transition-colors"><strong>Cosseno (cos):</strong> Cateto adjacente / Hipotenusa</li>
+                                  <li className="p-1 hover:bg-blue-50 rounded transition-colors"><strong>Tangente (tan):</strong> Cateto oposto / Cateto adjacente (ou sin/cos)</li>
+                                </ul>
+                              </div>
+                              <div className="flex-1">
+                                <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Representação Visual</h5>
+                                <div className="bg-white p-3 rounded-md flex justify-center border border-gray-100 shadow-sm h-40">
+                                  <div className="relative w-32 h-32">
+                                    {/* Triângulo retângulo simplificado */}
+                                    <div className="absolute bottom-0 left-0 h-32 w-32 border-b-2 border-l-2 border-gray-700">
+                                      {/* Hipotenusa */}
+                                      <div className="absolute top-0 left-0 w-32 h-0.5 bg-indigo-500 origin-bottom-left rotate-[135deg] transform scale-[1.414]"></div>
+                                      {/* Ângulo */}
+                                      <div className="absolute bottom-0 left-0 w-6 h-6 rounded-tl-none rounded-[6px] border-t-0 border-l-0 border-r-[2px] border-b-[2px] border-gray-700"></div>
+                                      {/* Textos */}
+                                      <div className="absolute left-16 bottom-[-20px] text-xs">Cateto Adjacente</div>
+                                      <div className="absolute top-16 left-[-70px] text-xs">Cateto<br/>Oposto</div>
+                                      <div className="absolute top-[-10px] right-[-20px] text-xs text-indigo-600">Hipotenusa</div>
+                                      <div className="absolute bottom-1 left-3 text-xs">θ</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4">
+                              <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Domínio e Imagem</h5>
+                              <ul className="mt-2 space-y-2">
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">sin(x):</strong> Domínio: Todos os números reais, Imagem: [-1, 1]
+                                </li>
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">cos(x):</strong> Domínio: Todos os números reais, Imagem: [-1, 1]
+                                </li>
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">tan(x):</strong> Domínio: Todos os números reais exceto x = (n + 1/2)π, Imagem: Todos os números reais
+                                </li>
+                              </ul>
+                            </div>
+                            
+                            <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                              <h5 className="font-medium text-yellow-800 mb-1">Aplicações</h5>
+                              <ul className="list-disc pl-5 mt-1 text-gray-700">
+                                <li>Física (movimento ondulatório, oscilações)</li>
+                                <li>Engenharia (análise de circuitos, processamento de sinais)</li>
+                                <li>Astronomia (cálculos de órbita e posição)</li>
+                                <li>Navegação (GPS, sistemas de posicionamento)</li>
+                              </ul>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex flex-col md:flex-row gap-4">
+                              <div className="flex-1">
+                                <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição</h5>
+                                <p>
+                                  <span className="font-semibold">Funções Trigonométricas Inversas:</span> Encontram o ângulo correspondente a uma razão trigonométrica.
+                                </p>
+                              </div>
+                              <div className="flex-1">
+                                <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Interpretação</h5>
+                                <p>
+                                  Para cada valor do seno, cosseno ou tangente, as funções inversas retornam o ângulo correspondente.
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-4">
+                              <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Domínio e Imagem</h5>
+                              <ul className="mt-2 space-y-2">
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">Arco Seno (arcsin):</strong> Domínio: [-1, 1], Imagem: [-π/2, π/2] ou [-90°, 90°]
+                                </li>
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">Arco Cosseno (arccos):</strong> Domínio: [-1, 1], Imagem: [0, π] ou [0°, 180°]
+                                </li>
+                                <li className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                  <strong className="text-indigo-600">Arco Tangente (arctan):</strong> Domínio: Todos os números reais, Imagem: (-π/2, π/2) ou (-90°, 90°)
+                                </li>
+                              </ul>
+                            </div>
+                            
+                            <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                              <h5 className="font-medium text-yellow-800 mb-1">Aplicações</h5>
+                              <ul className="list-disc pl-5 mt-1 text-gray-700">
+                                <li>Cálculos de ângulos em geometria e trigonometria</li>
+                                <li>Sistemas de navegação e orientação</li>
+                                <li>Processamento de imagens e visão computacional</li>
+                                <li>Robótica (cinemática inversa)</li>
+                              </ul>
+                            </div>
+                            
+                            <div className="p-3 bg-indigo-50 rounded-md border-l-4 border-indigo-300 mt-4">
+                              <p>
+                                <span className="font-semibold">Observação:</span> Funções trigonométricas são multivalentes, mas por convenção, 
+                                retornam apenas um valor específico no intervalo principal.
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

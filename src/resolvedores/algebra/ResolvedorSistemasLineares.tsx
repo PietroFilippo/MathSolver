@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { approximatelyEqual, roundToDecimals } from '../../utils/mathUtils';
-import { linearSystem } from '../../utils/mathUtilsAlgebra';
+import { linearSystem, getLinearSystemExamples } from '../../utils/mathUtilsAlgebra';
 import { HiCalculator } from 'react-icons/hi';
 
 const ResolvedorSistemasLineares: React.FC = () => {
@@ -99,13 +99,13 @@ const ResolvedorSistemasLineares: React.FC = () => {
             calculationSteps.push(`Passo ${stepCount}: Calcular x usando a regra de Cramer`);
             calculationSteps.push(`Substituímos a coluna dos coeficientes de x pelos termos independentes:`);
             calculationSteps.push(`det_x = ${numC1} * ${numB2} - ${numC2} * ${numB1} = ${numC1 * numB2 - numC2 * numB1}`);
-            calculationSteps.push(`x = det_x / det = ${(numC1 * numB2 - numC2 * numB1)} / ${det} = ${result.x}`);
+            calculationSteps.push(`x = det_x / det = ${(numC1 * numB2 - numC2 * numB1)} / ${det} = ${roundToDecimals(result.x, 4)}`);
             stepCount++;
             
             calculationSteps.push(`Passo ${stepCount}: Calcular y usando a regra de Cramer`);
             calculationSteps.push(`Substituímos a coluna dos coeficientes de y pelos termos independentes:`);
             calculationSteps.push(`det_y = ${numA1} * ${numC2} - ${numA2} * ${numC1} = ${numA1 * numC2 - numA2 * numC1}`);
-            calculationSteps.push(`y = det_y / det = ${(numA1 * numC2 - numA2 * numC1)} / ${det} = ${result.y}`);
+            calculationSteps.push(`y = det_y / det = ${(numA1 * numC2 - numA2 * numC1)} / ${det} = ${roundToDecimals(result.y, 4)}`);
             stepCount++;
             
             // Verificação da solução
@@ -130,6 +130,127 @@ const ResolvedorSistemasLineares: React.FC = () => {
         setShowExplanation(true);
     };
 
+    // Função para aplicar um exemplo de sistema linear
+    const applyExample = (example: {
+        a1: number, b1: number, c1: number,
+        a2: number, b2: number, c2: number
+    }) => {
+        setA1(example.a1.toString());
+        setB1(example.b1.toString());
+        setC1(example.c1.toString());
+        setA2(example.a2.toString());
+        setB2(example.b2.toString());
+        setC2(example.c2.toString());
+    };
+
+    // Função que gera os passos com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {steps.map((step, index) => {
+                    // Verificar se o passo começa com um padrão de número de passo como "Passo X:"
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verificar se o passo é uma equação do sistema
+                    const equationMatch = step.match(/^(Equação \d+:)(.*)$/);
+                    
+                    // Verificar se o passo é um cálculo de determinante
+                    const determinantMatch = step.match(/^(det|det_x|det_y) =/);
+                    
+                    // Verificar se o passo contém a solução para x ou y
+                    const solutionMatch = step.match(/^(x|y) =/);
+                    
+                    // Verificar se o passo contém verificação/resultado
+                    const verificationMatch = step.includes('verificação confirma') || 
+                                           step.includes('Verificar') || 
+                                           (step.includes('Equação') && step.includes('≈'));
+                    
+                    // Verificar se o passo é uma nota ou explicação adicional
+                    const noteMatch = step.includes('Nota:') || step.includes('diferenças devido');
+                    
+                    // Verificar se o passo explica algo sobre o sistema
+                    const explanationMatch = step.includes('O determinante') || 
+                                          step.includes('Por causa que') || 
+                                          step.includes('Podemos expressar') ||
+                                          step.includes('Isso significa que');
+                    
+                    // Verificar se o passo mostra a razão dos coeficientes
+                    const ratioMatch = step.includes('razão dos coeficientes');
+                    
+                    if (stepMatch) {
+                        // Se for um passo com número, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (equationMatch) {
+                        // Se for uma equação do sistema
+                        const [_, eqNumber, eqContent] = equationMatch;
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-medium text-blue-700 mr-2 mb-1 sm:mb-0">
+                                        {eqNumber}
+                                    </span>
+                                    <p className="text-gray-800 font-medium">{eqContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (determinantMatch || solutionMatch) {
+                        // Se for um cálculo de determinante ou solução
+                        return (
+                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                                <p className="text-purple-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (verificationMatch) {
+                        // Se for uma verificação
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700">{step}</p>
+                            </div>
+                        );
+                    } else if (noteMatch) {
+                        // Se for uma nota
+                        return (
+                            <div key={index} className="p-2 bg-yellow-50 rounded-md ml-4 text-sm text-yellow-700 italic border-l-2 border-yellow-300">
+                                {step}
+                            </div>
+                        );
+                    } else if (explanationMatch) {
+                        // Se for uma explicação
+                        return (
+                            <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                                <p className="text-indigo-700">{step}</p>
+                            </div>
+                        );
+                    } else if (ratioMatch) {
+                        // Se for uma razão de coeficientes
+                        return (
+                            <div key={index} className="p-3 bg-gray-100 rounded-md ml-8 text-gray-800">
+                                <p>{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Conteúdo regular sem classificação específica
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
@@ -143,9 +264,9 @@ const ResolvedorSistemasLineares: React.FC = () => {
                     Insira os coeficientes para cada equação no formato ax + by = c.
                 </p>
                 
-                <div className="bg-blue-50 p-4 rounded-md mb-6">
-                    <h4 className="font-medium text-blue-800 mb-2">Como usar:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <div className="mb-4 p-3 bg-blue-50 rounded-md text-sm">
+                    <h3 className="font-bold mb-1">Como usar esta calculadora:</h3>
+                    <ul className="list-disc pl-5 space-y-1">
                         <li>Para equações como "2x + 3y = 5", insira: a = 2, b = 3, c = 5</li>
                         <li>Para equações com termos negativos como "x - y = 2", insira: a = 1, b = -1, c = 2</li>
                         <li>Para equações sem x como "3y = 6", insira: a = 0, b = 3, c = 6</li>
@@ -229,6 +350,24 @@ const ResolvedorSistemasLineares: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Exemplos de sistemas lineares */}
+                <div className="mt-6 mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Exemplos
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                        {getLinearSystemExamples().map((example, index) => (
+                            <button
+                                key={index}
+                                onClick={() => applyExample(example)}
+                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                            >
+                                {example.description}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 <button
                     onClick={handleSolve}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-6"
@@ -287,53 +426,116 @@ const ResolvedorSistemasLineares: React.FC = () => {
                                 </h3>
                             </div>
                             
-                            <div className="space-y-4">
-                                {steps.map((step, index) => {
-                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                                    
-                                    if (stepMatch) {
-                                        // Se for um passo com número, extrai e destaca o número
-                                        const [_, stepNumber, stepContent] = stepMatch;
-                                        return (
-                                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                                <div className="flex flex-col sm:flex-row">
-                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                        {stepNumber}
-                                                    </span>
-                                                    <p className="text-gray-800">{stepContent}</p>
+                            {renderExplanationSteps()}
+                            
+                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                    <h4 className="font-semibold text-blue-800 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Conceito Matemático
+                                    </h4>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição</h5>
+                                            <p className="text-gray-700 mb-3">
+                                                Um sistema de equações lineares é um conjunto de equações onde cada variável 
+                                                aparece no primeiro grau e não há produtos entre variáveis.
+                                            </p>
+                                            <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm mb-3">
+                                                <div className="text-center font-medium text-indigo-700">
+                                                    <p>a₁x + b₁y = c₁</p>
+                                                    <p>a₂x + b₂y = c₂</p>
                                                 </div>
                                             </div>
-                                        );
-                                    } else {
-                                        // Conteúdo regular sem número de passo
-                                        return (
-                                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                                                <p className="text-gray-800">{step}</p>
+                                            <div className="p-3 bg-indigo-50 rounded-md">
+                                                <p className="text-sm text-indigo-700">
+                                                    <span className="font-medium">Interpretação Geométrica:</span> Cada equação 
+                                                    representa uma reta no plano cartesiano. Resolver o sistema significa 
+                                                    encontrar o ponto (ou pontos) onde essas retas se interceptam.
+                                                </p>
                                             </div>
-                                        );
-                                    }
-                                })}
-                            </div>
-                            
-                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                <p className="text-gray-700 mb-2">
-                                    Um sistema de equações lineares pode ter:
-                                </p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
-                                    <li>Uma única solução (as retas se interceptam em exatamente um ponto)</li>
-                                    <li>Infinitas soluções (as retas são idênticas)</li>
-                                    <li>Nenhuma solução (as retas são paralelas)</li>
-                                </ul>
-                                
-                                <p className="mt-3 text-gray-700">
-                                    O determinante da matriz de coeficientes nos diz qual caso temos:
-                                </p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
-                                    <li>Se determinante ≠ 0: Solução única</li>
-                                    <li>Se determinante = 0: Ou não há solução ou há infinitas soluções</li>
-                                </ul>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Possíveis Resultados</h5>
+                                            <div className="space-y-4">
+                                                <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm flex items-start">
+                                                    <div className="flex-shrink-0 w-16 h-16 mr-3 relative border border-gray-200 rounded">
+                                                        {/* Representação de retas que se cruzam */}
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-blue-500 origin-top-left rotate-[30deg] transform translate-y-7"></div>
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-red-500 origin-top-left rotate-[-30deg] transform translate-y-8"></div>
+                                                        <div className="absolute top-8 left-8 w-2 h-2 bg-green-500 rounded-full"></div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 className="text-indigo-700 font-medium mb-1">Solução Única</h6>
+                                                        <p className="text-xs text-gray-600">As retas se interceptam em exatamente um ponto. O determinante da matriz de coeficientes é diferente de zero.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm flex items-start">
+                                                    <div className="flex-shrink-0 w-16 h-16 mr-3 relative border border-gray-200 rounded">
+                                                        {/* Representação de retas coincidentes */}
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-purple-500 origin-top-left rotate-[30deg] transform translate-y-8"></div>
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-indigo-500 origin-top-left rotate-[30deg] transform translate-y-8 opacity-50"></div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 className="text-indigo-700 font-medium mb-1">Infinitas Soluções</h6>
+                                                        <p className="text-xs text-gray-600">As retas são coincidentes. O determinante é zero e as equações são linearmente dependentes.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm flex items-start">
+                                                    <div className="flex-shrink-0 w-16 h-16 mr-3 relative border border-gray-200 rounded">
+                                                        {/* Representação de retas paralelas */}
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-blue-500 origin-top-left rotate-[30deg] transform translate-y-4"></div>
+                                                        <div className="absolute top-0 left-0 w-full h-0.5 bg-red-500 origin-top-left rotate-[30deg] transform translate-y-12"></div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 className="text-indigo-700 font-medium mb-1">Sem Solução</h6>
+                                                        <p className="text-xs text-gray-600">As retas são paralelas. O determinante é zero, mas as equações são inconsistentes.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-4">
+                                        <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Métodos de Resolução</h5>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                <h6 className="text-indigo-700 font-medium mb-2">Regra de Cramer</h6>
+                                                <p className="text-sm text-gray-600 mb-2">Usa determinantes para encontrar o valor das variáveis:</p>
+                                                <div className="text-center space-y-1">
+                                                    <p className="text-sm">x = det(D<sub>x</sub>)/det(D)</p>
+                                                    <p className="text-sm">y = det(D<sub>y</sub>)/det(D)</p>
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-2">Onde D é a matriz de coeficientes, D<sub>x</sub> e D<sub>y</sub> são matrizes com a coluna respectiva substituída pelos termos independentes.</p>
+                                            </div>
+                                            <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                <h6 className="text-indigo-700 font-medium mb-2">Outros Métodos</h6>
+                                                <ul className="text-sm space-y-1 list-disc pl-4">
+                                                    <li><span className="font-medium">Substituição:</span> Isolar uma variável e substituir</li>
+                                                    <li><span className="font-medium">Eliminação:</span> Somar ou subtrair equações para eliminar variáveis</li>
+                                                    <li><span className="font-medium">Matriz Aumentada:</span> Resolver usando operações elementares</li>
+                                                    <li><span className="font-medium">Regra de Cramer:</span> Método dos determinantes</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                                        <h5 className="font-medium text-yellow-800 mb-1">Critério de Determinantes</h5>
+                                        <p className="text-gray-700 text-sm mb-2">
+                                            O determinante da matriz de coeficientes é crucial para determinar o tipo de solução:
+                                        </p>
+                                        <ul className="list-disc list-inside text-sm space-y-1 text-gray-700">
+                                            <li><span className="font-medium">Se det ≠ 0:</span> O sistema possui uma única solução</li>
+                                            <li><span className="font-medium">Se det = 0 e as equações são consistentes:</span> O sistema possui infinitas soluções</li>
+                                            <li><span className="font-medium">Se det = 0 e as equações são inconsistentes:</span> O sistema não possui solução</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

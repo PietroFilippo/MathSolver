@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { HiCalculator } from 'react-icons/hi';
 import { lcm, gcd } from '../../utils/mathUtils';
+import { getMMCMDCExamples } from '../../utils/mathUtilsTeoriaNumeros';
 
 const ResolvedorMMCMDC: React.FC = () => {
     const [numbers, setNumbers] = useState<string>('');
@@ -45,6 +46,11 @@ const ResolvedorMMCMDC: React.FC = () => {
 
         setResult(calculatedResult);
         setShowExplanation(true);
+    };
+
+    // Função para aplicar um exemplo
+    const applyExample = (example: { numbers: number[] }) => {
+        setNumbers(example.numbers.join(', '));
     };
 
     // Função para calcular o MDC de múltiplos números
@@ -184,6 +190,101 @@ const ResolvedorMMCMDC: React.FC = () => {
         return calculationSteps;
     };
 
+    // Função que gera os passos com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {calculationSteps.map((step, index) => {
+                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verifica se o passo inclui cálculos de MMC/MDC
+                    const calculationMatch = step.includes('MMC(') || 
+                                          step.includes('MDC(') || 
+                                          step.includes('Calculamos o MDC') ||
+                                          step.includes('Calculamos o MMC');
+                    
+                    // Verifica se o passo mostra uma divisão do algoritmo de Euclides
+                    const divisionMatch = step.includes('Dividimos') && 
+                                       (step.includes('e obtemos quociente') || step.includes('e obtemos resto'));
+                    
+                    // Verifica se o passo contém uma conclusão
+                    const conclusionMatch = step.includes('Portanto') || 
+                                         step.includes('O MMC de') || 
+                                         step.includes('O MDC de') ||
+                                         step.includes('então o MDC é') ||
+                                         step.includes('O resto é zero');
+                    
+                    // Verifica se o passo explica uma abordagem/metodologia
+                    const explanationMatch = step.includes('Para calcular o MMC') || 
+                                          step.includes('Para calcular o MDC') || 
+                                          step.includes('usaremos a fórmula') ||
+                                          step.includes('Usaremos o Algoritmo de Euclides');
+                    
+                    // Verifica se é um passo de detalhe (com travessão)
+                    const detailMatch = step.startsWith('  - ');
+                    
+                    if (stepMatch) {
+                        // Se for um passo com número, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (detailMatch) {
+                        // Se for um passo de detalhe
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-8 border-l-2 border-gray-300">
+                                <p className="text-gray-700">{step}</p>
+                            </div>
+                        );
+                    } else if (calculationMatch) {
+                        // Se for um cálculo de MMC/MDC
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <p className="text-blue-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (divisionMatch) {
+                        // Se for uma divisão do algoritmo de Euclides
+                        return (
+                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                                <p className="text-purple-700">{step}</p>
+                            </div>
+                        );
+                    } else if (conclusionMatch) {
+                        // Se for uma conclusão
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (explanationMatch) {
+                        // Se for uma explicação de abordagem/metodologia
+                        return (
+                            <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                                <p className="text-indigo-700">{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Conteúdo regular sem classificação específica
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
@@ -233,6 +334,24 @@ const ResolvedorMMCMDC: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Exemplos de MMC/MDC */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Exemplos
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                        {getMMCMDCExamples().map((example, index) => (
+                            <button
+                                key={index}
+                                onClick={() => applyExample(example)}
+                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                            >
+                                {example.description}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 <button
                     onClick={handleSolve}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300"
@@ -272,51 +391,166 @@ const ResolvedorMMCMDC: React.FC = () => {
                                 </h3>
                             </div>
                             
-                            <div className="space-y-4">
-                                {calculationSteps.map((step, index) => {
-                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                                    
-                                    if (stepMatch) {
-                                        // Se for um passo com número, extrai e destaca o número
-                                        const [_, stepNumber, stepContent] = stepMatch;
-                                        return (
-                                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                                <div className="flex flex-col sm:flex-row">
-                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                        {stepNumber}
-                                                    </span>
-                                                    <p className="text-gray-800">{stepContent}</p>
+                            {renderExplanationSteps()}
+                            
+                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                    <h4 className="font-semibold text-blue-800 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Conceito Matemático
+                                    </h4>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">
+                                                {operationType === 'mmc' ? 'MMC - Mínimo Múltiplo Comum' : 'MDC - Máximo Divisor Comum'}
+                                            </h5>
+                                            <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm mb-3">
+                                                <p className="text-gray-700 mb-2">
+                                                    {operationType === 'mmc' ? (
+                                                        <>O <strong className="text-indigo-700">Mínimo Múltiplo Comum (MMC)</strong> de dois ou mais números é o menor número positivo que é múltiplo de todos eles.</>
+                                                    ) : (
+                                                        <>O <strong className="text-indigo-700">Máximo Divisor Comum (MDC)</strong> de dois ou mais números é o maior número inteiro que divide todos eles sem deixar resto.</>
+                                                    )}
+                                                </p>
+                                                <div className="bg-indigo-50 p-2 rounded-md text-center">
+                                                    <p className="font-medium text-indigo-700">
+                                                        {operationType === 'mmc' ? (
+                                                            <>MMC(12, 18) = 36</>
+                                                        ) : (
+                                                            <>MDC(12, 18) = 6</>
+                                                        )}
+                                                    </p>
                                                 </div>
                                             </div>
-                                        );
-                                    } else {
-                                        // Conteúdo regular sem número de passo
-                                        return (
-                                            <div key={index} className="p-3 bg-white border border-gray-200 rounded-md">
-                                                <p className="text-gray-800">{step}</p>
+                                            <div className="p-3 bg-yellow-50 rounded-md border-l-2 border-yellow-300">
+                                                <p className="text-sm text-yellow-800">
+                                                    <span className="font-semibold">Propriedade importante:</span> {' '}
+                                                    {operationType === 'mmc' ? (
+                                                        <>
+                                                            Para dois números a e b: MMC(a,b) × MDC(a,b) = a × b
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            Se um número d é o MDC de a e b, então d divide tanto a quanto b sem deixar resto.
+                                                        </>
+                                                    )}
+                                                </p>
                                             </div>
-                                        );
-                                    }
-                                })}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Aplicações</h5>
+                                            <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                {operationType === 'mmc' ? (
+                                                    <>
+                                                        <h6 className="text-indigo-700 font-medium mb-2">Onde o MMC é usado</h6>
+                                                        <ul className="text-sm space-y-2 list-disc pl-4 text-gray-700">
+                                                            <li><span className="font-medium">Frações:</span> Para somar ou subtrair frações com denominadores diferentes</li>
+                                                            <li><span className="font-medium">Problemas de tempo:</span> Para calcular quando eventos periódicos coincidem novamente</li>
+                                                            <li><span className="font-medium">Teoria dos números:</span> Para resolver problemas de congruência linear</li>
+                                                            <li><span className="font-medium">Matemática financeira:</span> Para calcular períodos de pagamentos de dívidas</li>
+                                                        </ul>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <h6 className="text-indigo-700 font-medium mb-2">Onde o MDC é usado</h6>
+                                                        <ul className="text-sm space-y-2 list-disc pl-4 text-gray-700">
+                                                            <li><span className="font-medium">Frações:</span> Para simplificar frações ao seu formato irredutível</li>
+                                                            <li><span className="font-medium">Divisão justa:</span> Para distribuir itens em grupos iguais</li>
+                                                            <li><span className="font-medium">Algoritmos:</span> Na criptografia e em algoritmos computacionais</li>
+                                                            <li><span className="font-medium">Teoria dos números:</span> Para resolver equações diofantinas</li>
+                                                        </ul>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-4">
+                                        <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Métodos de Cálculo</h5>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm h-full">
+                                                    <h6 className="text-indigo-700 font-medium mb-2">Método da Fatoração em Primos</h6>
+                                                    <ol className="text-sm space-y-2 list-decimal pl-5 text-gray-700">
+                                                        <li>Fatore cada número em seus fatores primos</li>
+                                                        <li>
+                                                            {operationType === 'mmc' ? (
+                                                                <>Para o MMC: multiplique cada fator primo com o <strong>maior</strong> expoente que aparece em qualquer fatoração</>
+                                                            ) : (
+                                                                <>Para o MDC: multiplique cada fator primo com o <strong>menor</strong> expoente que aparece em todas as fatorações</>
+                                                            )}
+                                                        </li>
+                                                    </ol>
+                                                    <div className="mt-2 bg-gray-50 p-2 rounded-md">
+                                                        <p className="text-xs text-gray-600">Exemplo: Para 12 = 2² × 3 e 18 = 2 × 3²</p>
+                                                        {operationType === 'mmc' ? (
+                                                            <p className="text-xs text-gray-600">MMC = 2² × 3² = 4 × 9 = 36</p>
+                                                        ) : (
+                                                            <p className="text-xs text-gray-600">MDC = 2¹ × 3¹ = 2 × 3 = 6</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                {operationType === 'mmc' ? (
+                                                    <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm h-full">
+                                                        <h6 className="text-indigo-700 font-medium mb-2">Método das Divisões Sucessivas</h6>
+                                                        <p className="text-sm text-gray-700 mb-2">
+                                                            Para o MMC, podemos usar a fórmula:
+                                                        </p>
+                                                        <div className="bg-indigo-50 p-2 rounded-md text-center mb-2">
+                                                            <p className="font-medium text-indigo-700">
+                                                                MMC(a,b) = (a × b) ÷ MDC(a,b)
+                                                            </p>
+                                                        </div>
+                                                        <p className="text-sm text-gray-600">
+                                                            Esta fórmula é útil quando já conhecemos o MDC dos números.
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm h-full">
+                                                        <h6 className="text-indigo-700 font-medium mb-2">Algoritmo de Euclides</h6>
+                                                        <p className="text-sm text-gray-700 mb-2">
+                                                            Um método eficiente para calcular o MDC:
+                                                        </p>
+                                                        <ol className="text-xs space-y-1 list-decimal pl-5 text-gray-700">
+                                                            <li>Divida o maior número pelo menor e obtenha o resto</li>
+                                                            <li>Se o resto for zero, o MDC é o divisor</li>
+                                                            <li>Se o resto não for zero, faça o divisor se tornar o dividendo e o resto se tornar o divisor</li>
+                                                            <li>Repita até que o resto seja zero</li>
+                                                        </ol>
+                                                        <div className="mt-2 bg-gray-50 p-2 rounded-md">
+                                                            <p className="text-xs text-gray-600">Exemplo: MDC(48, 18)</p>
+                                                            <p className="text-xs text-gray-600">48 ÷ 18 = 2 com resto 12</p>
+                                                            <p className="text-xs text-gray-600">18 ÷ 12 = 1 com resto 6</p>
+                                                            <p className="text-xs text-gray-600">12 ÷ 6 = 2 com resto 0</p>
+                                                            <p className="text-xs text-gray-600">Como o resto é 0, MDC = 6</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                             </div>
                             
-                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                {operationType === 'mmc' && (
-                                    <p className="text-gray-700">
-                                        O Mínimo Múltiplo Comum (MMC) de dois ou mais números é o menor número positivo que é múltiplo de todos eles.
-                                        Ele representa o menor número que pode ser dividido por todos os números dados sem deixar resto.
-                                        O MMC é amplamente utilizado quando precisamos trabalhar com frações que têm denominadores diferentes.
-                                    </p>
-                                )}
-                                {operationType === 'mdc' && (
-                                    <p className="text-gray-700">
-                                        O Máximo Divisor Comum (MDC) de dois ou mais números é o maior número inteiro que divide todos eles sem deixar resto.
-                                        Ele representa o maior fator comum entre os números. O MDC é frequentemente usado para simplificar frações
-                                        e resolver problemas que envolvem distribuição igual de itens.
-                                    </p>
-                                )}
+                                    <div className="mt-4 p-3 bg-green-50 rounded-md border-l-4 border-green-400">
+                                        <h5 className="font-medium text-green-800 mb-1">Dica Didática</h5>
+                                        <p className="text-sm text-gray-700">
+                                            {operationType === 'mmc' ? (
+                                                <>
+                                                    Para lembrar do MMC: pense que estamos procurando o <strong>menor número</strong> que seja múltiplo de todos os números dados.
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Para lembrar do MDC: pense que estamos procurando o <strong>maior número</strong> que divida todos os números dados sem deixar resto.
+                                                </>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

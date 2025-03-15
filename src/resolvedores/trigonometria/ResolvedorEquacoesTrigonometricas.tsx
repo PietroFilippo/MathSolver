@@ -3,7 +3,8 @@ import { roundToDecimals, approximatelyEqual, formatInterval } from '../../utils
 import { 
   radiansToDegrees, 
   evaluateTrigonometricExpression,
-  parseInterval
+  parseInterval,
+  getTrigonometricEquationExamples
 } from '../../utils/mathUtilsTrigonometria';
 import { HiCalculator } from 'react-icons/hi';
 
@@ -21,6 +22,18 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(true);
   const [formattedSolutions, setFormattedSolutions] = useState<FormattedSolution[]>([]);
+
+  // Função para aplicar um exemplo selecionado
+  const applyExample = (example: any) => {
+    setEquation(example.equation);
+    setInterval(example.interval);
+    
+    // Limpar resultados anteriores
+    setResult(null);
+    setExplanationSteps([]);
+    setFormattedSolutions([]);
+    setError(null);
+  };
 
   const handleSolve = () => {
     // Limpa resultados anteriores
@@ -305,6 +318,101 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
     setInterval(newValue);
   };
 
+  // Função para renderizar os passos de explicação com estilização aprimorada
+  const renderExplanationSteps = () => {
+    return (
+      <div className="space-y-4">
+        {explanationSteps.map((step, index) => {
+          // Verifica se o passo começa com "Step X:"
+          const stepMatch = step.match(/^(Step \d+:)(.*)$/);
+          
+          // Verifica se contém informações sobre a equação
+          const equationMatch = step.includes('Equação:') || step.includes('Reescrevendo como:');
+          
+          // Verifica se contém informações sobre o intervalo
+          const intervalMatch = step.includes('Intervalo:') || step.includes('Valores originais do intervalo:');
+          
+          // Verifica se contém informações sobre o método
+          const methodMatch = step.includes('Método:');
+          
+          // Verifica se contém informações sobre soluções
+          const solutionMatch = step.includes('Solução') && step.includes('rad =');
+          
+          // Verifica se contém informações de verificação
+          const verificationMatch = step.includes('Verificação:') || step.includes('Diferença:');
+          
+          // Verifica se contém informações sobre periodicidade
+          const periodicMatch = step.includes('Observe que') && step.includes('também é solução');
+          
+          // Verifica se contém informações sobre propriedades gerais
+          const generalInfoMatch = step.includes('equações trigonométricas geralmente têm infinitas soluções');
+          
+          if (stepMatch) {
+            // Se for um passo numerado, extrai e destaca o número
+            const [_, stepNumber, stepContent] = stepMatch;
+            return (
+              <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                <div className="flex flex-col sm:flex-row">
+                  <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">{stepNumber}</span>
+                  <p className="text-gray-800">{stepContent}</p>
+                </div>
+              </div>
+            );
+          } else if (equationMatch) {
+            return (
+              <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                <p className="text-blue-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (intervalMatch) {
+            return (
+              <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                <p className="text-purple-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (methodMatch) {
+            return (
+              <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                <p className="text-indigo-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (solutionMatch) {
+            return (
+              <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                <p className="text-green-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (verificationMatch) {
+            return (
+              <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                <p className="text-amber-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (periodicMatch) {
+            return (
+              <div key={index} className="p-3 bg-teal-50 rounded-md ml-4 border-l-2 border-teal-300">
+                <p className="text-teal-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (generalInfoMatch) {
+            return (
+              <div key={index} className="p-3 bg-yellow-50 rounded-md ml-4 border-l-2 border-yellow-300">
+                <p className="text-yellow-700 font-medium">{step}</p>
+              </div>
+            );
+          } else {
+            // Outros passos
+            return (
+              <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                <p className="text-gray-800">{step}</p>
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
@@ -353,6 +461,24 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
               Especifique o intervalo no formato: início,fim. Use π para representar pi.
               Lembre-se de que os valores dos ângulos são em radianos (π/6 = 30°, π/4 = 45°, π/3 = 60°, π/2 = 90°).
             </p>
+          </div>
+        </div>
+        
+        {/* Exemplos */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Exemplos
+          </label>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {getTrigonometricEquationExamples().map((exemplo, index) => (
+              <button
+                key={index}
+                onClick={() => applyExample(exemplo)}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+              >
+                {exemplo.description}
+              </button>
+            ))}
           </div>
         </div>
         
@@ -418,56 +544,129 @@ const ResolvedorEquacoesTrigonometricas: React.FC = () => {
                 </h3>
               </div>
               
-              <div className="space-y-4">
-                {explanationSteps.map((step, index) => {
-                  // Verifica se o passo começa com um padrão de número de passo como "Step X:"
-                  const stepMatch = step.match(/^(Step \d+:)(.*)$/);
-                  
-                  if (stepMatch) {
-                    // Se for um passo com número, extrair e destacar
-                    const [_, stepNumber, stepContent] = stepMatch;
-                    return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                        <div className="flex flex-col sm:flex-row">
-                          <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                            {stepNumber}
-                          </span>
-                          <p className="text-gray-800">{stepContent}</p>
+              {renderExplanationSteps()}
+              
+              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                  <h4 className="font-semibold text-blue-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conceito Matemático
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4 mb-4">
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Propriedades</h5>
+                      <p className="text-gray-700">
+                        As equações trigonométricas geralmente possuem infinitas soluções devido à natureza periódica das funções trigonométricas.
+                      </p>
+                      <div className="mt-3 grid grid-cols-1 gap-2">
+                        <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                          <p className="text-sm">
+                            <strong className="text-indigo-600">Seno:</strong> Se x = α é solução de sen(x) = k, então x = α + 2nπ também é solução para qualquer inteiro n.
+                          </p>
+                        </div>
+                        <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                          <p className="text-sm">
+                            <strong className="text-indigo-600">Cosseno:</strong> Se x = α é solução de cos(x) = k, então x = ±α + 2nπ também é solução para qualquer inteiro n.
+                          </p>
+                        </div>
+                        <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                          <p className="text-sm">
+                            <strong className="text-indigo-600">Tangente:</strong> Se x = α é solução de tan(x) = k, então x = α + nπ também é solução para qualquer inteiro n.
+                          </p>
                         </div>
                       </div>
-                    );
-                  } else {
-                    // Conteúdo sem número de passo
-                    return (
-                      <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                        <p className="text-gray-800">{step}</p>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-              
-              <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                <div className="space-y-2 text-gray-700">
-                  <p>
-                    <span className="font-semibold">Propriedades:</span> As equações trigonométricas geralmente possuem infinitas soluções devido à natureza periódica das funções trigonométricas.
-                  </p>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li><strong>Seno:</strong> Se x = α é solução de sen(x) = k, então x = α + 2nπ também é solução para qualquer inteiro n.</li>
-                    <li><strong>Cosseno:</strong> Se x = α é solução de cos(x) = k, então x = ±α + 2nπ também é solução para qualquer inteiro n.</li>
-                    <li><strong>Tangente:</strong> Se x = α é solução de tan(x) = k, então x = α + nπ também é solução para qualquer inteiro n.</li>
-                  </ul>
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Método de Solução</h5>
+                      <p className="text-gray-700 mb-2">
+                        As equações trigonométricas podem ser resolvidas através de:
+                      </p>
+                      <ul className="space-y-2 text-gray-700">
+                        <li className="p-2 hover:bg-blue-50 rounded transition-colors flex">
+                          <div className="h-5 w-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">1</div>
+                          <span><span className="font-medium">Valores conhecidos:</span> Utilizar ângulos notáveis (30°, 45°, 60°, etc)</span>
+                        </li>
+                        <li className="p-2 hover:bg-blue-50 rounded transition-colors flex">
+                          <div className="h-5 w-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">2</div>
+                          <span><span className="font-medium">Identidades:</span> Aplicar identidades trigonométricas para simplificar</span>
+                        </li>
+                        <li className="p-2 hover:bg-blue-50 rounded transition-colors flex">
+                          <div className="h-5 w-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">3</div>
+                          <span><span className="font-medium">Métodos numéricos:</span> Para equações complexas</span>
+                        </li>
+                        <li className="p-2 hover:bg-blue-50 rounded transition-colors flex">
+                          <div className="h-5 w-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">4</div>
+                          <span><span className="font-medium">Reformulação:</span> Converter para formas mais simples</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                   
-                  <p className="mt-2">
-                    <span className="font-semibold">Método de solução:</span> As equações trigonométricas podem ser resolvidas através de:
-                  </p>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li>Uso de valores conhecidos (ângulos notáveis)</li>
-                    <li>Uso de identidades trigonométricas</li>
-                    <li>Métodos numéricos (para equações complexas)</li>
-                    <li>Reformulação para formas mais simples</li>
-                  </ul>
+                  <div className="mt-4">
+                    <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Ângulos Notáveis</h5>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white rounded-md shadow-sm">
+                        <thead>
+                          <tr className="bg-indigo-50 text-indigo-700">
+                            <th className="py-2 px-3 text-left text-sm font-medium">Ângulo (graus)</th>
+                            <th className="py-2 px-3 text-left text-sm font-medium">Ângulo (rad)</th>
+                            <th className="py-2 px-3 text-left text-sm font-medium">sen(x)</th>
+                            <th className="py-2 px-3 text-left text-sm font-medium">cos(x)</th>
+                            <th className="py-2 px-3 text-left text-sm font-medium">tan(x)</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          <tr className="hover:bg-gray-50">
+                            <td className="py-2 px-3 text-sm">0°</td>
+                            <td className="py-2 px-3 text-sm">0</td>
+                            <td className="py-2 px-3 text-sm">0</td>
+                            <td className="py-2 px-3 text-sm">1</td>
+                            <td className="py-2 px-3 text-sm">0</td>
+                          </tr>
+                          <tr className="hover:bg-gray-50">
+                            <td className="py-2 px-3 text-sm">30°</td>
+                            <td className="py-2 px-3 text-sm">π/6</td>
+                            <td className="py-2 px-3 text-sm">1/2</td>
+                            <td className="py-2 px-3 text-sm">√3/2</td>
+                            <td className="py-2 px-3 text-sm">1/√3</td>
+                          </tr>
+                          <tr className="hover:bg-gray-50">
+                            <td className="py-2 px-3 text-sm">45°</td>
+                            <td className="py-2 px-3 text-sm">π/4</td>
+                            <td className="py-2 px-3 text-sm">1/√2</td>
+                            <td className="py-2 px-3 text-sm">1/√2</td>
+                            <td className="py-2 px-3 text-sm">1</td>
+                          </tr>
+                          <tr className="hover:bg-gray-50">
+                            <td className="py-2 px-3 text-sm">60°</td>
+                            <td className="py-2 px-3 text-sm">π/3</td>
+                            <td className="py-2 px-3 text-sm">√3/2</td>
+                            <td className="py-2 px-3 text-sm">1/2</td>
+                            <td className="py-2 px-3 text-sm">√3</td>
+                          </tr>
+                          <tr className="hover:bg-gray-50">
+                            <td className="py-2 px-3 text-sm">90°</td>
+                            <td className="py-2 px-3 text-sm">π/2</td>
+                            <td className="py-2 px-3 text-sm">1</td>
+                            <td className="py-2 px-3 text-sm">0</td>
+                            <td className="py-2 px-3 text-sm">∞</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                    <h5 className="font-medium text-yellow-800 mb-1">Dica de Resolução</h5>
+                    <p className="text-gray-700 text-sm">
+                      Ao resolver equações trigonométricas, é fundamental identificar o período da função envolvida 
+                      (2π para seno e cosseno, π para tangente) para determinar corretamente todas as soluções no intervalo definido.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

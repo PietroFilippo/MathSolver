@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import { lcm, gcd } from '../../utils/mathUtils';
-import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { simplifyFraction, FractionDisplay, getFractionAddSubExamples } from '../../utils/mathUtilsFracoes';
 import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
 
 type Operation = 'add' | 'sub';
@@ -52,6 +52,26 @@ const ResolvedorAddSubFracao: React.FC = () => {
         setShowExplanation(true);
 
         setSteps(calculationSteps);
+    };
+
+    // Função para aplicar um exemplo
+    const applyExample = (example: { 
+        num1: number, 
+        den1: number, 
+        num2: number, 
+        den2: number, 
+        operation: 'add' | 'sub' 
+    }) => {
+        setNumerator1(example.num1.toString());
+        setDenominator1(example.den1.toString());
+        setNumerator2(example.num2.toString());
+        setDenominator2(example.den2.toString());
+        setOperation(example.operation);
+    };
+
+    // Função para filtrar exemplos com base na operação selecionada
+    const getFilteredExamples = () => {
+        return getFractionAddSubExamples().filter(example => example.operation === operation);
     };
 
     const calcularAddicaoSubtracao = (
@@ -383,6 +403,104 @@ const ResolvedorAddSubFracao: React.FC = () => {
         );
     };
 
+    // Função para renderizar os passos de explicação com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {steps.map((step, stepIndex) => {
+                    // Verifica se é uma string ou um ReactNode
+                    const isString = typeof step === 'string';
+                    if (!isString) {
+                        // Se for um ReactNode (por exemplo, um elemento de fração), renderiza diretamente
+                        return (
+                            <div key={stepIndex} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                                <div className="text-indigo-700 font-medium">{step}</div>
+                            </div>
+                        );
+                    }
+
+                    // Para strings, verifica diferentes padrões
+                    const stepStr = String(step);
+                    const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verifica se é um passo de MMC
+                    const mmcMatch = stepStr.startsWith('MMC(');
+                    
+                    // Verifica se é instrução para converter fração
+                    const conversionMatch = stepStr.startsWith('Para a') && stepStr.includes('Multiplique');
+                    
+                    // Verifica se é cálculo de numeradores
+                    const calcMatch = stepStr.startsWith('Calculando');
+                    
+                    // Verifica se é MDC ou divisão para simplificação
+                    const mdcMatch = stepStr.startsWith('MDC(') || stepStr.startsWith('Dividindo');
+                    
+                    if (stepMatch) {
+                        // Se for um passo com número, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={stepIndex} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                                
+                                {stepNumber === "Passo 1:" && mmcSteps && (
+                                    <button
+                                        onClick={() => setShowMMCDetails(!showMMCDetails)}
+                                        className="mt-2 flex items-center text-indigo-600 hover:text-indigo-800"
+                                    >
+                                        <HiInformationCircle className="h-5 w-5 mr-1" />
+                                        {showMMCDetails ? "Ocultar detalhes do cálculo do MMC" : "Ver detalhes do cálculo do MMC"}
+                                    </button>
+                                )}
+                                
+                                {stepNumber === "Passo 1:" && mmcSteps && showMMCDetails && MMCDetails()}
+                            </div>
+                        );
+                    } else if (mmcMatch) {
+                        // Se for o resultado do MMC
+                        return (
+                            <div key={stepIndex} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <p className="text-blue-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (conversionMatch) {
+                        // Se for instrução para conversão de fração
+                        return (
+                            <div key={stepIndex} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                                <p className="text-purple-700">{step}</p>
+                            </div>
+                        );
+                    } else if (calcMatch) {
+                        // Se for cálculo dos numeradores
+                        return (
+                            <div key={stepIndex} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                                <p className="text-amber-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (mdcMatch) {
+                        // Se for MDC ou divisão para simplificação
+                        return (
+                            <div key={stepIndex} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700">{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Conteúdo regular sem classificação específica
+                        return (
+                            <div key={stepIndex} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
@@ -474,6 +592,24 @@ const ResolvedorAddSubFracao: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Exemplos de frações */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Exemplos
+                    </label>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {getFilteredExamples().map((example, index) => (
+                            <button
+                                key={index}
+                                onClick={() => applyExample(example)}
+                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                            >
+                                {example.description}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
                 <button
                     onClick={handleSolve}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
@@ -524,81 +660,159 @@ const ResolvedorAddSubFracao: React.FC = () => {
                                     Solução passo a passo
                                 </h3>
                             </div>
-                            <div className="space-y-4">
-                                {steps.map((step, stepIndex) => {
-                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                                    const stepStr = String(step); // Garante que step seja tratado como string
-                                    const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
-                                    
-                                    if (stepMatch) {
-                                        // Se for um passo com número, extrai e destaca o número
-                                        const [_, stepNumber, stepContent] = stepMatch;
-                                        return (
-                                            <div key={stepIndex} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                                <div className="flex flex-col sm:flex-row">
-                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                        {stepNumber}
-                                                    </span>
-                                                    <p className="text-gray-800">{stepContent}</p>
-                                                </div>
-                                                
-                                                {stepNumber === "Passo 1:" && mmcSteps && (
-                                                    <button
-                                                        onClick={() => setShowMMCDetails(!showMMCDetails)}
-                                                        className="mt-2 flex items-center text-indigo-600 hover:text-indigo-800"
-                                                    >
-                                                        <HiInformationCircle className="h-5 w-5 mr-1" />
-                                                        {showMMCDetails ? "Ocultar detalhes do cálculo do MMC" : "Ver detalhes do cálculo do MMC"}
-                                                    </button>
-                                                )}
-                                                
-                                                {stepNumber === "Passo 1:" && mmcSteps && showMMCDetails && MMCDetails()}
-                                            </div>
-                                        );
-                                    } else {
-                                        // Conteúdo regular sem número de passo
-                                        return (
-                                            <div key={stepIndex} className="p-3 bg-gray-50 rounded-md ml-4">
-                                                <p className="text-gray-800">{step}</p>
-                                            </div>
-                                        );
-                                    }
-                                })}
-                            </div>
+                            {renderExplanationSteps()}
 
-                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                            <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                <div className="space-y-2 text-gray-700">
-                                    <p>
-                                        <span className="font-semibold">Adição e Subtração de Frações:</span> Para somar ou subtrair frações, precisamos de denominadores iguais. Seguimos estes passos:
-                                    </p>
-                                    <ol className="list-decimal pl-5 mt-2 space-y-1">
-                                        <li>Encontrar o Mínimo Múltiplo Comum (MMC) dos denominadores</li>
-                                        <li>Converter cada fração para denominadores iguais, multiplicando o numerador e denominador pelo fator necessário</li>
-                                        <li>Somar ou subtrair os numeradores, mantendo o denominador comum</li>
-                                        <li>Simplificar a fração resultante, encontrando o Máximo Divisor Comum (MDC) entre o numerador e denominador</li>
-                                    </ol>
-                                    
-                                    <p className="mt-2">
-                                        <span className="font-semibold">Fórmula:</span> Para frações <span className="italic">a/b</span> e <span className="italic">c/d</span>:
-                                    </p>
-                                    <div className="bg-white p-2 rounded border border-gray-200 text-center my-2">
-                                        <span className="italic">a/b ± c/d = (a·(mmc/b) ± c·(mmc/d))/mmc</span>
+                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                    <h4 className="font-semibold text-blue-800 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Conceito Matemático
+                                    </h4>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Adição e Subtração de Frações</h5>
+                                            <div className="space-y-3">
+                                                <p className="text-gray-700">
+                                                    Para somar ou subtrair frações, precisamos de denominadores iguais. Esta é uma propriedade 
+                                                    fundamental da aritmética de frações, pois só podemos adicionar ou subtrair partes quando 
+                                                    elas têm o mesmo tamanho (denominador).
+                                                </p>
+                                                <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                                                    <h6 className="text-indigo-700 font-medium mb-2">Fórmulas</h6>
+                                                    <div className="space-y-2 text-center font-medium text-indigo-700">
+                                                        <p>
+                                                            <span className="font-semibold">Com denominador comum:</span><br />
+                                                            a/c + b/c = (a + b)/c<br />
+                                                            a/c - b/c = (a - b)/c
+                                                        </p>
+                                                        <p className="text-sm pt-2 border-t border-gray-100">
+                                                            <span className="font-semibold">Com denominadores diferentes:</span><br />
+                                                            a/b ± c/d = (a·(mmc/b) ± c·(mmc/d))/mmc<br />
+                                                            onde mmc = mínimo múltiplo comum entre b e d
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="p-3 bg-indigo-50 rounded-md">
+                                                    <p className="text-sm text-indigo-700">
+                                                        <span className="font-medium">Por que precisamos do MMC?</span> O Mínimo Múltiplo Comum 
+                                                        dos denominadores nos permite converter as frações para um denominador comum, que é o 
+                                                        menor possível. Isso mantém os cálculos mais simples e facilita a simplificação posterior.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Passos para a Resolução</h5>
+                                            <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
+                                                <ol className="text-sm space-y-3 list-decimal pl-5 text-gray-700">
+                                                    <li>
+                                                        <span className="font-medium text-indigo-700">Encontrar o MMC dos denominadores</span>
+                                                        <p className="text-xs mt-1">
+                                                            Identifique o menor número que é múltiplo de ambos os denominadores.
+                                                            Podemos usar a decomposição em fatores primos ou o algoritmo de Euclides.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <span className="font-medium text-indigo-700">Converter as frações para o denominador comum</span>
+                                                        <p className="text-xs mt-1">
+                                                            Multiplique o numerador e o denominador de cada fração pelo fator necessário
+                                                            para obter o denominador comum (MMC).
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <span className="font-medium text-indigo-700">Somar ou subtrair os numeradores</span>
+                                                        <p className="text-xs mt-1">
+                                                            Com as frações convertidas para o mesmo denominador, agora podemos 
+                                                            adicionar ou subtrair seus numeradores, mantendo o denominador comum.
+                                                        </p>
+                                                    </li>
+                                                    <li>
+                                                        <span className="font-medium text-indigo-700">Simplificar a fração resultante</span>
+                                                        <p className="text-xs mt-1">
+                                                            Encontre o Máximo Divisor Comum (MDC) entre o numerador e o denominador resultantes,
+                                                            e divida ambos por esse valor para obter a fração na forma mais simples.
+                                                        </p>
+                                                    </li>
+                                                </ol>
+                                            </div>
+                                        </div>
                                     </div>
                                     
-                                    <p className="mt-2">
-                                        <span className="font-semibold">Simplificação:</span> Para simplificar uma fração <span className="italic">n/d</span>, encontramos o MDC entre <span className="italic">n</span> e <span className="italic">d</span> e dividimos ambos por ele.
-                                    </p>
+                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                                            <h5 className="font-medium text-gray-800 mb-2">Exemplos Práticos</h5>
+                                            <div className="space-y-3">
+                                                <div className="p-2 bg-indigo-50 rounded-md">
+                                                    <p className="text-sm text-indigo-700 font-medium">
+                                                        Exemplo de Adição: 2/3 + 1/4
+                                                    </p>
+                                                    <ol className="text-xs list-decimal pl-4 mt-1 text-gray-700">
+                                                        <li>MMC(3, 4) = 12</li>
+                                                        <li>2/3 = (2×4)/12 = 8/12</li>
+                                                        <li>1/4 = (1×3)/12 = 3/12</li>
+                                                        <li>8/12 + 3/12 = 11/12</li>
+                                                        <li>Como 11 e 12 são primos entre si, 11/12 já está simplificada</li>
+                                                    </ol>
+                                                </div>
+                                                
+                                                <div className="p-2 bg-purple-50 rounded-md">
+                                                    <p className="text-sm text-purple-700 font-medium">
+                                                        Exemplo de Subtração: 5/6 - 1/4
+                                                    </p>
+                                                    <ol className="text-xs list-decimal pl-4 mt-1 text-gray-700">
+                                                        <li>MMC(6, 4) = 12</li>
+                                                        <li>5/6 = (5×2)/12 = 10/12</li>
+                                                        <li>1/4 = (1×3)/12 = 3/12</li>
+                                                        <li>10/12 - 3/12 = 7/12</li>
+                                                        <li>Como 7 e 12 são primos entre si, 7/12 já está simplificada</li>
+                                                    </ol>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                                                <h5 className="font-medium text-yellow-800 mb-2">Dicas para Evitar Erros Comuns</h5>
+                                                <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                    <li>Nunca some ou subtraia diretamente os denominadores</li>
+                                                    <li>Certifique-se de encontrar o MMC correto dos denominadores</li>
+                                                    <li>Ao converter para o denominador comum, multiplique tanto o numerador quanto o denominador pelo mesmo fator</li>
+                                                    <li>Verifique se a fração resultante pode ser simplificada</li>
+                                                    <li>Com números negativos, tenha cuidado com os sinais durante as operações</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div className="bg-green-50 p-3 rounded-md border border-green-100">
+                                                <h5 className="font-medium text-green-800 mb-2">Aplicações no Cotidiano</h5>
+                                                <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                    <li>Receitas culinárias (ajuste de medidas de ingredientes)</li>
+                                                    <li>Medições em construção e carpintaria</li>
+                                                    <li>Cálculos financeiros (juros, descontos)</li>
+                                                    <li>Divisão de tempo em tarefas</li>
+                                                    <li>Análise de probabilidades em estatística</li>
+                                                </ul>
+                                            </div>
+                            </div>
+                                    </div>
                                     
-                                    <p className="mt-2">
-                                        <span className="font-semibold">Aplicações:</span> Esta operação é fundamental para cálculos em:
-                                    </p>
-                                    <ul className="list-disc pl-5 mt-1">
-                                        <li>Álgebra e resolução de equações</li>
-                                        <li>Receitas culinárias (ajustes de quantidades)</li>
-                                        <li>Finanças (divisão de despesas)</li>
-                                        <li>Estatística (cálculo de proporções)</li>
-                                    </ul>
+                                    <div className="mt-4 p-3 bg-indigo-50 rounded-md border border-indigo-100">
+                                        <h5 className="font-medium text-indigo-800 mb-1 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                            Relação com Outros Conceitos
+                                        </h5>
+                                        <p className="text-sm text-indigo-700">
+                                            A adição e subtração de frações são fundamentais para operações mais avançadas como resolução de equações 
+                                            fracionárias, cálculo de expressões algébricas e para o entendimento de conceitos como números racionais 
+                                            e irracionais. Essas operações também são a base para o trabalho com frações algébricas em álgebra.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

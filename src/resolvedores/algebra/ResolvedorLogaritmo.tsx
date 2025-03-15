@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
+import { getLogarithmExamples } from '../../utils/mathUtilsAlgebra';
 
 type LogType = 'natural' | 'base10' | 'custom';
 
@@ -135,6 +136,101 @@ const ResolvedorLogaritmo: React.FC = () => {
         setShowExplanation(true);
     };
 
+    // Função para aplicar um exemplo
+    const applyExample = (example: {type: 'natural' | 'base10' | 'custom', value: number, base?: number}) => {
+        setLogType(example.type);
+        setValue(example.value.toString());
+        if (example.type === 'custom' && example.base) {
+            setCustomBase(example.base.toString());
+        }
+    };
+
+    // Filtrar exemplos baseados no tipo de logaritmo selecionado
+    const getFilteredExamples = () => {
+        return getLogarithmExamples().filter(example => example.type === logType);
+    };
+
+    // Função que gera os passos com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {steps.map((step, index) => {
+                    // Verificar se o passo começa com um padrão de número de passo como "Passo X:"
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verificar se o passo é um resultado de cálculo (contém um sinal de igual)
+                    const calculationMatch = step.match(/^(ln|log|e\^|10\^)/);
+
+                    // Verificar se o passo é uma explicação teórica
+                    const explanationMatch = step.includes('é frequentemente usado') || 
+                                           step.includes('Logaritmo natural') || 
+                                           step.includes('fórmula de mudança de base');
+                    
+                    // Verificar se o passo é uma verificação/validação
+                    const verificationMatch = step.includes('Verificar') || 
+                                             step.includes('então') || 
+                                             step.includes('deve ser igual') ||
+                                             (step.includes('=') && step.includes('≈'));
+                    
+                    // Verificar se o passo é uma nota ou explicação adicional
+                    const specialCaseMatch = step.includes('propriedades especiais') || 
+                                            step.includes('caso especial') || 
+                                            step.includes('porque');
+                    
+                    if (stepMatch) {
+                        // Se for um passo com número, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (calculationMatch) {
+                        // Se for um resultado de cálculo
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <p className="text-gray-800 font-medium text-lg">{step}</p>
+                            </div>
+                        );
+                    } else if (explanationMatch) {
+                        // Se for uma explicação teórica
+                        return (
+                            <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                                <p className="text-indigo-700">{step}</p>
+                            </div>
+                        );
+                    } else if (verificationMatch) {
+                        // Se for uma verificação
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700">{step}</p>
+                            </div>
+                        );
+                    } else if (specialCaseMatch) {
+                        // Se for uma nota sobre casos especiais
+                        return (
+                            <div key={index} className="p-3 bg-yellow-50 rounded-md ml-4 border-l-2 border-yellow-300">
+                                <p className="text-yellow-700 italic">{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Conteúdo regular sem classificação específica
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
@@ -215,6 +311,24 @@ const ResolvedorLogaritmo: React.FC = () => {
                 )}
             </div>
 
+            {/* Exemplos de logaritmos */}
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Exemplos
+                </label>
+                <div className="flex flex-wrap gap-2">
+                    {getFilteredExamples().map((example, index) => (
+                        <button
+                            key={index}
+                            onClick={() => applyExample(example)}
+                            className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                        >
+                            {example.description}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <button
                 onClick={handleSolve}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
@@ -237,7 +351,7 @@ const ResolvedorLogaritmo: React.FC = () => {
                         {logType === 'natural' && `ln(${value}) = `}
                         {logType === 'base10' && `log₁₀(${value}) = `}
                         {logType === 'custom' && `log₍${customBase}₎(${value}) = `}
-                        <span className="font-bold">{result}</span>
+                        <span className="font-bold">{roundToDecimals(result, 6)}</span>
                     </p>
                     
                     <button 
@@ -257,58 +371,135 @@ const ResolvedorLogaritmo: React.FC = () => {
                             </h3>
                         </div>
                         
-                        <div className="space-y-4">
-                            {steps.map((step, index) => {
-                                // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                                const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                                
-                                if (stepMatch) {
-                                    // Se for um passo com número, extrai e destaca o número
-                                    const [_, stepNumber, stepContent] = stepMatch;
-                                    return (
-                                        <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                            <div className="flex flex-col sm:flex-row">
-                                                <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                    {stepNumber}
-                                                </span>
-                                                <p className="text-gray-800">{stepContent}</p>
+                        {renderExplanationSteps()}
+                        
+                        <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                            <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                <h4 className="font-semibold text-blue-800 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Conceito Matemático
+                                </h4>
+                            </div>
+                            <div className="p-4">
+                                <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                    <div className="flex-1">
+                                        <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição e Propriedades</h5>
+                                        <p className="text-gray-700 mb-3">
+                                            O logaritmo de um número <span className="font-medium">N</span> na base <span className="font-medium">b</span> é 
+                                            o expoente <span className="font-medium">x</span> ao qual devemos elevar <span className="font-medium">b</span> para 
+                                            obter <span className="font-medium">N</span>.
+                                        </p>
+                                        <div className="bg-white p-3 rounded-md text-center border border-gray-100 shadow-sm mb-3">
+                                            <p className="text-lg font-medium text-indigo-700">log<sub>b</sub>(N) = x ⟺ b<sup>x</sup> = N</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                <p className="text-sm">
+                                                    <span className="font-medium text-indigo-700">Logaritmo Natural (ln):</span> Usa a base <span className="italic">e</span> ≈ 2,71828
+                                                </p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                <p className="text-sm">
+                                                    <span className="font-medium text-indigo-700">Logaritmo Decimal (log₁₀):</span> Usa a base 10
+                                                </p>
+                                            </div>
+                                            <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                                                <p className="text-sm">
+                                                    <span className="font-medium text-indigo-700">Logaritmo Binário (log₂):</span> Usa a base 2 (comum em computação)
+                                                </p>
                                             </div>
                                         </div>
-                                    );
-                                } else {
-                                    // Conteúdo regular sem número de passo
-                                    return (
-                                        <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                                            <p className="text-gray-800">{step}</p>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Propriedades dos Logaritmos</h5>
+                                        <div className="space-y-2 mb-3">
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">log<sub>b</sub>(xy)</span>
+                                                </div>
+                                                <span>= log<sub>b</sub>(x) + log<sub>b</sub>(y)</span>
+                                            </div>
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">log<sub>b</sub>(x/y)</span>
+                                                </div>
+                                                <span>= log<sub>b</sub>(x) - log<sub>b</sub>(y)</span>
+                                            </div>
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">log<sub>b</sub>(x<sup>n</sup>)</span>
+                                                </div>
+                                                <span>= n · log<sub>b</sub>(x)</span>
+                                            </div>
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">log<sub>b</sub>(1)</span>
+                                                </div>
+                                                <span>= 0</span>
+                                            </div>
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">log<sub>b</sub>(b)</span>
+                                                </div>
+                                                <span>= 1</span>
+                                            </div>
+                                            <div className="p-2 bg-indigo-50 rounded-md flex items-center">
+                                                <div className="mr-2 w-20 text-center flex-shrink-0">
+                                                    <span className="font-mono text-indigo-700">b<sup>log<sub>b</sub>(x)</sup></span>
+                                                </div>
+                                                <span>= x</span>
+                                            </div>
                                         </div>
-                                    );
-                                }
-                            })}
-                        </div>
-                        
-                        <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                            <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                            <p className="text-gray-700 mb-2"><strong>Propriedades dos Logaritmos:</strong></p>
-                            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
-                                <li>log_b(xy) = log_b(x) + log_b(y)</li>
-                                <li>log_b(x/y) = log_b(x) - log_b(y)</li>
-                                <li>log_b(x^k) = n * log_b(x)</li>
-                                <li>log_b(1) = 0</li>
-                                <li>log_b(b) = 1</li>
-                                <li>b^log_b(x) = x</li>
-                                <li>log_a(x) = log_b(x) / log_b(a) (fórmula de mudança de base)</li>
-                            </ul>
-
-                            <p className="mt-3 text-gray-700">
-                                <strong>Aplicações de Logaritmos:</strong> Logaritmos são amplamente utilizados em diversas áreas, como:
-                            </p>
-                            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-700">
-                                <li>Resolução de equações exponenciais</li>
-                                <li>Calcular quantidades que variam a longas escalas (pH, decibéis, escala Richter)</li>
-                                <li>Análise de crescimento exponencial (crescimento populacional, juros compostos)</li>
-                                <li>Teoria da informação e compactação de dados</li>
-                                <li>Estatística e probabilidade (funções de verossimilhança logarítmica)</li>
-                            </ul>
+                                        <div className="p-3 bg-blue-50 rounded-md border-l-2 border-blue-300">
+                                            <p className="text-sm text-blue-800 font-medium">Fórmula de mudança de base:</p>
+                                            <p className="text-center text-blue-700 mt-1">log<sub>a</sub>(x) = log<sub>b</sub>(x) / log<sub>b</sub>(a)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-4">
+                                    <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Aplicações dos Logaritmos</h5>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                            <h6 className="text-indigo-700 font-medium mb-2">Ciência e Engenharia</h6>
+                                            <ul className="text-sm space-y-1 list-disc pl-4">
+                                                <li>Escala de decibéis (som)</li>
+                                                <li>Escala Richter (terremotos)</li>
+                                                <li>pH (acidez/alcalinidade)</li>
+                                                <li>Luminosidade de estrelas</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                            <h6 className="text-indigo-700 font-medium mb-2">Matemática Financeira</h6>
+                                            <ul className="text-sm space-y-1 list-disc pl-4">
+                                                <li>Cálculo de juros compostos</li>
+                                                <li>Tempo de duplicação de capital</li>
+                                                <li>Taxa de crescimento</li>
+                                                <li>Depreciação exponencial</li>
+                                            </ul>
+                                        </div>
+                                        <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                                            <h6 className="text-indigo-700 font-medium mb-2">Computação e Dados</h6>
+                                            <ul className="text-sm space-y-1 list-disc pl-4">
+                                                <li>Algoritmos de busca</li>
+                                                <li>Teoria da informação</li>
+                                                <li>Compressão de dados</li>
+                                                <li>Machine learning (entropia)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                                    <h5 className="font-medium text-yellow-800 mb-1">Dica de Resolução</h5>
+                                    <p className="text-gray-700 text-sm">
+                                        Ao resolver equações com logaritmos, lembre-se que o logaritmo só é definido para valores positivos.
+                                        Além disso, use as propriedades dos logaritmos para simplificar expressões complexas antes de resolver.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}

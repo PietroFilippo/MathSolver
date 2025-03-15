@@ -8,6 +8,7 @@ import {
     trapezoidArea,
     rhombusArea,
     hexagonArea,
+    getAreaExamples
 } from '../../utils/mathUtilsGeometria';
 
 type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
@@ -33,6 +34,57 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
     const numberPattern = /^-?\d*\.?\d*$/;
     if (value === '' || numberPattern.test(value)) {
       setter(value);
+    }
+  };
+
+  // Função para aplicar um exemplo
+  const applyExample = (exemplo: { valores: Record<string, number> }) => {
+    // Resetar todos os valores primeiro
+    setLado('');
+    setComprimento('');
+    setLargura('');
+    setBase('');
+    setBaseMaior('');
+    setBaseMenor('');
+    setAltura('');
+    setRaio('');
+    setDiagonalMaior('');
+    setDiagonalMenor('');
+    
+    // Aplicar os valores do exemplo
+    for (const [key, value] of Object.entries(exemplo.valores)) {
+      switch (key) {
+        case 'lado':
+          setLado(value.toString());
+          break;
+        case 'comprimento':
+          setComprimento(value.toString());
+          break;
+        case 'largura':
+          setLargura(value.toString());
+          break;
+        case 'base':
+          setBase(value.toString());
+          break;
+        case 'baseMaior':
+          setBaseMaior(value.toString());
+          break;
+        case 'baseMenor':
+          setBaseMenor(value.toString());
+          break;
+        case 'altura':
+          setAltura(value.toString());
+          break;
+        case 'raio':
+          setRaio(value.toString());
+          break;
+        case 'diagonalMaior':
+          setDiagonalMaior(value.toString());
+          break;
+        case 'diagonalMenor':
+          setDiagonalMenor(value.toString());
+          break;
+      }
     }
   };
 
@@ -391,7 +443,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               value={lado}
               onChange={(e) => handleNumberInput(e.target.value, setLado)}
               className={inputClassName}
-              placeholder="Digite o lado"
+              placeholder="Digite o valor do lado"
             />
           </div>
         );
@@ -400,32 +452,77 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
     }
   };
 
-  const getConceitoMatematico = () => {
-    switch (figura) {
-      case 'quadrado':
-        return "Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°). " +
-               "Sua área é calculada multiplicando o lado por ele mesmo (l²).";
-      case 'retangulo':
-        return "Um retângulo é um quadrilátero com quatro ângulos retos. " +
-               "Sua área é calculada multiplicando o comprimento pela largura.";
-      case 'triangulo':
-        return "Um triângulo é um polígono com três lados. " +
-               "Sua área é calculada multiplicando a base pela altura e dividindo por 2.";
-      case 'circulo':
-        return "Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro. " +
-               "Sua área é calculada multiplicando π pelo quadrado do raio (πr²).";
-      case 'trapezio':
-        return "Um trapézio é um quadrilátero com dois lados paralelos (bases). " +
-               "Sua área é calculada multiplicando a soma das bases pela altura e dividindo por 2.";
-      case 'losango':
-        return "Um losango é um quadrilátero com quatro lados iguais. " +
-               "Sua área é calculada multiplicando suas diagonais e dividindo por 2.";
-      case 'hexagono':
-        return "Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais. " +
-               "Sua área pode ser calculada usando a fórmula: (3 × √3 × l²) ÷ 2, onde l é o lado.";
-      default:
-        return "";
-    }
+  // Função para renderizar os passos de explicação com estilização aprimorada
+  const renderExplanationSteps = () => {
+    return (
+      <div className="space-y-4">
+        {steps.map((step, index) => {
+          const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+          
+          // Verifica se é um passo de aplicação de fórmula
+          const formulaMatch = step.includes('calculada pela fórmula');
+          
+          // Verifica se é um passo de substituição de valores
+          const substitutionMatch = step.includes('Substituindo');
+          
+          // Verifica se é um cálculo direto
+          const calculationMatch = step.startsWith('A =') && !step.includes('unidades quadradas');
+          
+          // Verifica se é o resultado final
+          const resultMatch = step.includes('unidades quadradas');
+          
+          if (stepMatch) {
+            // Se for um passo numerado, extrai e destaca o número
+            const [_, stepNumber, stepContent] = stepMatch;
+            return (
+              <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                <div className="flex flex-col sm:flex-row">
+                  <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                    {stepNumber}
+                  </span>
+                  <p className="text-gray-800">{stepContent}</p>
+                </div>
+              </div>
+            );
+          } else if (formulaMatch) {
+            // Se for uma explicação de fórmula
+            return (
+              <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                <p className="text-blue-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (substitutionMatch) {
+            // Se for um passo de substituição
+            return (
+              <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                <p className="text-purple-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (calculationMatch) {
+            // Se for um cálculo direto
+            return (
+              <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                <p className="text-amber-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (resultMatch) {
+            // Se for o resultado final
+            return (
+              <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                <p className="text-green-700 font-medium">{step}</p>
+              </div>
+            );
+          } else {
+            // Outro tipo de passo
+            return (
+              <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                <p className="text-gray-800">{step}</p>
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
   };
 
   return (
@@ -458,6 +555,24 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
             <option value="losango">Losango</option>
             <option value="hexagono">Hexágono Regular</option>
           </select>
+        </div>
+
+        {/* Exemplos */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Exemplos
+          </label>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {getAreaExamples(figura).map((exemplo, index) => (
+              <button
+                key={index}
+                onClick={() => applyExample(exemplo)}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+              >
+                {exemplo.description}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Input fields below the selection */}
@@ -500,40 +615,227 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800 flex items-center">
                   <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
-                  Solução passo a passo
+                  Explicação Detalhada
                 </h3>
               </div>
+
+              {renderExplanationSteps()}
               
-              <div className="space-y-4">
-                {steps.map((step, index) => {
-                  const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                  
-                  if (stepMatch) {
-                    const [_, stepNumber, stepContent] = stepMatch;
-                    return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                        <div className="flex flex-col sm:flex-row">
-                          <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                            {stepNumber}
-                          </span>
-                          <p className="text-gray-800">{stepContent}</p>
+              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                  <h4 className="font-semibold text-blue-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conceito Matemático
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4 mb-4">
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Área de Figuras Planas</h5>
+                      <div className="space-y-3">
+                        <p className="text-gray-700">
+                          A área de uma figura plana é a medida da região do plano ocupada pela figura, 
+                          expressa em unidades quadradas, como centímetros quadrados (cm²) ou metros quadrados (m²).
+                        </p>
+                        <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                          <h6 className="text-indigo-700 font-medium mb-2">Fórmulas de Área</h6>
+                          <div className="space-y-2 text-sm text-gray-700">
+                            {figura === 'quadrado' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Quadrado:</span> A = l², onde l é o comprimento do lado
+                              </div>
+                            )}
+                            {figura === 'retangulo' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Retângulo:</span> A = c × l, onde c é o comprimento e l é a largura
+                              </div>
+                            )}
+                            {figura === 'triangulo' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Triângulo:</span> A = (b × h) ÷ 2, onde b é a base e h é a altura
+                              </div>
+                            )}
+                            {figura === 'circulo' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Círculo:</span> A = πr², onde r é o raio e π ≈ 3,14159...
+                              </div>
+                            )}
+                            {figura === 'trapezio' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Trapézio:</span> A = [(B + b) × h] ÷ 2, onde B é a base maior, b é a base menor e h é a altura
+                              </div>
+                            )}
+                            {figura === 'losango' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Losango:</span> A = (D × d) ÷ 2, onde D é a diagonal maior e d é a diagonal menor
+                              </div>
+                            )}
+                            {figura === 'hexagono' && (
+                              <div className="p-2 border-b border-gray-50">
+                                <span className="font-medium">Hexágono Regular:</span> A = (3 × √3 × l²) ÷ 2, onde l é o lado
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="p-3 bg-indigo-50 rounded-md">
+                          <h6 className="text-indigo-700 font-medium mb-2">Princípios Fundamentais</h6>
+                          <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                            <li>A área é uma grandeza bidimensional e deve ser expressa em unidades quadradas</li>
+                            <li>Figuras com o mesmo perímetro podem ter áreas diferentes</li>
+                            <li>Figuras semelhantes têm suas áreas proporcionais ao quadrado da razão de semelhança</li>
+                            <li>A área de um polígono regular pode ser calculada conhecendo-se o número de lados, o comprimento do lado ou o raio da circunferência circunscrita</li>
+                          </ul>
                         </div>
                       </div>
-                    );
-                  } else {
-                    return (
-                      <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                        <p className="text-gray-800">{step}</p>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Características da Figura</h5>
+                      <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
+                        <div className="space-y-2">
+                          {figura === 'quadrado' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Quadrado</h6>
+                              <p className="text-sm text-gray-700">Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°).</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>Todos os lados têm o mesmo comprimento</li>
+                                <li>Todos os ângulos internos medem 90°</li>
+                                <li>As diagonais são iguais, perpendiculares entre si e bissetoras uma da outra</li>
+                                <li>Perímetro = 4 × lado</li>
+                                <li>Diagonal = lado × √2</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'retangulo' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Retângulo</h6>
+                              <p className="text-sm text-gray-700">Um retângulo é um quadrilátero com quatro ângulos retos.</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>Lados opostos são paralelos e iguais</li>
+                                <li>Todos os ângulos internos medem 90°</li>
+                                <li>As diagonais são iguais e bissetoras uma da outra</li>
+                                <li>Perímetro = 2 × (comprimento + largura)</li>
+                                <li>Diagonal = √(comprimento² + largura²)</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'triangulo' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Triângulo</h6>
+                              <p className="text-sm text-gray-700">Um triângulo é um polígono com três lados e três ângulos.</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>A soma dos ângulos internos é sempre 180°</li>
+                                <li>A altura é a distância perpendicular de um vértice ao lado oposto</li>
+                                <li>Pode ser classificado quanto aos lados (equilátero, isósceles, escaleno) ou ângulos (acutângulo, retângulo, obtusângulo)</li>
+                                <li>Perímetro = soma dos três lados</li>
+                                <li>Existem outras fórmulas para calcular a área, como a Fórmula de Heron</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'circulo' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Círculo</h6>
+                              <p className="text-sm text-gray-700">Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro.</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>O raio é a distância do centro a qualquer ponto da circunferência</li>
+                                <li>O diâmetro é o dobro do raio e passa pelo centro do círculo</li>
+                                <li>A circunferência é o contorno do círculo</li>
+                                <li>Perímetro (circunferência) = 2πr</li>
+                                <li>O número π (pi) é uma constante aproximadamente igual a 3,14159...</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'trapezio' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Trapézio</h6>
+                              <p className="text-sm text-gray-700">Um trapézio é um quadrilátero com dois lados paralelos (bases).</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>As bases são os lados paralelos (uma base maior e uma base menor)</li>
+                                <li>A altura é a distância perpendicular entre as bases</li>
+                                <li>Um trapézio isósceles tem os lados não-paralelos iguais</li>
+                                <li>Um trapézio retângulo tem dois ângulos retos</li>
+                                <li>Perímetro = soma dos quatro lados</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'losango' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Losango</h6>
+                              <p className="text-sm text-gray-700">Um losango é um quadrilátero com quatro lados iguais.</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>Todos os lados têm o mesmo comprimento</li>
+                                <li>Lados opostos são paralelos</li>
+                                <li>As diagonais são perpendiculares entre si e bissetoras uma da outra</li>
+                                <li>Perímetro = 4 × lado</li>
+                                <li>Também é possível calcular a área usando o lado e o ângulo: A = lado² × sen(ângulo)</li>
+                              </ul>
+                            </>
+                          )}
+                          {figura === 'hexagono' && (
+                            <>
+                              <h6 className="text-indigo-700 font-medium">Hexágono Regular</h6>
+                              <p className="text-sm text-gray-700">Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais.</p>
+                              <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                <li>Todos os lados têm o mesmo comprimento</li>
+                                <li>Todos os ângulos internos medem 120°</li>
+                                <li>A soma dos ângulos internos é 720° (6 × 120°)</li>
+                                <li>Perímetro = 6 × lado</li>
+                                <li>Pode ser dividido em 6 triângulos equiláteros iguais</li>
+                                <li>Apótema (distância do centro ao meio de cada lado) = (√3 × lado) ÷ 2</li>
+                              </ul>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    );
-                  }
-                })}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                      <h5 className="font-medium text-gray-800 mb-2">Aplicações Práticas</h5>
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-700">O cálculo de áreas é essencial em diversos contextos:</p>
+                        <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                          <li><span className="font-medium">Arquitetura e Construção:</span> Cálculo de materiais como pisos, pinturas, etc.</li>
+                          <li><span className="font-medium">Agrimensura:</span> Medição de terrenos e propriedades</li>
+                          <li><span className="font-medium">Design:</span> Desenvolvimento de layouts e estimativas de materiais</li>
+                          <li><span className="font-medium">Geografia:</span> Cálculo de áreas de regiões, países, lagos</li>
+                          <li><span className="font-medium">Biologia:</span> Estimativa de superfícies de folhas, órgãos, etc.</li>
+                          <li><span className="font-medium">Economia:</span> Cálculo de custos baseados em área</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                      <h5 className="font-medium text-yellow-800 mb-2">Dicas de Resolução</h5>
+                      <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                        <li>Sempre verifique se todas as medidas estão na mesma unidade</li>
+                        <li>Desenhe a figura e identifique todas as medidas conhecidas</li>
+                        <li>Para figuras complexas, divida-as em figuras mais simples e some as áreas</li>
+                        <li>Em fórmulas com radicais, mantenha o valor exato quando possível</li>
+                        <li>Lembre-se que a área é sempre expressa em unidades quadradas</li>
+                        <li>Para converter entre unidades de área, lembre-se que 1 m² = 10.000 cm²</li>
+                      </ul>
+                    </div>
               </div>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                <div className="space-y-2 text-gray-700">
-                  {getConceitoMatematico()}
+                  <div className="mt-4 p-3 bg-indigo-50 rounded-md border border-indigo-100">
+                    <h5 className="font-medium text-indigo-800 mb-1 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                      Relação com Outros Conceitos
+                    </h5>
+                    <p className="text-sm text-indigo-700">
+                      O cálculo de áreas está relacionado com diversos conceitos matemáticos, incluindo geometria 
+                      analítica, trigonometria, cálculo integral e álgebra. No cálculo avançado, a integração pode 
+                      ser usada para determinar áreas de regiões delimitadas por curvas. Além disso, o conceito de 
+                      área é fundamental para entender outros conceitos como densidade superficial, fluxo de campos 
+                      vetoriais e o Teorema de Green na análise matemática.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

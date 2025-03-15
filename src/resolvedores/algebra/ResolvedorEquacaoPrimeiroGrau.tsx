@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { roundToDecimals } from '../../utils/mathUtils';
 import { HiCalculator } from 'react-icons/hi';
+import { getLinearExamples } from '../../utils/mathUtilsAlgebra';
 
 const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
     const [a, setA] = useState<string>('');
@@ -67,6 +68,79 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
         setSteps(calculationSteps);
     };
 
+    // Função para aplicar um exemplo aos inputs
+    const applyExample = (example: {a: number, b: number, c: number}) => {
+        setA(example.a.toString());
+        setB(example.b.toString());
+        setC(example.c.toString());
+    };
+
+    // Função que gera os passos com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {steps.map((step, index) => {
+                    // Verificar se o passo começa com um padrão de número de passo como "Passo X:"
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verificar se o passo representa uma equação ou operação matemática
+                    const equationMatch = step.match(/^([0-9x\s\+\-\*\/\(\)=]+)$/);
+                    
+                    // Verificar se o passo contém uma verificação/validação
+                    const verificationMatch = step.includes("✓") || step.includes("verifica") || step.includes("Verifica");
+                    
+                    // Verificar se o passo é uma nota ou explicação adicional
+                    const noteMatch = step.startsWith("Nota:");
+                    
+                    if (stepMatch) {
+                        // Se for um passo com número, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (equationMatch) {
+                        // Se for uma equação matemática, destacá-la
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <div className="flex flex-col">
+                                    <span className="text-gray-800 font-medium text-lg">{step}</span>
+                                </div>
+                            </div>
+                        );
+                    } else if (verificationMatch) {
+                        // Se for uma verificação ou validação
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700">{step}</p>
+                            </div>
+                        );
+                    } else if (noteMatch) {
+                        // Se for uma nota ou observação
+                        return (
+                            <div key={index} className="p-2 bg-yellow-50 rounded-md ml-4 text-sm text-yellow-700 italic border-l-2 border-yellow-300">
+                                {step}
+                            </div>
+                        );
+                    } else {
+                        // Conteúdo regular sem classificação específica
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
@@ -124,6 +198,24 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Exemplos de equações */}
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Exemplos
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                        {getLinearExamples().map((example, index) => (
+                            <button
+                                key={index}
+                                onClick={() => applyExample(example)}
+                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                            >
+                                {example.description}
+                            </button>
+                        ))}
+                    </div>
+                </div>
                 
                 <button
                     onClick={handleSolve}
@@ -167,46 +259,56 @@ const ResolvedorEquacaoPrimeiroGrau: React.FC = () => {
                                 </h3>
                             </div>
                             
-                            <div className="space-y-4">
-                                {steps.map((step, index) => {
-                                    // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                                    
-                                    if (stepMatch) {
-                                        // Se for um passo com número, extrai e destaca o número
-                                        const [_, stepNumber, stepContent] = stepMatch;
-                                        return (
-                                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                                <div className="flex flex-col sm:flex-row">
-                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                        {stepNumber}
-                                                    </span>
-                                                    <p className="text-gray-800">{stepContent}</p>
-                                                </div>
-                                            </div>
-                                        );
-                                    } else {
-                                        // Conteúdo regular sem número de passo
-                                        return (
-                                            <div key={index} className="p-3 bg-white border border-gray-200 rounded-md">
-                                                <p className="text-gray-800">{step}</p>
-                                            </div>
-                                        );
-                                    }
-                                })}
-                            </div>
+                            {renderExplanationSteps()}
                             
-                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                <p className="text-gray-700">
-                                    Uma equação de primeiro grau (também chamada de equação linear) contém uma variável elevada apenas à potência de 1.
-                                    Os passos gerais para resolver esse tipo de equação são:
-                                </p>
-                                <ol className="list-decimal list-inside mt-2 space-y-1 text-gray-700">
-                                    <li>Isolar o termo da variável em um lado da equação</li>
-                                    <li>Isolar a variável dividindo ambos os lados pelo seu coeficiente</li>
-                                    <li>Verificar a solução substituindo-a na equação original</li>
-                                </ol>
+                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                    <h4 className="font-semibold text-blue-800 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Conceito Matemático
+                                    </h4>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-col md:flex-row gap-4">
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição</h5>
+                                            <p className="text-gray-700">
+                                                Uma equação de primeiro grau (também chamada de equação linear) contém uma variável elevada apenas à potência de 1.
+                                            </p>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Forma Geral</h5>
+                                            <div className="bg-white p-3 rounded-md text-center border border-gray-100 shadow-sm">
+                                                <span className="text-lg font-medium text-indigo-700">ax + b = c</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-4">
+                                        <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Método de Resolução</h5>
+                                        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                                            <li className="p-2 hover:bg-blue-50 rounded transition-colors">
+                                                <span className="font-medium">Isolar o termo da variável:</span> Mover todos os termos com a variável para um lado da equação e os valores constantes para o outro.
+                                            </li>
+                                            <li className="p-2 hover:bg-blue-50 rounded transition-colors">
+                                                <span className="font-medium">Isolar a variável:</span> Dividir ambos os lados pelo coeficiente da variável.
+                                            </li>
+                                            <li className="p-2 hover:bg-blue-50 rounded transition-colors">
+                                                <span className="font-medium">Verificar a solução:</span> Substituir o valor encontrado na equação original para confirmar.
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    
+                                    <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                                        <h5 className="font-medium text-yellow-800 mb-1">Aplicações</h5>
+                                        <p className="text-gray-700 text-sm">
+                                            Equações lineares são usadas em diversos campos como economia (preço vs. demanda), 
+                                            física (movimento uniforme), finanças (juros simples) e problemas cotidianos.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

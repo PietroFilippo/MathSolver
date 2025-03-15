@@ -200,3 +200,71 @@ export const generatePrimesUpTo = (limite: number): number[] => {
     
     return primes;
 };
+
+// ===================================================
+// ================= EXEMPLOS ÚTEIS =================
+// ===================================================
+
+// Função para obter exemplos de números para fatoração
+export const getFactorizationExamples = (): Array<{ number: number, description: string }> => {
+    return [
+        { number: 12, description: "12 = 2² × 3" },
+        { number: 60, description: "60 = 2² × 3 × 5" },
+        { number: 84, description: "84 = 2² × 3 × 7" },
+        { number: 100, description: "100 = 2² × 5²" },
+        { number: 36, description: "36 = 2² × 3²" },
+        { number: 17, description: "17 (número primo)" },
+        { number: 45, description: "45 = 3² × 5" },
+        { number: 144, description: "144 = 2⁴ × 3²" },
+        { number: 210, description: "210 = 2 × 3 × 5 × 7" },
+        { number: 64, description: "64 = 2⁶" }
+    ];
+};
+
+// Função para obter exemplos de números para MMC/MDC
+export const getMMCMDCExamples = (): Array<{ numbers: number[], description: string }> => {
+    return [
+        { numbers: [12, 18], description: "12, 18" },
+        { numbers: [24, 36, 48], description: "24, 36, 48" },
+        { numbers: [7, 13], description: "7, 13 (primos)" },
+        { numbers: [15, 25, 35], description: "15, 25, 35" },
+        { numbers: [16, 24, 36], description: "16, 24, 36" },
+        { numbers: [17, 34, 51], description: "17, 34, 51" },
+        { numbers: [100, 80, 60], description: "100, 80, 60" },
+        { numbers: [35, 49, 63], description: "35, 49, 63" },
+        { numbers: [8, 12, 20, 24], description: "8, 12, 20, 24" },
+        { numbers: [9, 27, 81], description: "9, 27, 81" }
+    ];
+};
+
+// Função para obter exemplos de cálculo de porcentagem
+export const getPercentageExamples = (): Array<{ value: number, percentage: number, type: 'percentage' | 'percentageChange' | 'reversePercentage', description: string }> => {
+    return [
+        { value: 200, percentage: 15, type: 'percentage', description: "15% de 200" },
+        { value: 50, percentage: 25, type: 'percentage', description: "25% de 50" },
+        { value: 80, percentage: 120, type: 'percentage', description: "120% de 80" },
+        { value: 1000, percentage: 7.5, type: 'percentage', description: "7.5% de 1000" },
+        { value: 60, percentage: 80, type: 'percentageChange', description: "Variação de 60 para 80" },
+        { value: 100, percentage: 75, type: 'percentageChange', description: "Variação de 100 para 75" },
+        { value: 40, percentage: 55, type: 'percentageChange', description: "Variação de 40 para 55" },
+        { value: 200, percentage: 250, type: 'percentageChange', description: "Variação de 200 para 250" },
+        { value: 25, percentage: 20, type: 'reversePercentage', description: "25 é 20% de X" },
+        { value: 75, percentage: 30, type: 'reversePercentage', description: "75 é 30% de X" }
+    ];
+};
+
+// Função para obter exemplos de proporções
+export const getProportionExamples = (): Array<{ a: number, b: number, c: number, d: number, solveFor: 'a' | 'b' | 'c' | 'd', description: string }> => {
+    return [
+        { a: 2, b: 4, c: 3, d: 6, solveFor: 'd', description: "2:4 = 3:?" },
+        { a: 3, b: 9, c: 5, d: 15, solveFor: 'd', description: "3:9 = 5:?" },
+        { a: 4, b: 5, c: 8, d: 10, solveFor: 'd', description: "4:5 = 8:?" },
+        { a: 100, b: 25, c: 80, d: 20, solveFor: 'd', description: "100:25 = 80:?" },
+        { a: 5, b: 8, c: 0, d: 16, solveFor: 'c', description: "5:8 = ?:16" },
+        { a: 6, b: 18, c: 0, d: 30, solveFor: 'c', description: "6:18 = ?:30" },
+        { a: 0, b: 3, c: 10, d: 15, solveFor: 'a', description: "?:3 = 10:15" },
+        { a: 0, b: 12, c: 7, d: 84, solveFor: 'a', description: "?:12 = 7:84" },
+        { a: 10, b: 0, c: 15, d: 30, solveFor: 'b', description: "10:? = 15:30" },
+        { a: 8, b: 0, c: 4, d: 16, solveFor: 'b', description: "8:? = 4:16" }
+    ];
+};

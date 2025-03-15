@@ -8,6 +8,7 @@ import {
     trapezoidPerimeter,
     rhombusPerimeter,
     hexagonPerimeter,
+    getPerimeterExamples
 } from '../../utils/mathUtilsGeometria';
 
 type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
@@ -34,6 +35,61 @@ const ResolvedorPerimetros: React.FC = () => {
         const numberPattern = /^-?\d*\.?\d*$/;
         if (value === '' || numberPattern.test(value)) {
             setter(value);
+        }
+    };
+
+    // Função para aplicar um exemplo
+    const applyExample = (exemplo: { valores: Record<string, number> }) => {
+        // Resetar todos os valores primeiro
+        setLado('');
+        setComprimento('');
+        setLargura('');
+        setLadoA('');
+        setLadoB('');
+        setLadoC('');
+        setRaio('');
+        setLadoParalelo1('');
+        setLadoParalelo2('');
+        setLadoObliquo1('');
+        setLadoObliquo2('');
+        
+        // Aplicar os valores do exemplo
+        for (const [key, value] of Object.entries(exemplo.valores)) {
+            switch (key) {
+                case 'lado':
+                    setLado(value.toString());
+                    break;
+                case 'comprimento':
+                    setComprimento(value.toString());
+                    break;
+                case 'largura':
+                    setLargura(value.toString());
+                    break;
+                case 'ladoA':
+                    setLadoA(value.toString());
+                    break;
+                case 'ladoB':
+                    setLadoB(value.toString());
+                    break;
+                case 'ladoC':
+                    setLadoC(value.toString());
+                    break;
+                case 'raio':
+                    setRaio(value.toString());
+                    break;
+                case 'ladoParalelo1':
+                    setLadoParalelo1(value.toString());
+                    break;
+                case 'ladoParalelo2':
+                    setLadoParalelo2(value.toString());
+                    break;
+                case 'ladoObliquo1':
+                    setLadoObliquo1(value.toString());
+                    break;
+                case 'ladoObliquo2':
+                    setLadoObliquo2(value.toString());
+                    break;
+            }
         }
     };
 
@@ -203,6 +259,79 @@ const ResolvedorPerimetros: React.FC = () => {
         }
     };
 
+    // Função para renderizar os passos de explicação com estilização aprimorada
+    const renderExplanationSteps = () => {
+        return (
+            <div className="space-y-4">
+                {steps.map((step, index) => {
+                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+                    
+                    // Verifica se é um passo de aplicação de fórmula
+                    const formulaMatch = step.includes('calculado pela fórmula');
+                    
+                    // Verifica se é um passo de substituição de valores
+                    const substitutionMatch = step.includes('Substituindo');
+                    
+                    // Verifica se é um cálculo direto
+                    const calculationMatch = step.startsWith('P =') && !step.includes('unidades');
+                    
+                    // Verifica se é o resultado final
+                    const resultMatch = step.includes('unidades');
+                    
+                    if (stepMatch) {
+                        // Se for um passo numerado, extrai e destaca o número
+                        const [_, stepNumber, stepContent] = stepMatch;
+                        return (
+                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                                <div className="flex flex-col sm:flex-row">
+                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                                        {stepNumber}
+                                    </span>
+                                    <p className="text-gray-800">{stepContent}</p>
+                                </div>
+                            </div>
+                        );
+                    } else if (formulaMatch) {
+                        // Se for uma explicação de fórmula
+                        return (
+                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                                <p className="text-blue-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (substitutionMatch) {
+                        // Se for um passo de substituição
+                        return (
+                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                                <p className="text-purple-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (calculationMatch) {
+                        // Se for um cálculo direto
+                        return (
+                            <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                                <p className="text-amber-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else if (resultMatch) {
+                        // Se for o resultado final
+                        return (
+                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                                <p className="text-green-700 font-medium">{step}</p>
+                            </div>
+                        );
+                    } else {
+                        // Outro tipo de passo
+                        return (
+                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                                <p className="text-gray-800">{step}</p>
+                            </div>
+                        );
+                    }
+                })}
+            </div>
+        );
+    };
+
     const renderFields = () => {
         const inputClassName = "w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500";
         
@@ -339,7 +468,7 @@ const ResolvedorPerimetros: React.FC = () => {
                     <>
                         <div className="mb-4">
                             <label htmlFor="ladoParalelo1" className="block text-sm font-medium text-gray-700 mb-2">
-                                Base Maior
+                                Base 1 (Lado Paralelo)
                             </label>
                             <input
                                 type="number"
@@ -347,14 +476,14 @@ const ResolvedorPerimetros: React.FC = () => {
                                 value={ladoParalelo1}
                                 onChange={(e) => handleNumberInput(e.target.value, setLadoParalelo1)}
                                 className={inputClassName}
-                                placeholder="Digite a base maior"
+                                placeholder="Digite a primeira base"
                                 step="0.1"
                                 min="0"
                             />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="ladoParalelo2" className="block text-sm font-medium text-gray-700 mb-2">
-                                Base Menor
+                                Base 2 (Lado Paralelo)
                             </label>
                             <input
                                 type="number"
@@ -362,7 +491,7 @@ const ResolvedorPerimetros: React.FC = () => {
                                 value={ladoParalelo2}
                                 onChange={(e) => handleNumberInput(e.target.value, setLadoParalelo2)}
                                 className={inputClassName}
-                                placeholder="Digite a base menor"
+                                placeholder="Digite a segunda base"
                                 step="0.1"
                                 min="0"
                             />
@@ -377,7 +506,7 @@ const ResolvedorPerimetros: React.FC = () => {
                                 value={ladoObliquo1}
                                 onChange={(e) => handleNumberInput(e.target.value, setLadoObliquo1)}
                                 className={inputClassName}
-                                placeholder="Digite o lado oblíquo 1"
+                                placeholder="Digite o primeiro lado oblíquo"
                                 step="0.1"
                                 min="0"
                             />
@@ -392,7 +521,7 @@ const ResolvedorPerimetros: React.FC = () => {
                                 value={ladoObliquo2}
                                 onChange={(e) => handleNumberInput(e.target.value, setLadoObliquo2)}
                                 className={inputClassName}
-                                placeholder="Digite o lado oblíquo 2"
+                                placeholder="Digite o segundo lado oblíquo"
                                 step="0.1"
                                 min="0"
                             />
@@ -402,34 +531,6 @@ const ResolvedorPerimetros: React.FC = () => {
 
             default:
                 return null;
-        }
-    };
-
-    const getConceitoMatematico = () => {
-        switch (figura) {
-            case 'quadrado':
-                return "Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°). " +
-                       "Seu perímetro é calculado somando todos os seus lados, ou multiplicando um lado por 4.";
-            case 'retangulo':
-                return "Um retângulo é um quadrilátero com quatro ângulos retos. " +
-                       "Seu perímetro é calculado somando todos os seus lados, ou multiplicando a soma do comprimento e largura por 2.";
-            case 'triangulo':
-                return "Um triângulo é um polígono com três lados. " +
-                       "Seu perímetro é calculado somando todos os seus lados (a + b + c).";
-            case 'circulo':
-                return "Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro. " +
-                       "Seu perímetro (circunferência) é calculado multiplicando o diâmetro por π, ou 2πr.";
-            case 'trapezio':
-                return "Um trapézio é um quadrilátero com dois lados paralelos (bases). " +
-                       "Seu perímetro é calculado somando todos os seus lados (base maior + base menor + lados oblíquos).";
-            case 'losango':
-                return "Um losango é um quadrilátero com quatro lados iguais. " +
-                       "Seu perímetro é calculado multiplicando o lado por 4.";
-            case 'hexagono':
-                return "Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais. " +
-                       "Seu perímetro é calculado multiplicando o lado por 6.";
-            default:
-                return "";
         }
     };
 
@@ -443,7 +544,7 @@ const ResolvedorPerimetros: React.FC = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
                 <p className="text-gray-700 mb-6">
                     Essa calculadora permite calcular o perímetro de diferentes figuras planas geométricas.
-                    Selecione a figura desejada e insira os dados necessários.
+                    Selecione a figura desejada e insira os dados necessários. A calculadora calculará o perímetro da figura.
                 </p>
 
                 <div className="mb-6">
@@ -463,6 +564,24 @@ const ResolvedorPerimetros: React.FC = () => {
                         <option value="losango">Losango</option>
                         <option value="hexagono">Hexágono Regular</option>
                     </select>
+                </div>
+
+                {/* Exemplos */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Exemplos
+                    </label>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {getPerimeterExamples(figura).map((exemplo, index) => (
+                            <button
+                                key={index}
+                                onClick={() => applyExample(exemplo)}
+                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                            >
+                                {exemplo.description}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="mb-6">
@@ -508,36 +627,222 @@ const ResolvedorPerimetros: React.FC = () => {
                                 </h3>
                             </div>
 
-                            <div className="space-y-4">
-                                {steps.map((step, index) => {
-                                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                                    
-                                    if (stepMatch) {
-                                        const [_, stepNumber, stepContent] = stepMatch;
-                                        return (
-                                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                                <div className="flex flex-col sm:flex-row">
-                                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                                        {stepNumber}
-                                                    </span>
-                                                    <p className="text-gray-800">{stepContent}</p>
+                            {renderExplanationSteps()}
+                            
+                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                                    <h4 className="font-semibold text-blue-800 flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Conceito Matemático
+                                    </h4>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Perímetro de Figuras Planas</h5>
+                                            <div className="space-y-3">
+                                                <p className="text-gray-700">
+                                                    O perímetro de uma figura plana é a medida total do contorno da figura, ou seja, 
+                                                    a soma dos comprimentos de todos os lados (para polígonos) ou a medida da circunferência (para círculos).
+                                                </p>
+                                                <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                                                    <h6 className="text-indigo-700 font-medium mb-2">Fórmulas de Perímetro</h6>
+                                                    <div className="space-y-2 text-sm text-gray-700">
+                                                        {figura === 'quadrado' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Quadrado:</span> P = 4l, onde l é o comprimento do lado
+                                                            </div>
+                                                        )}
+                                                        {figura === 'retangulo' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Retângulo:</span> P = 2(c + l), onde c é o comprimento e l é a largura
+                                                            </div>
+                                                        )}
+                                                        {figura === 'triangulo' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Triângulo:</span> P = a + b + c, onde a, b e c são os comprimentos dos lados
+                                                            </div>
+                                                        )}
+                                                        {figura === 'circulo' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Círculo:</span> P = 2πr, onde r é o raio e π ≈ 3,14159...
+                                                            </div>
+                                                        )}
+                                                        {figura === 'trapezio' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Trapézio:</span> P = a + b + c + d, onde a e b são os lados paralelos e c e d são os lados oblíquos
+                                                            </div>
+                                                        )}
+                                                        {figura === 'losango' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Losango:</span> P = 4l, onde l é o comprimento do lado
+                                                            </div>
+                                                        )}
+                                                        {figura === 'hexagono' && (
+                                                            <div className="p-2 border-b border-gray-50">
+                                                                <span className="font-medium">Hexágono Regular:</span> P = 6l, onde l é o comprimento do lado
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="p-3 bg-indigo-50 rounded-md">
+                                                    <h6 className="text-indigo-700 font-medium mb-2">Princípios Fundamentais</h6>
+                                                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                        <li>O perímetro é uma grandeza unidimensional e deve ser expressa em unidades lineares (m, cm, km, etc.)</li>
+                                                        <li>Figuras com o mesmo perímetro podem ter áreas diferentes</li>
+                                                        <li>Figuras semelhantes têm seus perímetros proporcionais à razão de semelhança</li>
+                                                        <li>Para qualquer polígono regular de n lados, o perímetro é calculado multiplicando o comprimento do lado por n</li>
+                                                    </ul>
                                                 </div>
                                             </div>
-                                        );
-                                    } else {
-                                        return (
-                                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                                                <p className="text-gray-800">{step}</p>
+                                        </div>
+                                        
+                                        <div className="flex-1">
+                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Características da Figura</h5>
+                                            <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
+                                                <div className="space-y-2">
+                                                    {figura === 'quadrado' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Quadrado</h6>
+                                                            <p className="text-sm text-gray-700">Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°).</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>Todos os lados têm o mesmo comprimento</li>
+                                                                <li>Todos os ângulos internos medem 90°</li>
+                                                                <li>As diagonais são iguais e perpendiculares entre si</li>
+                                                                <li>É um caso especial de losango, retângulo e paralelogramo</li>
+                                                                <li>Área = lado²</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'retangulo' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Retângulo</h6>
+                                                            <p className="text-sm text-gray-700">Um retângulo é um quadrilátero com quatro ângulos retos.</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>Lados opostos são paralelos e iguais</li>
+                                                                <li>Todos os ângulos internos medem 90°</li>
+                                                                <li>As diagonais são iguais e bissetoras uma da outra</li>
+                                                                <li>É um caso especial de paralelogramo</li>
+                                                                <li>Área = comprimento × largura</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'triangulo' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Triângulo</h6>
+                                                            <p className="text-sm text-gray-700">Um triângulo é um polígono com três lados e três ângulos.</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>A soma dos ângulos internos é sempre 180°</li>
+                                                                <li>Para formar um triângulo válido, a soma de quaisquer dois lados deve ser maior que o terceiro lado</li>
+                                                                <li>Pode ser classificado quanto aos lados (equilátero, isósceles, escaleno) ou ângulos (acutângulo, retângulo, obtusângulo)</li>
+                                                                <li>Área = (base × altura) ÷ 2</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'circulo' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Círculo</h6>
+                                                            <p className="text-sm text-gray-700">Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro.</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>O raio é a distância do centro a qualquer ponto da circunferência</li>
+                                                                <li>O diâmetro é o dobro do raio (d = 2r) e divide o círculo em duas partes iguais</li>
+                                                                <li>A circunferência é o contorno do círculo e equivale ao perímetro</li>
+                                                                <li>Área = πr²</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'trapezio' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Trapézio</h6>
+                                                            <p className="text-sm text-gray-700">Um trapézio é um quadrilátero com dois lados paralelos (bases).</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>Os lados paralelos são chamados de bases (maior e menor)</li>
+                                                                <li>Os outros dois lados são chamados de lados oblíquos ou não paralelos</li>
+                                                                <li>Um trapézio isósceles tem os lados oblíquos iguais</li>
+                                                                <li>Um trapézio retângulo tem dois ângulos retos</li>
+                                                                <li>Área = [(base maior + base menor) × altura] ÷ 2</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'losango' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Losango</h6>
+                                                            <p className="text-sm text-gray-700">Um losango é um quadrilátero com quatro lados iguais.</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>Todos os lados têm o mesmo comprimento</li>
+                                                                <li>Lados opostos são paralelos</li>
+                                                                <li>Ângulos opostos são iguais</li>
+                                                                <li>As diagonais são perpendiculares entre si e bissetoras uma da outra</li>
+                                                                <li>Área = (diagonal maior × diagonal menor) ÷ 2</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                    {figura === 'hexagono' && (
+                                                        <>
+                                                            <h6 className="text-indigo-700 font-medium">Hexágono Regular</h6>
+                                                            <p className="text-sm text-gray-700">Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais.</p>
+                                                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                                                                <li>Todos os lados têm o mesmo comprimento</li>
+                                                                <li>Todos os ângulos internos medem 120°</li>
+                                                                <li>A soma dos ângulos internos é 720° (6 × 120°)</li>
+                                                                <li>Pode ser dividido em 6 triângulos equiláteros a partir do centro</li>
+                                                                <li>Área = (3 × √3 × lado²) ÷ 2</li>
+                                                            </ul>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
-                                        );
-                                    }
-                                })}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                                            <h5 className="font-medium text-gray-800 mb-2">Aplicações Práticas</h5>
+                                            <div className="space-y-2">
+                                                <p className="text-sm text-gray-700">O cálculo de perímetros é essencial em diversos contextos:</p>
+                                                <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                    <li><span className="font-medium">Construção Civil:</span> Cálculo de materiais para cercas, rodapés, molduras, etc.</li>
+                                                    <li><span className="font-medium">Agricultura:</span> Cálculo de materiais para cercamento de terrenos e irrigação</li>
+                                                    <li><span className="font-medium">Arquitetura:</span> Planejamento de contornos, acabamentos e custos de materiais</li>
+                                                    <li><span className="font-medium">Esportes:</span> Definição de distâncias em pistas de corrida e quadras</li>
+                                                    <li><span className="font-medium">Geografia:</span> Medição do contorno de fronteiras, costas e ilhas</li>
+                                                    <li><span className="font-medium">Física:</span> Cálculos de tensão superficial e resistência de materiais</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                                            <h5 className="font-medium text-yellow-800 mb-2">Dicas de Resolução</h5>
+                                            <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                <li>Sempre verifique se todas as medidas estão na mesma unidade</li>
+                                                <li>Para figuras complexas, divida-as em segmentos e some os comprimentos</li>
+                                                <li>Lembre-se que o perímetro não depende da forma da figura, apenas do comprimento total do contorno</li>
+                                                <li>Para círculos, utilize π = 3,14159 ou a constante π da calculadora para maior precisão</li>
+                                                <li>Ao comparar figuras, figuras com maior perímetro não necessariamente têm maior área</li>
+                                                <li>Em triângulos, verifique se os lados satisfazem a desigualdade triangular</li>
+                                            </ul>
+                                        </div>
                             </div>
                             
-                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                                <div className="space-y-2 text-gray-700">
-                                    {getConceitoMatematico()}
+                                    <div className="mt-4 p-3 bg-indigo-50 rounded-md border border-indigo-100">
+                                        <h5 className="font-medium text-indigo-800 mb-1 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                            Relação com Outros Conceitos
+                                        </h5>
+                                        <p className="text-sm text-indigo-700">
+                                            O perímetro está relacionado com diversos outros conceitos matemáticos. Em geometria, 
+                                            existe o Problema Isoperimétrico, que busca encontrar a figura com maior área possível para 
+                                            um perímetro fixo (o círculo é a solução). O conceito de perímetro também é importante em 
+                                            cálculo diferencial, onde o comprimento de arco de curvas é determinado usando integrais. 
+                                            Na física, o perímetro está relacionado a conceitos como tensão superficial, difusão e capacitância, 
+                                            enquanto na biologia, a relação entre perímetro e área é crucial para entender a capacidade de troca 
+                                            de nutrientes e calor em organismos.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

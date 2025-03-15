@@ -1,7 +1,7 @@
 import React, { useState, ReactNode } from 'react';
 import { HiCalculator } from 'react-icons/hi';
 import { gcd } from '../../utils/mathUtils';
-import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { simplifyFraction, FractionDisplay, getFractionMultDivExamples } from '../../utils/mathUtilsFracoes';
 
 type Operation = 'multiply' | 'divide';
 
@@ -108,9 +108,9 @@ const ResolvedorMultDivFracao: React.FC = () => {
     }
     
     if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-        const mdcValue = gcd(resultNumerator, resultDenominator);
+        const mdcValue = gcd(Math.abs(resultNumerator), Math.abs(resultDenominator));
         calculationSteps.push(`Passo ${stepCount}: Simplificar a fração resultante`);
-        calculationSteps.push(`MDC(${resultNumerator}, ${resultDenominator}) = ${mdcValue}`);
+        calculationSteps.push(`MDC(${Math.abs(resultNumerator)}, ${Math.abs(resultDenominator)}) = ${mdcValue}`);
         calculationSteps.push(<>
             <FractionDisplay numerator={resultNumerator} denominator={resultDenominator} /> ÷ 
             <FractionDisplay numerator={mdcValue} denominator={mdcValue} /> = 
@@ -119,6 +119,92 @@ const ResolvedorMultDivFracao: React.FC = () => {
     }
     
     setSteps(calculationSteps);
+  };
+
+  // Função para aplicar um exemplo
+  const applyExample = (example: { 
+    num1: number, 
+    den1: number, 
+    num2: number, 
+    den2: number, 
+    operation: 'multiply' | 'divide' 
+  }) => {
+    setNumerator1(example.num1.toString());
+    setDenominator1(example.den1.toString());
+    setNumerator2(example.num2.toString());
+    setDenominator2(example.den2.toString());
+    setOperation(example.operation);
+  };
+
+  // Função para filtrar exemplos com base na operação selecionada
+  const getFilteredExamples = () => {
+    return getFractionMultDivExamples().filter(example => example.operation === operation);
+  };
+
+  // Função para renderizar os passos de explicação com estilização aprimorada
+  const renderExplanationSteps = () => {
+    return (
+      <div className="space-y-4">
+        {steps.map((step, index) => {
+          // Verifica se é uma string ou um ReactNode
+          const isString = typeof step === 'string';
+          if (!isString) {
+            // Se for um ReactNode (por exemplo, um elemento de fração), renderiza diretamente
+            return (
+              <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                <div className="text-indigo-700 font-medium">{step}</div>
+              </div>
+            );
+          }
+
+          // Para strings, verifica diferentes padrões
+          const stepStr = String(step);
+          const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
+          
+          // Verifica se é uma multiplicação de numeradores ou denominadores
+          const multiplicationMatch = stepStr.includes('×') && stepStr.includes('=');
+          
+          // Verifica se é MDC para simplificação
+          const mdcMatch = stepStr.startsWith('MDC(');
+          
+          if (stepMatch) {
+            // Se for um passo com número, extrai e destaca o número
+            const [_, stepNumber, stepContent] = stepMatch;
+            return (
+              <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                <div className="flex flex-col sm:flex-row">
+                  <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
+                    {stepNumber}
+                  </span>
+                  <p className="text-gray-800">{stepContent}</p>
+                </div>
+              </div>
+            );
+          } else if (multiplicationMatch) {
+            // Se for uma multiplicação de numeradores ou denominadores
+            return (
+              <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                <p className="text-purple-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (mdcMatch) {
+            // Se for MDC para simplificação
+            return (
+              <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                <p className="text-green-700 font-medium">{step}</p>
+              </div>
+            );
+          } else {
+            // Conteúdo regular sem classificação específica
+            return (
+              <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                <p className="text-gray-800">{step}</p>
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
   };
 
   return (
@@ -212,6 +298,24 @@ const ResolvedorMultDivFracao: React.FC = () => {
                 </div>
             </div>
 
+            {/* Exemplos de frações */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Exemplos
+              </label>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {getFilteredExamples().map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => applyExample(example)}
+                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                  >
+                    {example.description}
+                  </button>
+                ))}
+                </div>
+            </div>
+
             <button
                 onClick={handleSolve}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
@@ -263,63 +367,175 @@ const ResolvedorMultDivFracao: React.FC = () => {
                 </h3>
               </div>
               
-              <div className="space-y-4">
-                {steps.map((step, index) => {
-                  // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                  const stepStr = String(step); // Garante que step seja tratado como string
-                  const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
-                  
-                  if (stepMatch) {
-                    // Se for um passo com número, extrai e destaca o número
-                    const [_, stepNumber, stepContent] = stepMatch;
-                    return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                        <div className="flex flex-col sm:flex-row">
-                          <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                            {stepNumber}
-                          </span>
-                          <p className="text-gray-800">{stepContent}</p>
+              {renderExplanationSteps()}
+              
+              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                  <h4 className="font-semibold text-blue-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conceito Matemático
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4 mb-4">
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Multiplicação e Divisão de Frações</h5>
+                      <div className="space-y-3">
+                        <p className="text-gray-700">
+                          A multiplicação e divisão de frações são operações fundamentais que seguem regras diferentes 
+                          da adição e subtração, pois não exigem um denominador comum para serem realizadas.
+                        </p>
+                        <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                          <h6 className="text-indigo-700 font-medium mb-2">Fórmulas</h6>
+                          <div className="space-y-2 text-center font-medium text-indigo-700">
+                            <p>
+                              <span className="font-semibold">Multiplicação:</span><br />
+                              a/b × c/d = (a×c)/(b×d)
+                            </p>
+                            <p className="text-sm pt-2 border-t border-gray-100">
+                              <span className="font-semibold">Divisão:</span><br />
+                              a/b ÷ c/d = a/b × d/c = (a×d)/(b×c)
+                            </p>
+                          </div>
+                        </div>
+                        <div className="p-3 bg-indigo-50 rounded-md">
+                          <p className="text-sm text-indigo-700">
+                            <span className="font-medium">Propriedade fundamental:</span> Para dividir por uma fração, 
+                            multiplicamos pela sua fração invertida (recíproco). Isso transforma a divisão em multiplicação, 
+                            que é uma operação mais simples de realizar.
+                          </p>
                         </div>
                       </div>
-                    );
-                  } else {
-                    // Conteúdo regular sem número de passo
-                    return (
-                      <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                        <p className="text-gray-800">{step}</p>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Passos para a Resolução</h5>
+                      <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
+                        <div>
+                          <h6 className="text-indigo-700 font-medium mb-2">Para Multiplicação</h6>
+                          <ol className="text-sm space-y-2 list-decimal pl-5 text-gray-700">
+                            <li>
+                              <span className="font-medium">Multiplique os numeradores</span>
+                              <p className="text-xs mt-1">
+                                O numerador do resultado é o produto dos numeradores das frações originais.
+                              </p>
+                            </li>
+                            <li>
+                              <span className="font-medium">Multiplique os denominadores</span>
+                              <p className="text-xs mt-1">
+                                O denominador do resultado é o produto dos denominadores das frações originais.
+                              </p>
+                            </li>
+                            <li>
+                              <span className="font-medium">Simplifique a fração resultante</span>
+                              <p className="text-xs mt-1">
+                                Encontre o MDC (Máximo Divisor Comum) entre o numerador e o denominador do resultado,
+                                e divida ambos por ele para obter a fração na forma mais simples.
+                              </p>
+                            </li>
+                          </ol>
+                        </div>
+                        
+                        <div className="pt-3 border-t border-gray-100">
+                          <h6 className="text-indigo-700 font-medium mb-2">Para Divisão</h6>
+                          <ol className="text-sm space-y-2 list-decimal pl-5 text-gray-700">
+                            <li>
+                              <span className="font-medium">Inverta a segunda fração (o divisor)</span>
+                              <p className="text-xs mt-1">
+                                Troque o numerador e o denominador da segunda fração.
+                              </p>
+                            </li>
+                            <li>
+                              <span className="font-medium">Transforme a divisão em multiplicação</span>
+                              <p className="text-xs mt-1">
+                                Multiplique a primeira fração pela segunda fração invertida.
+                              </p>
+                            </li>
+                            <li>
+                              <span className="font-medium">Siga os passos da multiplicação</span>
+                              <p className="text-xs mt-1">
+                                Multiplique os numeradores e os denominadores, e então simplifique.
+                              </p>
+                            </li>
+                          </ol>
+                        </div>
                       </div>
-                    );
-                  }
-                })}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
+                      <h5 className="font-medium text-gray-800 mb-2">Exemplos Práticos</h5>
+                      <div className="space-y-3">
+                        <div className="p-2 bg-indigo-50 rounded-md">
+                          <p className="text-sm text-indigo-700 font-medium mb-1">
+                            Exemplo de Multiplicação: 2/3 × 3/4
+                          </p>
+                          <div className="text-xs text-gray-700">
+                            <p>1. Multiplique os numeradores: 2 × 3 = 6</p>
+                            <p>2. Multiplique os denominadores: 3 × 4 = 12</p>
+                            <p>3. Resultado: 6/12</p>
+                            <p>4. Simplifique dividindo por MDC = 6: 6/12 = 1/2</p>
+                          </div>
+                        </div>
+                        
+                        <div className="p-2 bg-purple-50 rounded-md">
+                          <p className="text-sm text-purple-700 font-medium mb-1">
+                            Exemplo de Divisão: 2/3 ÷ 1/2
+                          </p>
+                          <div className="text-xs text-gray-700">
+                            <p>1. Inverta a segunda fração: 1/2 → 2/1</p>
+                            <p>2. Multiplique: 2/3 × 2/1</p>
+                            <p>3. Multiplique os numeradores: 2 × 2 = 4</p>
+                            <p>4. Multiplique os denominadores: 3 × 1 = 3</p>
+                            <p>5. Resultado: 4/3</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                        <h5 className="font-medium text-yellow-800 mb-2">Dicas e Truques</h5>
+                        <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                          <li>Antes de multiplicar, verifique se é possível simplificar elementos cruzados (fatores comuns entre numerador de uma fração e denominador de outra)</li>
+                          <li>Lembre-se que qualquer número dividido por 1 permanece inalterado</li>
+                          <li>Divisão por uma fração é o mesmo que multiplicação pelo seu recíproco</li>
+                          <li>Ao multiplicar frações, o resultado será sempre menor que as frações originais (exceto com frações impróprias)</li>
+                          <li>Ao dividir por uma fração menor que 1, o resultado será maior que a fração original</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-green-50 p-3 rounded-md border border-green-100">
+                        <h5 className="font-medium text-green-800 mb-2">Aplicações no Mundo Real</h5>
+                        <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                          <li>Ajuste de receitas (metade de 2/3 de xícara)</li>
+                          <li>Cálculos de escala em mapas e projetos</li>
+                          <li>Divisão proporcional em finanças</li>
+                          <li>Cálculos de taxas e juros</li>
+                          <li>Problemas de razão e proporção</li>
+                          <li>Análises de probabilidades compostas</li>
+                        </ul>
+                      </div>
+                    </div>
               </div>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático</h4>
-                {operation === 'multiply' ? (
-                  <p className="text-gray-700">
-                    Para multiplicar frações, multiplicamos os numeradores entre si e os denominadores entre si:
-                    <br />
-                    <span className="font-medium">
-                      <FractionDisplay numerator={1} denominator={2} /> × 
-                      <FractionDisplay numerator={3} denominator={4} /> = 
-                      <FractionDisplay numerator={1 * 3} denominator={2 * 4} /> = 
-                      <FractionDisplay numerator={3} denominator={8} />
-                    </span>
-                  </p>
-                ) : (
-                  <p className="text-gray-700">
-                    Para dividir frações, multiplicamos a primeira fração pelo inverso da segunda:
-                    <br />
-                    <span className="font-medium">
-                      <FractionDisplay numerator={1} denominator={2} /> ÷ 
-                      <FractionDisplay numerator={3} denominator={4} /> = 
-                      <FractionDisplay numerator={1} denominator={2} /> × 
-                      <FractionDisplay numerator={4} denominator={3} /> = 
-                      <FractionDisplay numerator={4} denominator={6} /> = 
-                      <FractionDisplay numerator={2} denominator={3} />
-                    </span>
-                  </p>
-                )}
+                  <div className="mt-4 p-3 bg-indigo-50 rounded-md border border-indigo-100">
+                    <h5 className="font-medium text-indigo-800 mb-1 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                      Conceitos Avançados
+                    </h5>
+                    <p className="text-sm text-indigo-700">
+                      A multiplicação e divisão de frações são a base para o trabalho com expressões algébricas fracionárias, 
+                      equações racionais e funções racionais. Essas operações também são essenciais para entender conceitos 
+                      como proporção direta e inversa, taxas de variação e integração por substituição no cálculo avançado.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}

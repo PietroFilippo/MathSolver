@@ -7,7 +7,8 @@ import { formatInterval } from '../../utils/mathUtils';
 import { 
   generateTrigonometricFunctionPoints,
   generateGraphExplanationSteps,
-  parseInterval
+  parseInterval,
+  getTrigonometricGraphExamples
 } from '../../utils/mathUtilsTrigonometria';
 
 // Função auxiliar para processar valores com pi
@@ -41,6 +42,40 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
   const [solutionSteps, setSolutionSteps] = useState<string[]>([]);
   const [showExplanation, setShowExplanation] = useState<boolean>(true);
   const [showExpandedGraph, setShowExpandedGraph] = useState<boolean>(false);
+
+  // Função para aplicar um exemplo selecionado
+  const applyExample = (example: any) => {
+    setGraphType(example.type);
+    
+    if (example.type === 'personalizado' && example.funcaoPersonalizada) {
+      setFuncao(example.funcaoPersonalizada);
+    } else {
+      // Definir parâmetros da função padrão
+      setAmplitude(example.amplitude.toString());
+      setPeriod(example.periodo.toString());
+      setPhaseShift(example.defasagem.toString());
+      setVerticalShift(example.deslocamentoVertical.toString());
+    }
+    
+    // Definir intervalo
+    if (example.interval) {
+      const intervalStr = `${example.interval[0]},${example.interval[1]}`;
+      setInterval(intervalStr);
+    }
+    
+    // Limpar resultados anteriores
+    setResult(null);
+    setPoints([]);
+    setSolutionSteps([]);
+    setError(null);
+  };
+
+  // Filtra exemplos com base no tipo de gráfico selecionado
+  const getFilteredExamples = () => {
+    return getTrigonometricGraphExamples().filter(example => 
+      example.type === graphType || example.type === 'personalizado'
+    );
+  };
 
   const handleSolve = () => {
     // Limpar resultados anteriores
@@ -235,6 +270,101 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
     </div>
   );
 
+  // Função para renderizar os passos de explicação com estilização aprimorada
+  const renderExplanationSteps = () => {
+    return (
+      <div className="space-y-4">
+        {solutionSteps.map((step, index) => {
+          // Verifica se o passo começa com "Passo X:"
+          const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
+          
+          // Verifica se contém informações sobre a função
+          const functionMatch = step.includes('Função básica:') || step.includes('Função completa:') || step.includes('Expressão:');
+          
+          // Verifica se contém informações sobre o intervalo
+          const intervalMatch = step.includes('Intervalo selecionado:');
+          
+          // Verifica se contém informações sobre assíntotas
+          const asymptoticMatch = step.includes('Assíntotas no intervalo:') || step.includes('assíntotas verticais');
+          
+          // Verifica se contém informações sobre amplitude
+          const amplitudeMatch = step.includes('Amplitude:');
+          
+          // Verifica se contém informações sobre período
+          const periodMatch = step.includes('Período:');
+          
+          // Verifica se contém informações sobre defasagem
+          const phaseMatch = step.includes('Defasagem:');
+          
+          // Verifica se contém informações sobre deslocamento vertical
+          const shiftMatch = step.includes('Deslocamento vertical:');
+          
+          // Verifica se contém informações sobre zeros
+          const zerosMatch = step.includes('Zeros da função');
+          
+          // Verifica se contém informações sobre máximos/mínimos
+          const extremaMatch = step.includes('Valores máximos') || step.includes('Valores mínimos');
+          
+          if (stepMatch) {
+            // Se for um passo numerado, extrai e destaca o número
+            const [_, stepNumber, stepContent] = stepMatch;
+            return (
+              <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                <div className="flex flex-col sm:flex-row">
+                  <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">{stepNumber}</span>
+                  <p className="text-gray-800">{stepContent}</p>
+                </div>
+              </div>
+            );
+          } else if (functionMatch) {
+            return (
+              <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
+                <p className="text-blue-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (intervalMatch) {
+            return (
+              <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
+                <p className="text-purple-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (asymptoticMatch) {
+            return (
+              <div key={index} className="p-3 bg-red-50 rounded-md ml-4 border-l-2 border-red-300">
+                <p className="text-red-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (amplitudeMatch || periodMatch || phaseMatch || shiftMatch) {
+            return (
+              <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
+                <p className="text-indigo-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (zerosMatch) {
+            return (
+              <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
+                <p className="text-green-700 font-medium">{step}</p>
+              </div>
+            );
+          } else if (extremaMatch) {
+            return (
+              <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
+                <p className="text-amber-700 font-medium">{step}</p>
+              </div>
+            );
+          } else {
+            // Outros passos
+            return (
+              <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
+                <p className="text-gray-800">{step}</p>
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
@@ -288,6 +418,24 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
                 />
                 <span className="ml-2">Personalizado</span>
               </label>
+            </div>
+          </div>
+          
+          {/* Exemplos */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Exemplos
+            </label>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {getFilteredExamples().map((exemplo, index) => (
+                <button
+                  key={index}
+                  onClick={() => applyExample(exemplo)}
+                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                >
+                  {exemplo.description}
+                </button>
+              ))}
             </div>
           </div>
           
@@ -468,68 +616,105 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
                 </h3>
               </div>
               
-              <div className="space-y-4">
-                {solutionSteps.map((step, index) => {
-                  // Verifica se o passo começa com um padrão de número de passo como "Passo X:"
-                  const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                  
-                  if (stepMatch) {
-                    // Se for um passo com número, extrair e destacar
-                    const [_, stepNumber, stepContent] = stepMatch;
-                    return (
-                      <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                        <div className="flex flex-col sm:flex-row">
-                          <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                            {stepNumber}
-                          </span>
-                          <p className="text-gray-800">{stepContent}</p>
+              {renderExplanationSteps()}
+              
+              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                  <h4 className="font-semibold text-blue-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conceito Matemático
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <div className="flex flex-col md:flex-row gap-4 mb-4">
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Forma Geral</h5>
+                      <p className="text-gray-700">
+                        As funções trigonométricas podem ser escritas na forma geral:
+                      </p>
+                      <div className="bg-white p-3 rounded-md text-center border border-gray-100 shadow-sm my-2">
+                        <span className="text-lg font-medium text-indigo-700">y = a · f(b · (x - c)) + d</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
+                        <div className="p-2 bg-indigo-50 rounded border border-indigo-100">
+                          <span className="font-medium text-indigo-800">a</span>: amplitude
+                        </div>
+                        <div className="p-2 bg-indigo-50 rounded border border-indigo-100">
+                          <span className="font-medium text-indigo-800">b</span>: fator do período
+                        </div>
+                        <div className="p-2 bg-indigo-50 rounded border border-indigo-100">
+                          <span className="font-medium text-indigo-800">c</span>: defasagem horizontal
+                        </div>
+                        <div className="p-2 bg-indigo-50 rounded border border-indigo-100">
+                          <span className="font-medium text-indigo-800">d</span>: deslocamento vertical
                         </div>
                       </div>
-                    );
-                  } else {
-                    // Conteúdo sem número de passo
-                    return (
-                      <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                        <p className="text-gray-800">{step}</p>
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Períodos</h5>
+                      <div className="space-y-2">
+                        <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                          <span className="font-medium text-indigo-700">Seno e Cosseno:</span> T = 2π/b
+                        </div>
+                        <div className="p-2 bg-white rounded-md border border-gray-100 shadow-sm">
+                          <span className="font-medium text-indigo-700">Tangente:</span> T = π/b
+                        </div>
                       </div>
-                    );
-                  }
-                })}
-              </div>
-              
-              <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Conceito Matemático: Funções Trigonométricas</h4>
-                <div className="space-y-2 text-gray-700">
-                  <p>
-                    <span className="font-semibold">Forma Geral:</span> Uma função trigonométrica pode ser representada na forma
-                    y = a · f(b · (x - c)) + d, onde:
-                  </p>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li><strong>a</strong>: Amplitude - Controla a altura vertical da função</li>
-                    <li><strong>b</strong>: Fator do período - Controla o comprimento horizontal (período = 2π/b para seno e cosseno, π/b para tangente)</li>
-                    <li><strong>c</strong>: Defasagem - Causa deslocamento horizontal</li>
-                    <li><strong>d</strong>: Deslocamento vertical - Causa deslocamento para cima ou para baixo</li>
-                  </ul>
+                      <h5 className="font-medium text-gray-800 mb-2 mt-4 border-b border-gray-200 pb-1">Efeitos dos Parâmetros</h5>
+                      <ul className="space-y-1 text-sm">
+                        <li className="p-1 hover:bg-blue-50 rounded transition-colors">• Amplitude <strong>a</strong> afeta a altura da curva</li>
+                        <li className="p-1 hover:bg-blue-50 rounded transition-colors">• Período <strong>b</strong> afeta a "compressão" horizontal</li>
+                        <li className="p-1 hover:bg-blue-50 rounded transition-colors">• Defasagem <strong>c</strong> desloca a curva horizontalmente</li>
+                        <li className="p-1 hover:bg-blue-50 rounded transition-colors">• Deslocamento <strong>d</strong> move a curva verticalmente</li>
+                      </ul>
+                    </div>
+                  </div>
                   
-                  <p className="mt-2">
-                    <span className="font-semibold">Propriedades:</span>
-                  </p>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li><strong>Seno:</strong> Domínio = ℝ, Imagem = [-|a|+d, |a|+d], Período = 2π/b</li>
-                    <li><strong>Cosseno:</strong> Domínio = ℝ, Imagem = [-|a|+d, |a|+d], Período = 2π/b</li>
-                    <li><strong>Tangente:</strong> Domínio = {graphType === 'tangente' ? 'x ≠ (2n+1)π/2 + c' : 'x ≠ (2n+1)π/2'}, Imagem = ℝ, Período = π/b</li>
-                  </ul>
+                  <div className="mt-4">
+                    <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Características das Funções</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                        <h6 className="text-indigo-700 font-medium mb-2">Seno</h6>
+                        <ul className="text-sm space-y-1 list-disc pl-4">
+                          <li>Periódica, limitada entre -a e a</li>
+                          <li>Antissimétrica em relação à origem</li>
+                          <li>Zeros em x = nπ</li>
+                          <li>Máximos em x = π/2 + 2nπ</li>
+                          <li>Mínimos em x = 3π/2 + 2nπ</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                        <h6 className="text-indigo-700 font-medium mb-2">Cosseno</h6>
+                        <ul className="text-sm space-y-1 list-disc pl-4">
+                          <li>Periódica, limitada entre -a e a</li>
+                          <li>Simétrica em relação ao eixo y</li>
+                          <li>Zeros em x = π/2 + nπ</li>
+                          <li>Máximos em x = 2nπ</li>
+                          <li>Mínimos em x = (2n+1)π</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-white rounded-md border border-gray-100 shadow-sm">
+                        <h6 className="text-indigo-700 font-medium mb-2">Tangente</h6>
+                        <ul className="text-sm space-y-1 list-disc pl-4">
+                          <li>Periódica, não limitada</li>
+                          <li>Antissimétrica em relação à origem</li>
+                          <li>Assíntotas em x = π/2 + nπ</li>
+                          <li>Zeros em x = nπ</li>
+                          <li>Cresce rapidamente próximo às assíntotas</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
                   
-                  <p className="mt-2">
-                    <span className="font-semibold">Aplicações:</span> Os gráficos de funções trigonométricas são usados para modelar fenômenos periódicos como:
-                  </p>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li>Ondas sonoras e eletromagnéticas</li>
-                    <li>Movimentos harmônicos simples (pêndulos, molas)</li>
-                    <li>Ciclos biológicos e naturais</li>
-                    <li>Circuitos elétricos alternativos (AC)</li>
-                    <li>Processamento de sinais e análise de Fourier</li>
-                  </ul>
+                  <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
+                    <h5 className="font-medium text-yellow-800 mb-1">Aplicações</h5>
+                    <p className="text-gray-700 text-sm">
+                      Funções trigonométricas e seus gráficos são essenciais em áreas como física (ondas, oscilações), 
+                      engenharia elétrica (sinais AC), acústica, astronomia e em qualquer campo que envolva fenômenos periódicos.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -537,38 +722,20 @@ const ResolvedorGraficosTrigonometricos: React.FC = () => {
         </div>
       )}
       
-      {showExpandedGraph && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4"
-          onClick={() => setShowExpandedGraph(false)}
-        >
-          <div 
-            className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-xl font-bold text-gray-800 flex items-center">
-                <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
-                Gráfico Ampliado - {graphType === 'personalizado' ? funcao : `Função ${graphType}`}
-              </h3>
+      {showExpandedGraph && points.length > 0 && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-auto p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Gráfico da Função</h3>
               <button 
                 onClick={() => setShowExpandedGraph(false)}
-                className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                className="p-1 rounded-full hover:bg-gray-200"
               >
                 <HiX className="h-6 w-6" />
               </button>
             </div>
-            <div className="p-6 flex-grow overflow-auto">
-              <GraphFunction height="70vh" />
-            </div>
-            <div className="border-t p-4 text-right">
-              <button
-                onClick={() => setShowExpandedGraph(false)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-800"
-              >
-                Fechar
-              </button>
-            </div>
+            
+            <GraphFunction height="500px" />
           </div>
         </div>
       )}

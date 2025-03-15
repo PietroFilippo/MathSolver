@@ -1,8 +1,32 @@
 import React, { useState } from 'react';
-import { HiCalculator, HiX } from 'react-icons/hi';
-import { generateDerivativeSteps, regrasDerivacao } from '../../utils/mathUtilsCalculo/mathUtilsCalculoDerivada';
+import { HiCalculator, HiX, HiChevronDown, HiChevronUp } from 'react-icons/hi';
+import { generateDerivativeSteps, derivativesMathematicalConcept } from '../../utils/mathUtilsCalculo/mathUtilsCalculoDerivada';
+import { getDerivativesExamples } from '../../utils/mathUtilsCalculo/mathUtilsCalculoGeral';
+
+// Adiciona interface para as regras de derivação
+interface ruleDerivative {
+  nome: string;
+  formula?: string;
+  explicacao: string;
+  exemplo?: string;
+  corDestaque: string;
+}
+
+interface categoryDerivative {
+  nome: string;
+  regras: ruleDerivative[];
+}
+
+interface DerivadaConceito {
+  titulo: string;
+  descricao: string;
+  categorias: categoryDerivative[];
+}
 
 const ResolvedorDerivadas: React.FC = () => {
+  // Typecast o objeto importado para a interface
+  const conceitoDerivadas = derivativesMathematicalConcept as DerivadaConceito;
+  
   const [funcao, setFuncao] = useState<string>('');
   const [variable, setVariable] = useState<string>('x');
   const [order, setOrder] = useState<string>('1');
@@ -11,6 +35,7 @@ const ResolvedorDerivadas: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(true);
   const [showDisclaimer, setShowDisclaimer] = useState<boolean>(true);
+  const [showConceitoMatematico, setShowConceitoMatematico] = useState<boolean>(true);
 
   const handleSolve = () => {
     // Limpar resultados anteriores
@@ -147,24 +172,6 @@ const ResolvedorDerivadas: React.FC = () => {
     );
   };
 
-  // Função que retorna exemplos úteis para o tipo de função selecionada
-  const getExemples = (): string[] => {
-    return [
-      'x^2 + 3x',
-      'x^3 - 2x^2 + 5x - 3',
-      'sin(x)',
-      'cos(x)',
-      'e^(x)',
-      'ln(x)',
-      'ln(x^2)',
-      'x / (x^2 + 1)',
-      'sin(x) * cos(x)',
-      'e^(x) * sin(x)',
-      'x^2 * ln(x)',
-      '(x^2 + 1) / (x - 1)'
-    ];
-  };
-
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
@@ -230,7 +237,7 @@ const ResolvedorDerivadas: React.FC = () => {
               Exemplos
             </label>
             <div className="flex flex-wrap gap-2">
-              {getExemples().map((exemple, index) => (
+              {getDerivativesExamples().map((exemple, index) => (
                 <button
                   key={index}
                   onClick={() => setFuncao(exemple)}
@@ -304,15 +311,96 @@ const ResolvedorDerivadas: React.FC = () => {
               
               {renderExplanationSteps()}
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Regras de Derivação</h4>
-                <ul className="space-y-2 text-gray-700">
-                  {Object.entries(regrasDerivacao).map(([key, rule]) => (
-                    <li key={key} className="list-disc ml-5">
-                      {rule}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
+                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
+                  <h4 className="font-semibold text-blue-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conceito Matemático: Derivadas
+                    <button 
+                      onClick={() => setShowConceitoMatematico(!showConceitoMatematico)}
+                      className="ml-auto text-blue-600 hover:text-blue-800 focus:outline-none"
+                      aria-label={showConceitoMatematico ? "Esconder conceito matemático" : "Mostrar conceito matemático"}
+                    >
+                      {showConceitoMatematico ? <HiChevronUp className="h-5 w-5" /> : <HiChevronDown className="h-5 w-5" />}
+                    </button>
+                  </h4>
+                </div>
+                
+                {showConceitoMatematico && (
+                  <div className="p-4">
+                    <p className="text-gray-700 mb-4">{conceitoDerivadas.descricao}</p>
+                    
+                    <div className="space-y-6">
+                      {conceitoDerivadas.categorias.map((categoria, categoriaIndex) => (
+                        <div key={categoriaIndex} className="space-y-3">
+                          <h5 className="text-lg font-medium text-indigo-700 border-b border-indigo-100 pb-1">
+                            {categoria.nome}
+                          </h5>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {categoria.regras.map((regra, regraIndex) => (
+                              <div 
+                                key={regraIndex} 
+                                className={`p-3 rounded-md border-l-4 shadow-sm
+                                  ${regra.corDestaque === 'blue' ? 'bg-blue-50 border-blue-400' :
+                                    regra.corDestaque === 'green' ? 'bg-green-50 border-green-400' :
+                                    regra.corDestaque === 'purple' ? 'bg-purple-50 border-purple-400' :
+                                    regra.corDestaque === 'amber' ? 'bg-amber-50 border-amber-400' :
+                                    regra.corDestaque === 'cyan' ? 'bg-cyan-50 border-cyan-400' :
+                                    regra.corDestaque === 'red' ? 'bg-red-50 border-red-400' : 
+                                    'bg-gray-50 border-gray-400'
+                                  }`
+                                }
+                              >
+                                {regra.nome && (
+                                  <h6 className={`font-semibold mb-1
+                                    ${regra.corDestaque === 'blue' ? 'text-blue-700' :
+                                      regra.corDestaque === 'green' ? 'text-green-700' :
+                                      regra.corDestaque === 'purple' ? 'text-purple-700' :
+                                      regra.corDestaque === 'amber' ? 'text-amber-700' :
+                                      regra.corDestaque === 'cyan' ? 'text-cyan-700' :
+                                      regra.corDestaque === 'red' ? 'text-red-700' :
+                                      'text-gray-700'
+                                    }`
+                                  }>
+                                    {regra.nome}
+                                  </h6>
+                                )}
+                                
+                                {regra.formula && (
+                                  <div className="bg-white p-2 rounded border border-gray-200 mb-2 font-medium">
+                                    {regra.formula}
+                                  </div>
+                                )}
+                                
+                                <p className="text-gray-700 text-sm">{regra.explicacao}</p>
+                                
+                                {regra.exemplo && (
+                                  <div className="mt-2 text-sm">
+                                    <span className="font-medium">Exemplo: </span>
+                                    <span className="font-mono bg-white px-1 py-0.5 rounded">{regra.exemplo}</span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-6 bg-indigo-50 p-3 rounded-md">
+                      <h5 className="font-medium text-indigo-700 mb-2">Importância das Derivadas</h5>
+                      <p className="text-sm text-gray-700">
+                        As derivadas são fundamentais no cálculo e possibilitam a modelagem de fenômenos 
+                        que envolvem taxas de variação, como velocidade, aceleração, crescimento populacional 
+                        e muitos outros. Elas permitem o estudo do comportamento local de funções, incluindo
+                        a determinação de máximos e mínimos, que é essencial para problemas de otimização em diversas áreas.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
