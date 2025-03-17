@@ -1,268 +1,13 @@
-import { useState } from 'react';
+import React from 'react';
+import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
 import { roundToDecimals } from '../../utils/mathUtils';
-import { HiCalculator } from 'react-icons/hi';
 import { getQuadraticExamples } from '../../utils/mathUtilsAlgebra';
+import { useQuadraticSolver } from '../../hooks/algebra/useEquacaoQuadraticaSolver';
+import StepByStepExplanation from '../../components/StepByStepExplanation';
+import ConceitoMatematico from '../../components/ConceitoMatematico';
 
 const ResolvedorEquacaoQuadratica: React.FC = () => {
-    const [a, setA] = useState<string>('');
-    const [b, setB] = useState<string>('');
-    const [c, setC] = useState<string>('');
-
-    const [solution, setSolution] = useState<{ x1: number | null; x2: number | null } | null>(null);
-    const [solutionType, setSolutionType] = useState<'real' | 'repeated' | 'complex' | null>(null);
-    const [showExplanation, setShowExplanation] = useState<boolean>(true);
-    const [steps, setSteps] = useState<string[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string>('');
-
-    const handleSolve = () => {
-        // Reseta os estados
-        setErrorMessage('');
-        setSolution(null);
-        setSteps([]);
-        setSolutionType(null);
-        
-        // Converte os valores de entrada para números
-        const numA = parseFloat(a);
-        const numB = parseFloat(b);
-        const numC = parseFloat(c);
-
-        // Valida os valores de entrada
-        if (isNaN(numA) || isNaN(numB) || isNaN(numC)) {
-            setErrorMessage('Por favor, insira números válidos para a, b e c');
-            return;
-        }
-
-        if (numA === 0) {
-            setErrorMessage('O coeficiente de x² não pode ser zero na equação quadrática.');
-            return;
-        }
-
-        // Calcula o discriminante
-        const discriminant = numB * numB - 4 * numA * numC;
-
-        const calculationSteps = [];
-        let stepCount = 1;
-        
-        calculationSteps.push(`Passo ${stepCount}: Escrever a equação quadrática na forma padrão`);
-        calculationSteps.push(`A equação quadrática padrão tem o formato ax² + bx + c = 0, onde a, b e c são constantes.`);
-        calculationSteps.push(`Com os valores fornecidos: ${numA}x² + ${numB}x + ${numC} = 0`);
-        stepCount++;
-        
-        calculationSteps.push(`Passo ${stepCount}: Calcular o discriminante (b² - 4ac)`);
-        calculationSteps.push(`O discriminante determina quantas soluções reais a equação possui.`);
-        calculationSteps.push(`Discriminante = b² - 4ac`);
-        calculationSteps.push(`Discriminante = ${numB}² - 4 × ${numA} × ${numC}`);
-        calculationSteps.push(`Discriminante = ${numB * numB} - ${4 * numA * numC}`);
-        calculationSteps.push(`Discriminante = ${discriminant}`);
-        stepCount++;
-        
-        calculationSteps.push(`Passo ${stepCount}: Usar a fórmula de Bhaskara para encontrar as raízes`);
-        calculationSteps.push(`A fórmula de Bhaskara (ou fórmula quadrática) é: x = (-b ± √(discriminante)) / (2a)`);
-        stepCount++;
-
-        if (discriminant > 0) {
-            // Duas raízes reais e distintas
-            const sqrtDiscriminant = Math.sqrt(discriminant);
-            const x1 = (-numB + sqrtDiscriminant) / (2 * numA);
-            const x2 = (-numB - sqrtDiscriminant) / (2 * numA);
-
-            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é positivo, temos duas raízes reais e distintas`);
-            
-            calculationSteps.push(`Calculando x₁ (usando o sinal + na fórmula):`);
-            calculationSteps.push(`x₁ = (-${numB} + √${discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`x₁ = (${-numB} + ${roundToDecimals(sqrtDiscriminant, 4)}) / ${2 * numA}`);
-            calculationSteps.push(`x₁ = ${roundToDecimals(-numB + sqrtDiscriminant, 4)} / ${2 * numA}`);
-            calculationSteps.push(`x₁ = ${roundToDecimals(x1, 4)}`);
-            
-            calculationSteps.push(`Calculando x₂ (usando o sinal - na fórmula):`);
-            calculationSteps.push(`x₂ = (-${numB} - √${discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`x₂ = (${-numB} - ${roundToDecimals(sqrtDiscriminant, 4)}) / ${2 * numA}`);
-            calculationSteps.push(`x₂ = ${roundToDecimals(-numB - sqrtDiscriminant, 4)} / ${2 * numA}`);
-            calculationSteps.push(`x₂ = ${roundToDecimals(x2, 4)}`);
-
-            setSolution({ x1: x1, x2: x2});
-            setSolutionType('real');
-        } else if (discriminant === 0) {
-            // Uma raiz real repetida
-            const x = -numB / (2 * numA);
-            
-            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é igual a zero, temos uma raiz real repetida`);
-            calculationSteps.push(`Quando o discriminante é zero, a fórmula se simplifica para: x = -b / (2a)`);
-            calculationSteps.push(`x = -${numB} / (2 × ${numA})`);
-            calculationSteps.push(`x = ${-numB} / ${2 * numA}`);
-            calculationSteps.push(`x = ${roundToDecimals(x, 4)}`);
-            
-            setSolution({ x1: x, x2: x });
-            setSolutionType('repeated');
-        } else {
-            // Duas raízes complexas
-            const realPart = -numB / (2 * numA);
-            const imaginaryPart = Math.sqrt(-discriminant) / (2 * numA);
-            
-            calculationSteps.push(`Passo ${stepCount}: Como o discriminante (${discriminant}) é negativo, temos duas raízes complexas conjugadas`);
-            calculationSteps.push(`Para raízes complexas, a parte real é -b / (2a) e a parte imaginária é √(-discriminante) / (2a)`);
-            
-            calculationSteps.push(`Calculando a parte real:`);
-            calculationSteps.push(`Parte real = -${numB} / (2 × ${numA})`);
-            calculationSteps.push(`Parte real = ${-numB} / ${2 * numA}`);
-            calculationSteps.push(`Parte real = ${roundToDecimals(realPart, 4)}`);
-            
-            calculationSteps.push(`Calculando a parte imaginária:`);
-            calculationSteps.push(`Parte imaginária = √(${-discriminant}) / (2 × ${numA})`);
-            calculationSteps.push(`Parte imaginária = ${roundToDecimals(Math.sqrt(-discriminant), 4)} / ${2 * numA}`);
-            calculationSteps.push(`Parte imaginária = ${roundToDecimals(imaginaryPart, 4)}`);
-            
-            calculationSteps.push(`x₁ = ${roundToDecimals(realPart, 4)} + ${roundToDecimals(imaginaryPart, 4)}i`);
-            calculationSteps.push(`x₂ = ${roundToDecimals(realPart, 4)} - ${roundToDecimals(imaginaryPart, 4)}i`);
-            
-            setSolution({ x1: null, x2: null });
-            setSolutionType('complex');
-        }
-        
-        // Adicionar passo de verificação para soluções reais
-        if (discriminant >= 0) {
-            stepCount++;
-            
-            calculationSteps.push(`Passo ${stepCount}: Verificação das soluções`);
-            
-            // Aguardar até que a solução seja definida para verificar
-            if (solution !== null) {
-                const x1 = solution.x1;
-                const x2 = solution.x2;
-                
-                if (x1 !== null) {
-                    calculationSteps.push(`Substituindo x = ${roundToDecimals(x1, 4)} na equação original:`);
-                    const check1 = numA * (x1 * x1) + numB * x1 + numC;
-                    calculationSteps.push(`${numA} × (${roundToDecimals(x1, 4)})² + ${numB} × (${roundToDecimals(x1, 4)}) + ${numC}`);
-                    calculationSteps.push(`${numA} × ${roundToDecimals(x1 * x1, 4)} + ${numB} × ${roundToDecimals(x1, 4)} + ${numC}`);
-                    calculationSteps.push(`${roundToDecimals(numA * (x1 * x1), 4)} + ${roundToDecimals(numB * x1, 4)} + ${numC}`);
-                    calculationSteps.push(`= ${roundToDecimals(check1, 4)}`);
-                    
-                    if (Math.abs(check1) < 0.001) {
-                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${roundToDecimals(x1, 4)} está correta.`);
-                    } else {
-                        calculationSteps.push(`Nota: Se houve diferença no resultado final de: ${roundToDecimals(check1, 4)}, é porque o resultado final foi arredondado.`);
-                    }
-                }
-                
-                if (x2 !== null && x1 !== x2) {
-                    calculationSteps.push(`Substituindo x = ${roundToDecimals(x2, 4)} na equação original:`);
-                    const check2 = numA * (x2 * x2) + numB * x2 + numC;
-                    calculationSteps.push(`${numA} × (${roundToDecimals(x2, 4)})² + ${numB} × (${roundToDecimals(x2, 4)}) + ${numC}`);
-                    calculationSteps.push(`${numA} × ${roundToDecimals(x2 * x2, 4)} + ${numB} × ${roundToDecimals(x2, 4)} + ${numC}`);
-                    calculationSteps.push(`${roundToDecimals(numA * (x2 * x2), 4)} + ${roundToDecimals(numB * x2, 4)} + ${numC}`);
-                    calculationSteps.push(`= ${roundToDecimals(check2, 4)}`);
-                    
-                    if (Math.abs(check2) < 0.001) {
-                        calculationSteps.push(`Resultado aproximadamente igual a zero. A solução x = ${roundToDecimals(x2, 4)} está correta.`);
-                    } else {
-                        calculationSteps.push(`Nota: Se houve diferença no resultado final de: ${roundToDecimals(check2, 4)}, é porque o resultado final foi arredondado.`);
-                    }
-                }
-            }
-        }
-            
-        setSteps(calculationSteps);
-    };
-
-    // Função para aplicar um exemplo aos inputs
-    const applyExample = (example: {a: number, b: number, c: number}) => {
-        setA(example.a.toString());
-        setB(example.b.toString());
-        setC(example.c.toString());
-    };
-
-    // Função que gera os passos com estilização aprimorada
-    const renderExplanationSteps = () => {
-        return (
-            <div className="space-y-4">
-                {steps.map((step, index) => {
-                    // Verificar se o passo começa com um padrão de número de passo como "Passo X:"
-                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                    
-                    // Verificar se o passo é uma definição/explicação
-                    const definitionMatch = step.match(/^(A |O |Para |Quando )(.*)(tem o formato|determina|é:|se simplifica|é negativo|é igual|é positivo)/);
-                    
-                    // Verificar se o passo representa uma equação matemática
-                    const equationMatch = step.match(/^(Discriminante|x₁|x₂|x|Parte real|Parte imaginária) =/);
-                    
-                    // Verificar se o passo é um cálculo específico
-                    const calculationMatch = step.startsWith("Calculando");
-                    
-                    // Verificar se o passo contém uma verificação/resultados
-                    const verificationMatch = step.includes("Resultado aproximadamente") || step.includes("correta") || 
-                                            step.includes("Verificação") || step.startsWith("Substituindo");
-                    
-                    // Verificar se o passo é uma nota ou explicação adicional
-                    const noteMatch = step.startsWith("Nota:");
-                    
-                    if (stepMatch) {
-                        // Se for um passo com número, extrai e destaca o número
-                        const [_, stepNumber, stepContent] = stepMatch;
-                        return (
-                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                <div className="flex flex-col sm:flex-row">
-                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                        {stepNumber}
-                                    </span>
-                                    <p className="text-gray-800">{stepContent}</p>
-                                </div>
-                            </div>
-                        );
-                    } else if (definitionMatch) {
-                        // Se for uma definição ou explicação de conceito
-                        return (
-                            <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
-                                <p className="text-indigo-700">{step}</p>
-                            </div>
-                        );
-                    } else if (equationMatch) {
-                        // Se for uma equação matemática final
-                        return (
-                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
-                                <p className="text-gray-800 font-medium text-lg">{step}</p>
-                            </div>
-                        );
-                    } else if (calculationMatch) {
-                        // Se for um bloco de cálculo específico
-                        return (
-                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
-                                <p className="text-purple-700 font-medium">{step}</p>
-                            </div>
-                        );
-                    } else if (verificationMatch) {
-                        // Se for uma verificação ou validação de resultados
-                        return (
-                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
-                                <p className="text-green-700">{step}</p>
-                            </div>
-                        );
-                    } else if (noteMatch) {
-                        // Se for uma nota ou observação
-                        return (
-                            <div key={index} className="p-2 bg-yellow-50 rounded-md ml-4 text-sm text-yellow-700 italic border-l-2 border-yellow-300">
-                                {step}
-                            </div>
-                        );
-                    } else if (step.includes("=")) {
-                        // Se for uma etapa de cálculo com igualdade
-                        return (
-                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-8">
-                                <p className="text-gray-800">{step}</p>
-                            </div>
-                        );
-                    } else {
-                        // Conteúdo regular sem classificação específica
-                        return (
-                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                                <p className="text-gray-800">{step}</p>
-                            </div>
-                        );
-                    }
-                })}
-            </div>
-        );
-    };
+    const { state, dispatch, handleSolve, applyExample } = useQuadraticSolver();
             
     return (
         <div className="max-w-4xl mx-auto">
@@ -287,8 +32,8 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                             </label>
                             <input
                                 type="number"
-                                value={a}
-                                onChange={(e) => setA(e.target.value)}
+                                value={state.a}
+                                onChange={(e) => dispatch({ type: 'SET_COEFFICIENT', field: 'a', value: e.target.value })}
                                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Digite o valor de a"
                             />
@@ -300,8 +45,8 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                             </label>
                             <input
                                 type="number"
-                                value={b}
-                                onChange={(e) => setB(e.target.value)}
+                                value={state.b}
+                                onChange={(e) => dispatch({ type: 'SET_COEFFICIENT', field: 'b', value: e.target.value })}
                                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Digite o valor de b"
                             />
@@ -313,8 +58,8 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                             </label>
                             <input
                                 type="number"
-                                value={c}
-                                onChange={(e) => setC(e.target.value)}
+                                value={state.c}
+                                onChange={(e) => dispatch({ type: 'SET_COEFFICIENT', field: 'c', value: e.target.value })}
                                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Digite o valor de c"
                             />
@@ -347,35 +92,35 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                     Resolver Equação
                 </button>
                 
-                {errorMessage && (
+                {state.errorMessage && (
                     <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
-                        {errorMessage}
+                        {state.errorMessage}
                     </div>
                 )}
             </div>
             
-            {solution && (
+            {state.solution && (
                 <div className="space-y-6">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                         <p className="text-xl">
-                            Para a equação {a}x² + {b}x + {c} = 0
+                            Para a equação {state.a}x² + {state.b}x + {state.c} = 0
                         </p>
                         
-                        {solutionType === 'real' && solution.x1 !== null && solution.x2 !== null && (
+                        {state.solutionType === 'real' && state.solution.x1 !== null && state.solution.x2 !== null && (
                             <div className="mt-2">
-                                <p className="text-xl font-bold">x₁ = {roundToDecimals(solution.x1, 4)}</p>
-                                <p className="text-xl font-bold">x₂ = {roundToDecimals(solution.x2, 4)}</p>
+                                <p className="text-xl font-bold">x₁ = {roundToDecimals(state.solution.x1, 4)}</p>
+                                <p className="text-xl font-bold">x₂ = {roundToDecimals(state.solution.x2, 4)}</p>
                             </div>
                         )}
                         
-                        {solutionType === 'repeated' && solution.x1 !== null && (
+                        {state.solutionType === 'repeated' && state.solution.x1 !== null && (
                             <p className="text-xl font-bold mt-2">
-                                x = {roundToDecimals(solution.x1, 4)} (raiz repetida)
+                                x = {roundToDecimals(state.solution.x1, 4)} (raiz repetida)
                             </p>
                         )}
                         
-                        {solutionType === 'complex' && (
+                        {state.solutionType === 'complex' && (
                             <div className="mt-2">
                                 <p className="text-xl font-bold">A equação não tem soluções reais</p>
                                 <p className="text-gray-700 mt-1">As soluções são complexas (veja a explicação abaixo)</p>
@@ -383,15 +128,16 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                         )}
                         
                         <button 
-                            onClick={() => setShowExplanation(!showExplanation)}
+                            onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
                             className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
                         >
-                            {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                            <HiInformationCircle className="h-5 w-5 mr-1" />
+                            {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
                         </button>
                     </div>
                     
-                    {showExplanation && steps.length > 0 && (
-                        <div className="bg-white shadow-md rounded-lg p-5">
+                    {state.showExplanation && state.steps.length > 0 && (
+                        <div className="mt-8 bg-white shadow-md rounded-lg p-5">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-xl font-bold text-gray-800 flex items-center">
                                     <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
@@ -399,25 +145,25 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                                 </h3>
                             </div>
                             
-                            {renderExplanationSteps()}
+                            <StepByStepExplanation steps={state.steps} stepType="linear" />
                             
-                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
-                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
-                                    <h4 className="font-semibold text-blue-800 flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Conceito Matemático
-                                    </h4>
-                                </div>
-                                <div className="p-4">
+                            <ConceitoMatematico
+                                title="Conceito Matemático" 
+                                isOpen={state.showConceitoMatematico} 
+                                onToggle={() => dispatch({ type: 'TOGGLE_CONCEITO_MATEMATICO' })}
+                            >
                                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                                         <div className="flex-1">
                                             <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Definição</h5>
-                                            <p className="text-gray-700">
+                                            <p className="text-gray-700 mb-2">
                                                 Uma equação quadrática é uma equação de segundo grau na forma 
                                                 ax² + bx + c = 0, onde a, b e c são constantes e a ≠ 0.
                                             </p>
+                                            <div className="p-3 bg-yellow-50 rounded-md border-l-2 border-yellow-300 mb-3">
+                                                <p className="text-sm text-yellow-800">
+                                                    <span className="font-semibold">Propriedade importante:</span> Uma equação quadrática pode ter até duas raízes reais distintas, uma raiz real repetida, ou duas raízes complexas conjugadas.
+                                                </p>
+                                            </div>
                                             
                                             <h5 className="font-medium text-gray-800 mb-2 mt-4 border-b border-gray-200 pb-1">Fórmula de Bhaskara</h5>
                                             <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
@@ -432,6 +178,88 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                                                     </ul>
                                                 </div>
                                             </div>
+                                            
+                                            <div className="p-3 bg-green-50 rounded-md border-l-2 border-green-300 mt-3 mb-3">
+                                                <h6 className="text-green-700 font-medium mb-1">Variações e Propriedades da Fórmula</h6>
+                                                <p className="text-sm text-gray-700 mb-2">
+                                                    Existem várias formas alternativas e propriedades úteis da fórmula quadrática:
+                                                </p>
+                                                <div className="space-y-3">
+                                                    <div className="bg-white p-2 rounded-md border border-gray-100">
+                                                        <h6 className="text-sm font-medium text-green-700 mb-1">Fórmula de Viète</h6>
+                                                        <p className="text-xs text-gray-600">
+                                                            Se x₁ e x₂ são as raízes da equação ax² + bx + c = 0, então:
+                                                        </p>
+                                                        <div className="grid grid-cols-2 gap-2 mt-1">
+                                                            <div className="bg-gray-50 p-1 rounded text-center">
+                                                                <p className="text-xs text-gray-700">x₁ + x₂ = -b/a</p>
+                                                            </div>
+                                                            <div className="bg-gray-50 p-1 rounded text-center">
+                                                                <p className="text-xs text-gray-700">x₁ × x₂ = c/a</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="bg-white p-2 rounded-md border border-gray-100">
+                                                        <h6 className="text-sm font-medium text-green-700 mb-1">Forma Alternativa</h6>
+                                                        <p className="text-xs text-gray-600 mb-1">
+                                                            Quando |b| é grande, podemos usar esta versão para evitar erros de arredondamento:
+                                                        </p>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <div className="bg-gray-50 p-1 rounded text-center">
+                                                                <p className="text-xs text-gray-700">x₁ = (2c) / (-b - √(b² - 4ac))</p>
+                                                            </div>
+                                                            <div className="bg-gray-50 p-1 rounded text-center">
+                                                                <p className="text-xs text-gray-700">x₂ = (2c) / (-b + √(b² - 4ac))</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="bg-white p-2 rounded-md border border-gray-100">
+                                                        <h6 className="text-sm font-medium text-green-700 mb-1">Equações Quadráticas Especiais</h6>
+                                                        <div className="grid grid-cols-2 gap-2 mt-1">
+                                                            <div>
+                                                                <p className="text-xs font-medium text-gray-700">Equação pura (b = 0):</p>
+                                                                <p className="text-xs text-gray-600">ax² + c = 0</p>
+                                                                <p className="text-xs text-gray-600">x = ±√(-c/a)</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-medium text-gray-700">Equação incompleta (c = 0):</p>
+                                                                <p className="text-xs text-gray-600">ax² + bx = 0</p>
+                                                                <p className="text-xs text-gray-600">x = 0 ou x = -b/a</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="bg-white p-2 rounded-md border border-gray-100">
+                                                        <h6 className="text-sm font-medium text-green-700 mb-1">Completar Quadrados</h6>
+                                                        <p className="text-xs text-gray-600 mb-1">
+                                                            Método alternativo para resolver equações quadráticas reescrevendo-as na forma (x + p)² = q:
+                                                        </p>
+                                                        <div className="space-y-1 mt-1">
+                                                            <p className="text-xs text-gray-700">1. Dividir todos os termos por a: x² + (b/a)x + (c/a) = 0</p>
+                                                            <p className="text-xs text-gray-700">2. Reescrever como: x² + (b/a)x = -c/a</p>
+                                                            <p className="text-xs text-gray-700">3. Adicionar (b/2a)² a ambos os lados: x² + (b/a)x + (b/2a)² = -c/a + (b/2a)²</p>
+                                                            <p className="text-xs text-gray-700">4. Simplificar: (x + b/2a)² = (b² - 4ac)/4a²</p>
+                                                            <p className="text-xs text-gray-700">5. Extrair raiz: x + b/2a = ±√(b² - 4ac)/2a</p>
+                                                            <p className="text-xs text-gray-700">6. Isolar x: x = -b/2a ± √(b² - 4ac)/2a</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="bg-white p-2 rounded-md border border-gray-100">
+                                                        <h6 className="text-sm font-medium text-green-700 mb-1">Soma dos Quadrados das Raízes</h6>
+                                                        <p className="text-xs text-gray-600 mb-1">
+                                                            Se x₁ e x₂ são as raízes da equação ax² + bx + c = 0, então:
+                                                        </p>
+                                                        <div className="bg-gray-50 p-1 rounded text-center mt-1">
+                                                            <p className="text-xs text-gray-700">x₁² + x₂² = (x₁ + x₂)² - 2(x₁ × x₂) = (-b/a)² - 2(c/a) = (b² - 2ac)/a²</p>
+                                                        </div>
+                                                        <p className="text-xs text-gray-600 mt-1">
+                                                            Esta propriedade é útil em problemas que envolvem a soma dos quadrados sem precisar calcular as raízes individualmente.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="flex-1">
                                             <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Discriminante (Δ)</h5>
@@ -443,7 +271,7 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                                             </p>
                                             <div className="space-y-2">
                                                 <div className="p-2 bg-green-50 rounded border border-green-100 flex items-center">
-                                                    <div className="h-6 w-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">Δ&gt;0</div>
+                                                    <div className="h-6 w-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">Δ{'>'}0</div>
                                                     <span className="text-sm">Duas raízes reais distintas</span>
                                                 </div>
                                                 <div className="p-2 bg-yellow-50 rounded border border-yellow-100 flex items-center">
@@ -451,77 +279,54 @@ const ResolvedorEquacaoQuadratica: React.FC = () => {
                                                     <span className="text-sm">Uma raiz real repetida</span>
                                                 </div>
                                                 <div className="p-2 bg-indigo-50 rounded border border-indigo-100 flex items-center">
-                                                    <div className="h-6 w-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">Δ&lt;0</div>
+                                                    <div className="h-6 w-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs mr-2 flex-shrink-0">Δ{'<'}0</div>
                                                     <span className="text-sm">Duas raízes complexas conjugadas</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="mt-4 flex flex-col md:flex-row gap-4">
-                                        <div className="flex-1">
-                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Representação Gráfica</h5>
-                                            <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
-                                                <p className="text-sm text-gray-700 mb-2">
-                                                    Uma equação quadrática representa uma parábola no plano cartesiano:
-                                                </p>
-                                                <div className="flex justify-center">
-                                                    <div className="relative h-40 w-40 border-b border-l border-gray-400">
-                                                        {/* Eixos */}
-                                                        <div className="absolute bottom-0 left-0 w-full h-px bg-gray-400"></div>
-                                                        <div className="absolute bottom-0 left-0 w-px h-full bg-gray-400"></div>
-                                                        
-                                                        {/* Parábola para Δ > 0 */}
-                                                        <div className="absolute bottom-20 left-0 w-40 h-40 border-t-2 border-indigo-500 rounded-t-full"></div>
-                                                        
-                                                        {/* Raízes */}
-                                                        <div className="absolute bottom-0 left-10 h-2 w-2 bg-red-500 rounded-full"></div>
-                                                        <div className="absolute bottom-0 left-30 h-2 w-2 bg-red-500 rounded-full"></div>
-                                                        
-                                                        {/* Labels */}
-                                                        <div className="absolute bottom-[-15px] left-10 text-xs text-red-500">x₁</div>
-                                                        <div className="absolute bottom-[-15px] left-30 text-xs text-red-500">x₂</div>
-                                                        <div className="absolute bottom-20 left-20 text-xs text-indigo-600">y = ax² + bx + c</div>
-                                                    </div>
+                                            
+                                            <h5 className="font-medium text-gray-800 mb-2 mt-4 border-b border-gray-200 pb-1">Interpretação Geométrica</h5>
+                                            <p className="text-gray-700 mb-2">
+                                                Uma equação quadrática na forma y = ax² + bx + c representa uma parábola no plano cartesiano:
+                                            </p>
+                                            <div className="space-y-2 mb-3">
+                                                <div className="p-2 bg-white rounded-md border border-gray-100 flex items-center">
+                                                    <div className="h-5 w-5 bg-green-100 rounded-full mr-2 flex-shrink-0"></div>
+                                                    <p className="text-sm">Se a {'>'} 0: Parábola com concavidade para cima (∪)</p>
                                                 </div>
-                                                <p className="text-xs text-gray-500 text-center mt-2">
-                                                    As raízes da equação são os pontos onde a parábola cruza o eixo x
+                                                <div className="p-2 bg-white rounded-md border border-gray-100 flex items-center">
+                                                    <div className="h-5 w-5 bg-yellow-100 rounded-full mr-2 flex-shrink-0"></div>
+                                                    <p className="text-sm">Se a {'<'} 0: Parábola com concavidade para baixo (∩)</p>
+                                                </div>
+                                                <div className="p-2 bg-white rounded-md border border-gray-100 flex items-center">
+                                                    <div className="h-5 w-5 bg-indigo-100 rounded-full mr-2 flex-shrink-0"></div>
+                                                    <p className="text-sm">Soluções da equação: Pontos onde a parábola cruza o eixo x</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="p-3 bg-blue-50 rounded-md border-l-2 border-blue-300 mb-3">
+                                                <h6 className="text-blue-700 font-medium mb-1">Contexto Histórico</h6>
+                                                <p className="text-sm text-gray-700">
+                                                    A solução de equações quadráticas tem uma história rica que remonta a várias civilizações antigas. Os babilônios (cerca de 2000 a.C.) 
+                                                    já resolviam problemas equivalentes a equações quadráticas. O nome "Fórmula de Bhaskara" é uma homenagem ao matemático indiano 
+                                                    Bhaskara II (1114-1185), embora a fórmula tenha sido conhecida anteriormente por matemáticos árabes e persas. O matemático persa 
+                                                    Al-Khwarizmi (780-850 d.C.) publicou métodos sistemáticos para resolver equações quadráticas em seu trabalho sobre álgebra.
                                                 </p>
                                             </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Aplicações</h5>
-                                            <div className="space-y-2">
-                                                <div className="p-2 bg-white rounded-md shadow-sm border border-gray-100">
-                                                    <h6 className="text-indigo-700 font-medium text-sm">Física</h6>
-                                                    <p className="text-xs text-gray-600">Modelagem de movimento de projéteis, queda livre, movimentos uniformemente variados</p>
-                                                </div>
-                                                <div className="p-2 bg-white rounded-md shadow-sm border border-gray-100">
-                                                    <h6 className="text-indigo-700 font-medium text-sm">Engenharia</h6>
-                                                    <p className="text-xs text-gray-600">Cálculo de estruturas, modelagem de sistemas mecânicos, design</p>
-                                                </div>
-                                                <div className="p-2 bg-white rounded-md shadow-sm border border-gray-100">
-                                                    <h6 className="text-indigo-700 font-medium text-sm">Economia</h6>
-                                                    <p className="text-xs text-gray-600">Análise de lucro, ponto de equilíbrio, previsões de mercado</p>
-                                                </div>
-                                                <div className="p-2 bg-white rounded-md shadow-sm border border-gray-100">
-                                                    <h6 className="text-indigo-700 font-medium text-sm">Geometria</h6>
-                                                    <p className="text-xs text-gray-600">Cálculo de áreas, volumes, dimensões de objetos</p>
-                                                </div>
+                                            
+                                            <div className="p-3 bg-indigo-50 rounded-md">
+                                                <h6 className="text-indigo-700 font-medium mb-1">Aplicações Práticas</h6>
+                                                <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                    <li><span className="font-medium">Física:</span> Movimento de projéteis, queda livre e problemas de cinemática</li>
+                                                    <li><span className="font-medium">Engenharia:</span> Cálculo de áreas, otimização de estruturas e design</li>
+                                                    <li><span className="font-medium">Economia:</span> Modelagem de custos, receitas e lucros máximos</li>
+                                                    <li><span className="font-medium">Computação gráfica:</span> Cálculo de trajetórias, colisões e animações</li>
+                                                    <li><span className="font-medium">Arquitetura:</span> Desenho de arcos, pontes e estruturas parabólicas</li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div className="mt-4 bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
-                                        <h5 className="font-medium text-yellow-800 mb-1">Dica de Resolução</h5>
-                                        <p className="text-gray-700 text-sm">
-                                            Em alguns casos, a equação quadrática pode ser resolvida por fatoração direta, 
-                                            especialmente quando as raízes são números inteiros ou frações simples. Isso pode 
-                                            ser mais eficiente que a aplicação da fórmula de Bhaskara.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            </ConceitoMatematico>
                         </div>
                     )}
                 </div>

@@ -1,271 +1,23 @@
-import React, { useState } from 'react';
-import {
-    cubeVolume,
-    cuboidVolume,
-    sphereVolume,
-    cylinderVolume,
-    coneVolume,
-    pyramidVolume,
-    prismVolume,
-    getVolumeExamples
-} from '../../utils/mathUtilsGeometria';
-import { HiCalculator } from 'react-icons/hi';
-
-type Solido = 'cubo' | 'paralelepipedo' | 'esfera' | 'cilindro' | 'cone' | 'piramide' | 'prisma';
+import React from 'react';
+import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
+import { useVolumeSolidosSolver, Solido } from '../../hooks/geometria/useVolumeSolidosSolver';
+import StepByStepExplanation from '../../components/StepByStepExplanation';
+import ConceitoMatematico from '../../components/ConceitoMatematico';
 
 const ResolvedorVolumeSolidos: React.FC = () => {
-    const [solido, setSolido] = useState<Solido>('cubo');
-    const [aresta, setAresta] = useState<string>('');
-    const [comprimento, setComprimento] = useState<string>('');
-    const [largura, setLargura] = useState<string>('');
-    const [altura, setAltura] = useState<string>('');
-    const [raio, setRaio] = useState<string>('');
-    const [raioBase, setRaioBase] = useState<string>('');
-    const [areaBase, setAreaBase] = useState<string>('');
-    const [result, setResult] = useState<number | null>(null);
-    const [steps, setSteps] = useState<string[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [showExplanation, setShowExplanation] = useState<boolean>(true);
-
-    const handleNumberInput = (value: string, setter: (value: string) => void) => {
-        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
-            setter(value);
-        }
-    };
-
-    // Função para aplicar um exemplo
-    const applyExample = (exemplo: { valores: Record<string, number> }) => {
-        // Resetar todos os valores primeiro
-        setAresta('');
-        setComprimento('');
-        setLargura('');
-        setAltura('');
-        setRaio('');
-        setRaioBase('');
-        setAreaBase('');
-        
-        // Aplicar os valores do exemplo
-        for (const [key, value] of Object.entries(exemplo.valores)) {
-            switch (key) {
-                case 'aresta':
-                    setAresta(value.toString());
-                    break;
-                case 'comprimento':
-                    setComprimento(value.toString());
-                    break;
-                case 'largura':
-                    setLargura(value.toString());
-                    break;
-                case 'altura':
-                    setAltura(value.toString());
-                    break;
-                case 'raio':
-                    setRaio(value.toString());
-                    break;
-                case 'raioBase':
-                    setRaioBase(value.toString());
-                    break;
-                case 'areaBase':
-                    setAreaBase(value.toString());
-                    break;
-            }
-        }
-    };
-
-    const handleSolve = () => {
-        setErrorMessage('');
-        setSteps([]);
-        
-        try {
-            let volume: number;
-            const calculationSteps: string[] = [];
-            let stepCount = 1;
-
-            switch (solido) {
-                case 'cubo':
-                    if (!aresta) throw new Error('Por favor, insira o valor da aresta do cubo.');
-                    const arestaNum = Number(aresta);
-                    volume = cubeVolume(arestaNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume do cubo, usamos a fórmula V = a³`,
-                        `Passo ${stepCount++}: Substituindo a aresta: V = ${arestaNum}³`,
-                        `V = ${arestaNum} × ${arestaNum} × ${arestaNum}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                case 'paralelepipedo':
-                    if (!comprimento || !largura || !altura) 
-                        throw new Error('Por favor, insira todas as dimensões do paralelepípedo.');
-                    const compNum = Number(comprimento);
-                    const largNum = Number(largura);
-                    const altNum = Number(altura);
-                    volume = cuboidVolume(compNum, largNum, altNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume do paralelepípedo, usamos a fórmula V = c × l × h`,
-                        `Passo ${stepCount++}: Substituindo os valores: V = ${compNum} × ${largNum} × ${altNum}`,
-                        `V = ${compNum * largNum * altNum} unidades cúbicas`
-                    );
-                    break;
-
-                case 'esfera':
-                    if (!raio) throw new Error('Por favor, insira o raio da esfera.');
-                    const raioNum = Number(raio);
-                    volume = sphereVolume(raioNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume da esfera, usamos a fórmula V = (4/3)πr³`,
-                        `Passo ${stepCount++}: Substituindo o raio: V = (4/3)π × ${raioNum}³`,
-                        `V = (4/3) × ${Math.PI.toFixed(4)} × ${raioNum}³`,
-                        `V = (4/3) × ${Math.PI.toFixed(4)} × ${Math.pow(raioNum, 3).toFixed(4)}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                case 'cilindro':
-                    if (!raioBase || !altura) 
-                        throw new Error('Por favor, insira o raio da base e a altura do cilindro.');
-                    const raioBaseNum = Number(raioBase);
-                    const altCilNum = Number(altura);
-                    volume = cylinderVolume(raioBaseNum, altCilNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume do cilindro, usamos a fórmula V = πr²h`,
-                        `Passo ${stepCount++}: Substituindo os valores: V = π × ${raioBaseNum}² × ${altCilNum}`,
-                        `V = ${Math.PI.toFixed(4)} × ${Math.pow(raioBaseNum, 2).toFixed(4)} × ${altCilNum}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                case 'cone':
-                    if (!raioBase || !altura) 
-                        throw new Error('Por favor, insira o raio da base e a altura do cone.');
-                    const raioBaseConNum = Number(raioBase);
-                    const altConNum = Number(altura);
-                    volume = coneVolume(raioBaseConNum, altConNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume do cone, usamos a fórmula V = (1/3)πr²h`,
-                        `Passo ${stepCount++}: Substituindo os valores: V = (1/3)π × ${raioBaseConNum}² × ${altConNum}`,
-                        `V = (1/3) × ${Math.PI.toFixed(4)} × ${Math.pow(raioBaseConNum, 2).toFixed(4)} × ${altConNum}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                case 'piramide':
-                    if (!areaBase || !altura) 
-                        throw new Error('Por favor, insira a área da base e a altura da pirâmide.');
-                    const areaBaseNum = Number(areaBase);
-                    const altPirNum = Number(altura);
-                    volume = pyramidVolume(areaBaseNum, altPirNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume da pirâmide, usamos a fórmula V = (1/3)Abh`,
-                        `Passo ${stepCount++}: Substituindo os valores: V = (1/3) × ${areaBaseNum} × ${altPirNum}`,
-                        `V = (1/3) × ${areaBaseNum * altPirNum}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                case 'prisma':
-                    if (!areaBase || !altura) 
-                        throw new Error('Por favor, insira a área da base e a altura do prisma.');
-                    const areaBasePrismaNum = Number(areaBase);
-                    const altPrismaNum = Number(altura);
-                    volume = prismVolume(areaBasePrismaNum, altPrismaNum);
-                    calculationSteps.push(
-                        `Passo ${stepCount++}: Para calcular o volume do prisma, usamos a fórmula V = Abh`,
-                        `Passo ${stepCount++}: Substituindo os valores: V = ${areaBasePrismaNum} × ${altPrismaNum}`,
-                        `V = ${volume} unidades cúbicas`
-                    );
-                    break;
-
-                default:
-                    throw new Error('Sólido não reconhecido');
-            }
-
-            setResult(volume);
-            setSteps(calculationSteps);
-        } catch (error) {
-            if (error instanceof Error) {
-                setErrorMessage(error.message);
-            }
-        }
-    };
-
-    // Função para renderizar os passos de explicação com estilização aprimorada
-    const renderExplanationSteps = () => {
-        return (
-            <div className="space-y-4">
-                {steps.map((step, index) => {
-                    const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
-                    
-                    // Verifica se contém informação sobre fórmula
-                    const formulaMatch = step.includes('fórmula');
-                    
-                    // Verifica se é um passo de substituição de valores
-                    const substitutionMatch = step.includes('Substituindo');
-                    
-                    // Verifica se é cálculo intermediário 
-                    const intermediateMatch = step.startsWith('V =') && !step.includes('unidades cúbicas');
-                    
-                    // Verifica se é o resultado final
-                    const resultMatch = step.includes('unidades cúbicas');
-                    
-                    if (stepMatch) {
-                        // Se for um passo numerado, extrai e destaca o número
-                        const [_, stepNumber, stepContent] = stepMatch;
-                        return (
-                            <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                                <div className="flex flex-col sm:flex-row">
-                                    <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                                        {stepNumber}
-                                    </span>
-                                    <p className="text-gray-800">{stepContent}</p>
-                                </div>
-                            </div>
-                        );
-                    } else if (formulaMatch) {
-                        // Se for uma explicação de fórmula
-                        return (
-                            <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
-                                <p className="text-blue-700 font-medium">{step}</p>
-                            </div>
-                        );
-                    } else if (substitutionMatch) {
-                        // Se for um passo de substituição
-                        return (
-                            <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
-                                <p className="text-purple-700 font-medium">{step}</p>
-                            </div>
-                        );
-                    } else if (intermediateMatch) {
-                        // Se for um cálculo intermediário
-                        return (
-                            <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
-                                <p className="text-amber-700 font-medium">{step}</p>
-                            </div>
-                        );
-                    } else if (resultMatch) {
-                        // Se for o resultado final
-                        return (
-                            <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
-                                <p className="text-green-700 font-medium">{step}</p>
-                            </div>
-                        );
-                    } else {
-                        // Outros passos
-                        return (
-                            <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                                <p className="text-gray-800">{step}</p>
-                            </div>
-                        );
-                    }
-                })}
-            </div>
-        );
-    };
+    const {
+        state,
+        dispatch,
+        setFieldValue,
+        handleSolve,
+        applyExample,
+        getFilteredExamples
+    } = useVolumeSolidosSolver();
 
     const renderFields = () => {
         const inputClassName = "w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500";
         
-        switch (solido) {
+        switch (state.solido) {
             case 'cubo':
                 return (
                     <div className="mb-4">
@@ -275,8 +27,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         <input
                             type="number"
                             id="aresta"
-                            value={aresta}
-                            onChange={(e) => handleNumberInput(e.target.value, setAresta)}
+                            value={state.aresta}
+                            onChange={(e) => setFieldValue('aresta', e.target.value)}
                             className={inputClassName}
                             placeholder="Digite o valor da aresta"
                             step="0.1"
@@ -295,8 +47,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="comprimento"
-                                value={comprimento}
-                                onChange={(e) => handleNumberInput(e.target.value, setComprimento)}
+                                value={state.comprimento}
+                                onChange={(e) => setFieldValue('comprimento', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite o comprimento"
                                 step="0.1"
@@ -310,8 +62,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="largura"
-                                value={largura}
-                                onChange={(e) => handleNumberInput(e.target.value, setLargura)}
+                                value={state.largura}
+                                onChange={(e) => setFieldValue('largura', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite a largura"
                                 step="0.1"
@@ -325,8 +77,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="altura"
-                                value={altura}
-                                onChange={(e) => handleNumberInput(e.target.value, setAltura)}
+                                value={state.altura}
+                                onChange={(e) => setFieldValue('altura', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite a altura"
                                 step="0.1"
@@ -345,8 +97,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         <input
                             type="number"
                             id="raio"
-                            value={raio}
-                            onChange={(e) => handleNumberInput(e.target.value, setRaio)}
+                            value={state.raio}
+                            onChange={(e) => setFieldValue('raio', e.target.value)}
                             className={inputClassName}
                             placeholder="Digite o raio"
                             step="0.1"
@@ -366,8 +118,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="raioBase"
-                                value={raioBase}
-                                onChange={(e) => handleNumberInput(e.target.value, setRaioBase)}
+                                value={state.raioBase}
+                                onChange={(e) => setFieldValue('raioBase', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite o raio da base"
                                 step="0.1"
@@ -381,8 +133,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="altura"
-                                value={altura}
-                                onChange={(e) => handleNumberInput(e.target.value, setAltura)}
+                                value={state.altura}
+                                onChange={(e) => setFieldValue('altura', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite a altura"
                                 step="0.1"
@@ -403,8 +155,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="areaBase"
-                                value={areaBase}
-                                onChange={(e) => handleNumberInput(e.target.value, setAreaBase)}
+                                value={state.areaBase}
+                                onChange={(e) => setFieldValue('areaBase', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite a área da base"
                                 step="0.1"
@@ -418,8 +170,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                             <input
                                 type="number"
                                 id="altura"
-                                value={altura}
-                                onChange={(e) => handleNumberInput(e.target.value, setAltura)}
+                                value={state.altura}
+                                onChange={(e) => setFieldValue('altura', e.target.value)}
                                 className={inputClassName}
                                 placeholder="Digite a altura"
                                 step="0.1"
@@ -452,8 +204,8 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         Selecione o sólido
                     </label>
                     <select
-                        value={solido}
-                        onChange={(e) => setSolido(e.target.value as Solido)}
+                        value={state.solido}
+                        onChange={(e) => dispatch({ type: 'SET_SOLIDO', value: e.target.value as Solido })}
                         className="w-full border border-gray-300 rounded-md px-3 py-2"
                     >
                         <option value="cubo">Cubo</option>
@@ -472,7 +224,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                         Exemplos
                     </label>
                     <div className="flex flex-wrap gap-2 mb-4">
-                        {getVolumeExamples(solido).map((exemplo, index) => (
+                        {getFilteredExamples().map((exemplo, index) => (
                             <button
                                 key={index}
                                 onClick={() => applyExample(exemplo)}
@@ -495,30 +247,31 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                     Calcular Volume
                 </button>
 
-                {errorMessage && (
+                {state.errorMessage && (
                     <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
-                        {errorMessage}
+                        {state.errorMessage}
                     </div>
                 )}
             </div>
 
-            {result !== null && (
+            {state.result !== null && (
                 <div className="space-y-6">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                         <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
                         <p className="text-xl">
-                            O volume do sólido é: <span className="font-bold">{result}</span> unidades cúbicas
+                            O volume do sólido é: <span className="font-bold">{state.result}</span> unidades cúbicas
                         </p>
                         
                         <button 
-                            onClick={() => setShowExplanation(!showExplanation)}
+                            onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
                             className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
                         >
-                            {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                            <HiInformationCircle className="h-5 w-5 mr-1" />
+                            {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
                         </button>
                     </div>
 
-                    {showExplanation && (
+                    {state.showExplanation && (
                         <div className="bg-white shadow-md rounded-lg p-5">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-xl font-bold text-gray-800 flex items-center">
@@ -527,18 +280,13 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                 </h3>
                             </div>
 
-                            {renderExplanationSteps()}
+                            <StepByStepExplanation steps={state.steps} stepType="geometric" />
                             
-                            <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
-                                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
-                                    <h4 className="font-semibold text-blue-800 flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Conceito Matemático
-                                    </h4>
-                                </div>
-                                <div className="p-4">
+                            <ConceitoMatematico
+                                title="Conceito Matemático"
+                                isOpen={state.showConceitoMatematico}
+                                onToggle={() => dispatch({ type: 'TOGGLE_CONCEITO_MATEMATICO' })}
+                            >
                                     <div className="flex flex-col md:flex-row gap-4 mb-4">
                                         <div className="flex-1">
                                             <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Volume de Sólidos Geométricos</h5>
@@ -550,51 +298,42 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                 <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
                                                     <h6 className="text-indigo-700 font-medium mb-2">Fórmulas de Volume</h6>
                                                     <div className="space-y-2 text-sm text-gray-700">
-                                                        {solido === 'cubo' && (
+                                                    {state.solido === 'cubo' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Cubo:</span> V = a³, onde a é o comprimento da aresta
                                                             </div>
                                                         )}
-                                                        {solido === 'paralelepipedo' && (
+                                                    {state.solido === 'paralelepipedo' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Paralelepípedo:</span> V = c × l × h, onde c é o comprimento, l é a largura e h é a altura
                                                             </div>
                                                         )}
-                                                        {solido === 'esfera' && (
+                                                    {state.solido === 'esfera' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Esfera:</span> V = (4/3)πr³, onde r é o raio
                                                             </div>
                                                         )}
-                                                        {solido === 'cilindro' && (
+                                                    {state.solido === 'cilindro' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Cilindro:</span> V = πr²h, onde r é o raio da base e h é a altura
                                                             </div>
                                                         )}
-                                                        {solido === 'cone' && (
+                                                    {state.solido === 'cone' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Cone:</span> V = (1/3)πr²h, onde r é o raio da base e h é a altura
                                                             </div>
                                                         )}
-                                                        {solido === 'piramide' && (
+                                                    {state.solido === 'piramide' && (
                                                             <div className="p-2 border-b border-gray-50">
                                                                 <span className="font-medium">Pirâmide:</span> V = (1/3)A_b × h, onde A_b é a área da base e h é a altura
                                                             </div>
                                                         )}
-                                                        {solido === 'prisma' && (
+                                                    {state.solido === 'prisma' && (
                                                             <div className="p-2">
                                                                 <span className="font-medium">Prisma:</span> V = A_b × h, onde A_b é a área da base e h é a altura
                                                             </div>
                                                         )}
                                                     </div>
-                                                </div>
-                                                <div className="p-3 bg-indigo-50 rounded-md">
-                                                    <h6 className="text-indigo-700 font-medium mb-2">Princípios Fundamentais</h6>
-                                                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
-                                                        <li>Um sólido regular tem todas as faces iguais e os mesmos ângulos em cada vértice</li>
-                                                        <li>O volume de qualquer prisma ou cilindro é o produto da área da base pela altura</li>
-                                                        <li>O volume de qualquer pirâmide ou cone é um terço do produto da área da base pela altura</li>
-                                                        <li>O Princípio de Cavalieri: sólidos com a mesma altura e mesma área de seção transversal em cada altura têm o mesmo volume</li>
-                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -603,7 +342,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                             <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Características dos Sólidos</h5>
                                             <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
                                                 <div className="space-y-2">
-                                                    {solido === 'cubo' && (
+                                                {state.solido === 'cubo' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Cubo</h6>
                                                             <p className="text-sm text-gray-700">Um cubo é um sólido geométrico com seis faces quadradas iguais. Possui 8 vértices e 12 arestas.</p>
@@ -615,7 +354,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'paralelepipedo' && (
+                                                {state.solido === 'paralelepipedo' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Paralelepípedo</h6>
                                                             <p className="text-sm text-gray-700">Um paralelepípedo é um prisma com seis faces retangulares paralelas duas a duas. Possui 8 vértices e 12 arestas.</p>
@@ -627,7 +366,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'esfera' && (
+                                                {state.solido === 'esfera' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Esfera</h6>
                                                             <p className="text-sm text-gray-700">Uma esfera é um sólido geométrico perfeitamente redondo. Todos os pontos da superfície estão à mesma distância do centro.</p>
@@ -639,7 +378,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'cilindro' && (
+                                                {state.solido === 'cilindro' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Cilindro</h6>
                                                             <p className="text-sm text-gray-700">Um cilindro é um sólido geométrico formado por duas bases circulares paralelas e uma superfície lateral curva.</p>
@@ -652,7 +391,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'cone' && (
+                                                {state.solido === 'cone' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Cone</h6>
                                                             <p className="text-sm text-gray-700">Um cone é um sólido geométrico formado por uma base circular e um vértice, conectados por uma superfície lateral curva.</p>
@@ -665,7 +404,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'piramide' && (
+                                                {state.solido === 'piramide' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Pirâmide</h6>
                                                             <p className="text-sm text-gray-700">Uma pirâmide é um sólido geométrico com uma base poligonal e faces triangulares que convergem para um vértice.</p>
@@ -677,7 +416,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                             </ul>
                                                         </>
                                                     )}
-                                                    {solido === 'prisma' && (
+                                                {state.solido === 'prisma' && (
                                                         <>
                                                             <h6 className="text-indigo-700 font-medium">Prisma</h6>
                                                             <p className="text-sm text-gray-700">Um prisma é um sólido geométrico com duas bases poligonais congruentes e paralelas, e faces laterais retangulares.</p>
@@ -691,6 +430,18 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                                     )}
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="max-w-3xl mx-auto mt-6 mb-4">
+                                        <div className="p-3 bg-indigo-50 rounded-md">
+                                            <h6 className="text-indigo-700 font-medium mb-2 text-center">Princípios Fundamentais</h6>
+                                            <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                                                <li>Um sólido regular tem todas as faces iguais e os mesmos ângulos em cada vértice</li>
+                                                <li>O volume de qualquer prisma ou cilindro é o produto da área da base pela altura</li>
+                                                <li>O volume de qualquer pirâmide ou cone é um terço do produto da área da base pela altura</li>
+                                                <li>O Princípio de Cavalieri: sólidos com a mesma altura e mesma área de seção transversal em cada altura têm o mesmo volume</li>
+                                            </ul>
                                         </div>
                                     </div>
                                     
@@ -738,8 +489,7 @@ const ResolvedorVolumeSolidos: React.FC = () => {
                                             inércia e fluxo de fluidos na Física e Engenharia.
                                         </p>
                                     </div>
-                                </div>
-                            </div>
+                            </ConceitoMatematico>
                         </div>
                     )}
                 </div>

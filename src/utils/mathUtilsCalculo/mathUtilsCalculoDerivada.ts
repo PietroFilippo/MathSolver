@@ -5,8 +5,6 @@
 // Importa utilitários de mathUtilsCalculoGeral.ts
 import {
   Term,
-  parseExpression,
-  termToString,
   areTermsEqual,
   negateTerm
 } from './mathUtilsCalculoGeral';
@@ -112,7 +110,7 @@ export const calculateDerivative = (term: Term, variable: string): Term => {
       };
       
     case 'cos':
-      // Regra da derivada do cosseno: d/dx[cos(u)] = -sin(u) * du/dx
+      // Regra da derivada do cosseno: d/dx[cos(u)] = -sen(u) * du/dx
       const derivadaCosArg = calculateDerivative(term.argument!, variable);
       
       // Se a derivada do argumento for zero, a derivada total é zero
@@ -120,7 +118,7 @@ export const calculateDerivative = (term: Term, variable: string): Term => {
         return { type: 'constant', value: 0 };
       }
       
-      // Se a derivada do argumento for 1, simplifica a expressão para -sin(u)
+      // Se a derivada do argumento for 1, simplifica a expressão para -sen(u)
       if (derivadaCosArg.type === 'constant' && derivadaCosArg.value === 1) {
         return {
           type: 'product',
@@ -360,7 +358,7 @@ export const calculateDerivative = (term: Term, variable: string): Term => {
         };
       }
       
-      // Caso especial para sin(x) * cos(x)
+      // Caso especial para sen(x) * cos(x)
       if ((term.left!.type === 'sin' && term.right!.type === 'cos') || 
           (term.left!.type === 'cos' && term.right!.type === 'sin')) {
         
@@ -369,8 +367,8 @@ export const calculateDerivative = (term: Term, variable: string): Term => {
             term.left!.argument!.type === 'variable' && 
             term.left!.argument!.variable === variable) {
             
-          // Para d/dx[sin(x) * cos(x)], usar a identidade: 
-          // sin(x)' * cos(x) + sin(x) * cos(x)' = cos(x) * cos(x) + sin(x) * (-sin(x)) = cos²(x) - sin²(x)
+          // Para d/dx[sen(x) * cos(x)], usar a identidade: 
+          // sen(x)' * cos(x) + sen(x) * cos(x)' = cos(x) * cos(x) + sen(x) * (-sen(x)) = cos²(x) - sen²(x)
           return {
             type: 'difference',
             left: {
@@ -1035,8 +1033,8 @@ const getTermExponent = (termo: Term): number => {
   }
 };
 
-// Função para ordenar os termos por ordem decrescente de expoentes
-const sortTermsByExponent = (termos: Term[]): void => {
+// Função auxiliar para ordenar termos por expoente (para facilitar leitura de polinômios)
+export const sortTermsByExponent = (termos: Term[]): void => {
   termos.sort((a, b) => {
     const expoenteA = getTermExponent(a);
     const expoenteB = getTermExponent(b);
@@ -1255,353 +1253,8 @@ const simplifyQuotientProduct = (quociente: Term, produto: Term): Term | null =>
   return null;
 };
 
-// ===================================================
-// ========== FUNÇÕES PARA PASSOS DE DERIVADAS =======
-// ===================================================
-
-// Função para gerar passos de explicação para o cálculo da derivada
-// Fornece uma explicação detalhada do processo de derivação com passos intermediários
-export const generateDerivativeSteps = (
-  expressao: string, 
-  variavel: string, 
-  ordem: number
-): { resultado: string; passos: string[] } => {
-  try {
-    // Passos a serem retornados
-    const calculationSteps: string[] = [];
-    
-    // Parseia a expressão original
-    const termoParsed = parseExpression(expressao, variavel);
-    if (!termoParsed) {
-      throw new Error(`Não foi possível interpretar a expressão: ${expressao}`);
-    }
-    
-    calculationSteps.push(`Expressão original: ${termToString(termoParsed)}`);
-    
-    // Calcula a derivada da expressão
-    let resultado: Term = termoParsed;
-    for (let i = 1; i <= ordem; i++) {
-      calculationSteps.push(`Calculando a ${i}ª derivada:`);
-      
-      if (i > 1) {
-        calculationSteps.push(`Expressão atual: ${termToString(resultado)}`);
-      }
-      
-      // Adicionar explicações detalhadas baseadas no tipo da expressão
-      explainAppliedRules(resultado, variavel, calculationSteps);
-      
-      resultado = calculateDerivative(resultado, variavel);
-      
-      // Simplifica o resultado quando possível
-      resultado = simplifyExpression(resultado);
-      
-      calculationSteps.push(`Resultado da ${i}ª derivada: ${termToString(resultado)}`);
-      
-      // Se não for a última derivada e a ordem > 1, adicionar uma separação
-      if (i < ordem) {
-        calculationSteps.push(`----- Próximo passo para a ${i+1}ª derivada -----`);
-      }
-    }
-    
-    // Certifica-se de que o resultado final esteja ordenado corretamente
-    // Para polinômios, isto é especialmente importante para exibir os termos em ordem decrescente de potências
-    if (resultado.type === 'sum' || resultado.type === 'difference') {
-      // Converte para lista de termos, ordena e reconstrói a expressão
-      const termos = extractTermsFromSum(resultado);
-      sortTermsByExponent(termos);
-      
-      if (termos.length > 0) {
-        resultado = reconstructTermsSum(termos);
-      }
-    }
-    
-    return {
-      resultado: termToString(resultado),
-      passos: calculationSteps
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Função auxiliar para explicar as regras de derivação aplicadas a cada etapa
-// Cria explicações didáticas das regras utilizadas para o processo passo-a-passo
-const explainAppliedRules = (termo: Term, variavel: string, calculationSteps: string[]) => {
-  switch (termo.type) {
-    case 'constant':
-      calculationSteps.push(`Aplicando a regra da constante: d/d${variavel}(${termo.value}) = 0`);
-      calculationSteps.push(`A derivada de uma constante é sempre zero.`);
-      break;
-      
-    case 'variable':
-      if (termo.variable === variavel) {
-        calculationSteps.push(`Aplicando a regra da variável: d/d${variavel}(${variavel}) = 1`);
-        calculationSteps.push(`A derivada de uma variável em relação a ela mesma é 1.`);
-      } else {
-        calculationSteps.push(`Aplicando a regra da constante: d/d${variavel}(${termo.variable}) = 0`);
-        calculationSteps.push(`A variável ${termo.variable} é tratada como constante em relação a ${variavel}.`);
-      }
-      break;
-      
-    case 'power':
-      if (termo.argument && termo.argument.type === 'variable' && termo.argument.variable === variavel) {
-        const exponent = termo.exponent ?? 0;
-        calculationSteps.push(`Aplicando a regra da potência: d/d${variavel}(${variavel}^${exponent}) = ${exponent} × ${variavel}^${exponent-1}`);
-        calculationSteps.push(`Para derivar uma potência, multiplicamos pelo expoente e reduzimos o expoente em 1.`);
-      } else {
-        calculationSteps.push(`Para a expressão ${termToString(termo)}, precisamos aplicar a regra da cadeia.`);
-        calculationSteps.push(`d/d${variavel}[f(${variavel})^n] = n × f(${variavel})^(n-1) × f'(${variavel})`);
-      }
-      break;
-      
-    case 'sin':
-      calculationSteps.push(`Aplicando a regra do seno: d/d${variavel}[sin(u)] = cos(u) × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)}`);
-      break;
-      
-    case 'cos':
-      calculationSteps.push(`Aplicando a regra do cosseno: d/d${variavel}[cos(u)] = -sin(u) × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)}`);
-      break;
-      
-    case 'tan':
-      calculationSteps.push(`Aplicando a regra da tangente: d/d${variavel}[tan(u)] = sec²(u) × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)} e sec²(u) = 1/[cos²(u)]`);
-      break;
-      
-    case 'ln':
-      calculationSteps.push(`Aplicando a regra do logaritmo natural: d/d${variavel}[ln(u)] = (1/u) × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)}`);
-      break;
-      
-    case 'log':
-      calculationSteps.push(`Aplicando a regra do logaritmo base 10: d/d${variavel}[log(u)] = (1/(u×ln(10))) × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)}`);
-      break;
-      
-    case 'exp':
-      calculationSteps.push(`Aplicando a regra da exponencial: d/d${variavel}[e^u] = e^u × du/d${variavel}`);
-      calculationSteps.push(`Onde u = ${termToString(termo.argument!)}`);
-      break;
-      
-    case 'sum':
-      calculationSteps.push(`Aplicando a regra da soma: d/d${variavel}[f(${variavel}) + g(${variavel})] = f'(${variavel}) + g'(${variavel})`);
-      calculationSteps.push(`Onde f(${variavel}) = ${termToString(termo.left!)} e g(${variavel}) = ${termToString(termo.right!)}`);
-      calculationSteps.push(`Vamos calcular separadamente:`);
-      calculationSteps.push(`1) Para f(${variavel}) = ${termToString(termo.left!)}`);
-      explainAppliedRules(termo.left!, variavel, calculationSteps);
-      calculationSteps.push(`2) Para g(${variavel}) = ${termToString(termo.right!)}`);
-      explainAppliedRules(termo.right!, variavel, calculationSteps);
-      break;
-      
-    case 'difference':
-      calculationSteps.push(`Aplicando a regra da diferença: d/d${variavel}[f(${variavel}) - g(${variavel})] = f'(${variavel}) - g'(${variavel})`);
-      calculationSteps.push(`Onde f(${variavel}) = ${termToString(termo.left!)} e g(${variavel}) = ${termToString(termo.right!)}`);
-      calculationSteps.push(`Vamos calcular separadamente:`);
-      calculationSteps.push(`1) Para f(${variavel}) = ${termToString(termo.left!)}`);
-      explainAppliedRules(termo.left!, variavel, calculationSteps);
-      calculationSteps.push(`2) Para g(${variavel}) = ${termToString(termo.right!)}`);
-      explainAppliedRules(termo.right!, variavel, calculationSteps);
-      break;
-      
-    case 'product':
-      calculationSteps.push(`Aplicando a regra do produto: d/d${variavel}[f(${variavel}) × g(${variavel})] = f'(${variavel}) × g(${variavel}) + f(${variavel}) × g'(${variavel})`);
-      calculationSteps.push(`Onde f(${variavel}) = ${termToString(termo.left!)} e g(${variavel}) = ${termToString(termo.right!)}`);
-      calculationSteps.push(`Vamos calcular separadamente:`);
-      calculationSteps.push(`1) Para f(${variavel}) = ${termToString(termo.left!)}`);
-      explainAppliedRules(termo.left!, variavel, calculationSteps);
-      calculationSteps.push(`2) Para g(${variavel}) = ${termToString(termo.right!)}`);
-      explainAppliedRules(termo.right!, variavel, calculationSteps);
-      break;
-      
-    case 'quotient':
-      calculationSteps.push(`Aplicando a regra do quociente: d/d${variavel}[f(${variavel})/g(${variavel})] = [f'(${variavel}) × g(${variavel}) - f(${variavel}) × g'(${variavel})]/[g(${variavel})]²`);
-      calculationSteps.push(`Onde f(${variavel}) = ${termToString(termo.left!)} e g(${variavel}) = ${termToString(termo.right!)}`);
-      calculationSteps.push(`Vamos calcular separadamente:`);
-      calculationSteps.push(`1) Para f(${variavel}) = ${termToString(termo.left!)}`);
-      explainAppliedRules(termo.left!, variavel, calculationSteps);
-      calculationSteps.push(`2) Para g(${variavel}) = ${termToString(termo.right!)}`);
-      explainAppliedRules(termo.right!, variavel, calculationSteps);
-      break;
-  }
-};
-
-// ===================================================
-// ========== REGRAS DE DERIVAÇÃO BÁSICAS ============
-// ===================================================
-
-// Conjunto de regras de derivação em formato texto para referência didática
-export const derivativesMathematicalConcept = {
-  titulo: "Conceitos Fundamentais de Derivadas",
-  descricao: "Uma derivada representa a taxa de variação instantânea de uma função. Geometricamente, representa a inclinação da reta tangente à curva da função em um determinado ponto.",
-  categorias: [
-    {
-      nome: "Regras Básicas",
-      regras: [
-        {
-          nome: "Derivada de Constante",
-          formula: "d/dx(c) = 0",
-          explicacao: "A derivada de qualquer constante é sempre zero, pois constantes não variam quando x varia.",
-          exemplo: "d/dx(5) = 0",
-          corDestaque: "blue"
-        },
-        {
-          nome: "Derivada da Variável",
-          formula: "d/dx(x) = 1",
-          explicacao: "A derivada da variável em relação a ela mesma é sempre 1.",
-          exemplo: "d/dx(x) = 1",
-          corDestaque: "blue"
-        },
-        {
-          nome: "Derivada da Potência",
-          formula: "d/dx(x^n) = n·x^(n-1)",
-          explicacao: "Para derivar uma potência, multiplicamos pelo expoente e reduzimos o expoente em 1.",
-          exemplo: "d/dx(x³) = 3x²",
-          corDestaque: "blue"
-        },
-        {
-          nome: "Derivada da Multiplicação por Constante",
-          formula: "d/dx(c·f(x)) = c·f'(x)",
-          explicacao: "Constantes multiplicativas podem ser movidas para fora da derivada.",
-          exemplo: "d/dx(5x²) = 5·d/dx(x²) = 5·2x = 10x",
-          corDestaque: "blue"
-        }
-      ]
-    },
-    {
-      nome: "Operações Algébricas",
-      regras: [
-        {
-          nome: "Regra da Soma",
-          formula: "d/dx[f(x) + g(x)] = f'(x) + g'(x)",
-          explicacao: "A derivada de uma soma é igual à soma das derivadas.",
-          exemplo: "d/dx(x² + sin(x)) = d/dx(x²) + d/dx(sin(x)) = 2x + cos(x)",
-          corDestaque: "green"
-        },
-        {
-          nome: "Regra da Diferença",
-          formula: "d/dx[f(x) - g(x)] = f'(x) - g'(x)",
-          explicacao: "A derivada de uma diferença é igual à diferença das derivadas.",
-          exemplo: "d/dx(x³ - cos(x)) = d/dx(x³) - d/dx(cos(x)) = 3x² - (-sin(x)) = 3x² + sin(x)",
-          corDestaque: "green"
-        },
-        {
-          nome: "Regra do Produto",
-          formula: "d/dx[f(x)·g(x)] = f'(x)·g(x) + f(x)·g'(x)",
-          explicacao: "A derivada do produto é a derivada do primeiro multiplicada pelo segundo, mais o primeiro multiplicado pela derivada do segundo.",
-          exemplo: "d/dx(x·sin(x)) = d/dx(x)·sin(x) + x·d/dx(sin(x)) = 1·sin(x) + x·cos(x) = sin(x) + x·cos(x)",
-          corDestaque: "purple"
-        },
-        {
-          nome: "Regra do Quociente",
-          formula: "d/dx[f(x)/g(x)] = [f'(x)·g(x) - f(x)·g'(x)]/[g(x)]²",
-          explicacao: "A derivada do quociente segue esta fórmula. Observe que o denominador é elevado ao quadrado.",
-          exemplo: "d/dx(x²/cos(x)) = [d/dx(x²)·cos(x) - x²·d/dx(cos(x))]/[cos(x)]² = [2x·cos(x) - x²·(-sin(x))]/[cos(x)]² = [2x·cos(x) + x²·sin(x)]/[cos(x)]²",
-          corDestaque: "purple"
-        }
-      ]
-    },
-    {
-      nome: "Funções Compostas",
-      regras: [
-        {
-          nome: "Regra da Cadeia",
-          formula: "d/dx[f(g(x))] = f'(g(x))·g'(x)",
-          explicacao: "Para derivar uma função composta, derivamos a função externa em relação à função interna, e multiplicamos pela derivada da função interna.",
-          exemplo: "d/dx(sin(x²)) = cos(x²)·d/dx(x²) = cos(x²)·2x = 2x·cos(x²)",
-          corDestaque: "amber"
-        }
-      ]
-    },
-    {
-      nome: "Funções Trigonométricas",
-      regras: [
-        {
-          nome: "Derivada do Seno",
-          formula: "d/dx[sin(x)] = cos(x)",
-          explicacao: "A derivada do seno é o cosseno.",
-          exemplo: "d/dx(sin(2x)) = cos(2x)·d/dx(2x) = cos(2x)·2 = 2cos(2x)",
-          corDestaque: "cyan"
-        },
-        {
-          nome: "Derivada do Cosseno",
-          formula: "d/dx[cos(x)] = -sin(x)",
-          explicacao: "A derivada do cosseno é o negativo do seno.",
-          exemplo: "d/dx(cos(x³)) = -sin(x³)·d/dx(x³) = -sin(x³)·3x² = -3x²·sin(x³)",
-          corDestaque: "cyan"
-        },
-        {
-          nome: "Derivada da Tangente",
-          formula: "d/dx[tan(x)] = sec²(x) = 1/[cos²(x)]",
-          explicacao: "A derivada da tangente é a secante ao quadrado.",
-          exemplo: "d/dx(tan(x)) = sec²(x) = 1/cos²(x)",
-          corDestaque: "cyan"
-        }
-      ]
-    },
-    {
-      nome: "Funções Exponenciais e Logarítmicas",
-      regras: [
-        {
-          nome: "Derivada do Logaritmo Natural",
-          formula: "d/dx[ln(x)] = 1/x",
-          explicacao: "A derivada do logaritmo natural é o recíproco do argumento.",
-          exemplo: "d/dx(ln(x²)) = 1/(x²)·d/dx(x²) = 1/(x²)·2x = 2x/(x²) = 2/x",
-          corDestaque: "red"
-        },
-        {
-          nome: "Derivada do Logaritmo Base 10",
-          formula: "d/dx[log₁₀(x)] = 1/(x·ln(10))",
-          explicacao: "A derivada do logaritmo base 10 utiliza a mudança de base para o logaritmo natural.",
-          exemplo: "d/dx(log₁₀(x)) = 1/(x·ln(10))",
-          corDestaque: "red"
-        },
-        {
-          nome: "Derivada da Exponencial",
-          formula: "d/dx[e^x] = e^x",
-          explicacao: "A função exponencial é igual à sua própria derivada, uma propriedade única.",
-          exemplo: "d/dx(e^(2x)) = e^(2x)·d/dx(2x) = e^(2x)·2 = 2e^(2x)",
-          corDestaque: "red"
-        },
-        {
-          nome: "Derivada da Exponencial de Base a",
-          formula: "d/dx[a^x] = a^x·ln(a)",
-          explicacao: "A derivada da exponencial de base a multiplica pela função original e pelo logaritmo natural da base.",
-          exemplo: "d/dx(2^x) = 2^x·ln(2)",
-          corDestaque: "red"
-        }
-      ]
-    },
-    {
-      nome: "Aplicações e Interpretações",
-      regras: [
-        {
-          nome: "Interpretação Geométrica",
-          explicacao: "A derivada f'(a) representa a inclinação da reta tangente à curva y = f(x) no ponto (a, f(a)).",
-          corDestaque: "gray"
-        },
-        {
-          nome: "Interpretação Física",
-          explicacao: "Em movimento, se s(t) representa a posição, então s'(t) é a velocidade e s''(t) é a aceleração.",
-          corDestaque: "gray"
-        },
-        {
-          nome: "Taxa de Variação",
-          explicacao: "A derivada f'(x) representa a taxa de variação instantânea de f em relação a x.",
-          corDestaque: "gray"
-        },
-        {
-          nome: "Análise de Crescimento",
-          explicacao: "Se f'(x) > 0, a função é crescente. Se f'(x) < 0, a função é decrescente. Se f'(x) = 0, temos um ponto crítico (possível máximo, mínimo ou ponto de inflexão).",
-          corDestaque: "gray"
-        }
-      ]
-    }
-  ]
-};
-
 // Função auxiliar para extrair todos os termos de uma soma em uma lista plana
-const extractTermsFromSum = (termo: Term): Term[] => {
+export const extractTermsFromSum = (termo: Term): Term[] => {
   const resultado: Term[] = [];
   
   if (termo.type === 'sum') {
@@ -1637,8 +1290,8 @@ const extractTermsFromSum = (termo: Term): Term[] => {
   return resultado;
 };
 
-// Função auxiliar para reconstruir uma expressão de soma a partir de uma lista de termos
-const reconstructTermsSum = (termos: Term[]): Term => {
+// Função para reconstruir uma expressão de soma a partir de uma lista de termos
+export const reconstructTermsSum = (termos: Term[]): Term => {
   if (termos.length === 0) {
     return { type: 'constant', value: 0 }; // Lista vazia resulta em zero
   }

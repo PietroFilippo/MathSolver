@@ -1,189 +1,17 @@
-import React, { useState, ReactNode } from 'react';
-import { HiCalculator } from 'react-icons/hi';
-import { gcd } from '../../utils/mathUtils';
-import { simplifyFraction, FractionDisplay, getFractionSimplificationExamples } from '../../utils/mathUtilsFracoes';
+import React from 'react';
+import { HiCalculator, HiInformationCircle } from 'react-icons/hi';
+import { FractionDisplay, getFractionSimplificationExamples } from '../../utils/mathUtilsFracoes';
+import { useFractionSimplificationSolver } from '../../hooks/fracoes/useFractionSimplificacaoSolver';
+import StepByStepExplanation from '../../components/StepByStepExplanation';
+import ConceitoMatematico from '../../components/ConceitoMatematico';
 
 const ResolvedorSimplificacaoFracoes: React.FC = () => {
-  const [numerator, setNumerator] = useState<string>('');
-  const [denominator, setDenominator] = useState<string>('');
-  const [resultadoNum, setResultadoNum] = useState<number | null>(null);
-  const [resultadoDen, setResultadoDen] = useState<number | null>(null);
-  const [resultado, setResultado] = useState(false);
-  const [steps, setSteps] = useState<(string | ReactNode)[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [showExplanation, setShowExplanation] = useState<boolean>(false);
-
-  const handleSolve = () => {
-    // Resetar os valores anteriores e erros
-    setResultado(false);
-    setSteps([]);
-    setErrorMessage('');
-    setShowExplanation(false);
-    
-    const num = parseInt(numerator);
-    const den = parseInt(denominator);
-    
-    // Validação de inputs
-    if (isNaN(num) || isNaN(den)) {
-      setErrorMessage('Por favor, preencha todos os campos com valores numéricos.');
-      return;
-    }
-    
-    if (den === 0) {
-      setErrorMessage('O denominador não pode ser zero.');
-      return;
-    }
-    
-    // Simplificar a fração
-    const simplified = simplifyFraction(num, den);
-    const simplifiedNum = simplified.numerador;
-    const simplifiedDen = simplified.denominador;
-    
-    setResultadoNum(simplifiedNum);
-    setResultadoDen(simplifiedDen);
-    setResultado(true);
-    setShowExplanation(true);
-    
-    // Gerar os passos da explicação
-    const calculationSteps = [];
-    
-    calculationSteps.push(`Passo 1: Identificar a fração`);
-    calculationSteps.push(<FractionDisplay numerator={num} denominator={den} />);
-    
-    if (num === 0) {
-      calculationSteps.push(`Passo 2: Como o numerador é zero, a fração simplificada é 0`);
-      calculationSteps.push(`0/${den} = 0/1 = 0`);
-    } else if (num === simplifiedNum && den === simplifiedDen) {
-      calculationSteps.push(`Passo 2: A fração já está simplificada`);
-      calculationSteps.push(`${num}/${den} já está na sua forma irredutível.`);
-    } else {
-      calculationSteps.push(`Passo 2: Encontrar o MDC (Máximo Divisor Comum) de ${Math.abs(num)} e ${Math.abs(den)}`);
-      
-      const mdcValue = gcd(Math.abs(num), Math.abs(den));
-      calculationSteps.push(`MDC(${Math.abs(num)}, ${Math.abs(den)}) = ${mdcValue}`);
-      
-      calculationSteps.push(`Passo 3: Dividir o numerador e o denominador pelo MDC ${mdcValue}`);
-      calculationSteps.push(`Numerador: ${num} ÷ ${mdcValue} = ${simplifiedNum}`);
-      calculationSteps.push(`Denominador: ${den} ÷ ${mdcValue} = ${simplifiedDen}`);
-      
-      if (simplifiedDen < 0) {
-        // Se o denominador é negativo, multiplicamos tanto o numerador quanto o denominador por -1
-        const adjustedNum = -simplifiedNum;
-        const adjustedDen = -simplifiedDen;
-        
-        calculationSteps.push(`Passo 4: Como o denominador é negativo, multiplicamos numerador e denominador por -1`);
-        calculationSteps.push(`${simplifiedNum}/${simplifiedDen} = ${adjustedNum}/${adjustedDen}`);
-        
-        // Atualizamos os valores de resultado
-        setResultadoNum(adjustedNum);
-        setResultadoDen(adjustedDen);
-      }
-      
-      if (resultadoNum === 0) {
-        calculationSteps.push(`Resultado final: A fração simplificada é 0`);
-      } else {
-        calculationSteps.push(`Resultado final: A fração simplificada é `);
-        calculationSteps.push(<FractionDisplay 
-          numerator={simplifiedDen < 0 ? -simplifiedNum : simplifiedNum} 
-          denominator={simplifiedDen < 0 ? -simplifiedDen : simplifiedDen} 
-        />);
-      }
-    }
-    
-    setSteps(calculationSteps);
-  };
-
-  // Função para aplicar um exemplo
-  const applyExample = (example: { num: number, den: number }) => {
-    setNumerator(example.num.toString());
-    setDenominator(example.den.toString());
-  };
-
-  // Função para renderizar os passos de explicação com estilização aprimorada
-  const renderExplanationSteps = () => {
-    return (
-      <div className="space-y-4">
-        {steps.map((step, index) => {
-          // Verifica se é uma string ou um ReactNode
-          const isString = typeof step === 'string';
-          if (!isString) {
-            // Se for um ReactNode (por exemplo, um elemento de fração), renderiza diretamente
-            return (
-              <div key={index} className="p-3 bg-indigo-50 rounded-md ml-4 border-l-2 border-indigo-300">
-                <div className="text-indigo-700 font-medium">{step}</div>
-              </div>
-            );
-          }
-
-          // Para strings, verifica diferentes padrões
-          const stepStr = String(step);
-          const stepMatch = stepStr.match(/^(Passo \d+:)(.*)$/);
-          
-          // Verifica se é um cálculo de MDC
-          const mdcMatch = stepStr.startsWith('MDC(');
-          
-          // Verifica se é uma divisão para simplificação
-          const divisionMatch = stepStr.includes('÷') && (stepStr.startsWith('Numerador:') || stepStr.startsWith('Denominador:'));
-          
-          // Verifica se é manipulação de sinais 
-          const signAdjustmentMatch = stepStr.includes('multiplicamos numerador e denominador por -1');
-
-          // Verifica se é um resultado final
-          const finalResultMatch = stepStr.startsWith('Resultado final:');
-
-          if (stepMatch) {
-            // Se for um passo com número, extrai e destaca o número
-            const [_, stepNumber, stepContent] = stepMatch;
-            return (
-              <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
-                <div className="flex flex-col sm:flex-row">
-                  <span className="font-bold text-indigo-700 mr-2 mb-1 sm:mb-0">
-                    {stepNumber}
-                  </span>
-                  <p className="text-gray-800">{stepContent}</p>
-                </div>
-              </div>
-            );
-          } else if (mdcMatch) {
-            // Se for MDC, usa um estilo diferente
-            return (
-              <div key={index} className="p-3 bg-blue-50 rounded-md ml-4 border-l-2 border-blue-300">
-                <p className="text-blue-700 font-medium">{step}</p>
-              </div>
-            );
-          } else if (divisionMatch) {
-            // Se for divisão para simplificação, usa um estilo diferente
-            return (
-              <div key={index} className="p-3 bg-purple-50 rounded-md ml-4 border-l-2 border-purple-300">
-                <p className="text-purple-700 font-medium">{step}</p>
-              </div>
-            );
-          } else if (signAdjustmentMatch) {
-            // Se for ajuste de sinal, usa um estilo diferente
-            return (
-              <div key={index} className="p-3 bg-amber-50 rounded-md ml-4 border-l-2 border-amber-300">
-                <p className="text-amber-700 font-medium">{step}</p>
-              </div>
-            );
-          } else if (finalResultMatch) {
-            // Se for o resultado final, usa um estilo diferente
-            return (
-              <div key={index} className="p-3 bg-green-50 rounded-md ml-4 border-l-2 border-green-300">
-                <p className="text-green-700 font-medium">{step}</p>
-              </div>
-            );
-          } else {
-            // Conteúdo regular sem classificação específica
-            return (
-              <div key={index} className="p-3 bg-gray-50 rounded-md ml-4">
-                <p className="text-gray-800">{step}</p>
-              </div>
-            );
-          }
-        })}
-      </div>
-    );
-  };
+  const {
+    state,
+    dispatch,
+    handleSolve,
+    applyExample
+  } = useFractionSimplificationSolver();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -205,8 +33,8 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                     <div className="flex items-center">
                         <input
                             type="number"
-                            value={numerator}
-                            onChange={(e) => setNumerator(e.target.value)}
+                            value={state.numerator}
+                            onChange={(e) => dispatch({ type: 'SET_NUMERATOR', value: e.target.value })}
                             className="w-24 p-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Num"
                         />
@@ -215,8 +43,8 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                         </div>
                         <input
                             type="number"
-                            value={denominator}
-                            onChange={(e) => setDenominator(e.target.value)}
+                            value={state.denominator}
+                            onChange={(e) => dispatch({ type: 'SET_DENOMINATOR', value: e.target.value })}
                             className="w-24 p-2 border border-gray-300 rounded-r-md focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Den"
                         />
@@ -249,14 +77,14 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                 Simplificar
             </button>
 
-            {errorMessage && (
+            {state.errorMessage && (
                 <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
-                    {errorMessage}
+                    {state.errorMessage}
                 </div>
             )}
         </div>
       
-      {resultado && resultadoNum !== null && resultadoDen !== null && (
+      {state.resultado && state.resultadoNum !== null && state.resultadoDen !== null && (
         <div className="space-y-6">
           <div className="bg-green-50 border border-green-200 rounded-lg p-5">
             <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
@@ -264,25 +92,26 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
               <p className="text-xl mr-2">A fração na forma irredutível é: </p>
               <div className="mt-1 sm:mt-0">
                 <FractionDisplay
-                  numerator={resultadoNum} 
-                  denominator={resultadoDen} 
+                  numerator={state.resultadoNum} 
+                  denominator={state.resultadoDen} 
                   className="text-xl"
                 />
-                {resultadoNum % resultadoDen === 0 && (
-                  <span className="ml-3">= {resultadoNum / resultadoDen}</span>
+                {state.resultadoNum % state.resultadoDen === 0 && (
+                  <span className="ml-3">= {state.resultadoNum / state.resultadoDen}</span>
                 )}
               </div>
             </div>
             
             <button 
-                onClick={() => setShowExplanation(!showExplanation)}
+                onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
                 className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
             >
-                {showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+                <HiInformationCircle className="h-5 w-5 mr-1" />
+                {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
             </button>
           </div>
           
-          {showExplanation && (
+          {state.showExplanation && (
             <div className="bg-white shadow-md rounded-lg p-5">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800 flex items-center">
@@ -291,18 +120,13 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                 </h3>
               </div>
               
-              {renderExplanationSteps()}
+              <StepByStepExplanation steps={state.steps} stepType="linear" />
               
-              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
-                <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
-                  <h4 className="font-semibold text-blue-800 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Conceito Matemático
-                  </h4>
-                </div>
-                <div className="p-4">
+              <ConceitoMatematico
+                title="Conceito Matemático"
+                isOpen={state.showConceitoMatematico}
+                onToggle={() => dispatch({ type: 'TOGGLE_CONCEITO_MATEMATICO' })}
+              >
                   <div className="flex flex-col md:flex-row gap-4 mb-4">
                     <div className="flex-1">
                       <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Simplificação de Frações</h5>
@@ -413,6 +237,21 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                             <span className="font-medium">Ou pelo MDC:</span> MDC(75, 100) = 25, logo 75/100 = 3/4
                           </p>
                         </div>
+                        
+                        <div className="p-2 bg-amber-50 rounded-md">
+                          <p className="text-sm text-amber-700 font-medium mb-1">
+                            Simplificação de -24/36
+                          </p>
+                          <ol className="text-xs list-decimal pl-4 mt-1 text-gray-700">
+                            <li>Primeiro, ignoramos o sinal e calculamos MDC(24, 36) = 12</li>
+                            <li>Dividimos ambos por 12: -24 ÷ 12 = -2 e 36 ÷ 12 = 3</li>
+                            <li>Mantemos o sinal no numerador: -2/3</li>
+                            <li>Verificamos: o sinal de uma fração deve ficar no numerador ou como prefixo da fração</li>
+                          </ol>
+                          <p className="text-xs mt-2 text-amber-700">
+                            <span className="font-medium">Observação:</span> Também poderíamos escrever como -2/3 = (-2)/3 = 2/(-3)
+                          </p>
+                        </div>
                       </div>
                     </div>
 
@@ -463,8 +302,7 @@ const ResolvedorSimplificacaoFracoes: React.FC = () => {
                       multiplicação e divisão de frações, bem como na resolução de equações.
                     </p>
                   </div>
-                </div>
-              </div>
+              </ConceitoMatematico>
             </div>
           )}
         </div>
