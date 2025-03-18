@@ -56,7 +56,10 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
               </ul>
             </nav>
             
-            <ThemeSwitcher />
+            <div className="flex items-center gap-2 p-1 rounded-lg bg-primary-700/30 dark:bg-gray-700/50">
+              <span className="text-sm text-white/90 dark:text-gray-300 hidden sm:inline-block">Tema</span>
+              <ThemeSwitcher />
+            </div>
           </div>
         </div>
       </div>
