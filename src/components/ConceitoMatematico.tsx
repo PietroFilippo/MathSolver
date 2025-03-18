@@ -1,50 +1,53 @@
-import React, { ReactNode } from 'react';
-import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
+import React, { useState } from 'react';
+import { HiChevronDown, HiChevronUp, HiInformationCircle } from 'react-icons/hi';
 
 interface ConceitoMatematicoProps {
-  title: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: ReactNode;
+  title?: string;
+  children: React.ReactNode;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
 const ConceitoMatematico: React.FC<ConceitoMatematicoProps> = ({
-  title,
-  isOpen,
-  onToggle,
-  children
+  title = "Conceito Matemático",
+  children,
+  isOpen: externalIsOpen,
+  onToggle
 }) => {
+  // Estado local para controlar a visibilidade do conteúdo
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  // Determina se o componente é controlado externamente ou internamente
+  const isControlled = externalIsOpen !== undefined && onToggle !== undefined;
+  const isOpen = isControlled ? externalIsOpen : internalIsOpen;
+  
+  const handleToggle = () => {
+    if (isControlled) {
+      onToggle!();
+    } else {
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
+
   return (
-    <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100 overflow-hidden">
-      <div className="px-4 py-3 bg-blue-100 border-b border-blue-200">
-        <div className="flex justify-between items-center">
-          <h4 className="font-semibold text-blue-800 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {title}
-          </h4>
-          <button 
-            onClick={onToggle}
-            className="text-blue-700 hover:text-blue-900 flex items-center text-sm font-medium"
-          >
-            {isOpen ? (
-              <>
-                <HiChevronUp className="h-5 w-5 mr-1" />
-                Ocultar
-              </>
-            ) : (
-              <>
-                <HiChevronDown className="h-5 w-5 mr-1" />
-                Mostrar
-              </>
-            )}
-          </button>
+    <div className="mt-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between p-4 text-left bg-theme-container dark:bg-gray-800"
+        onClick={handleToggle}
+      >
+        <div className="flex items-center">
+          <HiInformationCircle className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mr-2" />
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">{title}</h3>
         </div>
-      </div>
+        {isOpen ? (
+          <HiChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+        ) : (
+          <HiChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+        )}
+      </button>
       
       {isOpen && (
-        <div className="p-4">
+        <div className="p-4 bg-theme-container dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
           {children}
         </div>
       )}

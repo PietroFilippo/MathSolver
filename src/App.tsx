@@ -3,43 +3,55 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ResolvedorPage from './pages/ResolvedorPage';
-import SobrePage from './pages/SobrePage';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [scrollToSobre, setScrollToSobre] = useState(false);
 
   const navigateToSolver = (category?: string) => {
     if (category) {
       setSelectedCategory(category);
     }
     setCurrentPage('resolvedor');
+    setScrollToSobre(false);
+  };
+
+  const navigateToPage = (page: string) => {
+    if (page === 'sobre') {
+      setCurrentPage('home');
+      setScrollToSobre(true);
+    } else {
+      setCurrentPage(page);
+      setScrollToSobre(false);
+    }
   };
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onSelectSolver={navigateToSolver} />;
+        return <HomePage onSelectSolver={navigateToSolver} scrollToSobre={scrollToSobre} />;
       case 'resolvedor':
         return <ResolvedorPage initialCategory={selectedCategory} />;
-      case 'sobre':
-        return <SobrePage />;
       default:
-        return <HomePage onSelectSolver={navigateToSolver} />;
+        return <HomePage onSelectSolver={navigateToSolver} scrollToSobre={scrollToSobre} />;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header 
-        currentPage={currentPage}
-        onNavigate={setCurrentPage}
-      />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        {renderPage()}
-      </main>
-      <Footer />
-    </div>
+    <ThemeProvider>
+      <div className="min-h-screen flex flex-col bg-theme-primary text-gray-900 dark:text-gray-100">
+        <Header 
+          currentPage={currentPage}
+          onNavigate={navigateToPage}
+        />
+        <main className="flex-grow container mx-auto px-4 py-8">
+          {renderPage()}
+        </main>
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 }
 

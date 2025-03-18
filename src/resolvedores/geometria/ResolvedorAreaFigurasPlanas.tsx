@@ -16,13 +16,13 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
 
   // Função para renderizar os campos apropriados com base na figura selecionada
   const renderFields = () => {
-    const inputClassName = "w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500";
+    const inputClassName = "w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200";
     
     switch (state.figura) {
       case 'quadrado':
         return (
           <div className="mb-4">
-            <label htmlFor="lado" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="lado" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Lado
             </label>
             <input
@@ -40,7 +40,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
         return (
           <>
             <div className="mb-4">
-              <label htmlFor="comprimento" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="comprimento" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Comprimento
               </label>
               <input
@@ -54,7 +54,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="largura" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="largura" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Largura
               </label>
               <input
@@ -73,7 +73,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
         return (
           <>
             <div className="mb-4">
-              <label htmlFor="base" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="base" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Base
               </label>
               <input
@@ -86,7 +86,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="altura" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="altura" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Altura
               </label>
               <input
@@ -103,7 +103,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
       case 'circulo':
         return (
           <div className="mb-4">
-            <label htmlFor="raio" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="raio" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Raio
             </label>
             <input
@@ -120,7 +120,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
         return (
           <>
             <div className="mb-4">
-              <label htmlFor="baseMaior" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="baseMaior" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Base Maior
               </label>
               <input
@@ -133,7 +133,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="baseMenor" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="baseMenor" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Base Menor
               </label>
               <input
@@ -146,7 +146,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="altura" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="altura" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Altura
               </label>
               <input
@@ -164,7 +164,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
         return (
           <>
             <div className="mb-4">
-              <label htmlFor="diagonalMaior" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="diagonalMaior" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Diagonal Maior
               </label>
               <input
@@ -177,7 +177,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="diagonalMenor" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="diagonalMenor" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Diagonal Menor
               </label>
               <input
@@ -194,7 +194,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
       case 'hexagono':
         return (
           <div className="mb-4">
-            <label htmlFor="lado" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="lado" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Lado
             </label>
             <input
@@ -215,24 +215,24 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
-        <HiCalculator className="h-6 w-6 text-indigo-600 mr-2" />
-        <h2 className="text-2xl font-bold">Calculadora de Áreas de Figuras Planas</h2>
+        <HiCalculator className="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" />
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Calculadora de Áreas de Figuras Planas</h2>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
-        <p className="text-gray-700 mb-6">
+      <div className="resolver-container p-6 mb-8">
+        <p className="text-gray-700 dark:text-gray-300 mb-6">
           Essa calculadora permite calcular a área de diferentes figuras planas geométricas.
           Selecione a figura desejada e insira os dados necessários. A calculadora calculará a área da figura.
         </p>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Selecione a figura
           </label>
           <select
             value={state.figura}
             onChange={(e) => dispatch({ type: 'SET_FIGURA', value: e.target.value as FiguraPlana })}
-            className="w-full border border-gray-300 rounded-md px-3 py-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
           >
             <option value="quadrado">Quadrado</option>
             <option value="retangulo">Retângulo</option>
@@ -246,7 +246,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
 
         {/* Exemplos */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Exemplos
           </label>
           <div className="flex flex-wrap gap-2 mb-4">
@@ -254,7 +254,7 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               <button
                 key={index}
                 onClick={() => applyExample(exemplo)}
-                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-full transition-colors"
+                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
               >
                 {exemplo.description}
               </button>
@@ -268,13 +268,13 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
 
         <button
           onClick={handleSolve}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300"
+          className="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300"
         >
           Calcular Área
         </button>
 
         {state.errorMessage && (
-          <div className="mt-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md">
+          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 rounded-md">
             {state.errorMessage}
           </div>
         )}
@@ -282,15 +282,15 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
 
       {state.result !== null && (
         <div className="space-y-6">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-5">
-            <h3 className="text-lg font-medium text-green-800 mb-2">Resultado</h3>
-            <p className="text-xl">
+          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
+            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">Resultado</h3>
+            <p className="text-xl text-gray-800 dark:text-gray-200">
               A área da figura é: <span className="font-bold">{state.result}</span> unidades quadradas
             </p>
             
             <button 
               onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
-              className="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
+              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
             >
               <HiInformationCircle className="h-5 w-5 mr-1" />
               {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
@@ -298,11 +298,11 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
           </div>
 
           {state.showExplanation && (
-            <div className="bg-white shadow-md rounded-lg p-5">
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800 flex items-center">
-                  <HiCalculator className="h-6 w-6 mr-2 text-indigo-600" />
-                  Explicação Detalhada
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
+                  <HiCalculator className="h-6 w-6 mr-2 text-indigo-600 dark:text-indigo-400" />
+                  Solução passo a passo
                 </h3>
               </div>
 
@@ -315,47 +315,47 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
               >
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Área de Figuras Planas</h5>
+                    <h5 className="font-medium text-gray-800 dark:text-gray-200 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Área de Figuras Planas</h5>
                     <div className="space-y-3">
-                      <p className="text-gray-700">
+                      <p className="text-gray-700 dark:text-gray-300">
                         A área de uma figura plana é a medida da região do plano ocupada pela figura, 
                         expressa em unidades quadradas, como centímetros quadrados (cm²) ou metros quadrados (m²).
                       </p>
-                      <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
-                        <h6 className="text-indigo-700 font-medium mb-2">Fórmulas de Área</h6>
-                        <div className="space-y-2 text-sm text-gray-700">
+                      <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm">
+                        <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-2">Fórmulas de Área</h6>
+                        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                           {state.figura === 'quadrado' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Quadrado:</span> A = l², onde l é o comprimento do lado
                             </div>
                           )}
                           {state.figura === 'retangulo' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Retângulo:</span> A = c × l, onde c é o comprimento e l é a largura
                             </div>
                           )}
                           {state.figura === 'triangulo' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Triângulo:</span> A = (b × h) ÷ 2, onde b é a base e h é a altura
                             </div>
                           )}
                           {state.figura === 'circulo' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Círculo:</span> A = πr², onde r é o raio e π ≈ 3,14159...
                             </div>
                           )}
                           {state.figura === 'trapezio' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Trapézio:</span> A = [(B + b) × h] ÷ 2, onde B é a base maior, b é a base menor e h é a altura
                             </div>
                           )}
                           {state.figura === 'losango' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Losango:</span> A = (D × d) ÷ 2, onde D é a diagonal maior e d é a diagonal menor
                             </div>
                           )}
                           {state.figura === 'hexagono' && (
-                            <div className="p-2 border-b border-gray-50">
+                            <div className="p-2 border-b border-gray-50 dark:border-gray-600">
                               <span className="font-medium">Hexágono Regular:</span> A = (3 × √3 × l²) ÷ 2, onde l é o lado
                             </div>
                           )}
@@ -365,14 +365,14 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                   </div>
                   
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 mb-2 border-b border-gray-200 pb-1">Características da Figura</h5>
-                    <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm space-y-4">
+                    <h5 className="font-medium text-gray-800 dark:text-gray-200 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Características da Figura</h5>
+                    <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm space-y-4">
                       <div className="space-y-2">
                         {state.figura === 'quadrado' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Quadrado</h6>
-                            <p className="text-sm text-gray-700">Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°).</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Quadrado</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um quadrado é um polígono regular com quatro lados iguais e quatro ângulos retos (90°).</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>Todos os lados têm o mesmo comprimento</li>
                               <li>Todos os ângulos internos medem 90°</li>
                               <li>As diagonais são iguais, perpendiculares entre si e bissetoras uma da outra</li>
@@ -383,9 +383,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'retangulo' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Retângulo</h6>
-                            <p className="text-sm text-gray-700">Um retângulo é um quadrilátero com quatro ângulos retos.</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Retângulo</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um retângulo é um quadrilátero com quatro ângulos retos.</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>Lados opostos são paralelos e iguais</li>
                               <li>Todos os ângulos internos medem 90°</li>
                               <li>As diagonais são iguais e bissetoras uma da outra</li>
@@ -396,9 +396,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'triangulo' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Triângulo</h6>
-                            <p className="text-sm text-gray-700">Um triângulo é um polígono com três lados e três ângulos.</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Triângulo</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um triângulo é um polígono com três lados e três ângulos.</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>A soma dos ângulos internos é sempre 180°</li>
                               <li>A altura é a distância perpendicular de um vértice ao lado oposto</li>
                               <li>Pode ser classificado quanto aos lados (equilátero, isósceles, escaleno) ou ângulos (acutângulo, retângulo, obtusângulo)</li>
@@ -409,9 +409,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'circulo' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Círculo</h6>
-                            <p className="text-sm text-gray-700">Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro.</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Círculo</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um círculo é uma figura plana onde todos os pontos estão a uma mesma distância do centro.</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>O raio é a distância do centro a qualquer ponto da circunferência</li>
                               <li>O diâmetro é o dobro do raio e passa pelo centro do círculo</li>
                               <li>A circunferência é o contorno do círculo</li>
@@ -422,9 +422,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'trapezio' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Trapézio</h6>
-                            <p className="text-sm text-gray-700">Um trapézio é um quadrilátero com dois lados paralelos (bases).</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Trapézio</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um trapézio é um quadrilátero com dois lados paralelos (bases).</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>As bases são os lados paralelos (uma base maior e uma base menor)</li>
                               <li>A altura é a distância perpendicular entre as bases</li>
                               <li>Um trapézio isósceles tem os lados não-paralelos iguais</li>
@@ -435,9 +435,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'losango' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Losango</h6>
-                            <p className="text-sm text-gray-700">Um losango é um quadrilátero com quatro lados iguais.</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Losango</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um losango é um quadrilátero com quatro lados iguais.</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>Todos os lados têm o mesmo comprimento</li>
                               <li>Lados opostos são paralelos</li>
                               <li>As diagonais são perpendiculares entre si e bissetoras uma da outra</li>
@@ -448,9 +448,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                         )}
                         {state.figura === 'hexagono' && (
                           <>
-                            <h6 className="text-indigo-700 font-medium">Hexágono Regular</h6>
-                            <p className="text-sm text-gray-700">Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais.</p>
-                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600">
+                            <h6 className="text-indigo-700 dark:text-indigo-300 font-medium">Hexágono Regular</h6>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">Um hexágono regular é um polígono de seis lados iguais e seis ângulos iguais.</p>
+                            <ul className="text-xs space-y-1 list-disc pl-4 text-gray-600 dark:text-gray-300">
                               <li>Todos os lados têm o mesmo comprimento</li>
                               <li>Todos os ângulos internos medem 120°</li>
                               <li>A soma dos ângulos internos é 720° (6 × 120°)</li>
@@ -467,9 +467,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                 
                 {/* Princípios Fundamentais - Now centered below both columns */}
                 <div className="max-w-3xl mx-auto mt-6 mb-4">
-                  <div className="p-3 bg-indigo-50 rounded-md">
-                    <h6 className="text-indigo-700 font-medium mb-2 text-center">Princípios Fundamentais</h6>
-                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                  <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md">
+                    <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-2 text-center">Princípios Fundamentais</h6>
+                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700 dark:text-gray-300">
                       <li>A área é uma grandeza bidimensional e deve ser expressa em unidades quadradas</li>
                       <li>Figuras com o mesmo perímetro podem ter áreas diferentes</li>
                       <li>Figuras semelhantes têm suas áreas proporcionais ao quadrado da razão de semelhança</li>
@@ -479,11 +479,11 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                 </div>
                 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white p-3 rounded-md border border-gray-100 shadow-sm">
-                    <h5 className="font-medium text-gray-800 mb-2">Aplicações Práticas</h5>
+                  <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm">
+                    <h5 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Aplicações Práticas</h5>
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-700">O cálculo de áreas é essencial em diversos contextos:</p>
-                      <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                      <p className="text-sm text-gray-700 dark:text-gray-300">O cálculo de áreas é essencial em diversos contextos:</p>
+                      <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700 dark:text-gray-300">
                         <li><span className="font-medium">Arquitetura e Construção:</span> Cálculo de materiais como pisos, pinturas, etc.</li>
                         <li><span className="font-medium">Agrimensura:</span> Medição de terrenos e propriedades</li>
                         <li><span className="font-medium">Design:</span> Desenvolvimento de layouts e estimativas de materiais</li>
@@ -494,9 +494,9 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-yellow-50 p-3 rounded-md border-l-4 border-yellow-400">
-                    <h5 className="font-medium text-yellow-800 mb-2">Dicas de Resolução</h5>
-                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700">
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-md border-l-4 border-yellow-400 dark:border-yellow-600">
+                    <h5 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">Dicas de Resolução</h5>
+                    <ul className="text-sm space-y-1 list-disc pl-4 text-gray-700 dark:text-gray-300">
                       <li>Sempre verifique se todas as medidas estão na mesma unidade</li>
                       <li>Desenhe a figura e identifique todas as medidas conhecidas</li>
                       <li>Para figuras complexas, divida-as em figuras mais simples e some as áreas</li>
@@ -507,14 +507,14 @@ const ResolvedorAreaFigurasPlanas: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="mt-4 p-3 bg-indigo-50 rounded-md border border-indigo-100">
-                  <h5 className="font-medium text-indigo-800 mb-1 flex items-center">
+                <div className="mt-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md border border-indigo-100 dark:border-indigo-800">
+                  <h5 className="font-medium text-indigo-800 dark:text-indigo-300 mb-1 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                     Relação com Outros Conceitos
                   </h5>
-                  <p className="text-sm text-indigo-700">
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">
                     O cálculo de áreas está relacionado com diversos conceitos matemáticos, incluindo geometria 
                     analítica, trigonometria, cálculo integral e álgebra. No cálculo avançado, a integração pode 
                     ser usada para determinar áreas de regiões delimitadas por curvas. Além disso, o conceito de 

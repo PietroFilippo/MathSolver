@@ -53,7 +53,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     'estatistica': false,
     'calculo': false
   });
-  const [filterMode, setFilterMode] = useState<'subject' | 'level'>('subject');
+  const [filterMode, setFilterMode] = useState<'subject' | 'level' | 'search'>('subject');
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Array<{id: string; name: string; category: string}>>([]);
@@ -86,7 +86,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     const normalizedSearchTerm = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const results: Array<{id: string; name: string; category: string}> = [];
 
-    Object.entries(solvers).forEach(([_, categoryData]) => {
+    Object.entries(solvers).forEach(([_categoryId, categoryData]) => {
       categoryData.solvers.forEach(solver => {
         const normalizedSolverName = solver.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         if (normalizedSolverName.includes(normalizedSearchTerm)) {
@@ -122,11 +122,12 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     }
   };
 
+  // Renderiza o solucionador selecionado
   const renderSolver = () => {
     if (!selectedSolver) return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+      <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
         <HiLightBulb className="h-16 w-16 mb-4 text-yellow-400" />
-        <h2 className="text-2xl font-bold mb-2">Selecione um solucionador</h2>
+        <h2 className="text-2xl font-bold mb-2 text-gray-700 dark:text-gray-200">Selecione um solucionador</h2>
         <p className="text-center max-w-md">
           Escolha um solucionador na barra lateral para começar a resolver problemas matemáticos passo a passo.
         </p>
@@ -181,202 +182,216 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
       case 'derivatives':
         return <ResolvedorDerivadas />;
       default:
-        return <div>Em breve.</div>;
+        return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }
   };
 
-  // Função auxiliar para verificar se o resolvedor pertence ao nível selecionado
-  const isSolverInLevel = (solverId: string, level: string) => {
-    return educationalLevels[level as keyof typeof educationalLevels].includes(solverId);
+  // Fix para a função isSolverInLevel para lidar com o tipo de verificação corretamente
+  const isSolverInLevel = (solverId: string, level: string): boolean => {
+    if (level in educationalLevels) {
+      return educationalLevels[level as keyof typeof educationalLevels].includes(solverId);
+    }
+    return false;
   };
 
   const renderSearchResults = () => {
+    if (searchTerm.trim() === '') {
+      return (
+        <div className="mt-4 px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+          Digite termos para buscar resolvedores...
+        </div>
+      );
+    }
+
     if (searchResults.length === 0) {
       return (
-        <div className="text-gray-500 p-3 italic text-center">
-          Nenhum solucionador encontrado para "{searchTerm}"
+        <div className="mt-4 px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+          Nenhum resultado encontrado para "{searchTerm}"
         </div>
       );
     }
 
     return (
-      <ul className="mt-2 space-y-1 pl-2">
-        {searchResults.map(result => (
-          <li key={result.id}>
-            <button 
-              className={`w-full text-left py-2 px-3 rounded-md ${
-                selectedSolver === result.id ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'
-              }`}
-              onClick={() => {
-                setSelectedSolver(result.id);
-                setSearchTerm(''); // Limpar a busca após a seleção
-              }}
-            >
-              <div>
-                {result.name}
-              </div>
-              <div className="text-xs text-gray-500">
-                {result.category}
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-2">
+        <h3 className="font-medium text-gray-700 dark:text-gray-300 px-4 py-2">Resultados da busca:</h3>
+        <ul className="mt-2 space-y-1 pl-2">
+          {searchResults.map(result => (
+            <li key={result.id}>
+              <button 
+                className={`w-full text-left py-2 px-3 rounded-md ${
+                  selectedSolver === result.id 
+                    ? 'bg-primary-100 dark:bg-indigo-700 text-primary-700 dark:text-white font-medium shadow-sm' 
+                    : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                }`}
+                onClick={() => {
+                  setSelectedSolver(result.id);
+                  setSearchTerm(''); // Limpar a busca após a seleção
+                }}
+              >
+                <div className="text-gray-800 dark:text-gray-200">
+                  {result.name}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {result.category}
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   };
 
   const renderBySubject = () => (
-    <>
-      {Object.entries(solvers).map(([category, categoryData]) => {
-        // Pula categorias vazias
-        if (categoryData.solvers.length === 0) return null;
-        
-        return (
-          <div key={category} className="mb-4">
-            <button 
-              className="w-full flex justify-between items-center py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-md font-medium"
-              onClick={() => toggleCategory(category)}
-            >
-              <div className="flex items-center">
-                <span className="mr-2">{getIconComponent(categoryData.icon)}</span>
-                <span>{categoryData.name}</span>
-              </div>
-              {expandedCategories[category] ? <HiChevronUp size={18} /> : <HiChevronDown size={18} />}
-            </button>
-            
-            {expandedCategories[category] && (
-              <ul className="mt-2 space-y-1 pl-2">
-                {categoryData.solvers.map(solver => (
-                  <li key={solver.id}>
-                    <button 
-                      className={`w-full text-left py-2 px-3 rounded-md ${
-                        selectedSolver === solver.id ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'
-                      }`}
-                      onClick={() => setSelectedSolver(solver.id)}
-                    >
-                      {solver.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+    <div>
+      {Object.entries(solvers).map(([categoryId, category]) => (
+        <div key={categoryId} className="mb-2">
+          <button
+            className={`w-full flex items-center justify-between py-2 px-3 rounded-md text-left font-medium resolver-selector-button text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700`}
+            onClick={() => toggleCategory(categoryId)}
+          >
+            <span className="flex items-center">
+              {getIconComponent(category.icon)}
+              <span className="ml-2">{category.name}</span>
+            </span>
+            {expandedCategories[categoryId] ? (
+              <HiChevronUp className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            ) : (
+              <HiChevronDown className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             )}
-          </div>
-        );
-      })}
-    </>
+          </button>
+          
+          {expandedCategories[categoryId] && (
+            <ul className="mt-1 space-y-1 pl-2">
+              {category.solvers.map(solver => (
+                <li key={solver.id}>
+                  <button
+                    className={`w-full text-left py-2 px-3 rounded-md ${
+                      selectedSolver === solver.id 
+                        ? 'bg-primary-100 dark:bg-indigo-700 text-primary-700 dark:text-white font-medium shadow-sm' 
+                        : 'resolver-selector-button text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                    }`}
+                    onClick={() => setSelectedSolver(solver.id)}
+                  >
+                    {solver.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
   );
 
+  // Fix para a função renderByLevel para lidar com o tipo de verificação corretamente
   const renderByLevel = () => (
-    <>
-      {Object.entries(educationalLevels).map(([level, _]) => {
-        const levelName = level === 'elementary' ? 'Ensino Fundamental' : 'Ensino Médio';
-        const isExpanded = selectedLevel === level;
-        
-        return (
-          <div key={level} className="mb-4">
-            <button 
-              className={`w-full flex justify-between items-center py-2 px-3 rounded-md font-medium ${
-                isExpanded ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 hover:bg-gray-200'
-              }`}
-              onClick={() => setSelectedLevel(isExpanded ? null : level)}
-            >
-              <div className="flex items-center">
-                <HiAcademicCap className="h-5 w-5 mr-2" />
-                <span>{levelName}</span>
-              </div>
-              {isExpanded ? <HiChevronUp size={18} /> : <HiChevronDown size={18} />}
-            </button>
-            
-            {isExpanded && (
-              <ul className="mt-2 space-y-1 pl-2">
-                {Object.entries(solvers).map(([category, categoryData]) => {
-                  // Filtra resolvedores pelo nível educacional
-                  const levelSolvers = categoryData.solvers.filter(
-                    solver => isSolverInLevel(solver.id, level)
-                  );
-                  
-                  if (levelSolvers.length === 0) return null;
-                  
-                  return (
-                    <li key={category} className="mt-2">
-                      <div className="font-medium text-sm text-gray-500 ml-2 mb-1 flex items-center">
-                        {getIconComponent(categoryData.icon)}
-                        <span className="ml-1">{categoryData.name}</span>
-                      </div>
-                      <ul>
-                        {levelSolvers.map(solver => (
-                          <li key={solver.id}>
-                            <button 
-                              className={`w-full text-left py-2 px-3 rounded-md ${
-                                selectedSolver === solver.id ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'
-                              }`}
-                              onClick={() => setSelectedSolver(solver.id)}
-                            >
-                              {solver.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  );
-                })}
-              </ul>
+    <div>
+      {Object.entries(educationalLevels).map(([levelId, _levelData]) => (
+        <div key={levelId} className="mb-2">
+          <button
+            className={`w-full flex items-center justify-between py-2 px-3 rounded-md text-left font-medium resolver-selector-button text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700`}
+            onClick={() => setSelectedLevel(selectedLevel === levelId ? null : levelId)}
+          >
+            <span className="flex items-center">
+              <HiAcademicCap className="h-5 w-5" />
+              <span className="ml-2">{
+                levelId === 'elementary' ? 'Ensino Fundamental' : 
+                levelId === 'high-school' ? 'Ensino Médio' : 
+                levelId === 'college' ? 'Ensino Superior' : 
+                'Outro'
+              }</span>
+            </span>
+            {selectedLevel === levelId ? (
+              <HiChevronUp className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            ) : (
+              <HiChevronDown className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             )}
-          </div>
-        );
-      })}
-    </>
+          </button>
+          
+          {selectedLevel === levelId && (
+            <ul className="mt-1 space-y-1 pl-2">
+              {Object.entries(solvers).flatMap(([_categoryId, category]) => 
+                category.solvers.filter(solver => 
+                  isSolverInLevel(solver.id, levelId)
+                )
+              ).map(solver => (
+                <li key={solver.id}>
+                  <button
+                    className={`w-full text-left py-2 px-3 rounded-md ${
+                      selectedSolver === solver.id 
+                        ? 'bg-primary-100 dark:bg-indigo-700 text-primary-700 dark:text-white font-medium shadow-sm' 
+                        : 'resolver-selector-button text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                    }`}
+                    onClick={() => setSelectedSolver(solver.id)}
+                  >
+                    {solver.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
   );
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="md:w-1/4 bg-white rounded-lg shadow-md p-4 h-fit">
-        <h2 className="text-xl font-bold mb-4">Solucionadores Matemáticos</h2>
-
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <HiSearch className="h-5 w-5 text-gray-400" />
+    <div className="flex flex-col md:flex-row h-full">
+      <div className="w-full md:w-80 md:min-h-[70vh] bg-theme-primary p-4 md:border-r border-gray-200 dark:border-gray-700">
+        <div className="flex items-center mb-4">
+          <div className="flex bg-theme-secondary dark:bg-gray-800 rounded-lg p-1">
+            <button
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                filterMode === 'subject' 
+                  ? 'bg-theme-container dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+              onClick={() => setFilterMode('subject')}
+              data-filter="subject"
+            >
+              Por Assunto
+            </button>
+            <button
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                filterMode === 'level' 
+                  ? 'bg-theme-container dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+              onClick={() => setFilterMode('level')}
+              data-filter="level"
+            >
+              Por Nível
+            </button>
           </div>
+        </div>
+        
+        <div className="relative mb-4">
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Buscar solucionador..."
+            placeholder="Buscar resolvedor..."
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-theme-container dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (e.target.value.trim() !== '' && filterMode !== 'search') {
+                setFilterMode('search');
+              } else if (e.target.value.trim() === '' && filterMode === 'search') {
+                setFilterMode('subject');
+              }
+            }}
           />
+          <HiSearch className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
         </div>
-
-        {searchTerm ? (
-          renderSearchResults()
-        ) : (
-          <>
-            <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
-              <button
-                className={`flex-1 py-2 text-sm font-medium rounded-md ${
-                  filterMode === 'subject' ? 'bg-white shadow-sm' : 'text-gray-600 hover:bg-gray-200'
-                }`}
-                onClick={() => setFilterMode('subject')}
-                data-filter="subject"
-              >
-                Por Assunto
-              </button>
-              <button
-                className={`flex-1 py-2 text-sm font-medium rounded-md ${
-                  filterMode === 'level' ? 'bg-white shadow-sm' : 'text-gray-600 hover:bg-gray-200'
-                }`}
-                onClick={() => setFilterMode('level')}
-                data-filter="level"
-              >
-                Por Nível
-              </button>
-            </div>
-            
-            {filterMode === 'subject' ? renderBySubject() : renderByLevel()}
-          </>
-        )}
+        
+        <div className="mt-4">
+          {filterMode === 'subject' && renderBySubject()}
+          {filterMode === 'level' && renderByLevel()}
+          {filterMode === 'search' && renderSearchResults()}
+        </div>
       </div>
-
-      <div className="md:w-3/4 bg-white rounded-lg shadow-md p-6">
+        
+      <div className="flex-1 p-4 bg-theme-primary dark:bg-gray-900">
         {renderSolver()}
       </div>
     </div>

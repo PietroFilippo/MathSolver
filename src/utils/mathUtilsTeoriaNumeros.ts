@@ -222,18 +222,18 @@ export const getFactorizationExamples = (): Array<{ number: number, description:
 };
 
 // Função para obter exemplos de números para MMC/MDC
-export const getMMCMDCExamples = (): Array<{ numbers: number[], description: string }> => {
+export const getMMCMDCExamples = (): Array<{ numbers: number[], description: string, type: 'mmc' | 'mdc' }> => {
     return [
-        { numbers: [12, 18], description: "12, 18" },
-        { numbers: [24, 36, 48], description: "24, 36, 48" },
-        { numbers: [7, 13], description: "7, 13 (primos)" },
-        { numbers: [15, 25, 35], description: "15, 25, 35" },
-        { numbers: [16, 24, 36], description: "16, 24, 36" },
-        { numbers: [17, 34, 51], description: "17, 34, 51" },
-        { numbers: [100, 80, 60], description: "100, 80, 60" },
-        { numbers: [35, 49, 63], description: "35, 49, 63" },
-        { numbers: [8, 12, 20, 24], description: "8, 12, 20, 24" },
-        { numbers: [9, 27, 81], description: "9, 27, 81" }
+        { numbers: [12, 18], description: "12, 18", type: 'mmc' },
+        { numbers: [24, 36, 48], description: "24, 36, 48", type: 'mmc' },
+        { numbers: [7, 13], description: "7, 13 (primos)", type: 'mmc' },
+        { numbers: [15, 25, 35], description: "15, 25, 35", type: 'mmc' },
+        { numbers: [16, 24, 36], description: "16, 24, 36", type: 'mmc' },
+        { numbers: [17, 34, 51], description: "17, 34, 51", type: 'mdc' },
+        { numbers: [100, 80, 60], description: "100, 80, 60", type: 'mdc' },
+        { numbers: [35, 49, 63], description: "35, 49, 63", type: 'mdc' },
+        { numbers: [8, 12, 20, 24], description: "8, 12, 20, 24", type: 'mdc' },
+        { numbers: [9, 27, 81], description: "9, 27, 81", type: 'mdc' }
     ];
 };
 

@@ -244,6 +244,9 @@ export function useFuncoesTrigonometricasSolver() {
         calculationSteps.push(`Identidade da tangente: tan(x) = sin(x) / cos(x)`);
         calculationSteps.push(`Verificação: sin(${roundToDecimals(valueInRadians, 4)}) / cos(${roundToDecimals(valueInRadians, 4)}) = ${roundToDecimals(sinVal / cosVal, 6)}`);
       }
+      
+      // Adicionar solução final após a verificação
+      calculationSteps.push(`Solução final: ${state.trigFunction}(${state.inputUnit === 'degrees' ? value + '°' : value}) = ${roundToDecimals(calculatedResult, 6)}`);
     }
     // Para funções trigonométricas inversas (asin, acos, atan)
     else if (['asin', 'acos', 'atan'].includes(state.trigFunction)) {
@@ -310,6 +313,9 @@ export function useFuncoesTrigonometricasSolver() {
       calculationSteps.push(`Aplicando a função direta ao resultado: ${state.trigFunction.substring(1)}(${roundToDecimals(calculatedResult, 6)}) = ${roundToDecimals(verification, 6)}`);
       calculationSteps.push(`Valor original: ${value}`);
       calculationSteps.push(`A diferença de ${roundToDecimals(Math.abs(verification - value), 8)} é devido ao arredondamento.`);
+      
+      // Adicionar solução final após a verificação
+      calculationSteps.push(`Solução final: ${state.trigFunction}(${value}) = ${roundToDecimals(calculatedResult, 6)}${state.outputUnit === 'degrees' ? '°' : ' rad'}`);
     }
 
     dispatch({ 
