@@ -22,9 +22,13 @@ function App() {
     if (page === 'sobre') {
       setCurrentPage('home');
       setScrollToSobre(true);
+      window.history.pushState(null, '', '#sobre');
     } else {
       setCurrentPage(page);
       setScrollToSobre(false);
+      if (window.location.hash) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
     }
   };
 

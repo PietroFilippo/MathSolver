@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Define os temas disponíveis
-type ThemeType = 'light' | 'dark' | 'blue' | 'purple' | 'green' | 'red' | 'pink';
+type ThemeType = 'light' | 'dark' | 'blue' | 'purple' | 'green' | 'red' | 'pink' | 'yellow' | 'brown' | 'rgb';
 
 interface ThemeContextType {
   theme: ThemeType;
@@ -23,7 +23,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     // Remove todas as classes de tema possíveis
     document.documentElement.classList.remove(
-      'theme-light', 'theme-dark', 'theme-blue', 'theme-purple', 'theme-green', 'theme-red', 'theme-pink'
+      'theme-light', 'theme-dark', 'theme-blue', 'theme-purple', 'theme-green', 'theme-red', 'theme-pink', 'theme-yellow', 'theme-brown', 'theme-rgb'
     );
     
     // Adiciona a classe do tema atual
@@ -41,7 +41,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     // Atualiza a classe do body para uma melhor integração de temas
     document.body.classList.remove(
-      'theme-light', 'theme-dark', 'theme-blue', 'theme-purple', 'theme-green', 'theme-red', 'theme-pink'
+      'theme-light', 'theme-dark', 'theme-blue', 'theme-purple', 'theme-green', 'theme-red', 'theme-pink', 'theme-yellow', 'theme-brown', 'theme-rgb'
     );
     document.body.classList.add(`theme-${theme}`);
     

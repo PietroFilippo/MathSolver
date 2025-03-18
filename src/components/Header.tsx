@@ -28,7 +28,13 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
               <ul className="flex space-x-6">
                 <li>
                   <button 
-                    onClick={() => onNavigate('home')}
+                    onClick={() => {
+                      onNavigate('home');
+                      // Clear the hash when going to home
+                      if (window.location.hash) {
+                        window.history.pushState(null, '', window.location.pathname);
+                      }
+                    }}
                     className={`flex items-center ${currentPage === 'home' && !isSobreActive ? 'text-white font-bold' : 'text-indigo-200 dark:text-gray-300 hover:text-white'}`}
                   >
                     <HiHome className="h-5 w-5 mr-1" />
@@ -56,8 +62,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
               </ul>
             </nav>
             
-            <div className="flex items-center gap-2 p-1 rounded-lg bg-primary-700/30 dark:bg-gray-700/50">
-              <span className="text-sm text-white/90 dark:text-gray-300 hidden sm:inline-block">Tema</span>
+            <div className="flex items-center text-indigo-200 dark:text-gray-300 hover:text-white ml-4">
               <ThemeSwitcher />
             </div>
           </div>

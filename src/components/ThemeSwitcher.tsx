@@ -30,28 +30,33 @@ const ThemeSwitcher: React.FC = () => {
     { value: 'green', label: 'Verde', colorClass: 'bg-green-500' },
     { value: 'red', label: 'Vermelho', colorClass: 'bg-red-500' },
     { value: 'pink', label: 'Rosa', colorClass: 'bg-pink-500' },
+    { value: 'yellow', label: 'Amarelo', colorClass: 'bg-yellow-500' },
+    { value: 'brown', label: 'Marrom', colorClass: 'bg-amber-800' },
+    { value: 'rgb', label: 'RGB', colorClass: 'rgb-gradient' },
   ];
 
   // Obter ícone do tema atual
   const getCurrentThemeIcon = () => {
-    if (theme === 'light') return <HiSun className="w-5 h-5 text-yellow-300" />;
-    if (theme === 'dark') return <HiMoon className="w-5 h-5 text-white" />;
-    return <HiColorSwatch className="w-5 h-5 text-white" />;
+    if (theme === 'light') return <HiSun className="h-5 w-5 mr-1" />;
+    if (theme === 'dark') return <HiMoon className="h-5 w-5 mr-1" />;
+    if (theme === 'rgb') return <HiColorSwatch className="h-5 w-5 mr-1 rgb-text" />;
+    return <HiColorSwatch className="h-5 w-5 mr-1" />;
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative inline-flex items-center" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-full bg-white/20 dark:bg-gray-800/50 text-white hover:bg-white/30 dark:hover:bg-gray-700 transition-colors duration-200 flex items-center shadow-sm border border-white/20 dark:border-gray-700"
+        className="flex items-center hover:text-white transition-colors duration-200"
         aria-label="Mudar tema"
         title="Mudar tema"
       >
         {getCurrentThemeIcon()}
+        <span>Tema</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
+        <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
           {themeOptions.map((option) => (
             <button
               key={option.value}
@@ -68,7 +73,7 @@ const ThemeSwitcher: React.FC = () => {
               ) : (
                 <span className={`w-5 h-5 rounded-full ${option.colorClass} shadow-sm`}></span>
               )}
-              <span className="ml-3 text-gray-700 dark:text-gray-200">{option.label}</span>
+              <span className="ml-3 text-gray-700 dark:text-gray-200 font-medium">{option.label}</span>
             </button>
           ))}
         </div>
