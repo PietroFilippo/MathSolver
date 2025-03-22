@@ -4,7 +4,7 @@ import {
     radiansToDegrees, 
     degreesToRadians,
     getTrigonometricFunctionExamples
-} from '../../utils/mathUtilsTrigonometria';
+} from '../../utils/mathUtilsTrigonometria/index';
 
 // Definições de tipo
 export type TrigFunction = 'sin' | 'cos' | 'tan' | 'asin' | 'acos' | 'atan';

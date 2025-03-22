@@ -57,7 +57,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
             </div>
             <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Vários Tipos de Problemas</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              De aritmética básica a álgebra avançada e cálculo - temos você coberto
+              De aritmética básica a álgebra avançada
             </p>
           </div>
           
@@ -253,7 +253,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
           <div className="relative z-10">
             <h1 className="text-4xl font-bold mb-4 drop-shadow-md">Sobre o MathSolver</h1>
             <p className="text-xl max-w-3xl mx-auto drop-shadow-md">
-              Conheça nossa missão de tornar a matemática acessível e compreensível para todos
+              Tornar a matemática acessível e compreensível para todos
             </p>
           </div>
         </div>
@@ -266,13 +266,12 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
               O MathSolver foi criado com uma missão simples: tornar a matemática acessível, 
-              compreensível e menos intimidadora para pessoas de todas as idades. Acreditamos que todo aluno 
-              merece as ferramentas e recursos necessários para ter sucesso na matemática.
+              compreensível e menos intimidadora para pessoas de todas as idades.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
               O principal objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos 
-              matemáticos. Ao oferecer explicações passo a passo ao lado das soluções, ajudamos os alunos a desenvolver 
-              habilidades de resolução de problemas que os acompanharão durante sua jornada acadêmica e além.
+              matemáticos. Ao oferecer explicações passo a passo ao lado das soluções, os alunos aprendem a desenvolver 
+              habilidades de resolução de problemas que os acompanharão durante sua jornada acadêmica.
             </p>
           </div>
           
@@ -282,14 +281,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
               Filosofia Educacional
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-              No MathSolver, acreditamos que entender o "porquê" por trás dos processos matemáticos é tão importante 
+              No MathSolver, entender o "porquê" por trás dos processos matemáticos é tão importante 
               quanto saber o "como". Essa abordagem enfatiza a compreensão conceitual juntamente com a fluência 
               procedimental.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
               As explicações são projetadas para ser claras, concisas e acessíveis a pessoas de diferentes níveis 
-              de proficiência matemática. Ao dividir problemas complexos em etapas manejáveis, os ajudamos a 
-              desenvolver confiança e uma mentalidade de crescimento em relação à matemática.
+              de proficiência matemática.
             </p>
           </div>
         </div>
@@ -297,13 +295,13 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-8 mb-8 border-l-4 border-tertiary-500">
           <h2 className="text-2xl font-bold mb-6 flex items-center text-tertiary-700 dark:text-tertiary-300">
             <HiUserGroup className="h-7 w-7 mr-3 text-tertiary-600 dark:text-tertiary-400" />
-            Para Quem Servimos
+            Para Quem É Destinado
           </h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                O MathSolver é destinado a um amplo público interessado em aprender e dominar conceitos matemáticos:
+                O MathSolver é destinado a aqueles que estão interessados em aprender e dominar conceitos matemáticos:
               </p>
               <ul className="list-disc list-inside space-y-3 text-gray-700 dark:text-gray-300 mb-4 pl-2">
                 <li className="flex items-start">
@@ -325,10 +323,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
               <ul className="list-disc list-inside space-y-3 text-gray-700 dark:text-gray-300 mb-4 pl-2 mt-10 md:mt-0">
                 <li className="flex items-start">
                   <span className="inline-block w-2 h-2 bg-primary-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                  <span><span className="font-medium text-primary-800 dark:text-primary-200">Professores</span> buscando recursos adicionais para apoiar seus alunos</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-block w-2 h-2 bg-primary-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
                   <span><span className="font-medium text-primary-800 dark:text-primary-200">Adultos</span> revisando seus conhecimentos matemáticos</span>
                 </li>
                 <li className="flex items-start">
@@ -338,7 +332,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
               </ul>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
                 Seja você alguém com dificuldades em um problema específico ou alguém que deseja fortalecer sua base 
-                matemática geral, o MathSolver está aqui para apoiar sua jornada de aprendizado.
+                matemática geral.
               </p>
             </div>
           </div>

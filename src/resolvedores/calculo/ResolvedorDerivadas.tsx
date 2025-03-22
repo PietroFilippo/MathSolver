@@ -1,10 +1,12 @@
-import React from 'react';
-import { HiCalculator, HiX } from 'react-icons/hi';
-import { useDerivativasSolver } from '../../hooks/calculo/useDerivativasSolver';
+import React, { useState } from 'react';
+import { HiCalculator, HiX, HiInformationCircle } from 'react-icons/hi';
+import { useDerivativasSolver } from '../../hooks/calculo/derivadas';
 import StepByStepExplanation from '../../components/StepByStepExplanation';
 import ConceitoMatematico from '../../components/ConceitoMatematico';
 
 const ResolvedorDerivadas: React.FC = () => {
+  const [showLimitations, setShowLimitations] = useState(false);
+  
   const { 
     state, 
     dispatch, 
@@ -41,7 +43,7 @@ const ResolvedorDerivadas: React.FC = () => {
               placeholder="Ex: x^2 + 3x - 5 ou sen(x)*e^x"
             />
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Use operadores como +, -, *, /, ^. O símbolo * para multiplicação é opcional para expressões como 3x. Funções disponíveis: sen, cos, tan, log, ln, e^x, etc.
+              Use operadores como +, -, *, /, ^, √. O símbolo * para multiplicação pode ter que ser explicitamente declarado em algumas expressões como -x^2*e^x. Funções disponíveis: sen, cos, tan, log, ln, e^x, etc.
             </p>
           </div>
           
@@ -108,12 +110,63 @@ const ResolvedorDerivadas: React.FC = () => {
             </div>
           )}
           
-          <button
-            onClick={handleSolve}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
-          >
-            Calcular Derivada
-          </button>
+          <div className="flex flex-wrap gap-2 mb-4">
+            <button
+              onClick={handleSolve}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+            >
+              Calcular Derivada
+            </button>
+            
+            <button
+              onClick={() => setShowLimitations(!showLimitations)}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+            >
+              <HiInformationCircle className="mr-2 h-5 w-5 text-indigo-500 dark:text-indigo-400" />
+              {showLimitations ? "Ocultar limitações" : "Ver limitações"}
+            </button>
+          </div>
+          
+          {showLimitations && (
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+                <HiInformationCircle className="mr-2 h-5 w-5 text-indigo-500 dark:text-indigo-400" />
+                Limitações do Calculador de Derivadas
+              </h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-red-600 dark:text-red-400 mb-2">Derivadas sem suporte:</h4>
+                  <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+                    <li>Funções hiperbólicas (sinh, cosh, tanh)</li>
+                    <li>Funções trigonométricas inversas (arcsin, arccos, arctan)</li>
+                    <li>Derivadas de ordem superior (automaticamente) - embora possam ser calculadas sequencialmente</li>
+                    <li>Derivadas parciais (funções com múltiplas variáveis)</li>
+                    <li>Funções paramétricas ou vetoriais</li>
+                    <li>Derivação implícita</li>
+                    <li>Funções especiais (função erro, funções de Bessel, etc.)</li>
+                    <li>Derivadas de funções definidas por partes</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-yellow-600 dark:text-yellow-400 mb-2">Derivadas com suporte limitado:</h4>
+                  <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+                    <li>Funções compostas muito complexas (com muitos níveis de aninhamento)</li>
+                    <li>Algumas expressões algébricas complexas podem não ser totalmente simplificadas</li>
+                    <li>Expressões com raízes complexas</li>
+                    <li>Expressões com notação avançada como somatórios ou produtórios</li>
+                    <li>Funções definidas recursivamente</li>
+                  </ul>
+                </div>
+                
+                <div className="text-sm text-gray-600 dark:text-gray-400 italic">
+                  O calculador consegue resolver a maioria das derivadas básicas, incluindo polinômios, funções trigonométricas, 
+                  logarítmicas, exponenciais e suas combinações através das regras básicas de derivação.
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         
         {state.erro && (
@@ -153,13 +206,9 @@ const ResolvedorDerivadas: React.FC = () => {
                   Solução passo a passo
                 </h3>
               </div>
-              
-              {/* Agrupamento visual de passos relacionados */}
-              <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden mb-6">
+    
                 <StepByStepExplanation steps={state.passos} stepType="calculus" />
-              </div>
 
-              
               <ConceitoMatematico
                 title="Conceito Matemático: Derivadas"
                 isOpen={state.showConceitoMatematico}

@@ -66,8 +66,7 @@ export const solvers = {
       icon: 'ChartLine',
       solvers: [
         { id: 'derivatives', name: 'Derivadas' },
-        { id: 'integrals', name: 'Integrais' },
-        { id: 'limits', name: 'Limites' }
+        { id: 'integrals', name: 'Integrais' }
       ]
     }
   };

@@ -1,11 +1,16 @@
 import React, { ReactNode } from 'react';
 import { 
   HiOutlineDocumentText, 
-  HiOutlineArrowsExpand, 
   HiOutlineCube, 
   HiOutlineRefresh, 
   HiOutlineCalculator,
-  HiOutlineCheck
+  HiOutlineCheck,
+  HiOutlineLightBulb,
+  HiOutlineInformationCircle,
+  HiOutlineCheckCircle,
+  HiOutlineArrowRight,
+  HiOutlinePencil,
+  HiOutlineArrowsExpand
 } from 'react-icons/hi';
 
 interface StepByStepExplanationProps {
@@ -29,20 +34,38 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
 
     // Para passos de cálculo diferencial e integral
     if (stepType === 'calculus') {
-      // Padrão para o cabeçalho da derivada ou integral
-      const calculatingMatch = step.match(/^(Calculando a \d+ª derivada:|Expressão original:)(.*)$/);
+      // Padrão para expressão original (mantém em roxo)
+      const expressionMatch = step.match(/^(Expressão original:)(.*)$/);
+      
+      // Padrão para passos de cálculo (agora em amarelo)
+      const calculatingMatch = step.match(/^(Calculando a \d+ª derivada:|Calculando a integral indefinida:|Calculando .+:)(.*)$/);
       
       // Padrão para resultados da derivada
       const resultMatch = step.match(/^(Resultado da .+:)(.*)$/);
       
       // Padrão para aplicação de regras de derivação/integração
-      const rulesMatch = step.match(/^(Aplicando a regra d[aeoi] .+:|Aplicando a regra integral de .+:)(.*)$/);
+      const rulesMatch = step.match(/^(Aplicando a regra d[aeoi] .+:|Aplicando a regra integral de .+:|Aplicando a regra da .+:|Aplicando a propriedade de .+:|Aplicando o Teorema .+:|Regra:|Fórmula:)(.*)$/);
+      
+      // Padrão para métodos de resolução
+      const methodMatch = step.match(/^(Método:|Técnica:|Transformação:|Substituição:)(.*)$/);
+      
+      // Padrão para observações
+      const observationMatch = step.match(/^(Observação:|Propriedade única:|Caso especial:)(.*)$/);
+      
+      // Padrão para verificações
+      const verificationMatch = step.match(/^(Verificando:|Demonstração:|Aplicando diretamente:)(.*)$/);
+      
+      // Padrão para resultados parciais
+      const partialResultMatch = step.match(/^(Resultado parcial:|Obtendo o resultado final:)(.*)$/);
+      
+      // Padrão para obter resultado final
+      const finalResultMatch = step === "Obter o resultado final";
       
       // Padrão para passos intermediários
       const intermediateMatch = step.includes('Onde ') || step.includes('Para a expressão') || step.includes('Vamos calcular');
       
       // Padrão para sub-expressões numeradas (como "1) Para f(x) = x^3")
-      const subExpressionMatch = step.match(/^(\d+\))\s+(Para .+:?|\S+:?)(.*)$/);
+      const subExpressionMatch = step.match(/^(Para .+:?)(.*)$/);
       
       // Padrão para resultado ou simplificação
       const simplificationMatch = step.includes('Simplificando:') || step.includes('Após simplificação:');
@@ -58,13 +81,25 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         );
       }
       
-      if (calculatingMatch) {
+      if (expressionMatch) {
         return (
           <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-3">
             <div className="flex items-center">
-              <HiOutlineCalculator className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-purple-700 dark:text-purple-300">{calculatingMatch[1]}</span>
-              <span className="text-purple-800 dark:text-purple-200">{calculatingMatch[2]}</span>
+              <HiOutlineDocumentText className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-purple-700 dark:text-purple-300 mr-2">{expressionMatch[1]}</span>
+              <span className="text-purple-800 dark:text-purple-200">{expressionMatch[2]}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (calculatingMatch) {
+        return (
+          <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-md ml-4 border-l-2 border-yellow-300 dark:border-yellow-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-yellow-700 dark:text-yellow-300 mr-2">{calculatingMatch[1]}</span>
+              <span className="text-yellow-800 dark:text-yellow-200">{calculatingMatch[2]}</span>
             </div>
           </div>
         );
@@ -75,6 +110,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
           <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 my-3">
             <div className="flex items-center">
               <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-green-700 dark:text-green-300 mr-2">{resultMatch[1]}</span>
               <span className="text-green-800 dark:text-green-200">{resultMatch[2]}</span>
             </div>
           </div>
@@ -86,30 +122,87 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
           <div key={index} className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-md ml-4 border-l-2 border-indigo-300 dark:border-indigo-600 my-3">
             <div className="flex items-center">
               <HiOutlineDocumentText className="text-indigo-600 dark:text-indigo-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-indigo-700 dark:text-indigo-300">{rulesMatch[1]}</span>
+              <span className="font-semibold text-indigo-700 dark:text-indigo-300 mr-2">{rulesMatch[1]}</span>
               <span className="text-indigo-800 dark:text-indigo-200">{rulesMatch[2]}</span>
             </div>
           </div>
         );
       }
       
-      if (intermediateMatch) {
+      if (methodMatch) {
         return (
-          <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 my-3">
             <div className="flex items-center">
-              <span className="text-gray-700 dark:text-gray-300">{step}</span>
+              <HiOutlineLightBulb className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-blue-700 dark:text-blue-300 mr-2">{methodMatch[1]}</span>
+              <span className="text-blue-800 dark:text-blue-200">{methodMatch[2]}</span>
             </div>
+          </div>
+        );
+      }
+      
+      if (observationMatch) {
+        return (
+          <div key={index} className="p-3 bg-cyan-50 dark:bg-cyan-900/30 rounded-md ml-4 border-l-2 border-cyan-300 dark:border-cyan-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineInformationCircle className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-cyan-700 dark:text-cyan-300 mr-2">{observationMatch[1]}</span>
+              <span className="text-cyan-800 dark:text-cyan-200">{observationMatch[2]}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (verificationMatch) {
+        return (
+          <div key={index} className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-md ml-4 border-l-2 border-teal-300 dark:border-teal-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineCheckCircle className="text-teal-600 dark:text-teal-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-teal-700 dark:text-teal-300 mr-2">{verificationMatch[1]}</span>
+              <span className="text-teal-800 dark:text-teal-200">{verificationMatch[2]}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (partialResultMatch) {
+        return (
+          <div key={index} className="p-3 bg-emerald-50 dark:bg-emerald-900/30 rounded-md ml-4 border-l-2 border-emerald-300 dark:border-emerald-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineArrowRight className="text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-emerald-700 dark:text-emerald-300 mr-2">{partialResultMatch[1]}</span>
+              <span className="text-emerald-800 dark:text-emerald-200">{partialResultMatch[2]}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (finalResultMatch) {
+        return (
+          <div key={index} className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-md ml-4 border-l-2 border-indigo-300 dark:border-indigo-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineDocumentText className="text-indigo-600 dark:text-indigo-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-indigo-800 dark:text-indigo-200">Obter o resultado final</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (intermediateMatch || step.includes("Temos")) {
+        return (
+          <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800/60 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
+            <span className="text-gray-800 dark:text-gray-200">{step}</span>
           </div>
         );
       }
       
       if (subExpressionMatch) {
         return (
-          <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md ml-4 border-l-2 border-amber-300 dark:border-amber-600 my-3">
-            <div className="flex items-center">
-              <HiOutlineCube className="text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-amber-700 dark:text-amber-300">{subExpressionMatch[1]} {subExpressionMatch[2]}</span>
-              <span className="text-amber-800 dark:text-amber-200">{subExpressionMatch[3]}</span>
+          <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-md ml-4 border-l-2 border-yellow-300 dark:border-yellow-600 my-3">
+            <div className="flex items-start">
+              <HiOutlineCalculator className="text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 h-5 w-5 mt-0.5" />
+              <span className="font-semibold text-yellow-700 dark:text-yellow-300 mr-2">{subExpressionMatch[1]}</span>
+              <span className="text-yellow-800 dark:text-yellow-200">{subExpressionMatch[2]}</span>
             </div>
           </div>
         );
@@ -117,23 +210,14 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       
       if (simplificationMatch) {
         return (
-          <div key={index} className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-md ml-4 border-l-2 border-teal-300 dark:border-teal-600 my-3">
+          <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md ml-4 border-l-2 border-amber-300 dark:border-amber-600 my-3">
             <div className="flex items-center">
-              <HiOutlineRefresh className="text-teal-600 dark:text-teal-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="text-teal-800 dark:text-teal-200">{step}</span>
+              <HiOutlinePencil className="text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-amber-800 dark:text-amber-200">{step}</span>
             </div>
           </div>
         );
       }
-      
-      // Default para passos de cálculo que não se encaixam nos padrões acima
-      return (
-        <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
-          <div className="flex items-center">
-            <span className="text-gray-700 dark:text-gray-300">{step}</span>
-          </div>
-        </div>
-      );
     }
     
     // Para passos de equações lineares, use estilo especial
@@ -598,13 +682,11 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
   };
 
   return (
-      <div className="p-4 bg-theme-container dark:bg-gray-800 overflow-auto">
-        {steps.map((step, index) => 
-          customRenderStep 
-            ? customRenderStep(step, index) 
-            : defaultRenderStep(step, index)
-        )}
-      </div>
+    <div className="space-y-2">
+      {steps.map((step, index) => 
+        customRenderStep ? customRenderStep(step, index) : defaultRenderStep(step, index)
+      )}
+    </div>
   );
 };
 

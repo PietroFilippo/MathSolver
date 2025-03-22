@@ -5,7 +5,7 @@ import {
   evaluateTrigonometricExpression,
   parseInterval,
   getTrigonometricEquationExamples
-} from '../../utils/mathUtilsTrigonometria';
+} from '../../utils/mathUtilsTrigonometria/index';
 
 // Definições de tipo
 interface FormattedSolution {

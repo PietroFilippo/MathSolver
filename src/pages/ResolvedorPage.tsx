@@ -37,7 +37,7 @@ import ResolvedorFuncoesTrigonometricas from '../resolvedores/trigonometria/Reso
 import ResolvedorEquacoesTrigonometricas from '../resolvedores/trigonometria/ResolvedorEquacoesTrigonometricas';
 import ResolvedorGraficosTrigonometricos from '../resolvedores/trigonometria/ResolvedorGraficosTrigonometricos';
 import ResolvedorDerivadas from '../resolvedores/calculo/ResolvedorDerivadas';
-
+import ResolvedorIntegrais from '../resolvedores/calculo/ResolvedorIntegrais';
 interface SolverPageProps {
   initialCategory?: string | null;
 }
@@ -181,6 +181,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorGraficosTrigonometricos />;
       case 'derivatives':
         return <ResolvedorDerivadas />;
+      case 'integrals':
+        return <ResolvedorIntegrais />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

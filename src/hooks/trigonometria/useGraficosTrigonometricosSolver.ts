@@ -5,7 +5,7 @@ import {
   generateGraphExplanationSteps,
   parseInterval,
   getTrigonometricGraphExamples
-} from '../../utils/mathUtilsTrigonometria';
+} from '../../utils/mathUtilsTrigonometria/index';
 
 // Definições de tipo
 export type GraphType = 'seno' | 'cosseno' | 'tangente' | 'personalizado';
