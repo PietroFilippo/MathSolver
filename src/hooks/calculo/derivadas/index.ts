@@ -3,7 +3,9 @@ import { derivativasReducer, initialState } from './reducer';
 import { derivativesMathematicalConcept } from './concepts';
 import { 
   getDerivativesExamples,
+  getPointEvaluationExamples,
   generateDerivativeSteps,
+  evaluateDerivativeAtPoint,
   processStepsWithNumbering
 } from './utils';
 import { DerivativasState, DerivativasAction, DerivadaConceito } from './types';
@@ -22,9 +24,19 @@ export function useDerivativasSolver() {
     return () => getDerivativesExamples();
   }, []);
 
+  // Obter exemplos de avaliação em pontos específicos
+  const getPointExamples = useMemo(() => {
+    return () => getPointEvaluationExamples();
+  }, []);
+
   // Aplicar um exemplo
   const applyExample = (example: string) => {
     dispatch({ type: 'APPLY_EXAMPLE', example });
+  };
+
+  // Aplicar um exemplo com avaliação em ponto
+  const applyPointExample = (funcao: string, ponto: string) => {
+    dispatch({ type: 'APPLY_POINT_EXAMPLE', funcao, ponto });
   };
 
   // Processa os passos para adicionar numeração e consolidar passos excessivos - versão memoizada
@@ -36,6 +48,13 @@ export function useDerivativasSolver() {
   const calculateMemoizedDerivative = useMemo(() => {
     return (expressao: string, variavel: string, ordem: number) => {
       return generateDerivativeSteps(expressao, variavel, ordem);
+    };
+  }, []);
+
+  // Memoiza o cálculo da derivada em ponto específico
+  const evaluateMemoizedDerivativeAtPoint = useMemo(() => {
+    return (expressao: string, variavel: string, ordem: number, ponto: string) => {
+      return evaluateDerivativeAtPoint(expressao, variavel, ordem, ponto);
     };
   }, []);
 
@@ -71,9 +90,31 @@ export function useDerivativasSolver() {
       return;
     }
     
+    // Validar ponto de avaliação para derivada em ponto
+    if (state.tipoDerivada === 'ponto' && !state.pontosAvaliacao.trim()) {
+      dispatch({ 
+        type: 'SET_ERROR', 
+        message: 'Por favor, especifique o ponto para avaliar a derivada.' 
+      });
+      return;
+    }
+    
     try {
-      // Calcular a derivada usando a função memoizada
-      const resultadoDerivada = calculateMemoizedDerivative(state.funcao, state.variavel, orderNum);
+      let resultadoDerivada;
+      
+      // Escolher o método de cálculo baseado no tipo de derivada
+      if (state.tipoDerivada === 'simbolica') {
+        // Calcular derivada simbólica
+        resultadoDerivada = calculateMemoizedDerivative(state.funcao, state.variavel, orderNum);
+      } else {
+        // Calcular derivada avaliada em um ponto
+        resultadoDerivada = evaluateMemoizedDerivativeAtPoint(
+          state.funcao, 
+          state.variavel, 
+          orderNum, 
+          state.pontosAvaliacao
+        );
+      }
       
       // Processar os passos para adicionar numeração usando a função memoizada
       const processedSteps = processStepsWithMemo(resultadoDerivada.passos);
@@ -97,7 +138,9 @@ export function useDerivativasSolver() {
     state,
     dispatch,
     getExamples,
+    getPointExamples,
     applyExample,
+    applyPointExample,
     handleSolve,
     conceitoDerivadas
   };

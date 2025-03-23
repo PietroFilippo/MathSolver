@@ -11,11 +11,69 @@ const ResolvedorDerivadas: React.FC = () => {
     state, 
     dispatch, 
     getExamples, 
+    getPointExamples,
     applyExample, 
+    applyPointExample,
     handleSolve,
     conceitoDerivadas
   } = useDerivativasSolver();
   
+  // Função para renderizar o resultado da derivada formatado
+  const renderFormattedResult = () => {
+    if (!state.resultado) return null;
+    
+    if (state.tipoDerivada === 'simbolica') {
+      return (
+        <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
+          <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">Resultado</h3>
+          <p className="text-xl text-gray-800 dark:text-gray-200">
+            {`A derivada ${parseInt(state.ordem) > 1 ? `${state.ordem}ª` : ''} de `}
+            <span>{state.funcao}</span>
+            {` em relação a ${state.variavel} é:`}
+          </p>
+          <p className="text-xl font-bold mt-2 text-gray-800 dark:text-gray-200">
+            {state.resultado}
+          </p>
+          
+          <button 
+            onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
+            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
+          >
+            <HiCalculator className="h-5 w-5 mr-1" />
+            {state.showExplanation ? "Ocultar explicação" : "Mostrar explicação"}
+          </button>
+        </div>
+      );
+    } else {
+      // Formato para derivada avaliada em um ponto
+      return (
+        <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
+          <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">Resultado</h3>
+          <p className="text-xl text-gray-800 dark:text-gray-200">
+            {`A derivada ${parseInt(state.ordem) > 1 ? `${state.ordem}ª` : ''} de `}
+            <span>{state.funcao}</span>
+            {` em ${state.variavel} = ${state.pontosAvaliacao} é:`}
+          </p>
+          <p className="text-xl font-bold mt-2 text-gray-800 dark:text-gray-200">
+            f'({state.pontosAvaliacao}) = {state.resultado}
+          </p>
+          
+          <div className="mt-2 text-md text-gray-700 dark:text-gray-300">
+            <p>Significado: O valor {state.resultado} representa a taxa de variação instantânea da função no ponto {state.pontosAvaliacao}.</p>
+          </div>
+          
+          <button 
+            onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
+            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
+          >
+            <HiCalculator className="h-5 w-5 mr-1" />
+            {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+          </button>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center mb-6">
@@ -78,19 +136,80 @@ const ResolvedorDerivadas: React.FC = () => {
           
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Exemplos
+              Tipo de Derivada
             </label>
-            <div className="flex flex-wrap gap-2">
-              {getExamples().map((example, index) => (
-                <button
-                  key={index}
-                  onClick={() => applyExample(example)}
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
-                >
-                  {example}
-                </button>
-              ))}
+            <div className="flex items-center space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-indigo-600 dark:text-indigo-400"
+                  checked={state.tipoDerivada === 'simbolica'}
+                  onChange={() => dispatch({ type: 'SET_TIPO_DERIVADA', tipoDerivada: 'simbolica' })}
+                />
+                <span className="ml-2 text-gray-700 dark:text-gray-300">Simbólica</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-indigo-600 dark:text-indigo-400"
+                  checked={state.tipoDerivada === 'ponto'}
+                  onChange={() => dispatch({ type: 'SET_TIPO_DERIVADA', tipoDerivada: 'ponto' })}
+                />
+                <span className="ml-2 text-gray-700 dark:text-gray-300">Avaliar em um ponto</span>
+              </label>
             </div>
+          </div>
+          
+          {state.tipoDerivada === 'ponto' && (
+            <div className="mb-4">
+              <label htmlFor="pontosAvaliacao" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Ponto de Avaliação
+              </label>
+              <input
+                type="text"
+                id="pontosAvaliacao"
+                value={state.pontosAvaliacao}
+                onChange={(e) => dispatch({ type: 'SET_PONTO_AVALIACAO', pontosAvaliacao: e.target.value })}
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400"
+                placeholder="Ex: 2, pi/4, 3.14159"
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Você pode usar números, expressões simples como pi/2, ou valores decimais.
+              </p>
+            </div>
+          )}
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              {state.tipoDerivada === 'simbolica' ? 'Exemplos de Funções' : 'Exemplos com Avaliação em Pontos'}
+            </label>
+            
+            {state.tipoDerivada === 'simbolica' ? (
+              <div className="flex flex-wrap gap-2">
+                {getExamples().map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => applyExample(example)}
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {getPointExamples().map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => applyPointExample(example.funcao, example.ponto)}
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
+                    title={example.descricao}
+                  >
+                    {example.funcao} em {example.ponto}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           
           {state.showDisclaimer && (
@@ -178,25 +297,7 @@ const ResolvedorDerivadas: React.FC = () => {
       
       {state.resultado && (
         <div className="space-y-6">
-          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
-            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-2">Resultado</h3>
-            <p className="text-xl text-gray-800 dark:text-gray-200">
-              {`A derivada ${parseInt(state.ordem) > 1 ? `${state.ordem}ª` : ''} de `}
-              <span>{state.funcao}</span>
-              {` em relação a ${state.variavel} é:`}
-            </p>
-            <p className="text-xl font-bold mt-2 text-gray-800 dark:text-gray-200">
-              {state.resultado}
-            </p>
-            
-            <button 
-              onClick={() => dispatch({ type: 'TOGGLE_EXPLANATION' })}
-              className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
-            >
-              <HiCalculator className="h-5 w-5 mr-1" />
-              {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
-            </button>
-          </div>
+          {renderFormattedResult()}
           
           {state.showExplanation && state.passos.length > 0 && (
             <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5">
@@ -207,7 +308,7 @@ const ResolvedorDerivadas: React.FC = () => {
                 </h3>
               </div>
     
-                <StepByStepExplanation steps={state.passos} stepType="calculus" />
+              <StepByStepExplanation steps={state.passos} stepType="calculus" />
 
               <ConceitoMatematico
                 title="Conceito Matemático: Derivadas"
@@ -283,6 +384,22 @@ const ResolvedorDerivadas: React.FC = () => {
                     a determinação de máximos e mínimos, que é essencial para problemas de otimização em diversas áreas.
                   </p>
                 </div>
+                
+                {state.tipoDerivada === 'ponto' && (
+                  <div className="mt-4 bg-green-50 dark:bg-green-900/20 p-3 rounded-md border-l-4 border-green-300 dark:border-green-600">
+                    <h5 className="font-medium text-green-700 dark:text-green-300 mb-2">Interpretação Geométrica da Derivada em um Ponto</h5>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      A derivada f'({state.pontosAvaliacao}) = {state.resultado} representa a inclinação da reta tangente
+                      ao gráfico da função no ponto ({state.pontosAvaliacao}, f({state.pontosAvaliacao})). Esta reta tangente
+                      tem equação y = {state.resultado}(x - {state.pontosAvaliacao}) + f({state.pontosAvaliacao}).
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                      Fisicamente, esse valor indica a taxa instantânea de variação da função no ponto {state.pontosAvaliacao}. 
+                      Por exemplo, se a função representar a posição de um objeto em função do tempo, 
+                      a derivada nesse ponto será a velocidade instantânea do objeto naquele momento.
+                    </p>
+                  </div>
+                )}
               </ConceitoMatematico>
             </div>
           )}

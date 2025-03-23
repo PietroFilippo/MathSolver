@@ -41,7 +41,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       const calculatingMatch = step.match(/^(Calculando a \d+ª derivada:|Calculando a integral indefinida:|Calculando .+:)(.*)$/);
       
       // Padrão para resultados da derivada
-      const resultMatch = step.match(/^(Resultado da .+:)(.*)$/);
+      const resultMatch = step.match(/^(Resultado da .+:|Resultado numérico:)(.*)$/);
       
       // Padrão para aplicação de regras de derivação/integração
       const rulesMatch = step.match(/^(Aplicando a regra d[aeoi] .+:|Aplicando a regra integral de .+:|Aplicando a regra da .+:|Aplicando a propriedade de .+:|Aplicando o Teorema .+:|Regra:|Fórmula:)(.*)$/);
@@ -69,6 +69,18 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       
       // Padrão para resultado ou simplificação
       const simplificationMatch = step.includes('Simplificando:') || step.includes('Após simplificação:');
+      
+      // Padrão para substituições em limites
+      const limitSubstitutionMatch = step.includes('Substituindo') && (step.includes('limite') || step.includes('h →') || step.includes('Δx →') || step.includes('x ='));
+      
+      // Padrão para interpretação da derivada
+      const interpretationMatch = step.includes('Interpretação:') || step.includes('Isso significa que') || step.includes('representa a taxa') || step.includes('geometricamente');
+      
+      // Padrão para observações
+      const observationPatternMatch = step.startsWith('Observação:') || step.startsWith('  Observação:');
+      
+      // Padrão para detalhes de termo específico
+      const termDetailMatch = step.startsWith('Para o termo:') || step.startsWith('  Para o termo:') || step.match(/^Para [fg]\(/);
       
       if (stepMatch) {
         return (
@@ -188,6 +200,28 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         );
       }
       
+      if (limitSubstitutionMatch) {
+        return (
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineArrowRight className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-blue-800 dark:text-blue-200">{step}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (interpretationMatch) {
+        return (
+          <div key={index} className="p-3 bg-cyan-50 dark:bg-cyan-900/30 rounded-md ml-4 border-l-2 border-cyan-300 dark:border-cyan-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineLightBulb className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-cyan-800 dark:text-cyan-200">{step}</span>
+            </div>
+          </div>
+        );
+      }
+      
       if (intermediateMatch || step.includes("Temos")) {
         return (
           <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800/60 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
@@ -214,6 +248,28 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
             <div className="flex items-center">
               <HiOutlinePencil className="text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0 h-5 w-5" />
               <span className="text-amber-800 dark:text-amber-200">{step}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (observationPatternMatch) {
+        return (
+          <div key={index} className="p-3 bg-cyan-50 dark:bg-cyan-900/30 rounded-md ml-4 border-l-2 border-cyan-300 dark:border-cyan-600 my-3">
+            <div className="flex items-center">
+              <HiOutlineInformationCircle className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-cyan-800 dark:text-cyan-200">{step.replace(/^\s\s/, '')}</span>
+            </div>
+          </div>
+        );
+      }
+      
+      if (termDetailMatch) {
+        return (
+          <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-md ml-4 border-l-2 border-yellow-300 dark:border-yellow-600 my-3">
+            <div className="flex items-start">
+              <HiOutlineCalculator className="text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 h-5 w-5 mt-0.5" />
+              <span className="text-yellow-700 dark:text-yellow-300">{step.replace(/^\s\s/, '')}</span>
             </div>
           </div>
         );

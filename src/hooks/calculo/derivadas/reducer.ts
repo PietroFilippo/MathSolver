@@ -5,6 +5,8 @@ export const initialState: DerivativasState = {
   funcao: '',
   variavel: 'x',
   ordem: '1',
+  tipoDerivada: 'simbolica', // Valor padrão: derivada simbólica
+  pontosAvaliacao: '', // Valor padrão vazio para ponto de avaliação
   resultado: null,
   passos: [],
   erro: null,
@@ -25,6 +27,15 @@ export function derivativasReducer(
       return { ...state, variavel: action.value };
     case 'SET_ORDEM':
       return { ...state, ordem: action.value };
+    case 'SET_TIPO_DERIVADA':
+      return { 
+        ...state, 
+        tipoDerivada: action.tipoDerivada,
+        // Limpa o ponto de avaliação ao mudar para derivada simbólica
+        pontosAvaliacao: action.tipoDerivada === 'simbolica' ? '' : state.pontosAvaliacao
+      };
+    case 'SET_PONTO_AVALIACAO':
+      return { ...state, pontosAvaliacao: action.pontosAvaliacao };
     case 'SET_RESULT':
       return {
         ...state,
@@ -56,6 +67,18 @@ export function derivativasReducer(
       return { 
         ...state,
         funcao: action.example,
+        tipoDerivada: 'simbolica', // Ao aplicar um exemplo normal, usa derivada simbólica
+        pontosAvaliacao: '',
+        resultado: null,
+        passos: [],
+        erro: null
+      };
+    case 'APPLY_POINT_EXAMPLE':
+      return {
+        ...state,
+        funcao: action.funcao,
+        tipoDerivada: 'ponto',
+        pontosAvaliacao: action.ponto,
         resultado: null,
         passos: [],
         erro: null
