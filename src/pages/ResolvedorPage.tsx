@@ -38,6 +38,11 @@ import ResolvedorEquacoesTrigonometricas from '../resolvedores/trigonometria/Res
 import ResolvedorGraficosTrigonometricos from '../resolvedores/trigonometria/ResolvedorGraficosTrigonometricos';
 import ResolvedorDerivadas from '../resolvedores/calculo/ResolvedorDerivadas';
 import ResolvedorIntegrais from '../resolvedores/calculo/ResolvedorIntegrais';
+import ResolvedorSuperficieSolidos from '../resolvedores/geometria/ResolvedorSuperficieSolidos';
+import ResolvedorCoordenadasGeometria from '../resolvedores/geometria/ResolvedorCoordenadasGeometria';
+import ResolvedorVetorGeometria from '../resolvedores/geometria/ResolvedorVetorGeometria';
+import ResolvedorGeometriaAnalitica from '../resolvedores/geometria/ResolvedorGeometriaAnalitica';
+
 interface SolverPageProps {
   initialCategory?: string | null;
 }
@@ -183,6 +188,14 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorDerivadas />;
       case 'integrals':
         return <ResolvedorIntegrais />;
+      case 'surface-solids':
+        return <ResolvedorSuperficieSolidos />;
+      case 'coordinate-geometry':
+        return <ResolvedorCoordenadasGeometria />;
+      case 'vector-geometry':
+        return <ResolvedorVetorGeometria />;
+      case 'analytic-geometry':
+        return <ResolvedorGeometriaAnalitica />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

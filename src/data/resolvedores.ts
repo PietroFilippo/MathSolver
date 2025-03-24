@@ -48,7 +48,11 @@ export const solvers = {
       solvers: [
         { id: 'plane-figures-area', name: 'Área de Figuras Planas' },
         { id: 'perimeters', name: 'Perímetros de Figuras Planas' },
-        { id: 'solid-volumes', name: 'Volume de Sólidos' }
+        { id: 'solid-volumes', name: 'Volume de Sólidos' },
+        { id: 'surface-solids', name: 'Superfície de Sólidos' },
+        { id: 'coordinate-geometry', name: 'Geometria de Coordenadas' },
+        { id: 'vector-geometry', name: 'Geometria Vetorial' },
+        { id: 'analytic-geometry', name: 'Geometria Analítica' }
       ]
     },
     'estatistica': {
@@ -89,10 +93,10 @@ export const solvers = {
       'algebraic-expressions', 'inequations', 'matrices',
       // Trigonometria
       'trigonometric-functions', 'trigonometric-equations', 'trigonometric-graphs',
-      // Cálculo
-      'derivatives', 'integrals', 'limits',
       // Geometria avançada
-      'solids-volume'
+      'solid-volumes', 'surface-solids', 'coordinate-geometry', 'vector-geometry',
+      // Cálculo
+      'derivatives', 'integrals', 'limits'
     ]
   };
   

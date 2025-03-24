@@ -8,7 +8,7 @@ import {
   pyramidVolume,
   prismVolume,
   getVolumeExamples
-} from '../../utils/mathUtilsGeometria';
+} from '../../utils/mathUtilsGeometria/mathUtilsGeometria';
 
 // Definições de tipo
 export type Solido = 'cubo' | 'paralelepipedo' | 'esfera' | 'cilindro' | 'cone' | 'piramide' | 'prisma';

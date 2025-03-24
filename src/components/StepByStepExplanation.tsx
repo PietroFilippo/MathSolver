@@ -122,8 +122,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
           <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 my-3">
             <div className="flex items-center">
               <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-green-700 dark:text-green-300 mr-2">{resultMatch[1]}</span>
-              <span className="text-green-800 dark:text-green-200">{resultMatch[2]}</span>
+              <p className="text-green-700 dark:text-green-300 font-medium">{resultMatch[2]}</p>
             </div>
           </div>
         );
@@ -558,9 +557,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         // Outros passos
         return (
           <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
-            <div className="flex items-center">
-              <p className="text-gray-800 dark:text-gray-200">{step}</p>
-            </div>
+            <p className="text-gray-800 dark:text-gray-200">{step}</p>
           </div>
         );
       }
@@ -590,7 +587,8 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         step.includes('unidades quadradas') || 
         step.includes('unidades de área') || 
         step.includes('unidades de comprimento') || 
-        step.includes('unidades cúbicas');
+        step.includes('unidades cúbicas') ||
+        step.startsWith('Resultado:');
       
       // Padrão de dimensão
       const dimensionMatch = 
@@ -661,11 +659,8 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       } else {
         // Outros passos
         return (
-          <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 my-3">
-            <div className="flex items-center">
-              <HiOutlineDocumentText className="text-gray-600 dark:text-gray-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <p className="text-gray-800 dark:text-gray-200">{step}</p>
-            </div>
+          <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-3">
+            <p className="text-gray-800 dark:text-gray-200">{step}</p>
           </div>
         );
       }

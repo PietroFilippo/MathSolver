@@ -8,7 +8,7 @@ import {
   rhombusPerimeter,
   hexagonPerimeter,
   getPerimeterExamples
-} from '../../utils/mathUtilsGeometria';
+} from '../../utils/mathUtilsGeometria/mathUtilsGeometria';
 
 // Definições de tipo
 export type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';

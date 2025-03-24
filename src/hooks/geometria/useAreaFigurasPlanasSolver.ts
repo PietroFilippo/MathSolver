@@ -8,7 +8,7 @@ import {
   rhombusArea,
   hexagonArea,
   getAreaExamples
-} from '../../utils/mathUtilsGeometria';
+} from '../../utils/mathUtilsGeometria/mathUtilsGeometria';
 
 // Definições de tipo
 export type FiguraPlana = 'quadrado' | 'retangulo' | 'triangulo' | 'circulo' | 'trapezio' | 'losango' | 'hexagono';
@@ -121,7 +121,7 @@ function areaFigurasReducer(state: AreaFigurasState, action: AreaFigurasAction):
       };
     case 'APPLY_EXAMPLE':
       const newState = { ...state };
-      // Reset all values first
+      // Reseta todos os valores
       newState.lado = '';
       newState.comprimento = '';
       newState.largura = '';
@@ -133,7 +133,7 @@ function areaFigurasReducer(state: AreaFigurasState, action: AreaFigurasAction):
       newState.diagonalMaior = '';
       newState.diagonalMenor = '';
       
-      // Apply example values
+      // Aplica os valores do exemplo
       for (const [key, value] of Object.entries(action.values)) {
         switch (key) {
           case 'lado':
