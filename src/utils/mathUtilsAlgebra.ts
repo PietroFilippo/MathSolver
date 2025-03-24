@@ -27,6 +27,38 @@ export const linearSystem = (
 // ================= EXEMPLOS ÚTEIS =================
 // ===================================================
 
+// Retorna exemplos de potenciação e radicação
+export const getExponentiationExamples = (): Array<{
+    type: 'exponenciacao' | 'radicacao',
+    base?: number,
+    expoente?: number,
+    indiceRaiz?: number,
+    radicando?: number,
+    description: string
+}> => {
+    return [
+        // Exemplos de exponenciação
+        { type: 'exponenciacao', base: 2, expoente: 3, description: "2³ = 2 × 2 × 2" },
+        { type: 'exponenciacao', base: 10, expoente: 2, description: "10² = 100" },
+        { type: 'exponenciacao', base: 3, expoente: 4, description: "3⁴ = 81" },
+        { type: 'exponenciacao', base: 5, expoente: 0, description: "5⁰ = 1" },
+        { type: 'exponenciacao', base: 4, expoente: -2, description: "4⁻² = 1/16" },
+        { type: 'exponenciacao', base: 2, expoente: 0.5, description: "2^(1/2) = √2" },
+        { type: 'exponenciacao', base: 8, expoente: 2/3, description: "8^(2/3) = (∛8)²" },
+        { type: 'exponenciacao', base: 1, expoente: 100, description: "1¹⁰⁰ = 1" },
+        
+        // Exemplos de radicação
+        { type: 'radicacao', radicando: 4, indiceRaiz: 2, description: "√4 = 2" },
+        { type: 'radicacao', radicando: 8, indiceRaiz: 3, description: "∛8 = 2" },
+        { type: 'radicacao', radicando: 16, indiceRaiz: 2, description: "√16 = 4" },
+        { type: 'radicacao', radicando: 27, indiceRaiz: 3, description: "∛27 = 3" },
+        { type: 'radicacao', radicando: 100, indiceRaiz: 2, description: "√100 = 10" },
+        { type: 'radicacao', radicando: 125, indiceRaiz: 3, description: "∛125 = 5" },
+        { type: 'radicacao', radicando: 32, indiceRaiz: 5, description: "⁵√32 = 2" },
+        { type: 'radicacao', radicando: -8, indiceRaiz: 3, description: "∛(-8) = -2" }
+    ];
+};
+
 // Retorna exemplos de equações quadráticas na forma [a, b, c]
 export const getQuadraticExamples = (): Array<{a: number, b: number, c: number, description: string}> => {
     return [

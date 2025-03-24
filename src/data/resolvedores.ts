@@ -30,7 +30,9 @@ export const solvers = {
         { id: 'logarithm', name: 'Logaritmos' },
         { id: 'algebraic-expressions', name: 'Expressões Algébricas' },
         { id: 'inequations', name: 'Inequações' },
-        { id: 'matrices', name: 'Matrizes' }
+        { id: 'matrices', name: 'Matrizes' },
+        { id: 'exponential-equations', name: 'Equações Exponenciais' },
+
       ]
     },
     'trigonometria': {

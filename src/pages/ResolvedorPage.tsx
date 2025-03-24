@@ -42,6 +42,7 @@ import ResolvedorSuperficieSolidos from '../resolvedores/geometria/ResolvedorSup
 import ResolvedorCoordenadasGeometria from '../resolvedores/geometria/ResolvedorCoordenadasGeometria';
 import ResolvedorVetorGeometria from '../resolvedores/geometria/ResolvedorVetorGeometria';
 import ResolvedorGeometriaAnalitica from '../resolvedores/geometria/ResolvedorGeometriaAnalitica';
+import ResolvedorExponenciacao from '../resolvedores/algebra/ResolvedorExponenciacao';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -196,6 +197,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorVetorGeometria />;
       case 'analytic-geometry':
         return <ResolvedorGeometriaAnalitica />;
+      case 'exponential-equations':
+        return <ResolvedorExponenciacao />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }
