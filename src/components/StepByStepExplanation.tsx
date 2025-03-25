@@ -10,13 +10,14 @@ import {
   HiOutlineCheckCircle,
   HiOutlineArrowRight,
   HiOutlinePencil,
-  HiOutlineArrowsExpand
+  HiOutlineArrowsExpand,
+  HiOutlineTable
 } from 'react-icons/hi';
 
 interface StepByStepExplanationProps {
   steps: (string | ReactNode)[];
   customRenderStep?: (step: string | ReactNode, index: number) => ReactNode;
-  stepType?: 'default' | 'trigonometric' | 'geometric' | 'linear' | 'calculus' | 'solution' | 'error';
+  stepType?: 'default' | 'trigonometric' | 'geometric' | 'linear' | 'calculus' | 'solution' | 'error' | 'matrices';
 }
 
 const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({ 
@@ -32,6 +33,160 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
     // Padrão para o cabeçalho do passo (Passo X:)
     const stepMatch = step.match(/^(Passo \d+:)(.*)$/);
 
+    // Para passos de matrizes
+    if (stepType === 'matrices') {
+      // Padrão para o cabeçalho da matriz (Matriz A: ou Matriz B:)
+      const matrixHeaderMatch = step.match(/^(Matriz [AB]( \(\d+×\d+\))?:)(.*)$/);
+      
+      // Padrão para conteúdo da matriz ([1, 2, 3])
+      const matrixContentMatch = step.match(/^\[([^\]]+)\]$/);
+      
+      // Padrão para fórmula/algoritmo
+      const formulaMatch = step.match(/^(Aplicando a fórmula:)(.*)$/);
+      
+      // Padrão para verificação de dimensões
+      const dimensionMatch = step.match(/^(Verificando dimensões:)(.*)$/);
+      
+      // Padrão para cálculos - agora apenas explicitamente contendo "Calculando:"
+      const calculationMatch = step.match(/^(Calculando:)(.*)$/);
+      
+      // Padrão para cálculos de elementos específicos - agora tratados separadamente
+      const elementCalculationMatch = step.includes('Elemento (') || step.includes(' = ');
+      
+      // Padrão para resultados
+      const resultMatch = step.match(/^(Resultado:)(.*)$/) || 
+                        step.includes('Resultado final:') || 
+                        step.includes('concluída com sucesso');
+      
+      // Padrão para forma inicial
+      const initialFormMatch = step.match(/^(Forma inicial:)(.*)$/);
+      
+      // Padrão para verificação/propriedades
+      const verificationMatch = step.match(/^(Verificação:|Verificando)(.*)$/) || 
+                               step.includes('propriedade');
+      
+      // Padrão para relação com outro conceito
+      const relationMatch = step.includes('Relação com');
+      
+      if (stepMatch) {
+        return (
+          <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border-l-4 border-indigo-500 dark:border-indigo-600 my-3">
+            <div className="flex flex-col sm:flex-row">
+              <span className="font-bold text-indigo-700 dark:text-indigo-300 mr-2 mb-1 sm:mb-0">{stepMatch[1]}</span>
+              <p className="text-gray-800 dark:text-gray-200">{stepMatch[2]}</p>
+            </div>
+          </div>
+        );
+      } else if (matrixHeaderMatch) {
+        return (
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineTable className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-blue-700 dark:text-blue-300 mr-2">{matrixHeaderMatch[1]}</span>
+              <span className="text-blue-800 dark:text-blue-200">{matrixHeaderMatch[3] || ''}</span>
+            </div>
+          </div>
+        );
+      } else if (matrixContentMatch) {
+        return (
+          <div key={index} className="p-2 bg-gray-50 dark:bg-gray-800/60 rounded-md ml-8 border-l-1 border-gray-200 dark:border-gray-600 my-1 font-mono text-sm">
+            <span className="text-gray-700 dark:text-gray-300">{step}</span>
+          </div>
+        );
+      } else if (formulaMatch) {
+        return (
+          <div key={index} className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-md ml-4 border-l-2 border-indigo-300 dark:border-indigo-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineDocumentText className="text-indigo-600 dark:text-indigo-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-indigo-700 dark:text-indigo-300 mr-2">{formulaMatch[1]}</span>
+              <span className="text-indigo-800 dark:text-indigo-200">{formulaMatch[2]}</span>
+            </div>
+          </div>
+        );
+      } else if (initialFormMatch) {
+        return (
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineDocumentText className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-purple-700 dark:text-purple-300 mr-2">{initialFormMatch[1]}</span>
+              <span className="text-purple-800 dark:text-purple-200">{initialFormMatch[2]}</span>
+            </div>
+          </div>
+        );
+      } else if (dimensionMatch) {
+        return (
+          <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md ml-4 border-l-2 border-amber-300 dark:border-amber-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineArrowsExpand className="text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-amber-700 dark:text-amber-300 mr-2">{dimensionMatch[1]}</span>
+              <span className="text-amber-800 dark:text-amber-200">{dimensionMatch[2]}</span>
+            </div>
+          </div>
+        );
+      } else if (calculationMatch) {
+        return (
+          <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-md ml-4 border-l-2 border-yellow-300 dark:border-yellow-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-yellow-800 dark:text-yellow-200">{step}</span>
+            </div>
+          </div>
+        );
+      } else if (elementCalculationMatch) {
+        return (
+          <div key={index} className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-md ml-4 border-l-2 border-slate-300 dark:border-slate-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-slate-600 dark:text-slate-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-slate-800 dark:text-slate-200">{step}</span>
+            </div>
+          </div>
+        );
+      } else if (resultMatch) {
+        return (
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-green-700 dark:text-green-300 font-medium">{step}</span>
+            </div>
+          </div>
+        );
+      } else if (verificationMatch) {
+        return (
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineCheckCircle className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-purple-700 dark:text-purple-300 font-medium">{step}</span>
+            </div>
+          </div>
+        );
+      } else if (relationMatch) {
+        return (
+          <div key={index} className="p-3 bg-cyan-50 dark:bg-cyan-900/30 rounded-md ml-4 border-l-2 border-cyan-300 dark:border-cyan-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineRefresh className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-cyan-700 dark:text-cyan-300 font-medium">{step}</span>
+            </div>
+          </div>
+        );
+      } else if (step === '---VERIFICATION_SEPARATOR---') {
+        return (
+          <div key={index} className="py-4 my-4 flex items-center">
+            <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
+            <div className="mx-4 px-4 py-2 bg-purple-100 dark:bg-purple-900/40 rounded-full text-purple-700 dark:text-purple-300 text-sm font-bold flex items-center">
+              <HiOutlineCheckCircle className="mr-1" /> Verificação e Propriedades
+            </div>
+            <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md ml-4 border-l-2 border-gray-300 dark:border-gray-600 my-2">
+            <span className="text-gray-800 dark:text-gray-200">{step}</span>
+          </div>
+        );
+      }
+    }
+    
     // Para passos de cálculo diferencial e integral
     if (stepType === 'calculus') {
       // Padrão para expressão original (mantém em roxo)
@@ -166,11 +321,10 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       
       if (verificationMatch) {
         return (
-          <div key={index} className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-md ml-4 border-l-2 border-teal-300 dark:border-teal-600 my-3">
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
             <div className="flex items-center">
-              <HiOutlineCheckCircle className="text-teal-600 dark:text-teal-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-teal-700 dark:text-teal-300 mr-2">{verificationMatch[1]}</span>
-              <span className="text-teal-800 dark:text-teal-200">{verificationMatch[2]}</span>
+              <HiOutlineCheckCircle className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-purple-700 dark:text-purple-300 font-medium">{step}</span>
             </div>
           </div>
         );
@@ -510,10 +664,10 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         );
       } else if (verificationMatch) {
         return (
-          <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md ml-4 border-l-2 border-amber-300 dark:border-amber-600 my-3">
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
             <div className="flex items-center">
-              <HiOutlineCheck className="text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <p className="text-amber-700 dark:text-amber-300 font-medium">{step}</p>
+              <HiOutlineCheckCircle className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="text-purple-700 dark:text-purple-300 font-medium">{step}</span>
             </div>
           </div>
         );

@@ -10,7 +10,8 @@ import {
   HiChartBar, 
   HiAcademicCap,
   HiSearch,
-  HiLightBulb
+  HiLightBulb,
+  HiTable
 } from 'react-icons/hi';
 import { solvers, educationalLevels } from '../data/resolvedores';
 
@@ -43,6 +44,8 @@ import ResolvedorCoordenadasGeometria from '../resolvedores/geometria/Resolvedor
 import ResolvedorVetorGeometria from '../resolvedores/geometria/ResolvedorVetorGeometria';
 import ResolvedorGeometriaAnalitica from '../resolvedores/geometria/ResolvedorGeometriaAnalitica';
 import ResolvedorExponenciacao from '../resolvedores/algebra/ResolvedorExponenciacao';
+import ResolvedorAddSubMatrizes from '../resolvedores/matrizes/ResolvedorAddSubMatrizes';
+import ResolvedorMultiplicacaoMatrizes from '../resolvedores/matrizes/ResolvedorMultiplicacaoMatrizes';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -54,6 +57,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     'arithmetic': false,
     'fractions': false,
     'algebra': false,
+    'matrizes': false,
     'trigonometria': false,
     'geometria': false,
     'estatistica': false,
@@ -124,6 +128,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
       case 'Square': return <HiViewGrid className="h-5 w-5" />;
       case 'BarChart': return <HiChartBar className="h-5 w-5" />;
       case 'ChartLine': return <HiTrendingUp className="h-5 w-5" />;
+      case 'Table': return <HiTable className="h-5 w-5" />;
       default: return <HiCalculator className="h-5 w-5" />;
     }
   };
@@ -199,6 +204,10 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorGeometriaAnalitica />;
       case 'exponential-equations':
         return <ResolvedorExponenciacao />;
+      case 'matrix-add-sub':
+        return <ResolvedorAddSubMatrizes />;
+      case 'matrix-mult':
+        return <ResolvedorMultiplicacaoMatrizes />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

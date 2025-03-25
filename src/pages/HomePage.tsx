@@ -9,7 +9,8 @@ import {
   HiChartBar,
   HiViewGrid,
   HiUserGroup,
-  HiOutlineAdjustments
+  HiOutlineAdjustments,
+  HiTable
 } from 'react-icons/hi';
 
 interface HomePageProps {
@@ -134,7 +135,6 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
               <li>Equações Quadráticas</li>
               <li>Sistemas Lineares</li>
               <li>Logaritmos</li>
-              <li>Matrizes</li>
             </ul>
             <button 
               onClick={() => onSelectSolver('algebra')}
@@ -202,7 +202,7 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
           </div>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-r from-teal-500 to-teal-600 p-6 rounded-lg shadow-md text-white">
             <div className="flex items-center mb-4">
               <HiViewGrid className="h-8 w-8 mr-3" />
@@ -218,6 +218,25 @@ const HomePage: React.FC<HomePageProps> = ({ onSelectSolver, scrollToSobre }) =>
               className="bg-white text-teal-600 hover:bg-teal-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Explorar Geometria
+            </button>
+          </div>
+          
+          <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 p-6 rounded-lg shadow-md text-white">
+            <div className="flex items-center mb-4">
+              <HiTable className="h-8 w-8 mr-3" />
+              <h3 className="text-2xl font-bold">Matrizes</h3>
+            </div>
+            <ul className="list-disc list-inside space-y-1 mb-4">
+              <li>Adição e Subtração</li>
+              <li>Multiplicação</li>
+              <li>Determinante</li>
+              <li>Matriz Transposta</li>
+            </ul>
+            <button 
+              onClick={() => onSelectSolver('matrizes')}
+              className="bg-white text-cyan-600 hover:bg-cyan-50 font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+            >
+              Explorar Matrizes
             </button>
           </div>
           

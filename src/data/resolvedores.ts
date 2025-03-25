@@ -30,9 +30,18 @@ export const solvers = {
         { id: 'logarithm', name: 'Logaritmos' },
         { id: 'algebraic-expressions', name: 'Expressões Algébricas' },
         { id: 'inequations', name: 'Inequações' },
-        { id: 'matrices', name: 'Matrizes' },
-        { id: 'exponential-equations', name: 'Equações Exponenciais' },
-
+        { id: 'exponential-equations', name: 'Equações Exponenciais' }
+      ]
+    },
+    'matrizes': {
+      name: 'Matrizes',
+      icon: 'Table',
+      solvers: [
+        { id: 'matrix-add-sub', name: 'Adição e Subtração de Matrizes' },
+        { id: 'matrix-mult', name: 'Multiplicação de Matrizes' },
+        { id: 'matrix-determinant', name: 'Determinante de Matrizes (Em breve)' },
+        { id: 'matrix-transpose', name: 'Matriz Transposta (Em breve)' },
+        { id: 'matrix-inverse', name: 'Matriz Inversa (Em breve)' }
       ]
     },
     'trigonometria': {
@@ -92,7 +101,9 @@ export const solvers = {
     'high-school': [
       // Álgebra
       'linear-equation', 'quadratic-equation', 'linear-system', 'logarithm', 
-      'algebraic-expressions', 'inequations', 'matrices',
+      'algebraic-expressions', 'inequations',
+      // Matrizes
+      'matrix-add-sub', 'matrix-mult', 'matrix-determinant', 'matrix-transpose', 'matrix-inverse',
       // Trigonometria
       'trigonometric-functions', 'trigonometric-equations', 'trigonometric-graphs',
       // Geometria avançada
