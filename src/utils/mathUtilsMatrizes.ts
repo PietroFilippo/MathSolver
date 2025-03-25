@@ -128,6 +128,123 @@ export const matrixToInputString = (matrix: number[][]): string => {
 };
 
 // ===================================================
+// ========= FUNÇÕES PARA DETERMINANTE ==============
+// ===================================================
+
+// Verifica se uma matriz é quadrada (mesmo número de linhas e colunas)
+export const isSquareMatrix = (matrix: number[][]): boolean => {
+  if (!isValidMatrix(matrix)) {
+    return false;
+  }
+  
+  return matrix.length === matrix[0].length;
+};
+
+// Calcula o determinante de uma matriz 2x2
+const calculateDeterminant2x2 = (matrix: number[][]): number => {
+  return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+};
+
+// Obtém a submatriz após remover uma linha e uma coluna específicas
+export const getSubmatrix = (matrix: number[][], excludeRow: number, excludeCol: number): number[][] => {
+  const submatrix: number[][] = [];
+  
+  for (let i = 0; i < matrix.length; i++) {
+    if (i === excludeRow) continue;
+    
+    const row: number[] = [];
+    for (let j = 0; j < matrix[0].length; j++) {
+      if (j === excludeCol) continue;
+      row.push(matrix[i][j]);
+    }
+    
+    submatrix.push(row);
+  }
+  
+  return submatrix;
+};
+
+// Calcula o determinante de uma matriz usando a expansão de cofatores (método de Laplace)
+export const calculateDeterminant = (matrix: number[][]): number | null => {
+  // Verifica se a matriz é quadrada
+  if (!isSquareMatrix(matrix)) {
+    return null;
+  }
+  
+  const n = matrix.length;
+  
+  // Caso base: matriz 1x1
+  if (n === 1) {
+    return matrix[0][0];
+  }
+  
+  // Caso base: matriz 2x2
+  if (n === 2) {
+    return calculateDeterminant2x2(matrix);
+  }
+  
+  // Expansão de cofatores pela primeira linha
+  let determinant = 0;
+  
+  for (let j = 0; j < n; j++) {
+    const cofactor = matrix[0][j] * Math.pow(-1, j) * calculateDeterminant(getSubmatrix(matrix, 0, j))!;
+    determinant += cofactor;
+  }
+  
+  return determinant;
+};
+
+// Interface para exemplo de determinante
+export interface DeterminantExample {
+  matrix: number[][];
+  description: string;
+}
+
+// Retorna exemplos de cálculo de determinante
+export const getDeterminantExamples = (): DeterminantExample[] => {
+  return [
+    {
+      matrix: [
+        [1, 2],
+        [3, 4]
+      ],
+      description: 'Matriz 2×2 simples'
+    },
+    {
+      matrix: [
+        [2, 0],
+        [0, 2]
+      ],
+      description: 'Matriz diagonal 2×2'
+    },
+    {
+      matrix: [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]
+      ],
+      description: 'Matriz identidade 3×3'
+    },
+    {
+      matrix: [
+        [4, 3, 2],
+        [1, 3, 1],
+        [2, 1, 5]
+      ],
+      description: 'Matriz 3×3 completa'
+    },
+    {
+      matrix: [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ],
+      description: 'Matriz 3×3 singular'
+    }
+  ];
+};
+
+// ===================================================
 // ============ EXEMPLOS DE MATRIZES ================
 // ===================================================
 
