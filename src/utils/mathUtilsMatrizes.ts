@@ -1,5 +1,5 @@
 // ===================================================
-// ========== FUNÇÕES PARA MATRIZ =====================
+// ========== FUNÇÕES GERAIS PARA MATRIZES ===========
 // ===================================================
 import { roundToDecimals } from './mathUtils';
 
@@ -9,6 +9,15 @@ export const isValidMatrix = (matrix: number[][]): boolean => {
   
   const numCols = matrix[0].length;
   return matrix.every(row => row.length === numCols);
+};
+
+// Verifica se uma matriz é quadrada (mesmo número de linhas e colunas)
+export const isSquareMatrix = (matrix: number[][]): boolean => {
+  if (!isValidMatrix(matrix)) {
+    return false;
+  }
+  
+  return matrix.length === matrix[0].length;
 };
 
 // Verifica se duas matrizes têm as mesmas dimensões
@@ -48,44 +57,6 @@ export const formatMatrixHTML = (matrix: number[][], decimals: number = 2): stri
       `).join('')}
     </tbody>
   </table>`;
-};
-
-// Adiciona duas matrizes
-export const addMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
-  if (!haveSameDimensions(matrixA, matrixB)) {
-    return null;
-  }
-  
-  const result: number[][] = [];
-  
-  for (let i = 0; i < matrixA.length; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < matrixA[0].length; j++) {
-      row.push(matrixA[i][j] + matrixB[i][j]);
-    }
-    result.push(row);
-  }
-  
-  return result;
-};
-
-// Subtrai duas matrizes (A - B)
-export const subtractMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
-  if (!haveSameDimensions(matrixA, matrixB)) {
-    return null;
-  }
-  
-  const result: number[][] = [];
-  
-  for (let i = 0; i < matrixA.length; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < matrixA[0].length; j++) {
-      row.push(matrixA[i][j] - matrixB[i][j]);
-    }
-    result.push(row);
-  }
-  
-  return result;
 };
 
 // Converte uma string em uma matriz de números
@@ -128,22 +99,115 @@ export const matrixToInputString = (matrix: number[][]): string => {
 };
 
 // ===================================================
-// ========= FUNÇÕES PARA DETERMINANTE ==============
+// ========= OPERAÇÕES BÁSICAS DE MATRIZES ===========
 // ===================================================
 
-// Verifica se uma matriz é quadrada (mesmo número de linhas e colunas)
-export const isSquareMatrix = (matrix: number[][]): boolean => {
-  if (!isValidMatrix(matrix)) {
-    return false;
+// Adiciona duas matrizes
+export const addMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
+  if (!haveSameDimensions(matrixA, matrixB)) {
+    return null;
   }
   
-  return matrix.length === matrix[0].length;
+  const result: number[][] = [];
+  
+  for (let i = 0; i < matrixA.length; i++) {
+    const row: number[] = [];
+    for (let j = 0; j < matrixA[0].length; j++) {
+      row.push(matrixA[i][j] + matrixB[i][j]);
+    }
+    result.push(row);
+  }
+  
+  return result;
 };
 
-// Calcula o determinante de uma matriz 2x2
-const calculateDeterminant2x2 = (matrix: number[][]): number => {
-  return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+// Subtrai duas matrizes (A - B)
+export const subtractMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
+  if (!haveSameDimensions(matrixA, matrixB)) {
+    return null;
+  }
+  
+  const result: number[][] = [];
+  
+  for (let i = 0; i < matrixA.length; i++) {
+    const row: number[] = [];
+    for (let j = 0; j < matrixA[0].length; j++) {
+      row.push(matrixA[i][j] - matrixB[i][j]);
+    }
+    result.push(row);
+  }
+  
+  return result;
 };
+
+// Multiplica duas matrizes (A × B)
+export const multiplyMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
+  // Verifica se as dimensões são compatíveis para multiplicação
+  if (matrixA[0].length !== matrixB.length) {
+    return null;
+  }
+  
+  const result: number[][] = [];
+  const rowsA = matrixA.length;
+  const colsB = matrixB[0].length;
+  const common = matrixB.length; // Número de colunas de A / linhas de B
+  
+  for (let i = 0; i < rowsA; i++) {
+    const row: number[] = [];
+    for (let j = 0; j < colsB; j++) {
+      let sum = 0;
+      for (let k = 0; k < common; k++) {
+        sum += matrixA[i][k] * matrixB[k][j];
+      }
+      row.push(sum);
+    }
+    result.push(row);
+  }
+  
+  return result;
+};
+
+// Multiplica uma matriz por um escalar
+export const multiplyMatrixByScalar = (matrix: number[][], scalar: number): number[][] => {
+  const result: number[][] = [];
+  
+  for (let i = 0; i < matrix.length; i++) {
+    const row: number[] = [];
+    for (let j = 0; j < matrix[0].length; j++) {
+      row.push(matrix[i][j] * scalar);
+    }
+    result.push(row);
+  }
+  
+  return result;
+};
+
+// Verifica se as dimensões são compatíveis para multiplicação de matrizes
+export const isValidForMultiplication = (matrixA: number[][], matrixB: number[][]): boolean => {
+  return matrixA[0].length === matrixB.length;
+};
+
+// Calcula a transposta de uma matriz
+export const transposeMatrix = (matrix: number[][]): number[][] => {
+  if (!matrix || matrix.length === 0) return [];
+  
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  
+  const transpose: number[][] = Array(cols).fill(0).map(() => Array(rows).fill(0));
+  
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      transpose[j][i] = matrix[i][j];
+    }
+  }
+  
+  return transpose;
+};
+
+// ===================================================
+// ========= FUNÇÕES PARA DETERMINANTE ==============
+// ===================================================
 
 // Obtém a submatriz após remover uma linha e uma coluna específicas
 export const getSubmatrix = (matrix: number[][], excludeRow: number, excludeCol: number): number[][] => {
@@ -162,6 +226,11 @@ export const getSubmatrix = (matrix: number[][], excludeRow: number, excludeCol:
   }
   
   return submatrix;
+};
+
+// Calcula o determinante de uma matriz 2x2
+const calculateDeterminant2x2 = (matrix: number[][]): number => {
+  return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
 };
 
 // Calcula o determinante de uma matriz usando a expansão de cofatores (método de Laplace)
@@ -194,54 +263,81 @@ export const calculateDeterminant = (matrix: number[][]): number | null => {
   return determinant;
 };
 
-// Interface para exemplo de determinante
-export interface DeterminantExample {
-  matrix: number[][];
-  description: string;
-}
+// ===================================================
+// ========= FUNÇÕES PARA MATRIZ INVERSA ============
+// ===================================================
 
-// Retorna exemplos de cálculo de determinante
-export const getDeterminantExamples = (): DeterminantExample[] => {
-  return [
-    {
-      matrix: [
-        [1, 2],
-        [3, 4]
-      ],
-      description: 'Matriz 2×2 simples'
-    },
-    {
-      matrix: [
-        [2, 0],
-        [0, 2]
-      ],
-      description: 'Matriz diagonal 2×2'
-    },
-    {
-      matrix: [
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1]
-      ],
-      description: 'Matriz identidade 3×3'
-    },
-    {
-      matrix: [
-        [4, 3, 2],
-        [1, 3, 1],
-        [2, 1, 5]
-      ],
-      description: 'Matriz 3×3 completa'
-    },
-    {
-      matrix: [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
-      ],
-      description: 'Matriz 3×3 singular'
+// Calcula a matriz de cofatores
+export const calculateCofactorMatrix = (matrix: number[][]): number[][] | null => {
+  if (!isSquareMatrix(matrix)) {
+    return null;
+  }
+  
+  const n = matrix.length;
+  const cofactorMatrix: number[][] = [];
+  
+  for (let i = 0; i < n; i++) {
+    const cofactorRow: number[] = [];
+    for (let j = 0; j < n; j++) {
+      // Cálculo do cofator: (-1)^(i+j) * determinante da submatriz
+      const sign = Math.pow(-1, i + j);
+      const submatrix = getSubmatrix(matrix, i, j);
+      const subDet = calculateDeterminant(submatrix);
+      
+      if (subDet === null) {
+        return null;
+      }
+      
+      cofactorRow.push(sign * subDet);
     }
-  ];
+    cofactorMatrix.push(cofactorRow);
+  }
+  
+  return cofactorMatrix;
+};
+
+// Calcula a matriz adjunta (transposta da matriz de cofatores)
+export const calculateAdjointMatrix = (matrix: number[][]): number[][] | null => {
+  const cofactorMatrix = calculateCofactorMatrix(matrix);
+  
+  if (!cofactorMatrix) {
+    return null;
+  }
+  
+  return transposeMatrix(cofactorMatrix);
+};
+
+// Calcula a matriz inversa
+export const calculateInverseMatrix = (matrix: number[][]): number[][] | null => {
+  if (!isSquareMatrix(matrix)) {
+    return null;
+  }
+  
+  const determinant = calculateDeterminant(matrix);
+  
+  // Se o determinante for zero, a matriz não é inversível
+  if (determinant === null || determinant === 0) {
+    return null;
+  }
+  
+  const adjointMatrix = calculateAdjointMatrix(matrix);
+  
+  if (!adjointMatrix) {
+    return null;
+  }
+  
+  // A inversa é 1/determinante * adjunta
+  const inverseMatrix: number[][] = [];
+  
+  for (let i = 0; i < adjointMatrix.length; i++) {
+    const row: number[] = [];
+    for (let j = 0; j < adjointMatrix[0].length; j++) {
+      row.push(adjointMatrix[i][j] / determinant);
+    }
+    inverseMatrix.push(row);
+  }
+  
+  return inverseMatrix;
 };
 
 // ===================================================
@@ -314,53 +410,6 @@ export const getMatrixAddSubExamples = (): MatrizExample[] => {
       description: '2×4 Grandes'
     }
   ];
-};
-
-// Multiplica duas matrizes (A × B)
-export const multiplyMatrices = (matrixA: number[][], matrixB: number[][]): number[][] | null => {
-  // Verifica se as dimensões são compatíveis para multiplicação
-  if (matrixA[0].length !== matrixB.length) {
-    return null;
-  }
-  
-  const result: number[][] = [];
-  const rowsA = matrixA.length;
-  const colsB = matrixB[0].length;
-  const common = matrixB.length; // Número de colunas de A / linhas de B
-  
-  for (let i = 0; i < rowsA; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < colsB; j++) {
-      let sum = 0;
-      for (let k = 0; k < common; k++) {
-        sum += matrixA[i][k] * matrixB[k][j];
-      }
-      row.push(sum);
-    }
-    result.push(row);
-  }
-  
-  return result;
-};
-
-// Multiplica uma matriz por um escalar
-export const multiplyMatrixByScalar = (matrix: number[][], scalar: number): number[][] => {
-  const result: number[][] = [];
-  
-  for (let i = 0; i < matrix.length; i++) {
-    const row: number[] = [];
-    for (let j = 0; j < matrix[0].length; j++) {
-      row.push(matrix[i][j] * scalar);
-    }
-    result.push(row);
-  }
-  
-  return result;
-};
-
-// Verifica se as dimensões são compatíveis para multiplicação de matrizes
-export const isValidForMultiplication = (matrixA: number[][], matrixB: number[][]): boolean => {
-  return matrixA[0].length === matrixB.length;
 };
 
 // Interface para exemplos de multiplicação de matrizes
@@ -466,6 +515,106 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
       ],
       scalar: 2,
       description: 'Matriz com decimais'
+    }
+  ];
+};
+
+// Interface para exemplo de determinante
+export interface DeterminantExample {
+  matrix: number[][];
+  description: string;
+}
+
+// Retorna exemplos de cálculo de determinante
+export const getDeterminantExamples = (): DeterminantExample[] => {
+  return [
+    {
+      matrix: [
+        [1, 2],
+        [3, 4]
+      ],
+      description: 'Matriz 2×2 simples'
+    },
+    {
+      matrix: [
+        [2, 0],
+        [0, 2]
+      ],
+      description: 'Matriz diagonal 2×2'
+    },
+    {
+      matrix: [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]
+      ],
+      description: 'Matriz identidade 3×3'
+    },
+    {
+      matrix: [
+        [4, 3, 2],
+        [1, 3, 1],
+        [2, 1, 5]
+      ],
+      description: 'Matriz 3×3 completa'
+    },
+    {
+      matrix: [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ],
+      description: 'Matriz 3×3 singular'
+    }
+  ];
+};
+
+// Interface para exemplo de matriz inversa
+export interface InverseMatrixExample {
+  matrix: number[][];
+  description: string;
+}
+
+// Retorna exemplos de cálculo de matriz inversa
+export const getInverseMatrixExamples = (): InverseMatrixExample[] => {
+  return [
+    {
+      matrix: [
+        [1, 0],
+        [0, 1]
+      ],
+      description: 'Matriz identidade 2×2'
+    },
+    {
+      matrix: [
+        [4, 7],
+        [2, 6]
+      ],
+      description: 'Matriz 2×2 simples'
+    },
+    {
+      matrix: [
+        [1, 2, 3],
+        [0, 1, 4],
+        [5, 6, 0]
+      ],
+      description: 'Matriz 3×3 inversível'
+    },
+    {
+      matrix: [
+        [1, 0, 0],
+        [0, 2, 0],
+        [0, 0, 4]
+      ],
+      description: 'Matriz diagonal 3×3'
+    },
+    {
+      matrix: [
+        [2, 1, 1],
+        [1, 2, 1],
+        [1, 1, 2]
+      ],
+      description: 'Matriz simétrica 3×3'
     }
   ];
 }; 

@@ -46,7 +46,9 @@ import ResolvedorGeometriaAnalitica from '../resolvedores/geometria/ResolvedorGe
 import ResolvedorExponenciacao from '../resolvedores/algebra/ResolvedorExponenciacao';
 import ResolvedorAddSubMatrizes from '../resolvedores/matrizes/ResolvedorAddSubMatrizes';
 import ResolvedorMultiplicacaoMatrizes from '../resolvedores/matrizes/ResolvedorMultiplicacaoMatrizes';
-import ResolvedorDeterminanteMatrizes from '../resolvedores/matrizes/ResolvedorDeterminanteMatrizes';
+import ResolvedorDeterminanteMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesDeterminantes';
+import ResolvedorTransposeMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesTranspostas';
+import ResolvedorInverseMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesInversas';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -211,6 +213,10 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorMultiplicacaoMatrizes />;
       case 'matrix-determinant':
         return <ResolvedorDeterminanteMatrizes />;
+      case 'matrix-transpose':
+        return <ResolvedorTransposeMatrizes />;
+      case 'matrix-inverse':
+        return <ResolvedorInverseMatrizes />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

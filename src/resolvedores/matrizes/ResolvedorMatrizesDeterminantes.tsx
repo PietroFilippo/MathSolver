@@ -4,7 +4,7 @@ import {
   HiInformationCircle
 } from 'react-icons/hi';
 import { getDeterminantExamples } from '../../utils/mathUtilsMatrizes';
-import { useMatrizDeterminantSolver } from '../../hooks/matrizes/useMatrizDeterminantSolver';
+import { useMatrizDeterminantSolver } from '../../hooks/matrizes/useMatrizDeterminanteSolver';
 import StepByStepExplanation from '../../components/StepByStepExplanation';
 import ConceitoMatematico from '../../components/ConceitoMatematico';
 

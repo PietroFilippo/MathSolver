@@ -130,6 +130,27 @@ const ResolvedorAddSubMatrizes: React.FC = () => {
                 {renderMatrix(state.parsedMatrizB)}
               </div>
             )}
+            
+            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+              <div className="flex items-start">
+                <HiInformationCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    <span className="font-medium">Requisito para adição e subtração de matrizes:</span> As matrizes A e B 
+                    devem ter as mesmas dimensões (mesmo número de linhas e colunas).
+                  </p>
+                  {state.parsedMatrizA && state.parsedMatrizB && (
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                      {state.parsedMatrizA.length === state.parsedMatrizB.length && 
+                       state.parsedMatrizA[0]?.length === state.parsedMatrizB[0]?.length
+                        ? `✓ Compatível: Matriz A (${state.parsedMatrizA.length}×${state.parsedMatrizA[0]?.length}) = Matriz B (${state.parsedMatrizB.length}×${state.parsedMatrizB[0]?.length})`
+                        : `✗ Incompatível: Matriz A (${state.parsedMatrizA.length}×${state.parsedMatrizA[0]?.length}) ≠ Matriz B (${state.parsedMatrizB.length}×${state.parsedMatrizB[0]?.length})`
+                      }
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="mb-4">

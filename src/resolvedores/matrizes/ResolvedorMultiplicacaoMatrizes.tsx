@@ -8,7 +8,7 @@ import {
   getMatrixMultiplicationExamples, 
   getScalarMultiplicationExamples 
 } from '../../utils/mathUtilsMatrizes';
-import { useMatrizMultiplicationSolver } from '../../hooks/matrizes/useMatrizMultiplicationSolver';
+import { useMatrizMultiplicationSolver } from '../../hooks/matrizes/useMatrizMultiplicacaoSolver';
 import StepByStepExplanation from '../../components/StepByStepExplanation';
 import ConceitoMatematico from '../../components/ConceitoMatematico';
 

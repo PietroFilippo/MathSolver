@@ -40,8 +40,8 @@ export const solvers = {
         { id: 'matrix-add-sub', name: 'Adição e Subtração de Matrizes' },
         { id: 'matrix-mult', name: 'Multiplicação de Matrizes' },
         { id: 'matrix-determinant', name: 'Determinante de Matrizes' },
-        { id: 'matrix-transpose', name: 'Matriz Transposta (Em breve)' },
-        { id: 'matrix-inverse', name: 'Matriz Inversa (Em breve)' }
+        { id: 'matrix-transpose', name: 'Matriz Transposta' },
+        { id: 'matrix-inverse', name: 'Matriz Inversa' }
       ]
     },
     'trigonometria': {

@@ -38,6 +38,9 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       // Padrão para o cabeçalho da matriz (Matriz A: ou Matriz B:)
       const matrixHeaderMatch = step.match(/^(Matriz [AB]( \(\d+×\d+\))?:)(.*)$/);
       
+      // Padrão para matriz de entrada ou original
+      const matrixInputMatch = step.match(/^(Matriz (de entrada|original|de cofatores|adjunta)( \(\d+×\d+\))?:)(.*)$/);
+      
       // Padrão para conteúdo da matriz ([1, 2, 3])
       const matrixContentMatch = step.match(/^\[([^\]]+)\]$/);
       
@@ -87,6 +90,16 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
             </div>
           </div>
         );
+      } else if (matrixInputMatch) {
+        return (
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 my-2">
+            <div className="flex items-center">
+              <HiOutlineTable className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-blue-700 dark:text-blue-300 mr-2">{matrixInputMatch[1]}</span>
+              <span className="text-blue-800 dark:text-blue-200">{matrixInputMatch[4] || ''}</span>
+            </div>
+          </div>
+        );
       } else if (matrixContentMatch) {
         return (
           <div key={index} className="p-2 bg-gray-50 dark:bg-gray-800/60 rounded-md ml-8 border-l-1 border-gray-200 dark:border-gray-600 my-1 font-mono text-sm">
@@ -105,11 +118,11 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         );
       } else if (initialFormMatch) {
         return (
-          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 my-2">
             <div className="flex items-center">
-              <HiOutlineDocumentText className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <span className="font-semibold text-purple-700 dark:text-purple-300 mr-2">{initialFormMatch[1]}</span>
-              <span className="text-purple-800 dark:text-purple-200">{initialFormMatch[2]}</span>
+              <HiOutlineDocumentText className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <span className="font-semibold text-blue-700 dark:text-blue-300 mr-2">{initialFormMatch[1]}</span>
+              <span className="text-blue-800 dark:text-blue-200">{initialFormMatch[2]}</span>
             </div>
           </div>
         );
