@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   HiChevronDown, 
   HiChevronUp, 
@@ -49,6 +49,7 @@ import ResolvedorMultiplicacaoMatrizes from '../resolvedores/matrizes/Resolvedor
 import ResolvedorDeterminanteMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesDeterminantes';
 import ResolvedorTransposeMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesTranspostas';
 import ResolvedorInverseMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesInversas';
+import ResolvedorExpressoesAlgebricas from '../resolvedores/algebra/ResolvedorExpressoesAlgebricas';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -217,6 +218,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorTransposeMatrizes />;
       case 'matrix-inverse':
         return <ResolvedorInverseMatrizes />;
+      case 'algebraic-expressions':
+        return <ResolvedorExpressoesAlgebricas />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

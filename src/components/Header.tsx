@@ -1,5 +1,6 @@
 import { HiHome, HiInformationCircle, HiBookOpen, HiCalculator } from 'react-icons/hi';
 import ThemeSwitcher from './ThemeSwitcher';
+import React from 'react';
 
 interface HeaderProps {
   currentPage: string;
