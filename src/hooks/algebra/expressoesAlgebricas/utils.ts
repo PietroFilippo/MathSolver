@@ -2,12 +2,12 @@ import {
   getAlgebraicSimplificationExamples,
   getAlgebraicExpansionExamples,
   getAlgebraicFactorizationExamples
-} from '../../../utils/mathUtilsAlgebra/algebraExamples';
+} from '../../../utils/mathUtilsAlgebra/examples/algebraExamples';
 import { 
   simplifyAlgebraicExpression as simplifyAlgebraExpression,
   expandAlgebraicExpression as expandAlgebraExpression, 
   factorizeAlgebraicExpression as factorizeAlgebraExpression 
-} from '../../../utils/mathUtilsAlgebra/algebraAPI';
+} from '../../../utils/mathUtilsAlgebra/core/algebraAPI';
 import { Term } from '../../../utils/mathUtilsCalculo/geral/termDefinition';
 import { approximatelyEqual } from '../../../utils/mathUtils';
 import { algebraicExpressionsConceptsAndRules } from './concepts';
@@ -585,7 +585,7 @@ const enhanceSteps = (
       
       // Detectar fator comum
       if (currentStep.includes('fator comum') && !currentStep.includes('Isolando o fator comum')) {
-        if (!enhancedSteps.some(step => step.includes('Identificar fator comum'))) {
+        if (!enhancedSteps.some(step => step.includes('Identificar fatores comuns'))) {
           const explanation = `Método de fatoração: Identificar e isolar fatores comuns`;
           if (!addedExplanations.has(explanation)) {
             enhancedSteps.push(explanation);

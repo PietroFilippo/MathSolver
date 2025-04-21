@@ -2,20 +2,22 @@
 // ========= API PRINCIPAL DE OPERAÇÕES ALGÉBRICAS ====
 // ===================================================
 
-import { AlgebraTerm, cloneTerm } from './algebraTermDefinition';
-import { parseAlgebraicExpression, normalizeExpression } from './algebraExpressionParser';
-import { termToString, simplifyConstants } from './algebraTermManipulator';
-import { expandTerm } from './algebraExpansion';
-import { combineLikeTerms } from './algebraTermUtils';
-import { factorByCommonFactor, factorQuadratic, detectPerfectSquare, detectDifferenceOfSquares } from './algebraFactorization';
-import { formatFinalResult } from './algebraUtils';
-import { applyAlgebraicRules, checkForSpecialCases } from './algebraRules';
-import { CacheEntry } from './algebraTypes';
+import { AlgebraTerm, cloneTerm } from '../terms/algebraTermDefinition';
+import { parseAlgebraicExpression, normalizeExpression } from '../expressions/algebraExpressionParser';
+import { termToString, simplifyConstants } from '../terms/algebraTermManipulator';
+import { expandTerm } from '../expressions/algebraExpansion';
+import { combineLikeTerms } from '../terms/algebraTermUtils';
+import { factorByCommonFactor, factorQuadratic, detectPerfectSquare, detectDifferenceOfSquares } from '../expressions/algebraFactorization';
+import { formatFinalResult } from '../core/algebraUtils';
+import { applyAlgebraicRules, checkForSpecialCases } from '../expressions/algebraRules';
+import { CacheEntry } from '../core/algebraTypes';
+import { simplifyExpression, simplifyLinearExpression } from '../inequalities/algebraInequalityExpressionEvaluator';
 
 // Cache de resultados para operações custosas
 const simplificationCache: Map<string, CacheEntry> = new Map();
 const expansionCache: Map<string, CacheEntry> = new Map();
 const factorizationCache: Map<string, CacheEntry> = new Map();
+const inequalityExpressionCache: Map<string, string> = new Map();
 
 // Função principal para simplificar uma expressão algébrica
 export const simplifyAlgebraicExpression = (expression: string): { result: string; steps: string[] } => {
@@ -258,6 +260,30 @@ export const factorizeAlgebraicExpression = (expression: string): { result: stri
     result: resultString,
     steps
   };
+};
+
+// Função para avaliar expressões com valores substituídos
+export const evaluateExpression = (expression: string): string => {
+  // Verificar cache primeiro
+  if (inequalityExpressionCache.has(expression)) {
+    return inequalityExpressionCache.get(expression)!;
+  }
+  
+  // Avaliar a expressão
+  const result = simplifyExpression(expression);
+  
+  // Armazenar no cache
+  inequalityExpressionCache.set(expression, result);
+  
+  return result;
+};
+
+// Função para simplificar expressões lineares
+export const simplifyLinearExpressionWithVariable = (
+  expression: string, 
+  variable: string
+): { coefficient: number; constant: number } => {
+  return simplifyLinearExpression(expression, variable);
 };
 
 // Resolver um sistema de equações lineares 2x2

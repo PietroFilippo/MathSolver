@@ -29,7 +29,7 @@ export const solvers = {
         { id: 'linear-system', name: 'Sistemas Lineares' },
         { id: 'logarithm', name: 'Logaritmos' },
         { id: 'algebraic-expressions', name: 'Expressões Algébricas' },
-        { id: 'inequations', name: 'Inequações' },
+        { id: 'inequalities', name: 'Inequações' },
         { id: 'exponential-equations', name: 'Equações Exponenciais' }
       ]
     },

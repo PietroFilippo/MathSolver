@@ -50,6 +50,7 @@ import ResolvedorDeterminanteMatrizes from '../resolvedores/matrizes/ResolvedorM
 import ResolvedorTransposeMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesTranspostas';
 import ResolvedorInverseMatrizes from '../resolvedores/matrizes/ResolvedorMatrizesInversas';
 import ResolvedorExpressoesAlgebricas from '../resolvedores/algebra/ResolvedorExpressoesAlgebricas';
+import ResolvedorInequacoes from '../resolvedores/algebra/ResolvedorInequacoes';
 
 interface SolverPageProps {
   initialCategory?: string | null;
@@ -220,6 +221,8 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorInverseMatrizes />;
       case 'algebraic-expressions':
         return <ResolvedorExpressoesAlgebricas />;
+      case 'inequalities':
+        return <ResolvedorInequacoes />;
       default:
         return <div className="p-4 text-gray-700 dark:text-gray-300">Em breve.</div>;
     }

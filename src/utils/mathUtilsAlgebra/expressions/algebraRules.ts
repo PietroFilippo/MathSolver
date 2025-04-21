@@ -2,9 +2,9 @@
 // ========= APLICAÇÃO DE REGRAS ALGÉBRICAS ==========
 // ===================================================
 
-import { AlgebraTerm, cloneTerm, areTermsEqual } from './algebraTermDefinition';
-import { termToString } from './algebraTermManipulator';
-import { isDifferenceOfSquares, transformDifferenceOfSquares, isPerfectSquareTrinomial, transformPerfectSquare } from './algebraFactorization';
+import { AlgebraTerm, cloneTerm, areTermsEqual } from '../terms/algebraTermDefinition';
+import { termToString } from '../terms/algebraTermManipulator';
+import { isDifferenceOfSquares, transformDifferenceOfSquares, isPerfectSquareTrinomial, transformPerfectSquare } from '../expressions/algebraFactorization';
 
 // Aplicar regras algébricas específicas
 export const applyAlgebraicRules = (term: AlgebraTerm, steps: string[]): AlgebraTerm => {

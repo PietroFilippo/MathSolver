@@ -23,40 +23,28 @@ export const termToString = (term: AlgebraTerm): string => {
   
   switch (term.type) {
     case 'constant':
-      result = term.value!.toString();
+      result = `${term.value}`;
       break;
       
     case 'variable':
-      result = term.variable!;
+      result = term.variable || '';
       break;
       
     case 'power':
-      const baseStr = term.variable || termToString(term.argument!);
-      const exponentStr = typeof term.exponent === 'number' ? 
-        term.exponent.toString() : 
-        termToString(term.exponent as AlgebraTerm);
-      
-      // Adicionar parênteses se necessário
-      const needsParens = term.argument && 
-        (term.argument.type === 'sum' || 
-         term.argument.type === 'difference' || 
-         term.argument.type === 'product' || 
-         term.argument.type === 'quotient');
-        
-      result = needsParens ? 
-        `(${baseStr})^${exponentStr}` : 
-        `${baseStr}^${exponentStr}`;
+      if (term.variable) {
+        result = `${term.variable}${term.exponent && term.exponent !== 1 ? `^${typeof term.exponent === 'number' ? term.exponent : termToString(term.exponent as AlgebraTerm)}` : ''}`;
+      } else if (term.argument) {
+        const base = termToString(term.argument);
+        const needsParens = term.argument.type !== 'constant' && term.argument.type !== 'variable';
+        result = `${needsParens ? '(' : ''}${base}${needsParens ? ')' : ''}${term.exponent && term.exponent !== 1 ? `^${typeof term.exponent === 'number' ? term.exponent : termToString(term.exponent as AlgebraTerm)}` : ''}`;
+      }
       break;
       
     case 'negative':
       const argStr = termToString(term.argument!);
-      
-      // Adicionar parênteses se o argumento for uma expressão composta
-      if (term.argument!.type === 'sum' || term.argument!.type === 'difference') {
-        result = `-(${argStr})`;
-      } else {
-        result = `-${argStr}`;
-      }
+      // Adicionar parênteses ao argumento se for uma soma ou diferença para evitar ambiguidade
+      const needsParensNeg = term.argument!.type === 'sum' || term.argument!.type === 'difference';
+      result = `-${needsParensNeg ? `(${argStr})` : argStr}`;
       break;
       
     case 'sum':
@@ -64,82 +52,43 @@ export const termToString = (term: AlgebraTerm): string => {
       break;
       
     case 'difference':
-      const rightStr = termToString(term.right!);
-      
-      // Adicionar parênteses se necessário no lado direito
-      if (term.right!.type === 'sum' || term.right!.type === 'difference') {
-        result = `${termToString(term.left!)} - (${rightStr})`;
-      } else {
-        result = `${termToString(term.left!)} - ${rightStr}`;
-      }
+      const rightDiffStr = termToString(term.right!);
+      // Adicionar parênteses ao termo direito se for uma soma ou diferença para evitar ambiguidade
+      const needsParens = term.right!.type === 'sum' || term.right!.type === 'difference';
+      result = `${termToString(term.left!)} - ${needsParens ? `(${rightDiffStr})` : rightDiffStr}`;
       break;
       
     case 'product':
-      // Caso especial para números negativos
-      if (term.left!.type === 'constant' && term.left!.value === -1) {
-        return termToString({
-          type: 'negative',
-          argument: term.right!
-        });
-      }
-      
-      // Caso especial para coeficiente * variável
-      if (term.left!.type === 'constant' && 
-         (term.right!.type === 'variable' || term.right!.type === 'power')) {
-        // Para coeficientes 1, mostrar apenas a variável
-        if (term.left!.value === 1) {
-          result = termToString(term.right!);
-        } else {
-          // Para outros coeficientes, mostrar sem o símbolo de multiplicação
-          result = `${term.left!.value}${termToString(term.right!)}`;
-        }
-        break;
-      }
-      
-      // Caso especial para variável * coeficiente 
-      if (term.right!.type === 'constant' && 
-         (term.left!.type === 'variable' || term.left!.type === 'power')) {
-        // Para coeficientes 1, mostrar apenas a variável
-        if (term.right!.value === 1) {
-          result = termToString(term.left!);
-        } else {
-          // Para outros coeficientes, mostrar sem o símbolo de multiplicação
-          result = `${term.right!.value}${termToString(term.left!)}`;
-        }
-        break;
-      }
-      
-      // Caso geral de multiplicação
-      const leftProdStr = termToString(term.left!);
-      const rightProdStr = termToString(term.right!);
-      
-      // Adicionar parênteses se necessário
+      // Verificar se os operandos precisam de parênteses (somas, diferenças ou outros produtos)
       const leftNeedsParens = term.left!.type === 'sum' || term.left!.type === 'difference';
       const rightNeedsParens = term.right!.type === 'sum' || term.right!.type === 'difference';
       
-      const formattedLeft = leftNeedsParens ? `(${leftProdStr})` : leftProdStr;
-      const formattedRight = rightNeedsParens ? `(${rightProdStr})` : rightProdStr;
+      const leftStr = termToString(term.left!);
+      const rightStr = termToString(term.right!);
       
-      result = `${formattedLeft} * ${formattedRight}`;
+      // Para factorização, precisamos verificar se estamos multiplicando dois binômios
+      const isBinomialProduct = (term.left!.type === 'sum' || term.left!.type === 'difference') && 
+                              (term.right!.type === 'sum' || term.right!.type === 'difference');
+      
+      if (isBinomialProduct) {
+        // Para produtos de binômios, usar formato (a+b)(c+d)
+        result = `(${leftStr})(${rightStr})`;
+      } else {
+        // Adicionar parênteses conforme necessário para evitar ambiguidade
+        result = `${leftNeedsParens ? `(${leftStr})` : leftStr} * ${rightNeedsParens ? `(${rightStr})` : rightStr}`;
+      }
       break;
       
     case 'quotient':
-      const numeratorStr = termToString(term.left!);
-      const denominatorStr = termToString(term.right!);
-      
-      // Adicionar parênteses se necessário
-      const numNeedsParens = term.left!.type === 'sum' || term.left!.type === 'difference';
-      const denomNeedsParens = term.right!.type === 'sum' || term.right!.type === 'difference';
-      
-      const formattedNum = numNeedsParens ? `(${numeratorStr})` : numeratorStr;
-      const formattedDenom = denomNeedsParens ? `(${denominatorStr})` : denominatorStr;
-      
-      result = `${formattedNum} / ${formattedDenom}`;
+      result = `${termToString(term.left!)} / ${termToString(term.right!)}`;
       break;
       
     case 'function':
-      const functionArg = termToString(term.argument!);
-      result = `${term.functionName}(${functionArg})`;
+      result = `${term.functionName}(${termToString(term.argument!)})`;
+      break;
+      
+    case 'modulus':
+      result = `|${termToString(term.argument!)}|`;
       break;
       
     case 'polynomial':

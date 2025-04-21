@@ -2,7 +2,7 @@
 // ========= TIPOS DE ÁLGEBRA COMPARTILHADOS =========
 // ===================================================
 
-import { AlgebraTerm } from './algebraTermDefinition';
+import { AlgebraTerm } from '../terms/algebraTermDefinition';
 
 // Interface para armazenar em cache os resultados de operações
 export interface CacheEntry {

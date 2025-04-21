@@ -472,51 +472,101 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         );
       }
       
-      // Padrão para a equação original
-      const equationMatch = step.includes('Equação original:') || step.includes('Forma inicial:') || step.includes('Resolvendo a equação:') || step.includes('Expressão original:');
+      // Padrão para a equação ou inequação original
+      const equationMatch = step.includes('Equação original:') || 
+                           step.includes('Forma inicial:') || 
+                           step.includes('Resolvendo a equação:') || 
+                           step.includes('Expressão original:') ||
+                           step.includes('Inequação original:');
       
       // Padrão para isolamento da variável
-      const isolateMatch = step.includes('Isolando') || step.includes('variável') || step.includes('isolar') || step.includes('Isolar fatores');
+      const isolateMatch = step.includes('Isolando') || 
+                          step.includes('variável') || 
+                          step.includes('isolar') || 
+                          step.includes('Isolar fatores') ||
+                          step.includes('Isolando o termo:');
       
       // Padrão para operações com ambos os lados
-      const operationMatch = step.includes('ambos os lados') || step.includes('os dois lados') || step.includes('Operando em ambos os lados') || step.includes('Operação:');
+      const operationMatch = step.includes('ambos os lados') || 
+                            step.includes('os dois lados') || 
+                            step.includes('Operando em ambos os lados') || 
+                            step.includes('Operação:');
       
       // Padrão para combinação de termos semelhantes
-      const likeTermsMatch = step.includes('termos semelhantes') || step.includes('coeficientes') || 
-                             step.includes('simplificar') || step.includes('Simplificando:') || 
-                             step.includes('Simplificando a divisão:') || step.includes('Combinando termos:') ||
+      const likeTermsMatch = step.includes('termos semelhantes') || 
+                             step.includes('coeficientes') || 
+                             step.includes('simplificar') || 
+                             step.includes('Simplificando:') || 
+                             step.includes('Simplificando a divisão:') || 
+                             step.includes('Combinando termos:') ||
                              step.includes('Agrupando termos');
       
       // Padrão para dividir por coeficiente
-      const divideMatch = step.includes('dividir por') || step.includes('dividindo por') || step.includes('Dividindo ambos os lados por:');
+      const divideMatch = step.includes('dividir por') || 
+                         step.includes('dividindo por') || 
+                         step.includes('Dividindo ambos os lados por:');
       
       // Padrão para resultado final
-      const resultMatch = step.includes('Resultado:') || step.includes('Solução final:') || 
-                          step.includes('Valor de x:') || step.includes('Verificação concluída:') || 
-                          step.includes('(Correto!)') || step.startsWith('Obter o resultado final');
+      const resultMatch = step.includes('Resultado:') || 
+                          step.includes('Solução final:') || 
+                          step.includes('Valor de x:') || 
+                          step.includes('Verificação concluída:') || 
+                          step.includes('(Correto!)') || 
+                          step.startsWith('Obter o resultado final') ||
+                          step.includes('O valor satisfaz') ||
+                          step.includes('O valor não satisfaz');
       
       // Padrão para verificação
-      const checkMatch = step.includes('Verificando') || step.includes('Verificação:') || 
-                         step.includes('Substituindo o valor') || step.includes('recuperamos a expressão original');
+      const checkMatch = step.includes('Verificando') || 
+                         step.includes('Verificação:') || 
+                         step.includes('Substituindo o valor') || 
+                         step.includes('recuperamos a expressão original') ||
+                         step.includes('substitui o valor');
       
       // Padrão para aplicação de regras e fórmulas
-      const ruleMatch = step.includes('Aplicando a regra:') || step.includes('Regra aplicada:') || step.includes('Fórmula:');
+      const ruleMatch = step.includes('Aplicando a regra:') || 
+                       step.includes('Regra aplicada:') || 
+                       step.includes('Fórmula:');
       
       // Padrão para propriedades matemáticas
-      const propertyMatch = step.includes('Propriedade:') || step.includes('distributiva') || 
-                           step.includes('comutativa') || step.includes('associativa') || step.includes('igualdade');
+      const propertyMatch = step.includes('Propriedade:') || 
+                           step.includes('distributiva') || 
+                           step.includes('comutativa') || 
+                           step.includes('associativa') || 
+                           step.includes('igualdade') ||
+                           step.includes('transitividade');
       
       // Padrão para métodos de resolução
-      const methodMatch = step.includes('Método:') || step.includes('Técnica:') || step.includes('Estratégia:');
+      const methodMatch = step.includes('Método:') || 
+                         step.includes('Técnica:') || 
+                         step.includes('Estratégia:');
       
       // Padrão para análise da estrutura
-      const analysisMatch = step.includes('Análise:') || step.includes('Identificando') || step.includes('Estrutura:');
+      const analysisMatch = step.includes('Análise:') || 
+                           step.includes('Identificando') || 
+                           step.includes('Estrutura:') ||
+                           step.includes('Tipo de inequação:');
       
       // Padrão para cálculos
-      const calculatingMatch = step.includes('Calculando:') || step.includes('Computando:');
+      const calculatingMatch = step.includes('Calculando:') || 
+                              step.includes('Computando:');
       
       // Padrão para observações
-      const observationMatch = step.includes('Observação:') || step.includes('Nota:');
+      const observationMatch = step.includes('Observação:') || 
+                              step.includes('Nota:') ||
+                              step.includes('Importante:');
+
+      // Padrão para inversão de sinais em inequações
+      const signChangeMatch = step.includes('inverter o sinal') || 
+                              step.includes('mudança de sinal') || 
+                              step.includes('Invertendo a desigualdade:') || 
+                              step.includes('Trocando o sentido:');
+      
+      // Padrão para intervalos de solução em inequações
+      const intervalMatch = step.includes('Intervalo de solução:') || 
+                           step.includes('Conjunto solução:') || 
+                           step.includes('Valores de x:') || 
+                           step.includes('Representação do conjunto:');
       
       if (stepMatch) {
         // Passo numerado com destaque
@@ -643,6 +693,24 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
             <div className="flex items-center">
               <HiOutlineCheck className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
               <p className="text-purple-700 dark:text-purple-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (signChangeMatch) {
+        return (
+          <div key={index} className="p-3 bg-rose-50 dark:bg-rose-900/30 rounded-md ml-4 border-l-2 border-rose-300 dark:border-rose-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineRefresh className="text-rose-600 dark:text-rose-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-rose-700 dark:text-rose-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (intervalMatch) {
+        return (
+          <div key={index} className="p-3 bg-emerald-50 dark:bg-emerald-900/30 rounded-md ml-4 border-l-2 border-emerald-300 dark:border-emerald-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineArrowsExpand className="text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-emerald-700 dark:text-emerald-300 font-medium">{step}</p>
             </div>
           </div>
         );

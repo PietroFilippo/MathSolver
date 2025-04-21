@@ -2,7 +2,8 @@
 // ========= UTILIDADES GERAIS DE ÁLGEBRA ===========
 // ===================================================
 
-import { AlgebraTerm } from './algebraTermDefinition';
+import { AlgebraTerm } from '../terms/algebraTermDefinition';
+import { solveForVariable } from '../expressions/algebraExpressionParser';
 
 // Calcular o MDC entre dois números
 export const findGCD = (a: number, b: number): number => {
@@ -47,6 +48,9 @@ export const formatFinalResult = (result: string): string => {
   
   // Substituir * por nada (implícito em notação algébrica)
   let formatted = result.replace(/\s*\*\s*/g, '');
+  
+  // Substituir ^2 por ² (superscript para expoente 2)
+  formatted = formatted.replace(/\^2\b/g, '²');
   
   // Substituir ** por ^ (padrão para expoente)
   formatted = formatted.replace(/\*\*/g, '^');
@@ -103,4 +107,22 @@ export const linearSystem = (
   const y = (a1 * c2 - a2 * c1) / det;
   
   return { x, y };
+};
+
+// Resolve uma equação linear
+export const solveLinearEquation = (equation: string, variable: string = 'x'): string => {
+  // Remove spaces and ensure the equation is in standard form
+  const cleanedEquation = equation.trim().replace(/\s+/g, '');
+  
+  // Verificar se é uma equação válida
+  if (!cleanedEquation.includes('=')) {
+    throw new Error('Expressão inválida. Uma equação deve conter o símbolo "=".');
+  }
+  
+  try {
+    // Usar a função solveForVariable para resolver a equação
+    return solveForVariable(cleanedEquation, variable);
+  } catch (error) {
+    throw new Error(`Erro ao resolver a equação: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }; 

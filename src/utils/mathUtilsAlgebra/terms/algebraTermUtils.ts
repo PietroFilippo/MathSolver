@@ -4,9 +4,9 @@
 
 import { AlgebraTerm, cloneTerm, areTermsEqual } from './algebraTermDefinition';
 import { termToString } from './algebraTermManipulator';
-import { buildSumTree, findGCD } from './algebraUtils';
-import { distributeNegative } from './algebraExpansion';
-import { findCommonFactor, factorOutCommonTerm } from './algebraFactorization';
+import { buildSumTree } from '../core/algebraUtils';
+import { distributeNegative } from '../expressions/algebraExpansion';
+import { findCommonFactor, factorOutCommonTerm } from '../expressions/algebraFactorization';
 
 // Função para combinar termos semelhantes em um termo algébrico
 export const combineLikeTerms = (term: AlgebraTerm, steps: string[]): AlgebraTerm => {

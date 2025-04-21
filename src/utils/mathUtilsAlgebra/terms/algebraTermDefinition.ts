@@ -4,7 +4,7 @@
 
 // Definição dos tipos de termos algébricos
 export type AlgebraTerm = {
-  type: 'constant' | 'variable' | 'power' | 'sum' | 'difference' | 'product' | 'quotient' | 'negative' | 'function' | 'polynomial' | 'fraction';
+  type: 'constant' | 'variable' | 'power' | 'sum' | 'difference' | 'product' | 'quotient' | 'negative' | 'function' | 'polynomial' | 'fraction' | 'modulus';
   value?: number;
   variable?: string;
   exponent?: number | AlgebraTerm;
@@ -115,6 +115,10 @@ export const areTermsEqual = (term1: AlgebraTerm, term2: AlgebraTerm): boolean =
       // Funções são iguais se têm o mesmo nome e argumento
       return term1.functionName === term2.functionName && 
              areTermsEqual(term1.argument!, term2.argument!);
+      
+    case 'modulus':
+      // Modulus termos são iguais se seus argumentos são iguais
+      return areTermsEqual(term1.argument!, term2.argument!);
       
     default:
       // Para outros tipos, consideramos diferentes

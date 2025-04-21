@@ -2,9 +2,9 @@
 // ========= UTILIDADES DE EXPANSÃO ================
 // ===================================================
 
-import { AlgebraTerm, cloneTerm, areTermsEqual } from './algebraTermDefinition';
-import { termToString } from './algebraTermManipulator';
-import { combineLikeTerms } from './algebraTermUtils';
+import { AlgebraTerm, cloneTerm, areTermsEqual } from '../terms/algebraTermDefinition';
+import { termToString } from '../terms/algebraTermManipulator';
+import { combineLikeTerms } from '../terms/algebraTermUtils';
 
 // Distribuir sinal negativo sobre uma expressão
 export const distributeNegative = (term: AlgebraTerm, steps: string[]): AlgebraTerm => {

@@ -1,25 +1,6 @@
 // ===================================================
-// ======== MÓDULO DE ÁLGEBRA - MAIN EXPORTS =========
+// ========= MATH UTILS ALGEBRA ROOT EXPORTS ===========
 // ===================================================
 
-// Export all modules from the modular algebra system
-
-// Core types
-export * from './algebraTypes';
-
-// Term definition and manipulation
-export * from './algebraTermDefinition';
-export * from './algebraTermManipulator';
-
-// Core algebra utilities
-export * from './algebraTermUtils';
-export * from './algebraFactorization';
-export * from './algebraExpansion';
-export * from './algebraRules';
-export * from './algebraUtils';
-
-// Main API
-export * from './algebraAPI';
-
-// Re-export examples if needed
-export * from './algebraExamples';
+// Re-exporta todos os subdiretórios de core
+export * from './core'; 

@@ -2,11 +2,11 @@
 // ========= UTILIDADES DE FATORAÇÃO ALGÉBRICA ========
 // ===================================================
 
-import { AlgebraTerm, cloneTerm, areTermsEqual } from './algebraTermDefinition';
-import { termToString } from './algebraTermManipulator';
-import { extractTermsFromSum, normalizeNegativeTerm, extractCoefficientAndVariable } from './algebraTermUtils';
-import { findGCD } from './algebraUtils';
-import { QuadraticInfo, LinearInfo } from './algebraTypes';
+import { AlgebraTerm, cloneTerm, areTermsEqual } from '../terms/algebraTermDefinition';
+import { termToString } from '../terms/algebraTermManipulator';
+import { extractTermsFromSum, normalizeNegativeTerm, extractCoefficientAndVariable } from '../terms/algebraTermUtils';
+import { findGCD } from '../core/algebraUtils';
+import { QuadraticInfo, LinearInfo } from '../core/algebraTypes';
 
 // Encontrar o fator comum entre dois termos
 export const findCommonFactor = (prod1: AlgebraTerm, prod2: AlgebraTerm): AlgebraTerm | null => {
