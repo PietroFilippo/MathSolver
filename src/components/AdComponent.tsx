@@ -10,15 +10,15 @@ const AdComponent: React.FC<AdProps> = ({ adSlot, adFormat = 'auto', style = {} 
   const adRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // Only try to load ads if we're in a browser environment
+    // Apenas tenta carregar anúncios se estiver em um ambiente de navegador
     if (typeof window !== 'undefined' && adRef.current) {
       try {
-        // Clear previous ad if any
+        // Limpa o anúncio anterior se houver
         if (adRef.current.childNodes.length > 0) {
           adRef.current.innerHTML = '';
         }
         
-        // Create a new ins element for the ad
+        // Cria um novo elemento ins para o anúncio
         const adElement = document.createElement('ins');
         adElement.className = 'adsbygoogle';
         adElement.style.display = 'block';
@@ -28,22 +28,22 @@ const AdComponent: React.FC<AdProps> = ({ adSlot, adFormat = 'auto', style = {} 
         adElement.setAttribute('data-ad-format', adFormat);
         adElement.setAttribute('data-full-width-responsive', 'true');
         
-        // Append the ad to our ref
+        // Anexa o anúncio ao nosso ref
         adRef.current.appendChild(adElement);
         
-        // Execute the ad code
+        // Executa o código do anúncio
         try {
           // @ts-ignore
           (window.adsbygoogle = window.adsbygoogle || []).push({});
         } catch (error) {
-          console.error('AdSense push error:', error);
+          console.error('Erro ao executar o código do anúncio:', error);
         }
       } catch (error) {
-        console.error('AdSense load error:', error);
+        console.error('Erro ao carregar o anúncio:', error);
       }
     }
     
-    // Cleanup function
+    // Função de limpeza
     return () => {
       if (adRef.current) {
         adRef.current.innerHTML = '';

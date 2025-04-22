@@ -7,7 +7,7 @@ export const solvers = {
         { id: 'percentage', name: 'Porcentagem' },
         { id: 'proportion', name: 'Proporções' },
         { id: 'mmc-mdc', name: 'MMC e MDC' },
-        { id: 'fatorizacao', name: 'Fatoração em Primos' }
+        { id: 'factorization', name: 'Fatoração em Primos' }
       ]
     },
     'fractions': {
@@ -90,7 +90,7 @@ export const solvers = {
   export const educationalLevels = {
     'elementary': [
       // Aritmética
-      'percentage', 'arithmetic-mean', 'proportion', 'mmc-mdc', 'fatorizacao',
+      'percentage', 'arithmetic-mean', 'proportion', 'mmc-mdc', 'factorization',
       // Frações
       'fraction-add-sub', 'fraction-mult-div', 'fraction-simplification', 'mixed-fractions',
       // Estatística básica

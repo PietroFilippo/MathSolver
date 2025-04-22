@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+import React,{ useState, useRef, useEffect } from 'react';
 import { HiSun, HiMoon, HiColorSwatch } from 'react-icons/hi';
 import { useTheme } from '../contexts/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const ThemeSwitcher: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,16 +25,16 @@ const ThemeSwitcher: React.FC = () => {
 
   // Opções de tema
   const themeOptions = [
-    { value: 'light', label: 'Claro', icon: <HiSun className="w-5 h-5 text-yellow-500" /> },
-    { value: 'dark', label: 'Escuro', icon: <HiMoon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> },
-    { value: 'blue', label: 'Azul', colorClass: 'bg-blue-500' },
-    { value: 'purple', label: 'Roxo', colorClass: 'bg-purple-500' },
-    { value: 'green', label: 'Verde', colorClass: 'bg-green-500' },
-    { value: 'red', label: 'Vermelho', colorClass: 'bg-red-500' },
-    { value: 'pink', label: 'Rosa', colorClass: 'bg-pink-500' },
-    { value: 'yellow', label: 'Amarelo', colorClass: 'bg-yellow-500' },
-    { value: 'brown', label: 'Marrom', colorClass: 'bg-amber-800' },
-    { value: 'rgb', label: 'RGB', colorClass: 'rgb-gradient' },
+    { value: 'light', label: t('theme.light'), icon: <HiSun className="w-5 h-5 text-yellow-500" /> },
+    { value: 'dark', label: t('theme.dark'), icon: <HiMoon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /> },
+    { value: 'blue', label: t('theme.blue'), colorClass: 'bg-blue-500' },
+    { value: 'purple', label: t('theme.purple'), colorClass: 'bg-purple-500' },
+    { value: 'green', label: t('theme.green'), colorClass: 'bg-green-500' },
+    { value: 'red', label: t('theme.red'), colorClass: 'bg-red-500' },
+    { value: 'pink', label: t('theme.pink'), colorClass: 'bg-pink-500' },
+    { value: 'yellow', label: t('theme.yellow'), colorClass: 'bg-yellow-500' },
+    { value: 'brown', label: t('theme.brown'), colorClass: 'bg-amber-800' },
+    { value: 'rgb', label: t('theme.rgb'), colorClass: 'rgb-gradient' },
   ];
 
   // Obter ícone do tema atual
@@ -48,11 +50,11 @@ const ThemeSwitcher: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center hover:text-white transition-colors duration-200"
-        aria-label="Mudar tema"
-        title="Mudar tema"
+        aria-label={t('theme.change_theme')}
+        title={t('theme.change_theme')}
       >
         {getCurrentThemeIcon()}
-        <span>Tema</span>
+        <span>{t('theme.theme')}</span>
       </button>
 
       {isOpen && (

@@ -1,6 +1,8 @@
 import { HiHome, HiInformationCircle, HiBookOpen, HiCalculator } from 'react-icons/hi';
 import ThemeSwitcher from './ThemeSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   currentPage: string;
@@ -8,6 +10,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
+  const { t } = useTranslation();
   // Verifica se estamos visualizando a seção Sobre dentro da página inicial
   const isSobreActive = currentPage === 'sobre' || 
     (currentPage === 'home' && window.location.hash === '#sobre');
@@ -21,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
             className="flex items-center mb-4 md:mb-0 hover:opacity-80 transition-opacity duration-200"
           >
             <HiCalculator className="h-8 w-8 mr-2" />
-            <h1 className="text-2xl font-bold">MathSolver</h1>
+            <h1 className="text-2xl font-bold">{t('app.title')}</h1>
           </button>
           
           <div className="flex items-center">
@@ -39,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     className={`flex items-center ${currentPage === 'home' && !isSobreActive ? 'text-white font-bold' : 'text-indigo-200 dark:text-gray-300 hover:text-white'}`}
                   >
                     <HiHome className="h-5 w-5 mr-1" />
-                    <span>Home</span>
+                    <span>{t('navigation.home')}</span>
                   </button>
                 </li>
                 <li>
@@ -48,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     className={`flex items-center ${currentPage === 'resolvedor' ? 'text-white font-bold' : 'text-indigo-200 dark:text-gray-300 hover:text-white'}`}
                   >
                     <HiBookOpen className="h-5 w-5 mr-1" />
-                    <span>Resolvedores</span>
+                    <span>{t('navigation.solvers')}</span>
                   </button>
                 </li>
                 <li>
@@ -57,13 +60,14 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     className={`flex items-center ${isSobreActive ? 'text-white font-bold' : 'text-indigo-200 dark:text-gray-300 hover:text-white'}`}
                   >
                     <HiInformationCircle className="h-5 w-5 mr-1" />
-                    <span>Sobre</span>
+                    <span>{t('navigation.about')}</span>
                   </button>
                 </li>
               </ul>
             </nav>
             
-            <div className="flex items-center text-indigo-200 dark:text-gray-300 hover:text-white ml-4">
+            <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               <ThemeSwitcher />
             </div>
           </div>
