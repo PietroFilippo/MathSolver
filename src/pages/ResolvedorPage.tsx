@@ -182,7 +182,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
         return <ResolvedorLogaritmo />;
       case 'mmc-mdc':
         return <ResolvedorMMCMDC />;
-      case 'fatorizacao':
+      case 'factorization':
         return <ResolvedorFatorizacao />;
       case 'weighted-mean':
         return <ResolvedorMediaPonderada />;
@@ -360,59 +360,61 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div className="md:col-span-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-        <div className="mb-4">
-          <div className="flex space-x-2 mb-4">
-            <button
-              onClick={() => setFilterMode('subject')}
-              className={`flex-1 py-2 px-4 rounded-lg ${
-                filterMode === 'subject'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-              }`}
-            >
-              {t('solver_page.by_subject')}
-            </button>
-            <button
-              onClick={() => setFilterMode('level')}
-              className={`flex-1 py-2 px-4 rounded-lg ${
-                filterMode === 'level'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-              }`}
-            >
-              {t('solver_page.by_level')}
-            </button>
+      <div className="md:col-span-1">
+        <div className="sticky top-4 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="mb-4">
+            <div className="flex space-x-2 mb-4">
+              <button
+                onClick={() => setFilterMode('subject')}
+                className={`flex-1 py-2 px-4 rounded-lg ${
+                  filterMode === 'subject'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                }`}
+              >
+                {t('solver_page.filter_modes.by_subject')}
+              </button>
+              <button
+                onClick={() => setFilterMode('level')}
+                className={`flex-1 py-2 px-4 rounded-lg ${
+                  filterMode === 'level'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                }`}
+              >
+                {t('solver_page.filter_modes.by_level')}
+              </button>
+            </div>
+            
+            <div className="mb-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={t('solver_page.search.placeholder')}
+                  className="w-full p-2 pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    if (e.target.value) {
+                      setFilterMode('search');
+                    } else if (filterMode === 'search') {
+                      setFilterMode('subject');
+                    }
+                  }}
+                />
+                <HiSearch className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+
+            {filterMode === 'search' 
+              ? renderSearchResults() 
+              : filterMode === 'level' 
+                ? renderByLevel() 
+                : renderBySubject()}
           </div>
           
-          <div className="mb-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder={t('solver_page.search_placeholder')}
-                className="w-full p-2 pl-10 pr-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  if (e.target.value) {
-                    setFilterMode('search');
-                  } else if (filterMode === 'search') {
-                    setFilterMode('subject');
-                  }
-                }}
-              />
-              <HiSearch className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-            </div>
-          </div>
-
-          {filterMode === 'search' 
-            ? renderSearchResults() 
-            : filterMode === 'level' 
-              ? renderByLevel() 
-              : renderBySubject()}
+          <AdComponent adSlot="7894561230" />
         </div>
-        
-        <AdComponent adSlot="7894561230" />
       </div>
       
       <div className="md:col-span-2">

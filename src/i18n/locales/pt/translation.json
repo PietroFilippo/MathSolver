@@ -1,0 +1,214 @@
+{
+  "app": {
+    "title": "Resolvedor de Matemática",
+    "description": "Resolva problemas matemáticos com facilidade"
+  },
+  "navigation": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato",
+    "solvers": "Resolvedores"
+  },
+  "buttons": {
+    "solve": "Resolver",
+    "reset": "Limpar",
+    "submit": "Enviar",
+    "start_solving": "Comece a resolver agora",
+    "explore": "Explorar"
+  },
+  "theme": {
+    "theme": "Tema",
+    "change_theme": "Mudar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "blue": "Azul",
+    "purple": "Roxo",
+    "green": "Verde",
+    "red": "Vermelho",
+    "pink": "Rosa",
+    "yellow": "Amarelo",
+    "brown": "Marrom",
+    "rgb": "RGB"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Masterize Matemática com o MathSolver",
+      "subtitle": "Resolva problemas matemáticos de forma fácil e eficiente com o MathSolver"
+    },
+    "why_use": {
+      "title": "Por que usar o MathSolver?",
+      "various_problems": {
+        "title": "Vários Tipos de Problemas",
+        "description": "De aritmética básica a álgebra avançada"
+      },
+      "step_by_step": {
+        "title": "Soluções Passo a Passo",
+        "description": "Não ganhe apenas uma resposta - entenda como resolver você mesmo na próxima vez"
+      },
+      "improve_skills": {
+        "title": "Melhore suas Habilidades",
+        "description": "Construa confiança e domínio sobre os conceitos matemáticos através da prática e compreensão"
+      }
+    },
+    "categories": {
+      "title": "Categorias de Problemas",
+      "arithmetic": {
+        "title": "Aritmética",
+        "items": ["Porcentagem", "Proporções", "MMC e MDC", "Fatorização"],
+        "explore": "Explorar Aritmética"
+      },
+      "fractions": {
+        "title": "Frações",
+        "items": ["Adição e Subtração", "Multiplicação e Divisão", "Simplificação", "Frações Mistas"],
+        "explore": "Explorar Frações"
+      },
+      "algebra": {
+        "title": "Álgebra",
+        "items": ["Equações de Primeiro Grau", "Equações Quadráticas", "Sistemas Lineares", "Logaritmos"],
+        "explore": "Explorar Álgebra"
+      },
+      "trigonometry": {
+        "title": "Trigonometria",
+        "items": ["Funções Trigonométricas", "Equações Trigonométricas", "Gráficos Trigonométricos"],
+        "explore": "Explorar Trigonometria"
+      },
+      "statistics": {
+        "title": "Estatística",
+        "items": ["Média, Moda e Mediana", "Média Ponderada", "Medidas de Dispersão", "Coeficiente de Variação"],
+        "explore": "Explorar Estatística"
+      },
+      "calculus": {
+        "title": "Cálculo",
+        "items": ["Derivadas", "Integrais", "Limites"],
+        "explore": "Explorar Cálculo"
+      },
+      "geometry": {
+        "title": "Geometria",
+        "items": ["Área de Figuras Planas", "Perímetros", "Volume de Sólidos"],
+        "explore": "Explorar Geometria"
+      },
+      "matrices": {
+        "title": "Matrizes",
+        "items": ["Adição e Subtração", "Multiplicação", "Determinante", "Matriz Transposta"],
+        "explore": "Explorar Matrizes"
+      },
+      "by_level": {
+        "title": "Por Nível Escolar",
+        "description": "Filtre problemas por nível escolar para encontrar exercícios apropriados para sua série.",
+        "explore": "Ver Níveis Escolares"
+      }
+    },
+    "about": {
+      "title": "Sobre o MathSolver",
+      "subtitle": "Tornar a matemática acessível e compreensível para todos",
+      "main_objective": {
+        "title": "Objetivo Principal",
+        "description1": "O MathSolver foi criado com uma missão simples: tornar a matemática acessível, compreensível e menos intimidadora para pessoas de todas as idades.",
+        "description2": "O principal objetivo não é apenas fornecer respostas, mas fomentar a verdadeira compreensão dos conceitos matemáticos. Ao oferecer explicações passo a passo ao lado das soluções, os alunos aprendem a desenvolver habilidades de resolução de problemas que os acompanharão durante sua jornada acadêmica."
+      },
+      "educational_philosophy": {
+        "title": "Filosofia Educacional",
+        "description1": "No MathSolver, entender o \"porquê\" por trás dos processos matemáticos é tão importante quanto saber o \"como\". Essa abordagem enfatiza a compreensão conceitual juntamente com a fluência procedimental.",
+        "description2": "As explicações são projetadas para ser claras, concisas e acessíveis a pessoas de diferentes níveis de proficiência matemática."
+      },
+      "target_audience": {
+        "title": "Para Quem É Destinado",
+        "description": "O MathSolver é destinado a aqueles que estão interessados em aprender e dominar conceitos matemáticos:",
+        "elementary_students": "Estudantes do ensino fundamental e médio aprendendo conceitos matemáticos fundamentais",
+        "high_school_students": "Estudantes do ensino médio enfrentando tópicos mais avançados como álgebra, geometria e cálculo",
+        "parents": "Pais ajudando seus filhos com deveres de casa",
+        "adults": "Adultos revisando seus conhecimentos matemáticos",
+        "anyone": "Qualquer pessoa com interesse em melhorar suas habilidades matemáticas",
+        "conclusion": "Seja você alguém com dificuldades em um problema específico ou alguém que deseja fortalecer sua base matemática geral."
+      }
+    }
+  },
+  "footer": {
+    "title": "MathSolver",
+    "tagline": "Facilitando o aprendizado da matemática, um problema por vez"
+  },
+  "solver_page": {
+    "title": "Resolvedores de Matemática",
+    "select_solver": "Selecione um resolvedor",
+    "select_solver_description": "Escolha um resolvedor na barra lateral para começar a resolver problemas matemáticos passo a passo.",
+    "filter_modes": {
+      "by_subject": "Por Assunto",
+      "by_level": "Por Nível",
+      "search": "Buscar"
+    },
+    "levels": {
+      "elementary": "Ensino Fundamental",
+      "high_school": "Ensino Médio"
+    },
+    "search": {
+      "placeholder": "Buscar resolvedor...",
+      "no_results": "Nenhum resolvedor encontrado para sua busca.",
+      "results_for": "Resultados para",
+      "in_category": "na categoria"
+    }
+  },
+  "categories": {
+    "arithmetic": "Aritmética",
+    "fractions": "Frações",
+    "algebra": "Álgebra",
+    "matrices": "Matrizes",
+    "trigonometry": "Trigonometria",
+    "geometry": "Geometria",
+    "statistics": "Estatística",
+    "calculus": "Cálculo"
+  },
+  "solvers": {
+    "percentage": "Porcentagem",
+    "proportion": "Proporções",
+    "mmc_mdc": "MMC e MDC",
+    "factorization": "Fatoração em Primos",
+    "fraction_add_sub": "Adição e Subtração de Frações",
+    "fraction_mult_div": "Multiplicação e Divisão de Frações",
+    "fraction_simplification": "Simplificação de Frações",
+    "mixed_fractions": "Frações Mistas",
+    "linear_equation": "Equações de Primeiro Grau",
+    "quadratic_equation": "Equações Quadráticas",
+    "linear_system": "Sistemas Lineares",
+    "logarithm": "Logaritmos",
+    "algebraic_expressions": "Expressões Algébricas",
+    "inequalities": "Inequações",
+    "exponential_equations": "Equações Exponenciais",
+    "matrix_add_sub": "Adição e Subtração de Matrizes",
+    "matrix_mult": "Multiplicação de Matrizes",
+    "matrix_determinant": "Determinante de Matrizes",
+    "matrix_transpose": "Matriz Transposta",
+    "matrix_inverse": "Matriz Inversa",
+    "trigonometric_functions": "Funções Trigonométricas",
+    "trigonometric_equations": "Equações Trigonométricas",
+    "trigonometric_graphs": "Gráficos Trigonométricos",
+    "plane_figures_area": "Área de Figuras Planas",
+    "perimeters": "Perímetros de Figuras Planas",
+    "solid_volumes": "Volume de Sólidos",
+    "surface_solids": "Superfície de Sólidos",
+    "coordinate_geometry": "Geometria de Coordenadas",
+    "vector_geometry": "Geometria Vetorial",
+    "analytic_geometry": "Geometria Analítica",
+    "mean_mode_median": "Média, Moda e Mediana",
+    "weighted_mean": "Média Ponderada",
+    "dispersions": "Dispersões",
+    "variation_coefficient": "Coeficiente de Variação",
+    "derivatives": "Derivadas",
+    "integrals": "Integrais",
+    "limits": "Limites"
+  },
+  "common": {
+    "step": "Passo",
+    "result": "Resultado",
+    "verification": "Verificação",
+    "example": "Exemplo",
+    "examples": "Exemplos",
+    "calculate": "Calcular",
+    "solution": "Solução",
+    "error": "Erro",
+    "loading": "Carregando...",
+    "please_wait": "Aguarde um momento",
+    "input_value": "Digite um valor",
+    "verify": "Verificar",
+    "explanation": "Explicação"
+  }
+} 

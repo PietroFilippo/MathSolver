@@ -1,0 +1,214 @@
+{
+  "app": {
+    "title": "Math Solver",
+    "description": "Solve math problems with ease"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "solvers": "Solvers"
+  },
+  "buttons": {
+    "solve": "Solve",
+    "reset": "Reset",
+    "submit": "Submit",
+    "start_solving": "Start solving now",
+    "explore": "Explore"
+  },
+  "theme": {
+    "theme": "Theme",
+    "change_theme": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "blue": "Blue",
+    "purple": "Purple",
+    "green": "Green",
+    "red": "Red",
+    "pink": "Pink",
+    "yellow": "Yellow",
+    "brown": "Brown",
+    "rgb": "RGB"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Master Mathematics with MathSolver",
+      "subtitle": "Solve math problems easily and efficiently with MathSolver"
+    },
+    "why_use": {
+      "title": "Why use MathSolver?",
+      "various_problems": {
+        "title": "Various Types of Problems",
+        "description": "From basic arithmetic to advanced algebra"
+      },
+      "step_by_step": {
+        "title": "Step-by-Step Solutions",
+        "description": "Don't just get an answer - understand how to solve it yourself next time"
+      },
+      "improve_skills": {
+        "title": "Improve Your Skills",
+        "description": "Build confidence and mastery of math concepts through practice and understanding"
+      }
+    },
+    "categories": {
+      "title": "Problem Categories",
+      "arithmetic": {
+        "title": "Arithmetic",
+        "items": ["Percentage", "Proportions", "LCM and GCD", "Factorization"],
+        "explore": "Explore Arithmetic"
+      },
+      "fractions": {
+        "title": "Fractions",
+        "items": ["Addition and Subtraction", "Multiplication and Division", "Simplification", "Mixed Fractions"],
+        "explore": "Explore Fractions"
+      },
+      "algebra": {
+        "title": "Algebra",
+        "items": ["First Degree Equations", "Quadratic Equations", "Linear Systems", "Logarithms"],
+        "explore": "Explore Algebra"
+      },
+      "trigonometry": {
+        "title": "Trigonometry",
+        "items": ["Trigonometric Functions", "Trigonometric Equations", "Trigonometric Graphs"],
+        "explore": "Explore Trigonometry"
+      },
+      "statistics": {
+        "title": "Statistics",
+        "items": ["Mean, Mode and Median", "Weighted Mean", "Measures of Dispersion", "Coefficient of Variation"],
+        "explore": "Explore Statistics"
+      },
+      "calculus": {
+        "title": "Calculus",
+        "items": ["Derivatives", "Integrals", "Limits"],
+        "explore": "Explore Calculus"
+      },
+      "geometry": {
+        "title": "Geometry",
+        "items": ["Area of Plane Figures", "Perimeters", "Volume of Solids"],
+        "explore": "Explore Geometry"
+      },
+      "matrices": {
+        "title": "Matrices",
+        "items": ["Addition and Subtraction", "Multiplication", "Determinant", "Transpose Matrix"],
+        "explore": "Explore Matrices"
+      },
+      "by_level": {
+        "title": "By School Level",
+        "description": "Filter problems by school level to find exercises appropriate for your grade.",
+        "explore": "View School Levels"
+      }
+    },
+    "about": {
+      "title": "About MathSolver",
+      "subtitle": "Making mathematics accessible and comprehensible for everyone",
+      "main_objective": {
+        "title": "Main Objective",
+        "description1": "MathSolver was created with a simple mission: to make mathematics accessible, comprehensible, and less intimidating for people of all ages.",
+        "description2": "The main goal is not just to provide answers, but to foster true understanding of mathematical concepts. By offering step-by-step explanations alongside solutions, students learn to develop problem-solving skills that will accompany them throughout their academic journey."
+      },
+      "educational_philosophy": {
+        "title": "Educational Philosophy",
+        "description1": "At MathSolver, understanding the 'why' behind mathematical processes is as important as knowing the 'how'. This approach emphasizes conceptual understanding along with procedural fluency.",
+        "description2": "The explanations are designed to be clear, concise, and accessible to people with different levels of mathematical proficiency."
+      },
+      "target_audience": {
+        "title": "Target Audience",
+        "description": "MathSolver is intended for those interested in learning and mastering mathematical concepts:",
+        "elementary_students": "Elementary and middle school students learning fundamental math concepts",
+        "high_school_students": "High school students facing more advanced topics like algebra, geometry, and calculus",
+        "parents": "Parents helping their children with homework",
+        "adults": "Adults reviewing their mathematical knowledge",
+        "anyone": "Anyone interested in improving their math skills",
+        "conclusion": "Whether you're someone struggling with a specific problem or someone who wants to strengthen your general mathematical foundation."
+      }
+    }
+  },
+  "footer": {
+    "title": "MathSolver",
+    "tagline": "Facilitating math learning, one problem at a time"
+  },
+  "solver_page": {
+    "title": "Math Solvers",
+    "select_solver": "Select a solver",
+    "select_solver_description": "Choose a solver from the sidebar to start solving mathematical problems step by step.",
+    "filter_modes": {
+      "by_subject": "By Subject",
+      "by_level": "By Level",
+      "search": "Search"
+    },
+    "levels": {
+      "elementary": "Elementary School",
+      "high_school": "High School"
+    },
+    "search": {
+      "placeholder": "Search for a solver...",
+      "no_results": "No solvers found matching your search.",
+      "results_for": "Results for",
+      "in_category": "in category"
+    }
+  },
+  "categories": {
+    "arithmetic": "Arithmetic",
+    "fractions": "Fractions",
+    "algebra": "Algebra",
+    "matrices": "Matrices",
+    "trigonometry": "Trigonometry",
+    "geometry": "Geometry",
+    "statistics": "Statistics",
+    "calculus": "Calculus"
+  },
+  "solvers": {
+    "percentage": "Percentage",
+    "proportion": "Proportions",
+    "mmc_mdc": "LCM and GCD",
+    "factorization": "Prime Factorization",
+    "fraction_add_sub": "Addition and Subtraction of Fractions",
+    "fraction_mult_div": "Multiplication and Division of Fractions",
+    "fraction_simplification": "Simplification of Fractions",
+    "mixed_fractions": "Mixed Fractions",
+    "linear_equation": "First Degree Equations",
+    "quadratic_equation": "Quadratic Equations",
+    "linear_system": "Linear Systems",
+    "logarithm": "Logarithms",
+    "algebraic_expressions": "Algebraic Expressions",
+    "inequalities": "Inequalities",
+    "exponential_equations": "Exponential Equations",
+    "matrix_add_sub": "Addition and Subtraction of Matrices",
+    "matrix_mult": "Multiplication of Matrices",
+    "matrix_determinant": "Matrix Determinant",
+    "matrix_transpose": "Transpose Matrix",
+    "matrix_inverse": "Inverse Matrix",
+    "trigonometric_functions": "Trigonometric Functions",
+    "trigonometric_equations": "Trigonometric Equations",
+    "trigonometric_graphs": "Trigonometric Graphs",
+    "plane_figures_area": "Area of Plane Figures",
+    "perimeters": "Perimeters of Plane Figures",
+    "solid_volumes": "Volume of Solids",
+    "surface_solids": "Surface of Solids",
+    "coordinate_geometry": "Coordinate Geometry",
+    "vector_geometry": "Vector Geometry",
+    "analytic_geometry": "Analytic Geometry",
+    "mean_mode_median": "Mean, Mode and Median",
+    "weighted_mean": "Weighted Mean",
+    "dispersions": "Dispersions",
+    "variation_coefficient": "Coefficient of Variation",
+    "derivatives": "Derivatives",
+    "integrals": "Integrals",
+    "limits": "Limits"
+  },
+  "common": {
+    "step": "Step",
+    "result": "Result",
+    "verification": "Verification",
+    "example": "Example",
+    "examples": "Examples",
+    "calculate": "Calculate",
+    "solution": "Solution",
+    "error": "Error",
+    "loading": "Loading...",
+    "please_wait": "Please wait",
+    "input_value": "Enter a value",
+    "verify": "Verify",
+    "explanation": "Explanation"
+  }
+} 
