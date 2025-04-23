@@ -209,6 +209,14 @@
     "please_wait": "Please wait",
     "input_value": "Enter a value",
     "verify": "Verify",
-    "explanation": "Explanation"
+    "explanation": "Explanation",
+    "show_explanation": "Show detailed explanation",
+    "hide_explanation": "Hide detailed explanation",
+    "step_by_step": "Step-by-step solution",
+    "mathematical_concept": "Mathematical Concept",
+    "tip": "Tip",
+    "errors": {
+      "unknown": "Unknown error."
+    }
   }
 } 

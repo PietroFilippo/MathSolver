@@ -11,8 +11,11 @@ import {
   HiOutlineArrowRight,
   HiOutlinePencil,
   HiOutlineArrowsExpand,
-  HiOutlineTable
+  HiOutlineTable,
+  HiCheckCircle,
+  HiXCircle
 } from 'react-icons/hi';
+import { useTranslation, Trans } from 'react-i18next';
 
 interface StepByStepExplanationProps {
   steps: (string | ReactNode)[];
@@ -25,9 +28,223 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
   customRenderStep,
   stepType = 'default'
 }) => {
+  const { t } = useTranslation(['arithmetic', 'translation']);
+  
+  // Função para lidar com os passos de verificação concluídos
+  const getVerificationStatus = (text: string) => {
+    // Verifica se há ✓ ou "Correct!" no texto, o que indica uma verificação bem-sucedida
+    return text.includes('✓') || text.includes('(Correct!)') || text.includes('true');
+  };
+
   const defaultRenderStep = (step: string | ReactNode, index: number) => {
     if (typeof step !== 'string') {
       return <div key={index} className="p-3 bg-theme-container dark:bg-gray-800 rounded-md">{step}</div>;
+    }
+
+    // Lidar com o separador para a seção de verificação
+    if (step === 'verification' || step === 'translation:verification' || step === 'common.verification') {
+      return (
+        <div key={index} className="flex items-center justify-center my-4">
+          <div className="w-full h-px bg-purple-200 dark:bg-purple-800"></div>
+          <span className="px-3 py-1 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900 rounded-full mx-4">
+            {t('common.verification')}
+          </span>
+          <div className="w-full h-px bg-purple-200 dark:bg-purple-800"></div>
+        </div>
+      );
+    }
+
+    // Lidar com o cabeçalho do passo
+    if (step.startsWith('common.step') || step.startsWith('translation:common.step')) {
+      const stepNumberMatch = step.match(/(?:common\.step|translation:common\.step) (\d+):(.*)/);
+      if (stepNumberMatch) {
+        const [_, stepNumber, content] = stepNumberMatch;
+        return (
+          <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border-l-4 border-indigo-500 dark:border-indigo-600 shadow-sm my-3">
+            <div className="flex flex-col sm:flex-row">
+              <span className="font-bold text-indigo-700 dark:text-indigo-300 mr-2 mb-1 sm:mb-0">{t('common.step')} {stepNumber}:</span>
+              <p className="text-gray-800 dark:text-gray-200">{content.trim()}</p>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    // Lidar com o cabeçalho de verificação
+    if (step.startsWith('common.verification:') || 
+        step.startsWith('translation:common.verification:') || 
+        step === 'Verification:' ||
+        step.includes('Verificando o resultado') ||
+        step.includes('Verifying the result') ||
+        step.includes('Verificação final') ||
+        step.includes('Final verification') ||
+        step.includes('Verificação do resultado') ||
+        step.includes('Verification of the result') ||
+        (step.startsWith('Verifying') && step.includes('should')) ||
+        (step.startsWith('Verificando') && step.includes('deve'))) {
+      return (
+        <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 shadow-sm my-2 mt-4">
+          <div className="flex items-center">
+            <HiOutlineCheckCircle className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+            <p className="text-purple-700 dark:text-purple-300 font-medium">{step}</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Tratamento especial para passos de verificação concluídos com indicador de correção
+    if ((step.includes('verification.completed') || 
+         step.includes('Verification completed') ||
+         step.includes('Verificação concluída')) && 
+        (step.includes('✓') || step.includes('(Correct!)') || step.includes('{{#if'))) {
+      
+      // Limpar qualquer sintaxe de handlebars se presente
+      let cleanedStep = step;
+      
+      // Tratamento de verificação de fatoração com condicional isCorrect
+      if (step.includes('{{#if isCorrect}}')) {
+        // Extrair as partes antes da condicional
+        const beforeConditional = step.split('{{#if isCorrect}}')[0].trim();
+        
+        // Padrão padrão para o checkmark (✓) como assumimos que a verificação passou
+        const displayText = beforeConditional + ' ✓';
+        return (
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-green-700 dark:text-green-300 font-medium">{displayText}</p>
+            </div>
+          </div>
+        );
+      }
+      
+      // Tratamento padrão para condicional correta/incorreta
+      if (step.includes('{{#if correct}}')) {
+        const isCorrect = getVerificationStatus(step);
+        // Extrair o texto apropriado com base na correção
+        const correctTextMatch = step.match(/{{#if correct}}(.*?){{else}}/);
+        const incorrectTextMatch = step.match(/{{else}}(.*?){{\/if}}/);
+        
+        if (isCorrect && correctTextMatch) {
+          cleanedStep = correctTextMatch[1];
+        } else if (!isCorrect && incorrectTextMatch) {
+          cleanedStep = incorrectTextMatch[1];
+        }
+        
+        // Limpar qualquer sintaxe de handlebars restante
+        cleanedStep = cleanedStep.replace(/{{.*?}}/g, '');
+      }
+      
+      // Remover a chave de tradução se presente
+      if (cleanedStep.includes('verification.completed:')) {
+        cleanedStep = cleanedStep.replace(/verification\.completed:\s+/, '');
+      }
+      
+      return (
+        <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
+          <div className="flex items-center">
+            <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+            <p className="text-green-700 dark:text-green-300 font-medium">{cleanedStep}</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Tratamento especial para passos em solvers que podem ter chaves de tradução
+    // Verificar padrões comuns em passos que podem conter chaves de tradução
+    if (stepType === 'linear' || stepType === 'default') {
+      // Verificar padrão comum de passo
+      const commonStepRegex = /^(common\.step|Step|Passo|translation:common\.step) (\d+):(.*)/;
+      const commonStepMatch = step.match(commonStepRegex);
+      
+      // Verificar padrão de equação original
+      const originalEquationRegex = /(solvers\..+\.steps\.original_equation|arithmetic:percentage\.steps\..+\.original_equation|Original equation|Equação original):(.*)/;
+      const originalEquationMatch = step.match(originalEquationRegex);
+      
+      // Verificar padrão de verificação
+      const verificationRegex = /(common\.verification|Verification|Verificação|translation:common\.verification):(.*)/;
+      const verificationMatch = step.match(verificationRegex);
+      
+      // Verificar padrão de cálculo
+      const calculatingRegex = /(solvers\..+\.steps\..+\.calculating|arithmetic:percentage\.steps\..+\.calculating|Calculating|Calculando):(.*)/;
+      const calculatingMatch = step.match(calculatingRegex);
+      
+      // Verificar padrão de simplificação
+      const simplifyingRegex = /(solvers\..+\.steps\..+\.simplifying|arithmetic:percentage\.steps\..+\.simplifying|Simplifying|Simplificando):(.*)/;
+      const simplifyingMatch = step.match(simplifyingRegex);
+      
+      // Verificar padrão de resultado
+      const resultRegex = /(common\.result|translation:common\.result|Result|Resultado):(.*)/;
+      const resultMatch = step.match(resultRegex);
+      
+      // Verificar padrão de verificação concluída
+      const verificationCompletedRegex = /(solvers\..+\.steps\..+\.verification\.completed|arithmetic:percentage\.steps\..+\.verification\.completed|Verification completed|Verificação concluída):(.*)/;
+      let verificationCompletedMatch = step.match(verificationCompletedRegex);
+
+      if (commonStepMatch) {
+        return (
+          <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border-l-4 border-indigo-500 dark:border-indigo-600 shadow-sm my-3">
+            <div className="flex flex-col sm:flex-row">
+              <span className="font-bold text-indigo-700 dark:text-indigo-300 mr-2 mb-1 sm:mb-0">{t('translation:common.step')} {commonStepMatch[2]}:</span>
+              <p className="text-gray-800 dark:text-gray-200">{commonStepMatch[3]}</p>
+            </div>
+          </div>
+        );
+      } else if (originalEquationMatch) {
+        return (
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineDocumentText className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-blue-700 dark:text-blue-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (verificationMatch) {
+        return (
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 shadow-sm my-2 mt-4">
+            <div className="flex items-center">
+              <HiOutlineCheckCircle className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-purple-700 dark:text-purple-300 font-medium">{t('translation:common.verification')}:</p>
+            </div>
+          </div>
+        );
+      } else if (calculatingMatch) {
+        return (
+          <div key={index} className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-md ml-4 border-l-2 border-orange-300 dark:border-orange-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-orange-600 dark:text-orange-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-orange-700 dark:text-orange-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (simplifyingMatch) {
+        return (
+          <div key={index} className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-md ml-4 border-l-2 border-teal-300 dark:border-teal-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineRefresh className="text-teal-600 dark:text-teal-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-teal-700 dark:text-teal-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (resultMatch) {
+        return (
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-green-700 dark:text-green-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      } else if (verificationCompletedMatch) {
+        return (
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-green-700 dark:text-green-300 font-medium">{step}</p>
+            </div>
+          </div>
+        );
+      }
     }
 
     // Padrão para o cabeçalho do passo (Passo X:)
@@ -179,16 +396,6 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
               <HiOutlineRefresh className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0 h-5 w-5" />
               <span className="text-cyan-700 dark:text-cyan-300 font-medium">{step}</span>
             </div>
-          </div>
-        );
-      } else if (step === '---VERIFICATION_SEPARATOR---') {
-        return (
-          <div key={index} className="py-4 my-4 flex items-center">
-            <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
-            <div className="mx-4 px-4 py-2 bg-purple-100 dark:bg-purple-900/40 rounded-full text-purple-700 dark:text-purple-300 text-sm font-bold flex items-center">
-              <HiOutlineCheckCircle className="mr-1" /> Verificação e Propriedades
-            </div>
-            <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
         );
       } else {
@@ -465,7 +672,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
           <div key={index} className="py-4 my-4 flex items-center">
             <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
             <div className="mx-4 px-4 py-2 bg-purple-100 dark:bg-purple-900/40 rounded-full text-purple-700 dark:text-purple-300 text-sm font-bold flex items-center">
-              <HiOutlineCheckCircle className="mr-1" /> Verificação
+              <HiOutlineCheckCircle className="mr-1" /> {t('translation:common.verification')}
             </div>
             <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
           </div>
@@ -981,70 +1188,115 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       }
     }
 
-    // Padrão de estilo para passos regulares
-    if (stepMatch) {
-      // Número do passo destacado
-      const [_, stepNumber, stepContent] = stepMatch;
+    // Se for um cálculo de porcentagem (namespace arithmetic)
+    if (step.includes('percentage.steps') || step.includes('percentage.errors')) {
+      // Verificar padrões comuns em passos de porcentagem que contêm chaves de tradução
+      if (step.includes('original_equation')) {
       return (
-        <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md border-l-4 border-blue-400 dark:border-blue-600 my-2">
-          <span className="font-bold text-blue-700 dark:text-blue-300">{stepNumber}</span>
-          <span className="text-blue-800 dark:text-blue-200">{stepContent}</span>
+          <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-md ml-4 border-l-2 border-blue-300 dark:border-blue-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineDocumentText className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-blue-700 dark:text-blue-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('MDC')) {
-      // Cálculo MDC
+      } else if (step.includes('convert_percentage')) {
       return (
-        <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md border-l-2 border-purple-300 dark:border-purple-600">
-          <p className="text-purple-700 dark:text-purple-300 font-medium">{step}</p>
+          <div key={index} className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-md ml-4 border-l-2 border-indigo-300 dark:border-indigo-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-indigo-600 dark:text-indigo-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-indigo-700 dark:text-indigo-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes(' / ') || step.includes('divisão')) {
-      // Passo de divisão
+      } else if (step.includes('multiply_value') || step.includes('divide_value') || step.includes('calculate_difference')) {
       return (
-        <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md border-l-2 border-amber-300 dark:border-amber-600">
-          <p className="text-amber-700 dark:text-amber-300 font-medium">{step}</p>
+          <div key={index} className="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-md ml-4 border-l-2 border-yellow-300 dark:border-yellow-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-yellow-600 dark:text-yellow-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-yellow-700 dark:text-yellow-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('sinal')) {
-      // Passo de ajuste de sinal
+      } else if (step.includes('verification.calculating')) {
       return (
-        <div key={index} className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-md border-l-2 border-teal-300 dark:border-teal-600">
-          <p className="text-teal-700 dark:text-teal-300 font-medium">{step}</p>
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 shadow-sm my-2 mt-4">
+            <div className="flex items-center">
+              <HiOutlineCalculator className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-purple-700 dark:text-purple-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('Resultado') || step.includes('resultado')) {
-      // Resultado final
+      } else if (step.includes('verification.simplifying')) {
       return (
-        <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md border-l-2 border-green-300 dark:border-green-600">
-          <p className="text-green-700 dark:text-green-300 font-medium">{step}</p>
+          <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineRefresh className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-purple-700 dark:text-purple-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('Entrada:') || step.includes('Input:')) {
+      } else if (step.includes('verification.completed')) {
+        // Extract the verification message from the format 'verification.completed: {translated text}: ✓'
+        const verificationCompletedRegex = /verification\.completed:\s+(.*?)$/;
+        const verificationCompletedMatch = step.match(verificationCompletedRegex);
+        
+        let displayText = '';
+        if (verificationCompletedMatch && verificationCompletedMatch[1]) {
+          displayText = verificationCompletedMatch[1];
+        } else {
+          // Fallback in case regex doesn't match
+          displayText = step.replace('verification.completed: ', '');
+        }
+        
       return (
-        <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md border-l-4 border-purple-400 dark:border-purple-600 my-2">
-          <span className="text-purple-800 dark:text-purple-200">{step}</span>
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-green-700 dark:text-green-300 font-medium">{displayText}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('Verificação:') || step.includes('Verificando:') || step.includes('Conferindo:')) {
+      } else if (step.includes('common.result')) {
       return (
-        <div key={index} className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-md border-l-4 border-amber-400 dark:border-amber-600 my-2">
-          <span className="text-amber-800 dark:text-amber-200">{step}</span>
+          <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-green-700 dark:text-green-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else if (step.includes('Erro:') || step.includes('Atenção:') || step.includes('Aviso:')) {
+      } else if (step.includes('error')) {
       return (
-        <div key={index} className="p-3 bg-red-50 dark:bg-red-900/30 rounded-md border-l-4 border-red-400 dark:border-red-600 my-2">
-          <span className="text-red-800 dark:text-red-200">{step}</span>
+          <div key={index} className="p-3 bg-red-50 dark:bg-red-900/30 rounded-md ml-4 border-l-2 border-red-300 dark:border-red-600 shadow-sm my-2">
+            <div className="flex items-center">
+              <HiOutlineInformationCircle className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0 h-5 w-5" />
+              <p className="text-red-700 dark:text-red-300 font-medium">{step}</p>
+            </div>
         </div>
       );
-    } else {
-      // Conteúdo regular
+      }
+    }
+
+    // Verificar padrão de verificação concluída com chave de tradução no início, que pode ter sido perdida
+    if (typeof step === 'string' && step.startsWith('verification.completed:')) {
+      const cleanedStep = step.replace(/^verification\.completed:\s+/, '');
       return (
-        <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md border-l-4 border-gray-300 dark:border-gray-600 my-2">
-          <span className="text-gray-700 dark:text-gray-300">{step}</span>
+        <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
+          <div className="flex items-center">
+            <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
+            <p className="text-green-700 dark:text-green-300 font-medium">{cleanedStep}</p>
+          </div>
         </div>
       );
     }
+
+    // Estilo padrão para passos regulares se nenhum dos padrões acima correspondeu
+    return (
+      <div key={index} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-md border-l-4 border-gray-300 dark:border-gray-600 my-2">
+        <span className="text-gray-700 dark:text-gray-300">{step}</span>
+      </div>
+    );
   };
 
   return (

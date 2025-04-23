@@ -1,0 +1,408 @@
+{
+  "percentage": {
+    "description": "Calcule o valor de uma porcentagem de um número.",
+    "labels": {
+      "value": "Valor",
+      "percentage": "Porcentagem (%)",
+      "calculation_type": "Tipo de cálculo"
+    },
+    "placeholders": {
+      "value": "Digite o valor",
+      "percentage": "Digite a porcentagem"
+    },
+    "operation_types": {
+      "percentage": "Valor da porcentagem",
+      "percentage_change": "Variação percentual",
+      "reverse_percentage": "Cálculo reverso"
+    },
+    "hide_explanation": "Ocultar explicação detalhada",
+    "show_explanation": "Mostrar explicação detalhada",
+    "step_by_step": "Solução passo a passo",
+    "mathematical_concept": "Conceito Matemático",
+    "results": {
+      "percentage": "O resultado de {{percentage}}% de {{value}} é: <span class=\"font-bold\">{{result}}</span>",
+      "percentage_change": "A variação percentual de {{initialValue}} para {{value}} é: <span class=\"font-bold\">{{result}}%</span>",
+      "reverse_percentage": "O valor do qual {{value}} representa {{percentage}}% é: <span class=\"font-bold\">{{result}}</span>"
+    },
+    "steps": {
+      "original_equation": "Equação original: Calcular {{percentage}}% de {{value}}",
+      "convert_percentage": "Convertemos a porcentagem para decimal dividindo por 100: {{percentage}}% = {{percentage}} ÷ 100 = {{decimal}}",
+      "multiply_value": "Multiplicamos o valor pelo decimal: {{value}} × {{decimal}} = {{result}}",
+      "result": "{{percentage}}% de {{value}} é igual a {{result}}.",
+      "verification": {
+        "calculating": "Calculando: qual porcentagem {{result}} representa de {{value}}",
+        "simplifying": "Simplificando: {{result}} ÷ {{value}} × 100 = {{percentage}}%",
+        "completed": "Verificação concluída: ({{calculated}}% ≈ {{original}}%) (Correto!)"
+      },
+      "percentageChange": {
+        "original_equation": "Equação original: Calcular a variação percentual entre {{initialValue}} (valor inicial) e {{value}} (valor final)",
+        "calculate_difference": "Calculamos a diferença entre os valores: {{value}} - {{initialValue}} = {{difference}}",
+        "divide_difference": "Dividimos a diferença pelo valor inicial: ({{value}} - {{initialValue}}) ÷ {{initialValue}} = {{division}}",
+        "multiply_100": "Multiplicamos por 100 para obter a porcentagem: {{division}} × 100 = {{result}}%",
+        "result_increase": "Houve um aumento de {{result}}% do valor inicial para o valor final.",
+        "result_decrease": "Houve uma redução de {{result}}% do valor inicial para o valor final.",
+        "result_no_change": "Não houve variação percentual entre os valores.",
+        "verification": {
+          "calculating": "Calculando: aplicando a variação percentual de {{result}}% ao valor inicial {{initialValue}}",
+          "simplifying": "Simplificando: {{initialValue}} × (1 + {{result}} ÷ 100) = {{initialValue}} × {{calculation}}",
+          "completed": "Verificação concluída: O valor final calculado {{calculated}} {{#if correct}}✓ (Correto!){{else}}≈{{/if}} {{original}}"
+        }
+      },
+      "reversePercentage": {
+        "original_equation": "Equação original: Encontrar o valor original antes de um aumento de {{percentageIncrease}}%",
+        "convert_percentage": "Convertemos a porcentagem para decimal e adicionamos 1: 1 + {{percentageIncrease}} ÷ 100 = 1 + {{percentageIncrease}} / 100 = {{conversion}}",
+        "divide_value": "Dividimos o valor atual pelo resultado: {{currentValue}} ÷ {{divisor}} = {{result}}",
+        "result": "O valor original antes do aumento de {{percentageIncrease}}% era {{result}}.",
+        "verification": {
+          "calculating": "Calculando: aplicando um aumento de {{percentageIncrease}}% ao valor original {{result}}",
+          "simplifying": "Simplificando: {{result}} × (1 + {{percentageIncrease}} ÷ 100) = {{result}} × {{calculation}}",
+          "completed": "Verificação concluída: O valor após o aumento {{calculated}} {{#if correct}}✓ (Correto!){{else}}≈{{/if}} {{original}}"
+        }
+      }
+    },
+    "errors": {
+      "invalid_value": "Por favor, insira um valor válido.",
+      "invalid_percentage": "Por favor, insira uma porcentagem válida.",
+      "invalid_operation": "Tipo de operação inválido."
+    },
+    "concepts": {
+      "basic": {
+        "title": "Porcentagem Básica",
+        "description": "Porcentagens representam partes por cem. Quando dizemos \"<span class=\"font-medium\">{{percentage}}%</span>\", queremos dizer \"{{percentage}} partes de 100\".",
+        "formula_title": "Fórmula Básica",
+        "formula": "Valor da porcentagem = (Valor × Porcentagem) ÷ 100",
+        "example": "Para calcular 25% de 80:<br />(80 × 25) ÷ 100 = 2000 ÷ 100 = 20"
+      },
+      "percentage_change": {
+        "title": "Variação Percentual",
+        "description": "A variação percentual mede quanto um valor mudou em relação ao valor original, expressa em porcentagem. Um resultado positivo indica aumento, enquanto um resultado negativo indica diminuição.",
+        "formula_title": "Fórmula",
+        "formula": "Variação % = ((Valor Final - Valor Inicial) ÷ Valor Inicial) × 100",
+        "example": "Se um preço aumentou de R$80 para R$100:<br />((100 - 80) ÷ 80) × 100 = (20 ÷ 80) × 100 = 0,25 × 100 = 25%"
+      },
+      "reverse_percentage": {
+        "title": "Cálculo Reverso de Porcentagem",
+        "description": "O cálculo reverso de porcentagem nos permite encontrar o valor original quando conhecemos uma parte percentual desse valor.",
+        "formula_title": "Fórmula",
+        "formula": "Valor Original = (Valor Conhecido × 100) ÷ Porcentagem",
+        "example": "Se R$20 é 25% de um valor:<br />(20 × 100) ÷ 25 = 2000 ÷ 25 = 80"
+      },
+      "applications": {
+        "title": "Aplicações",
+        "contexts_title": "Contextos de Uso",
+        "contexts": {
+          "commerce": {
+            "title": "Comércio",
+            "description": "Descontos, margens de lucro e aumentos de preço"
+          },
+          "finance": {
+            "title": "Finanças",
+            "description": "Juros, investimentos e taxas de crescimento"
+          },
+          "statistics": {
+            "title": "Estatística",
+            "description": "Análise de dados, crescimento populacional"
+          },
+          "science": {
+            "title": "Ciências",
+            "description": "Concentrações, probabilidades e composições"
+          },
+          "daily": {
+            "title": "Cotidiano",
+            "description": "Impostos, gorjetas e controle orçamentário"
+          }
+        }
+      },
+      "useful_conversions": {
+        "title": "Conversões Úteis",
+        "divide_by_10": "dividir por 10",
+        "divide_by_4": "dividir por 4",
+        "divide_by_2": "dividir por 2",
+        "original_value": "valor original",
+        "multiply_by_2": "multiplicar por 2"
+      },
+      "calculation_tips": {
+        "title": "Dicas de Cálculo",
+        "decompose": "Para calcular mentalmente porcentagens, tente decompor: 15% = 10% + 5%",
+        "increase_decrease": "Um aumento de X% seguido de uma redução de X% <strong>não</strong> retorna ao valor original",
+        "fraction_to_percentage": "Para converter uma fração em porcentagem, divida o numerador pelo denominador e multiplique por 100",
+        "decimal_to_percentage": "0,1 = 10%, 0,01 = 1%, 0,001 = 0,1% (mova a vírgula duas casas para a direita)"
+      },
+      "fun_fact": {
+        "title": "Curiosidade Matemática",
+        "description": "A palavra \"porcentagem\" vem do latim \"per centum\", que significa \"por cento\" ou \"a cada cem\". O símbolo % que usamos hoje foi desenvolvido a partir de uma abreviação da expressão \"per cento\" (p. cento), que eventualmente se transformou no símbolo que conhecemos."
+      }
+    }
+  },
+  "proportion": {
+    "title": "Proporções",
+    "description": "A proporção é uma equação que afirma que duas razões são iguais: a/b = c/d. Essa calculadora ajuda você a resolver a proporção para qualquer valor desconhecido.",
+    "solve_for": "Resolver para",
+    "result_value": "O valor de <span class=\"font-bold\">{{variable}}</span> é: <span class=\"font-bold\">{{value}}</span>",
+    "steps": {
+      "intro": "Vamos resolver uma proporção da forma a/b = c/d para {{solveFor}}.",
+      "identify_values": "Identificar os valores conhecidos:",
+      "original_equation": "Equação original: a/b = c/d onde a={{a}}, b={{b}}, c={{c}}, d={{d}}",
+      "fundamental_property": "Para encontrar o valor desconhecido, usamos a propriedade fundamental das proporções: a × d = b × c.",
+      "isolate_a": "Isolando a variável a: a = (b × c) ÷ d",
+      "isolate_b": "Isolando a variável b: b = (a × d) ÷ c",
+      "isolate_c": "Isolando a variável c: c = (a × d) ÷ b",
+      "isolate_d": "Isolando a variável d: d = (b × c) ÷ a",
+      "substitute_a": "Substituindo os valores: a = ({{b}} × {{c}}) ÷ {{d}}",
+      "substitute_b": "Substituindo os valores: b = ({{a}} × {{d}}) ÷ {{c}}",
+      "substitute_c": "Substituindo os valores: c = ({{a}} × {{d}}) ÷ {{b}}",
+      "substitute_d": "Substituindo os valores: d = ({{b}} × {{c}}) ÷ {{a}}",
+      "calculate_a": "Calculando os termos: a = {{product}} ÷ {{d}}",
+      "calculate_b": "Calculando os termos: b = {{product}} ÷ {{c}}",
+      "calculate_c": "Calculando os termos: c = {{product}} ÷ {{b}}",
+      "calculate_d": "Calculando os termos: d = {{product}} ÷ {{a}}",
+      "verification": {
+        "left_side": "Calculando o lado esquerdo da proporção: a/b = {{a}}/{{b}} = {{result}}",
+        "right_side": "Calculando o lado direito da proporção: c/d = {{c}}/{{d}} = {{result}}",
+        "success": "Verificação concluída: Como os dois lados são aproximadamente iguais ({{left}} ≈ {{right}}), a proporção está correta.",
+        "rounding_note": "Nota: Há uma pequena diferença entre {{left}} e {{right}} devido a arredondamentos."
+      }
+    },
+    "errors": {
+      "missing_values": "Por favor, insira valores válidos para {{values}}.",
+      "invalid_solve_type": "Tipo de resolução inválido."
+    },
+    "concept": {
+      "understanding_title": "Entendendo Proporções",
+      "understanding_text": "Uma proporção é uma igualdade entre duas razões, expressa na forma a:b = c:d ou a/b = c/d. Quando duas razões são iguais, dizemos que são proporcionais.",
+      "fundamental_property": "Propriedade fundamental: a × d = b × c",
+      "example_text": "Na proporção 2/5 = 4/10, podemos verificar:",
+      "solving_title": "Resolvendo Proporções",
+      "solving_text": "Usando a propriedade fundamental das proporções, podemos isolar qualquer variável desconhecida.",
+      "formulas_title": "Fórmulas para cada variável",
+      "for_a": "Para a",
+      "for_b": "Para b",
+      "for_c": "Para c",
+      "for_d": "Para d",
+      "applications_title": "Aplicações de Proporções",
+      "application1_title": "Escalas e Mapas",
+      "application1_text": "As proporções são usadas para representar distâncias reais em mapas usando uma escala proporcional.",
+      "application2_title": "Receitas Culinárias",
+      "application2_text": "Ajustar quantidades de ingredientes mantendo a mesma proporção para obter o mesmo resultado.",
+      "application3_title": "Finanças",
+      "application3_text": "Cálculo de juros, taxas e conversões de moedas frequentemente utilizam proporções.",
+      "solution_tip_title": "Dica de Resolução",
+      "solution_tip_text": "Para verificar se uma proporção está correta, verifique sempre se o produto cruzado (a × d = b × c) é verdadeiro. Isso funciona para qualquer proporção válida e é uma ótima maneira de verificar seus cálculos."
+    }
+  },
+  "factorization": {
+    "title": "Fatoração em Números Primos",
+    "description": "Esta calculadora decompõe um número em sua fatoração em números primos. A fatoração em primos representa um número como um produto de seus fatores primos.",
+    "input_label": "Número para fatorar",
+    "input_placeholder": "Digite um número inteiro maior que 1",
+    "button": "Fatorar",
+    "result_text": "A fatoração em primos de <span>{{number}}</span>",
+    "errors": {
+      "empty_input": "Por favor, insira um número inteiro positivo.",
+      "invalid_number": "Por favor, insira um número inteiro positivo válido.",
+      "positive_integer_required": "Por favor, insira um número inteiro positivo."
+    },
+    "steps": {
+      "number_one_no_factors": "O número 1 não tem fatores primos.",
+      "invalid_factorization": "O número {{number}} não tem fatoração válida em números primos.",
+      "original_equation": "Equação original: Fatoração de {{number}} em números primos.",
+      "decompose_intro": "Vamos decompor o número {{number}} em seus fatores primos usando o método de divisões sucessivas.",
+      "divide_step": "Passo {{step}}: Dividimos {{number}} por {{factor}} e obtemos {{result}}",
+      "prime_number": "Passo {{step}}: {{number}} é um número primo, pois não é divisível por nenhum número menor que sua raiz quadrada.",
+      "result": "Resultado: {{number}} = {{factorization}}",
+      "verification_intro": "Verificação do resultado: Multiplicamos todos os fatores primos para confirmar que obtemos o número original.",
+      "multiply_factor": "Multiplicando por {{factor}}^{{exponent}} = {{result}}",
+      "verification_completed": "Verificação concluída: {{factorization}} = {{product}} {{#if isCorrect}}✓{{else}}✗{{/if}}"
+    },
+    "concept": {
+      "prime_numbers": {
+        "title": "Números Primos",
+        "description": "Um número primo é um número natural maior que 1 que só é divisível por 1 e por ele mesmo.",
+        "examples_title": "Exemplos de números primos",
+        "examples": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, ..."
+      },
+      "composite_numbers": {
+        "title": "Números Compostos",
+        "description": "Um número composto é um número natural maior que 1 que possui outros divisores além de 1 e ele mesmo.",
+        "examples_title": "Exemplos de números compostos",
+        "examples": "4 = 2 × 2, 6 = 2 × 3, 8 = 2 × 2 × 2, 9 = 3 × 3, 10 = 2 × 5, ..."
+      },
+      "fundamental_theorem": {
+        "title": "Teorema Fundamental da Aritmética",
+        "statement": "Todo número inteiro maior que 1 ou é primo ou pode ser escrito como um produto de números primos de maneira única (desconsiderando a ordem dos fatores).",
+        "importance": "Este é um dos teoremas mais importantes da teoria dos números, pois garante que a fatoração em primos é única."
+      },
+      "prime_factorization": {
+        "title": "Fatoração em Números Primos",
+        "definition": {
+          "title": "Definição",
+          "description": "A fatoração em números primos é a decomposição de um número em um produto de fatores primos. Cada número composto pode ser representado de maneira única como uma multiplicação de números primos."
+        },
+        "algorithm": {
+          "title": "Algoritmo",
+          "steps": "<li>Comece com o menor número primo, 2.</li><li>Verifique se o número é divisível pelo primo atual.</li><li>Se for divisível, divida o número e repita o passo 2.</li><li>Se não for divisível, passe para o próximo número primo.</li><li>Continue até que o número restante seja 1.</li>"
+        }
+      },
+      "applications": {
+        "title": "Aplicações da Fatoração",
+        "cryptography": {
+          "title": "Criptografia",
+          "description": "A segurança de muitos sistemas criptográficos, como o RSA, depende da dificuldade de fatorar números grandes."
+        },
+        "fractions": {
+          "title": "Simplificação de Frações",
+          "description": "A fatoração ajuda a encontrar o MDC para simplificar frações ao seu menor termo."
+        },
+        "lcm_gcd": {
+          "title": "Cálculo de MMC e MDC",
+          "description": "A fatoração é utilizada para calcular o mínimo múltiplo comum e o máximo divisor comum entre números."
+        }
+      },
+      "calculation_tip": {
+        "title": "Dica de Cálculo",
+        "description": "Ao fatorar números grandes, primeiro verifique se eles são divisíveis pelos primeiros primos (2, 3, 5, 7, 11, 13). Se um número não for divisível por nenhum primo menor ou igual à sua raiz quadrada, então ele é primo."
+      }
+    }
+  },
+  "gcd_lcm": {
+    "title": "Calculadora de MMC e MDC",
+    "description": "Calcule o Mínimo Múltiplo Comum (MMC) ou o Máximo Divisor Comum (MDC) de dois ou mais números inteiros positivos.",
+    "input_label": "Números (separados por vírgula)",
+    "input_placeholder": "Ex: 12, 18, 24",
+    "calculation_type": "Tipo de cálculo",
+    "types": {
+      "lcm": "MMC - Mínimo Múltiplo Comum",
+      "gcd": "MDC - Máximo Divisor Comum"
+    },
+    "result_text": {
+      "lcm": "O MMC de <span>{{numbers}}</span> é: <span>{{result}}</span>",
+      "gcd": "O MDC de <span>{{numbers}}</span> é: <span>{{result}}</span>"
+    },
+    "step_by_step": {
+      "lcm": "Cálculo do MMC passo a passo",
+      "gcd": "Cálculo do MDC passo a passo"
+    },
+    "errors": {
+      "missing_input": "Por favor, insira pelo menos dois números.",
+      "invalid_number": "O valor '{{value}}' não é um número inteiro válido.",
+      "positive_required": "Todos os números devem ser inteiros positivos.",
+      "no_valid_numbers": "Nenhum número válido foi inserido.",
+      "need_at_least_two": "Por favor, insira pelo menos dois números para calcular o MDC ou MMC."
+    },
+    "steps": {
+      "gcd": {
+        "calculating": "Calculando o MDC de {{a}} e {{b}} usando o Algoritmo de Euclides:",
+        "organize_numbers": "Organizando os números em ordem decrescente: {{num1}} e {{num2}}",
+        "division_step": "Passo {{step}}: Dividimos {{num1}} por {{num2}} e obtemos quociente {{quotient}} e resto {{remainder}}",
+        "result": "Resultado: Como o resto é 0, o MDC é o último divisor não nulo: {{num1}}",
+        "verification_intro": "Verificando o resultado: O MDC encontrado ({{gcd}}) deve dividir ambos os números originais sem deixar resto.",
+        "verification_step": "{{number}} ÷ {{gcd}} = {{result}} (sem resto)",
+        "single_number": "O MDC de um único número {{number}} é o próprio número.",
+        "multiple_numbers_intro": "Calculando o MDC de {{numbers}} passo a passo:",
+        "start_with_two": "Passo {{step}}: Começamos calculando o MDC dos dois primeiros números: {{first}} e {{second}}",
+        "calculate_pair": "Passo {{step}}: Calculando MDC({{currentGcd}}, {{nextNumber}}):",
+        "current_result": "MDC atual: {{currentGcd}}",
+        "stop_at_one": "Como o MDC é 1, podemos parar aqui, pois o MDC de todos os números será 1.",
+        "final_result": "Solução final: MDC de {{numbers}} é {{result}}"
+      },
+      "lcm": {
+        "calculating": "Calculando o MMC de {{a}} e {{b}}:",
+        "formula_intro": "Passo {{step}}: Utilizamos a fórmula MMC(a,b) = (a × b) / MDC(a,b)",
+        "calculate_gcd_first": "Passo {{step}}: Primeiro, calculamos o MDC de {{a}} e {{b}}:",
+        "gcd_result": "MDC({{a}}, {{b}}) = {{gcdValue}}",
+        "apply_formula": "Passo {{step}}: Aplicando a fórmula do MMC: MMC({{a}}, {{b}}) = ({{a}} × {{b}}) / {{gcdValue}} = {{product}} / {{gcdValue}} = {{lcmValue}}",
+        "verification_intro": "Verificando o resultado: O MMC encontrado ({{lcmValue}}) deve ser divisível por ambos os números originais.",
+        "verification_step": "{{lcmValue}} ÷ {{number}} = {{result}} (sem resto)",
+        "single_number": "O MMC de um único número {{number}} é o próprio número.",
+        "multiple_numbers_intro": "Calculando o MMC de {{numbers}} passo a passo:",
+        "start_with_two": "Passo {{step}}: Começamos calculando o MMC dos dois primeiros números: {{first}} e {{second}}",
+        "calculate_pair": "Passo {{step}}: Calculando MMC({{currentLcm}}, {{nextNumber}}):",
+        "current_result": "MMC atual: {{currentLcm}}",
+        "final_result": "Solução final: MMC de {{numbers}} é {{result}}",
+        "final_verification": "Verificação final: O MMC encontrado ({{currentLcm}}) deve ser divisível por todos os números originais."
+      }
+    },
+    "concept": {
+      "lcm": {
+        "title": "Mínimo Múltiplo Comum (MMC)",
+        "description": "O MMC entre dois ou mais números é o menor número positivo que é múltiplo de todos eles.",
+        "example1": "<p>• Múltiplos de 4: 4, 8, 12, 16, 20, 24, 28, ...</p><p>• Múltiplos de 6: 6, 12, 18, 24, 30, ...</p><p>∴ MMC(4,6) = 12</p>",
+        "example2": "<p>• Múltiplos de 3: 3, 6, 9, 12, 15, 18, 21, 24, ...</p><p>• Múltiplos de 5: 5, 10, 15, 20, 25, 30, ...</p><p>∴ MMC(3,5) = 15</p>",
+        "example3": "<p>• Múltiplos de 8: 8, 16, 24, 32, 40, 48, ...</p><p>• Múltiplos de 10: 10, 20, 30, 40, 50, ...</p><p>∴ MMC(8,10) = 40</p>",
+        "example4": "<p>• Múltiplos de 9: 9, 18, 27, 36, 45, 54, ...</p><p>• Múltiplos de 15: 15, 30, 45, 60, 75, ...</p><p>∴ MMC(9,15) = 45</p>"
+      },
+      "gcd": {
+        "title": "Máximo Divisor Comum (MDC)",
+        "description": "O MDC entre dois ou mais números é o maior número que divide todos eles sem deixar resto.",
+        "example1": "<p>• Divisores de 12: 1, 2, 3, 4, 6, 12</p><p>• Divisores de 18: 1, 2, 3, 6, 9, 18</p><p>∴ MDC(12,18) = 6</p>",
+        "example2": "<p>• Divisores de 24: 1, 2, 3, 4, 6, 8, 12, 24</p><p>• Divisores de 36: 1, 2, 3, 4, 6, 9, 12, 18, 36</p><p>∴ MDC(24,36) = 12</p>",
+        "example3": "<p>• Divisores de 15: 1, 3, 5, 15</p><p>• Divisores de 25: 1, 5, 25</p><p>∴ MDC(15,25) = 5</p>",
+        "example4": "<p>• Divisores de 14: 1, 2, 7, 14</p><p>• Divisores de 35: 1, 5, 7, 35</p><p>∴ MDC(14,35) = 7</p>"
+      },
+      "relation": {
+        "title": "Relação entre MMC e MDC",
+        "description": "O MDC e o MMC estão relacionados pela fórmula:",
+        "formula": "MMC(a, b) × MDC(a, b) = a × b",
+        "note": "Esta fórmula é válida para quaisquer dois inteiros positivos a e b.",
+        "example1": {
+          "title": "Para 12 e 18",
+          "gcd": "MDC(12, 18) = 6",
+          "lcm": "MMC(12, 18) = 36",
+          "verification": "Verificando: 6 × 36 = 12 × 18 = 216 ✓"
+        },
+        "example2": {
+          "title": "Para 15 e 25",
+          "gcd": "MDC(15, 25) = 5",
+          "lcm": "MMC(15, 25) = 75",
+          "verification": "Verificando: 5 × 75 = 15 × 25 = 375 ✓"
+        }
+      },
+      "methods": {
+        "title": "Métodos de Cálculo",
+        "prime_factorization": {
+          "title": "Método da Fatoração em Primos",
+          "step1": "Fatore cada número em seus fatores primos",
+          "lcm_step2": "Para o MMC: multiplique cada fator primo com o <strong>maior</strong> expoente que aparece em qualquer fatoração",
+          "gcd_step2": "Para o MDC: multiplique cada fator primo com o <strong>menor</strong> expoente que aparece em todas as fatorações",
+          "example": {
+            "intro": "Exemplo: Para 12 = 2² × 3 e 18 = 2 × 3²",
+            "lcm": "MMC = 2² × 3² = 4 × 9 = 36",
+            "gcd": "MDC = 2¹ × 3¹ = 2 × 3 = 6"
+          },
+          "tip": "Este método é mais eficiente para números grandes e funciona bem para calcular tanto o MMC quanto o MDC.",
+          "coprime_note": "Se dois números não têm fatores em comum, seu MDC é 1, e eles são chamados de coprimos ou primos entre si."
+        },
+        "euclidean": {
+          "title": "Algoritmo de Euclides (para MDC)",
+          "step1": "Divida o maior número pelo menor e obtenha o resto",
+          "step2": "Se o resto for zero, o MDC é o segundo número",
+          "step3": "Se não, substitua o primeiro número pelo segundo e o segundo pelo resto, e repita o processo",
+          "example": {
+            "title": "Exemplo: MDC(48, 18)",
+            "step1": "48 = 18 × 2 + 12",
+            "step2": "18 = 12 × 1 + 6",
+            "step3": "12 = 6 × 2 + 0",
+            "conclusion": "Como o resto é 0, MDC(48, 18) = 6"
+          }
+        },
+        "multiples": {
+          "title": "Método dos Múltiplos (para MMC)",
+          "step1": "Liste os múltiplos de cada número",
+          "step2": "Identifique o menor múltiplo que aparece em todas as listas",
+          "example": {
+            "title": "Exemplo: MMC(4, 6)",
+            "multiples1": "Múltiplos de 4: 4, 8, 12, 16, 20, 24, ...",
+            "multiples2": "Múltiplos de 6: 6, 12, 18, 24, ...",
+            "conclusion": "O menor múltiplo comum é 12"
+          },
+          "tip": "Usar a fatoração em primos é geralmente mais eficiente para números grandes."
+        }
+      },
+      "solution_tip": {
+        "title": "Dica de Resolução",
+        "lcm": "Para calcular o MMC de vários números, uma estratégia eficiente é calcular o MMC dos dois primeiros números, depois calcular o MMC desse resultado com o terceiro número, e assim por diante.",
+        "gcd": "Para calcular o MDC de vários números, você pode calcular o MDC dos dois primeiros números, depois calcular o MDC desse resultado com o terceiro número, e assim por diante."
+      }
+    }
+  }
+} 

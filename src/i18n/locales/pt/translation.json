@@ -206,9 +206,17 @@
     "solution": "Solução",
     "error": "Erro",
     "loading": "Carregando...",
-    "please_wait": "Aguarde um momento",
+    "please_wait": "Aguarde",
     "input_value": "Digite um valor",
     "verify": "Verificar",
-    "explanation": "Explicação"
+    "explanation": "Explicação",
+    "show_explanation": "Mostrar explicação detalhada",
+    "hide_explanation": "Ocultar explicação detalhada",
+    "step_by_step": "Solução passo a passo",
+    "mathematical_concept": "Conceito Matemático",
+    "tip": "Dica",
+    "errors": {
+      "unknown": "Erro desconhecido."
+    }
   }
 } 

@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { gcd, lcm } from '../../utils/mathUtils';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 type CalculationType = 'mdc' | 'mmc';
@@ -84,141 +85,196 @@ function reducer(state: State, action: Action): State {
 }
 
 // Gerar passos para cálculo do MDC de dois números (versão para uso interno)
-function generateGcdStepsForTwoNumbers(a: number, b: number, stepCountRef: { count: number }): string[] {
+function generateGcdStepsForTwoNumbers(a: number, b: number, stepCountRef: { count: number }, t: any): string[] {
   const calculationSteps: string[] = [];
   
-  calculationSteps.push(`Calculando o MDC de ${a} e ${b} usando o Algoritmo de Euclides:`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.calculating', { a, b }));
   
   // Copiar os números para evitar a modificação dos originais
   let num1 = Math.max(a, b);
   let num2 = Math.min(a, b);
   
-  calculationSteps.push(`Organizando os números em ordem decrescente: ${num1} e ${num2}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.organize_numbers', { num1, num2 }));
   
   let remainder = -1;
   
   while (num2 !== 0) {
     remainder = num1 % num2;
-    calculationSteps.push(`Passo ${stepCountRef.count++}: Dividimos ${num1} por ${num2} e obtemos quociente ${Math.floor(num1 / num2)} e resto ${remainder}`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.division_step', { 
+      step: stepCountRef.count++, 
+      num1, 
+      num2, 
+      quotient: Math.floor(num1 / num2), 
+      remainder 
+    }));
     
     num1 = num2;
     num2 = remainder;
   }
   
-  calculationSteps.push(`Resultado: Como o resto é 0, o MDC é o último divisor não nulo: ${num1}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.result', { num1 }));
   
   // Adicionar verificação
   calculationSteps.push('---VERIFICATION_SEPARATOR---');
-  calculationSteps.push(`Verificando o resultado: O MDC encontrado (${num1}) deve dividir ambos os números originais sem deixar resto.`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.verification_intro', { gcd: num1 }));
   
   // Cálculos para verificação
   const original1 = Math.max(a, b);
   const original2 = Math.min(a, b);
-  calculationSteps.push(`${original1} ÷ ${num1} = ${original1 / num1} (sem resto)`);
-  calculationSteps.push(`${original2} ÷ ${num1} = ${original2 / num1} (sem resto)`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.verification_step', { 
+    number: original1, 
+    gcd: num1, 
+    result: original1 / num1 
+  }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.verification_step', { 
+    number: original2, 
+    gcd: num1, 
+    result: original2 / num1 
+  }));
   
   return calculationSteps;
 }
 
 // Gerar passos para cálculo do MDC de vários números
-function generateGcdStepsForMultipleNumbers(numbers: number[]): string[] {
+function generateGcdStepsForMultipleNumbers(numbers: number[], t: any): string[] {
   const calculationSteps: string[] = [];
   let stepCountRef = { count: 1 };
   
   if (numbers.length === 0) return calculationSteps;
   
   if (numbers.length === 1) {
-    calculationSteps.push(`O MDC de um único número ${numbers[0]} é o próprio número.`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.single_number', { number: numbers[0] }));
     return calculationSteps;
   }
   
-  calculationSteps.push(`Calculando o MDC de ${numbers.join(', ')} passo a passo:`);
-  calculationSteps.push(`Passo ${stepCountRef.count++}: Começamos calculando o MDC dos dois primeiros números: ${numbers[0]} e ${numbers[1]}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.multiple_numbers_intro', { numbers: numbers.join(', ') }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.start_with_two', { 
+    step: stepCountRef.count++, 
+    first: numbers[0], 
+    second: numbers[1] 
+  }));
   
   let currentGcd = numbers[0];
   
   for (let i = 1; i < numbers.length; i++) {
-    calculationSteps.push(`Passo ${stepCountRef.count++}: Calculando MDC(${currentGcd}, ${numbers[i]}):`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.calculate_pair', { 
+      step: stepCountRef.count++, 
+      currentGcd, 
+      nextNumber: numbers[i] 
+    }));
     
     // Gerar passos para este par
-    const pairSteps = generateGcdStepsForTwoNumbers(currentGcd, numbers[i], stepCountRef);
+    const pairSteps = generateGcdStepsForTwoNumbers(currentGcd, numbers[i], stepCountRef, t);
     calculationSteps.push(...pairSteps);
     
     currentGcd = gcd(currentGcd, numbers[i]);
-    calculationSteps.push(`MDC atual: ${currentGcd}`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.current_result', { currentGcd }));
     
     if (currentGcd === 1) {
-      calculationSteps.push(`Como o MDC é 1, podemos parar aqui, pois o MDC de todos os números será 1.`);
+      calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.stop_at_one'));
       break;
     }
   }
   
-  calculationSteps.push(`Solução final: MDC de ${numbers.join(', ')} é ${currentGcd}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.gcd.final_result', { 
+    numbers: numbers.join(', '), 
+    result: currentGcd 
+  }));
   
   return calculationSteps;
 }
 
 // Gerar passos para cálculo do MMC de dois números
-function generateLcmStepsForTwoNumbers(a: number, b: number, stepCountRef: { count: number }): string[] {
+function generateLcmStepsForTwoNumbers(a: number, b: number, stepCountRef: { count: number }, t: any): string[] {
   const calculationSteps: string[] = [];
   
-  calculationSteps.push(`Calculando o MMC de ${a} e ${b}:`);
-  calculationSteps.push(`Passo ${stepCountRef.count++}: Utilizamos a fórmula MMC(a,b) = (a × b) / MDC(a,b)`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.calculating', { a, b }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.formula_intro', { step: stepCountRef.count++ }));
   
-  calculationSteps.push(`Passo ${stepCountRef.count++}: Primeiro, calculamos o MDC de ${a} e ${b}:`);
-  const gcdSteps = generateGcdStepsForTwoNumbers(a, b, stepCountRef);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.calculate_gcd_first', { step: stepCountRef.count++, a, b }));
+  const gcdSteps = generateGcdStepsForTwoNumbers(a, b, stepCountRef, t);
   calculationSteps.push(...gcdSteps);
   
   const gcdValue = gcd(a, b);
-  calculationSteps.push(`MDC(${a}, ${b}) = ${gcdValue}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.gcd_result', { a, b, gcdValue }));
   
   const lcmValue = (a * b) / gcdValue;
-  calculationSteps.push(`Passo ${stepCountRef.count++}: Aplicando a fórmula do MMC: MMC(${a}, ${b}) = (${a} × ${b}) / ${gcdValue} = ${a * b} / ${gcdValue} = ${lcmValue}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.apply_formula', { 
+    step: stepCountRef.count++, 
+    a, 
+    b, 
+    gcdValue, 
+    product: a * b, 
+    lcmValue 
+  }));
   
   // Adicionar verificação
   calculationSteps.push('---VERIFICATION_SEPARATOR---');
-  calculationSteps.push(`Verificando o resultado: O MMC encontrado (${lcmValue}) deve ser divisível por ambos os números originais.`);
-  calculationSteps.push(`${lcmValue} ÷ ${a} = ${lcmValue / a} (sem resto)`);
-  calculationSteps.push(`${lcmValue} ÷ ${b} = ${lcmValue / b} (sem resto)`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.verification_intro', { lcmValue }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.verification_step', { 
+    lcmValue, 
+    number: a, 
+    result: lcmValue / a 
+  }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.verification_step', { 
+    lcmValue, 
+    number: b, 
+    result: lcmValue / b 
+  }));
   
   return calculationSteps;
 }
 
 // Gerar passos para cálculo do MMC de vários números
-function generateLcmStepsForMultipleNumbers(numbers: number[]): string[] {
+function generateLcmStepsForMultipleNumbers(numbers: number[], t: any): string[] {
   const calculationSteps: string[] = [];
   let stepCountRef = { count: 1 };
   
   if (numbers.length === 0) return calculationSteps;
   
   if (numbers.length === 1) {
-    calculationSteps.push(`O MMC de um único número ${numbers[0]} é o próprio número.`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.single_number', { number: numbers[0] }));
     return calculationSteps;
   }
   
-  calculationSteps.push(`Calculando o MMC de ${numbers.join(', ')} passo a passo:`);
-  calculationSteps.push(`Passo ${stepCountRef.count++}: Começamos calculando o MMC dos dois primeiros números: ${numbers[0]} e ${numbers[1]}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.multiple_numbers_intro', { numbers: numbers.join(', ') }));
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.start_with_two', { 
+    step: stepCountRef.count++, 
+    first: numbers[0], 
+    second: numbers[1] 
+  }));
   
   let currentLcm = numbers[0];
   
   for (let i = 1; i < numbers.length; i++) {
-    calculationSteps.push(`Passo ${stepCountRef.count++}: Calculando MMC(${currentLcm}, ${numbers[i]}):`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.calculate_pair', { 
+      step: stepCountRef.count++, 
+      currentLcm, 
+      nextNumber: numbers[i] 
+    }));
     
     // Gerar passos para este par
-    const pairSteps = generateLcmStepsForTwoNumbers(currentLcm, numbers[i], stepCountRef);
+    const pairSteps = generateLcmStepsForTwoNumbers(currentLcm, numbers[i], stepCountRef, t);
     calculationSteps.push(...pairSteps);
     
     currentLcm = lcm(currentLcm, numbers[i]);
-    calculationSteps.push(`MMC atual: ${currentLcm}`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.current_result', { currentLcm }));
   }
   
-  calculationSteps.push(`Solução final: MMC de ${numbers.join(', ')} é ${currentLcm}`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.final_result', { 
+    numbers: numbers.join(', '), 
+    result: currentLcm 
+  }));
   
   // Adicionar verificação final
   calculationSteps.push('---VERIFICATION_SEPARATOR---');
-  calculationSteps.push(`Verificação final: O MMC encontrado (${currentLcm}) deve ser divisível por todos os números originais.`);
+  calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.final_verification', { currentLcm }));
   for (let i = 0; i < numbers.length; i++) {
-    calculationSteps.push(`${currentLcm} ÷ ${numbers[i]} = ${currentLcm / numbers[i]} (sem resto)`);
+    calculationSteps.push(t('arithmetic:gcd_lcm.steps.lcm.verification_step', { 
+      lcmValue: currentLcm, 
+      number: numbers[i], 
+      result: currentLcm / numbers[i] 
+    }));
   }
   
   return calculationSteps;
@@ -226,6 +282,7 @@ function generateLcmStepsForMultipleNumbers(numbers: number[]): string[] {
 
 export function useGcdLcmSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['arithmetic', 'translation']);
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -234,7 +291,7 @@ export function useGcdLcmSolver() {
     try {
       const inputText = state.inputNumbers.trim();
       if (!inputText) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira pelo menos dois números.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:gcd_lcm.errors.missing_input') });
         return;
       }
       
@@ -245,21 +302,21 @@ export function useGcdLcmSolver() {
         .map(item => {
           const num = parseInt(item.trim(), 10);
           if (isNaN(num)) {
-            throw new Error(`O valor '${item}' não é um número inteiro válido.`);
+            throw new Error(t('arithmetic:gcd_lcm.errors.invalid_number', { value: item }));
           }
           if (num <= 0) {
-            throw new Error(`Todos os números devem ser inteiros positivos.`);
+            throw new Error(t('arithmetic:gcd_lcm.errors.positive_required'));
           }
           return num;
         });
       
       if (numbers.length === 0) {
-        dispatch({ type: 'SET_ERROR', message: 'Nenhum número válido foi inserido.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:gcd_lcm.errors.no_valid_numbers') });
         return;
       }
       
       if (numbers.length === 1) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira pelo menos dois números para calcular o MDC ou MMC.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:gcd_lcm.errors.need_at_least_two') });
         return;
       }
       
@@ -269,15 +326,15 @@ export function useGcdLcmSolver() {
       
       if (state.calculationType === 'mdc') {
         result = numbers.reduce((acc, num) => gcd(acc, num));
-        steps = generateGcdStepsForMultipleNumbers(numbers);
+        steps = generateGcdStepsForMultipleNumbers(numbers, t);
       } else { // mmc
         result = numbers.reduce((acc, num) => lcm(acc, num));
-        steps = generateLcmStepsForMultipleNumbers(numbers);
+        steps = generateLcmStepsForMultipleNumbers(numbers, t);
       }
       
       dispatch({ type: 'SET_RESULT', numbers, result, steps });
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : 'Erro desconhecido.' });
+      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : t('translation:common.errors.unknown') });
     }
   };
 

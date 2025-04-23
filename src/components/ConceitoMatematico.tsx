@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HiChevronDown, HiChevronUp, HiInformationCircle } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 
 interface ConceitoMatematicoProps {
   title?: string;
@@ -14,6 +15,7 @@ const ConceitoMatematico: React.FC<ConceitoMatematicoProps> = ({
   isOpen: externalIsOpen,
   onToggle
 }) => {
+  const { t } = useTranslation(['translation']);
   // Estado local para controlar a visibilidade do conteúdo
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   

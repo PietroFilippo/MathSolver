@@ -5,13 +5,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Importa os arquivos de tradução
 import enTranslation from './locales/en/translation.json';
 import ptTranslation from './locales/pt/translation.json';
+import enArithmetic from './locales/en/arithmetic.json';
+import ptArithmetic from './locales/pt/arithmetic.json';
 
 export const resources = {
   en: {
-    translation: enTranslation
+    translation: enTranslation,
+    arithmetic: enArithmetic
   },
   pt: {
-    translation: ptTranslation
+    translation: ptTranslation,
+    arithmetic: ptArithmetic
   }
 };
 

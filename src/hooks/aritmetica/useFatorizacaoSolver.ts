@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { factorNumberIntoPrimes } from '../../utils/mathUtilsTeoriaNumeros';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 type State = {
@@ -76,20 +77,20 @@ function reducer(state: State, action: Action): State {
 }
 
 // Gerar passos para fatoração em números primos
-function generateFactorizationSteps(num: number): string[] {
+function generateFactorizationSteps(num: number, t: any): string[] {
   const calculationSteps: string[] = [];
   
   if (num <= 1) {
     if (num === 1) {
-      calculationSteps.push('O número 1 não tem fatores primos.');
+      calculationSteps.push(t('arithmetic:factorization.steps.number_one_no_factors'));
     } else {
-      calculationSteps.push(`O número ${num} não tem fatoração válida em números primos.`);
+      calculationSteps.push(t('arithmetic:factorization.steps.invalid_factorization', { number: num }));
     }
     return calculationSteps;
   }
   
-  calculationSteps.push(`Equação original: Fatoração de ${num} em números primos.`);
-  calculationSteps.push(`Vamos decompor o número ${num} em seus fatores primos usando o método de divisões sucessivas.`);
+  calculationSteps.push(t('arithmetic:factorization.steps.original_equation', { number: num }));
+  calculationSteps.push(t('arithmetic:factorization.steps.decompose_intro', { number: num }));
   
   // Tentaremos dividir primeiro pelos menores números primos
   let currentNumber = num;
@@ -99,7 +100,12 @@ function generateFactorizationSteps(num: number): string[] {
   while (currentNumber > 1) {
     // Se o fator atual é um divisor
     if (currentNumber % currentFactor === 0) {
-      calculationSteps.push(`Passo ${stepCount}: Dividimos ${currentNumber} por ${currentFactor} e obtemos ${currentNumber / currentFactor}`);
+      calculationSteps.push(t('arithmetic:factorization.steps.divide_step', { 
+        step: stepCount, 
+        number: currentNumber, 
+        factor: currentFactor, 
+        result: currentNumber / currentFactor 
+      }));
       currentNumber /= currentFactor;
       stepCount++;
     } else {
@@ -109,7 +115,10 @@ function generateFactorizationSteps(num: number): string[] {
       // Otimização: se o quadrado do fator atual for maior que o número,
       // então o número atual é primo
       if (currentFactor * currentFactor > currentNumber && currentNumber > 1) {
-        calculationSteps.push(`Passo ${stepCount}: ${currentNumber} é um número primo, pois não é divisível por nenhum número menor que sua raiz quadrada.`);
+        calculationSteps.push(t('arithmetic:factorization.steps.prime_number', { 
+          step: stepCount, 
+          number: currentNumber 
+        }));
         break;
       }
     }
@@ -135,11 +144,11 @@ function generateFactorizationSteps(num: number): string[] {
   // Remover o " × " do final
   factorStr = factorStr.slice(0, -3);
   
-  calculationSteps.push(`Resultado: ${num} = ${factorStr}`);
+  calculationSteps.push(t('arithmetic:factorization.steps.result', { number: num, factorization: factorStr }));
   
   // Adicionar verificação
   calculationSteps.push('---VERIFICATION_SEPARATOR---');
-  calculationSteps.push(`Verificação do resultado: Multiplicamos todos os fatores primos para confirmar que obtemos o número original.`);
+  calculationSteps.push(t('arithmetic:factorization.steps.verification_intro'));
   
   // Calcular o produto dos fatores
   let product = 1;
@@ -147,17 +156,26 @@ function generateFactorizationSteps(num: number): string[] {
     const factor = factorization.factors[i];
     const exponent = factorization.exponents[i];
     
-    calculationSteps.push(`Multiplicando por ${factor}^${exponent} = ${Math.pow(factor, exponent)}`);
+    calculationSteps.push(t('arithmetic:factorization.steps.multiply_factor', { 
+      factor: factor, 
+      exponent: exponent, 
+      result: Math.pow(factor, exponent) 
+    }));
     product *= Math.pow(factor, exponent);
   }
   
-  calculationSteps.push(`Verificação concluída: ${factorStr} = ${product} ${product === num ? '✓' : '✗'}`);
+  calculationSteps.push(t('arithmetic:factorization.steps.verification_completed', { 
+    factorization: factorStr, 
+    product: product, 
+    isCorrect: product === num 
+  }));
   
   return calculationSteps;
 }
 
 export function useFactorizationSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['arithmetic', 'translation']);
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -166,24 +184,24 @@ export function useFactorizationSolver() {
     try {
       const input = state.inputNumber.trim();
       if (!input) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira um número inteiro positivo.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:factorization.errors.empty_input') });
         return;
       }
       
       const num = parseInt(input, 10);
       
       if (isNaN(num)) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira um número inteiro positivo válido.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:factorization.errors.invalid_number') });
         return;
       }
       
       if (num <= 0) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira um número inteiro positivo.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:factorization.errors.positive_integer_required') });
         return;
       }
       
       const primeFactors = factorNumberIntoPrimes(num);
-      const steps = generateFactorizationSteps(num);
+      const steps = generateFactorizationSteps(num, t);
       
       dispatch({
         type: 'SET_RESULT',
@@ -192,7 +210,7 @@ export function useFactorizationSolver() {
         steps
       });
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : 'Erro desconhecido.' });
+      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : t('translation:common.errors.unknown') });
     }
   };
 

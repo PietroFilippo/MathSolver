@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { roundToDecimals } from '../../utils/mathUtils';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 type OperationType = 'percentage' | 'percentageChange' | 'reversePercentage';
@@ -90,6 +91,7 @@ function reducer(state: State, action: Action): State {
 
 export function usePercentageSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['arithmetic', 'translation']);
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -101,12 +103,12 @@ export function usePercentageSolver() {
       
       // Validar as entradas
       if (state.value.trim() === '' || isNaN(value)) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira um valor válido.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:percentage.errors.invalid_value') });
         return;
       }
       
       if (state.percentage.trim() === '' || isNaN(percentage)) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira uma porcentagem válida.' });
+        dispatch({ type: 'SET_ERROR', message: t('arithmetic:percentage.errors.invalid_percentage') });
         return;
       }
       
@@ -120,17 +122,25 @@ export function usePercentageSolver() {
           result = (percentage / 100) * value;
           result = roundToDecimals(result, 4);
           
-          calculationSteps.push(`Equação original: Calcular ${percentage}% de ${value}`);
-          calculationSteps.push(`Passo ${stepCount++}: Convertemos a porcentagem para decimal dividindo por 100: ${percentage}% = ${percentage} ÷ 100 = ${percentage / 100}`);
-          calculationSteps.push(`Passo ${stepCount++}: Multiplicamos o valor pelo decimal: ${value} × ${percentage / 100} = ${result}`);
-          calculationSteps.push(`Resultado: ${percentage}% de ${value} é igual a ${result}.`);
+          calculationSteps.push(t('arithmetic:percentage.steps.original_equation', { percentage, value }));
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.convert_percentage', { percentage, decimal: percentage / 100 })}`);
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.multiply_value', { value, decimal: percentage / 100, result })}`);
+          calculationSteps.push(`${t('translation:common.result')}: ${t('arithmetic:percentage.steps.result', { percentage, value, result })}`);
           
           // Adicionar verificação
           calculationSteps.push('---VERIFICATION_SEPARATOR---');
-          calculationSteps.push(`Verificação do resultado:`);
-          calculationSteps.push(`Calculando: qual porcentagem ${result} representa de ${value}:`);
-          calculationSteps.push(`Simplificando: ${result} ÷ ${value} × 100 = ${(result / value) * 100}%`);
-          calculationSteps.push(`Verificação concluída: (${(result / value) * 100}% ≈ ${percentage}%) (Correto!)`);
+          calculationSteps.push(`${t('translation:common.verification')}:`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.verification.calculating', { result, value })}:`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.verification.simplifying', { result, value, percentage: (result / value) * 100 })}`);
+          
+          // Determinar se a verificação é correta - sem sintaxe de handlebars
+          const calculatedPercentage = (result / value) * 100;
+          const isCorrectPercentage = Math.abs(calculatedPercentage - percentage) < 0.01;
+          const verificationText = isCorrectPercentage 
+            ? `verification.completed: ${t('arithmetic:percentage.steps.verification.completed', { calculated: calculatedPercentage, original: percentage })} ✓`
+            : `verification.completed: ${t('arithmetic:percentage.steps.verification.completed', { calculated: calculatedPercentage, original: percentage })}`;
+            
+          calculationSteps.push(verificationText);
           break;
           
         case 'percentageChange':
@@ -138,26 +148,33 @@ export function usePercentageSolver() {
           result = ((value - percentage) / percentage) * 100;
           result = roundToDecimals(result, 2);
           
-          calculationSteps.push(`Equação original: Calcular a variação percentual entre ${percentage} (valor inicial) e ${value} (valor final)`);
-          calculationSteps.push(`Passo ${stepCount++}: Calculamos a diferença entre os valores: ${value} - ${percentage} = ${value - percentage}`);
-          calculationSteps.push(`Passo ${stepCount++}: Dividimos a diferença pelo valor inicial: (${value} - ${percentage}) ÷ ${percentage} = ${(value - percentage) / percentage}`);
-          calculationSteps.push(`Passo ${stepCount++}: Multiplicamos por 100 para obter a porcentagem: ${(value - percentage) / percentage} × 100 = ${result}%`);
+          calculationSteps.push(t('arithmetic:percentage.steps.percentageChange.original_equation', { initialValue: percentage, value }));
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.percentageChange.calculate_difference', { value, initialValue: percentage, difference: value - percentage })}`);
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.percentageChange.divide_difference', { value, initialValue: percentage, division: (value - percentage) / percentage })}`);
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.percentageChange.multiply_100', { division: (value - percentage) / percentage, result })}`);
           
           if (result > 0) {
-            calculationSteps.push(`Resultado: Houve um aumento de ${result}% do valor inicial para o valor final.`);
+            calculationSteps.push(`${t('translation:common.result')}: ${t('arithmetic:percentage.steps.percentageChange.result_increase', { result })}`);
           } else if (result < 0) {
-            calculationSteps.push(`Resultado: Houve uma redução de ${Math.abs(result)}% do valor inicial para o valor final.`);
+            calculationSteps.push(`${t('translation:common.result')}: ${t('arithmetic:percentage.steps.percentageChange.result_decrease', { result: Math.abs(result) })}`);
           } else {
-            calculationSteps.push(`Resultado: Não houve variação percentual entre os valores.`);
+            calculationSteps.push(`${t('translation:common.result')}: ${t('arithmetic:percentage.steps.percentageChange.result_no_change')}`);
           }
           
           // Adicionar verificação
           calculationSteps.push('---VERIFICATION_SEPARATOR---');
-          calculationSteps.push(`Verificação do resultado:`);
+          calculationSteps.push(`${t('translation:common.verification')}:`);
           const finalValue = percentage * (1 + result / 100);
-          calculationSteps.push(`Calculando: aplicando a variação percentual de ${result}% ao valor inicial ${percentage}:`);
-          calculationSteps.push(`Simplificando: ${percentage} × (1 + ${result} ÷ 100) = ${percentage} × ${1 + result / 100} = ${finalValue}`);
-          calculationSteps.push(`Verificação concluída: O valor final calculado ${finalValue} ${Math.abs(finalValue - value) < 0.01 ? "✓ (Correto!)" : "≈"} ${value}`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.percentageChange.verification.calculating', { result, initialValue: percentage })}:`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.percentageChange.verification.simplifying', { initialValue: percentage, result, calculation: finalValue })}`);
+          
+          // Determinar se a verificação é correta - sem sintaxe de handlebars
+          const isCorrectFinalValue = Math.abs(finalValue - value) < 0.01;
+          const finalValueVerificationText = isCorrectFinalValue
+            ? `verification.completed: ${t('arithmetic:percentage.steps.percentageChange.verification.completed', { calculated: finalValue, original: value })} ✓`
+            : `verification.completed: ${t('arithmetic:percentage.steps.percentageChange.verification.completed', { calculated: finalValue, original: value })}`;
+            
+          calculationSteps.push(finalValueVerificationText);
           break;
           
         case 'reversePercentage':
@@ -165,28 +182,35 @@ export function usePercentageSolver() {
           result = value / (1 + percentage / 100);
           result = roundToDecimals(result, 4);
           
-          calculationSteps.push(`Equação original: Encontrar o valor original antes de um aumento de ${percentage}%`);
-          calculationSteps.push(`Passo ${stepCount++}: Convertemos a porcentagem para decimal e adicionamos 1: 1 + ${percentage} ÷ 100 = 1 + ${percentage / 100} = ${1 + percentage / 100}`);
-          calculationSteps.push(`Passo ${stepCount++}: Dividimos o valor atual pelo resultado: ${value} ÷ ${1 + percentage / 100} = ${result}`);
-          calculationSteps.push(`Resultado: O valor original antes do aumento de ${percentage}% era ${result}.`);
+          calculationSteps.push(t('arithmetic:percentage.steps.reversePercentage.original_equation', { percentageIncrease: percentage }));
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.reversePercentage.convert_percentage', { percentageIncrease: percentage, conversion: 1 + percentage / 100 })}`);
+          calculationSteps.push(`${t('translation:common.step')} ${stepCount++}: ${t('arithmetic:percentage.steps.reversePercentage.divide_value', { currentValue: value, divisor: 1 + percentage / 100, result })}`);
+          calculationSteps.push(`${t('translation:common.result')}: ${t('arithmetic:percentage.steps.reversePercentage.result', { percentageIncrease: percentage, result })}`);
           
           // Adicionar verificação
           calculationSteps.push('---VERIFICATION_SEPARATOR---');
-          calculationSteps.push(`Verificação do resultado:`);
+          calculationSteps.push(`${t('translation:common.verification')}:`);
           const afterIncrease = result * (1 + percentage / 100);
-          calculationSteps.push(`Calculando: aplicando um aumento de ${percentage}% ao valor original ${result}:`);
-          calculationSteps.push(`Simplificando: ${result} × (1 + ${percentage} ÷ 100) = ${result} × ${1 + percentage / 100} = ${afterIncrease}`);
-          calculationSteps.push(`Verificação concluída: O valor após o aumento ${afterIncrease} ${Math.abs(afterIncrease - value) < 0.01 ? "✓ (Correto!)" : "≈"} ${value}`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.reversePercentage.verification.calculating', { percentageIncrease: percentage, result })}:`);
+          calculationSteps.push(`${t('arithmetic:percentage.steps.reversePercentage.verification.simplifying', { result, percentageIncrease: percentage, calculation: afterIncrease })}`);
+          
+          // Determine if verification is correct - no handlebars syntax
+          const isCorrectAfterIncrease = Math.abs(afterIncrease - value) < 0.01;
+          const afterIncreaseVerificationText = isCorrectAfterIncrease
+            ? `verification.completed: ${t('arithmetic:percentage.steps.reversePercentage.verification.completed', { calculated: afterIncrease, original: value })} ✓`
+            : `verification.completed: ${t('arithmetic:percentage.steps.reversePercentage.verification.completed', { calculated: afterIncrease, original: value })}`;
+            
+          calculationSteps.push(afterIncreaseVerificationText);
           break;
           
         default:
-          dispatch({ type: 'SET_ERROR', message: 'Tipo de operação inválido.' });
+          dispatch({ type: 'SET_ERROR', message: t('arithmetic:percentage.errors.invalid_operation') });
           return;
       }
       
       dispatch({ type: 'SET_RESULT', result, steps: calculationSteps });
     } catch (error) {
-      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : 'Erro desconhecido.' });
+      dispatch({ type: 'SET_ERROR', message: error instanceof Error ? error.message : t('translation:common.errors.unknown') });
     }
   };
 

@@ -1,0 +1,408 @@
+{
+  "percentage": {
+    "description": "Calculate the value of a percentage of a number.",
+    "labels": {
+      "value": "Value",
+      "percentage": "Percentage (%)",
+      "calculation_type": "Calculation type"
+    },
+    "placeholders": {
+      "value": "Enter the value",
+      "percentage": "Enter the percentage"
+    },
+    "operation_types": {
+      "percentage": "Percentage value",
+      "percentage_change": "Percentage change",
+      "reverse_percentage": "Reverse calculation"
+    },
+    "hide_explanation": "Hide detailed explanation",
+    "show_explanation": "Show detailed explanation",
+    "step_by_step": "Step-by-step solution",
+    "mathematical_concept": "Mathematical Concept",
+    "results": {
+      "percentage": "The result of {{percentage}}% of {{value}} is: <span class=\"font-bold\">{{result}}</span>",
+      "percentage_change": "The percentage change from {{initialValue}} to {{value}} is: <span class=\"font-bold\">{{result}}%</span>",
+      "reverse_percentage": "The value of which {{value}} represents {{percentage}}% is: <span class=\"font-bold\">{{result}}</span>"
+    },
+    "steps": {
+      "original_equation": "Original equation: Calculate {{percentage}}% of {{value}}",
+      "convert_percentage": "We convert the percentage to decimal by dividing by 100: {{percentage}}% = {{percentage}} ÷ 100 = {{decimal}}",
+      "multiply_value": "We multiply the value by the decimal: {{value}} × {{decimal}} = {{result}}",
+      "result": "{{percentage}}% of {{value}} is equal to {{result}}.",
+      "verification": {
+        "calculating": "Calculating: what percentage {{result}} represents of {{value}}",
+        "simplifying": "Simplifying: {{result}} ÷ {{value}} × 100 = {{percentage}}%",
+        "completed": "Verification completed: ({{calculated}}% ≈ {{original}}%) (Correct!)"
+      },
+      "percentageChange": {
+        "original_equation": "Original equation: Calculate the percentage change between {{initialValue}} (initial value) and {{value}} (final value)",
+        "calculate_difference": "We calculate the difference between the values: {{value}} - {{initialValue}} = {{difference}}",
+        "divide_difference": "We divide the difference by the initial value: ({{value}} - {{initialValue}}) ÷ {{initialValue}} = {{division}}",
+        "multiply_100": "We multiply by 100 to get the percentage: {{division}} × 100 = {{result}}%",
+        "result_increase": "There was an increase of {{result}}% from the initial value to the final value.",
+        "result_decrease": "There was a decrease of {{result}}% from the initial value to the final value.",
+        "result_no_change": "There was no percentage change between the values.",
+        "verification": {
+          "calculating": "Calculating: applying the percentage change of {{result}}% to the initial value {{initialValue}}",
+          "simplifying": "Simplifying: {{initialValue}} × (1 + {{result}} ÷ 100) = {{initialValue}} × {{calculation}}",
+          "completed": "Verification completed: The calculated final value {{calculated}} {{#if correct}}✓ (Correct!){{else}}≈{{/if}} {{original}}"
+        }
+      },
+      "reversePercentage": {
+        "original_equation": "Original equation: Find the original value before an increase of {{percentageIncrease}}%",
+        "convert_percentage": "We convert the percentage to decimal and add 1: 1 + {{percentageIncrease}} ÷ 100 = 1 + {{percentageIncrease}} / 100 = {{conversion}}",
+        "divide_value": "We divide the current value by the result: {{currentValue}} ÷ {{divisor}} = {{result}}",
+        "result": "The original value before the {{percentageIncrease}}% increase was {{result}}.",
+        "verification": {
+          "calculating": "Calculating: applying an increase of {{percentageIncrease}}% to the original value {{result}}",
+          "simplifying": "Simplifying: {{result}} × (1 + {{percentageIncrease}} ÷ 100) = {{result}} × {{calculation}}",
+          "completed": "Verification completed: The value after the increase {{calculated}} {{#if correct}}✓ (Correct!){{else}}≈{{/if}} {{original}}"
+        }
+      }
+    },
+    "errors": {
+      "invalid_value": "Please enter a valid value.",
+      "invalid_percentage": "Please enter a valid percentage.",
+      "invalid_operation": "Invalid operation type."
+    },
+    "concepts": {
+      "basic": {
+        "title": "Basic Percentage",
+        "description": "Percentages represent parts per hundred. When we say \"<span class=\"font-medium\">{{percentage}}%</span>\", we mean \"{{percentage}} parts of 100\".",
+        "formula_title": "Basic Formula",
+        "formula": "Percentage value = (Value × Percentage) ÷ 100",
+        "example": "To calculate 25% of 80:<br />(80 × 25) ÷ 100 = 2000 ÷ 100 = 20"
+      },
+      "percentage_change": {
+        "title": "Percentage Change",
+        "description": "Percentage change measures how much a value has changed relative to the original value, expressed as a percentage. A positive result indicates an increase, while a negative result indicates a decrease.",
+        "formula_title": "Formula",
+        "formula": "Percentage change = ((Final Value - Initial Value) ÷ Initial Value) × 100",
+        "example": "If a price increased from $80 to $100:<br />((100 - 80) ÷ 80) × 100 = (20 ÷ 80) × 100 = 0.25 × 100 = 25%"
+      },
+      "reverse_percentage": {
+        "title": "Reverse Percentage Calculation",
+        "description": "Reverse percentage calculation allows us to find the original value when we know a percentage portion of that value.",
+        "formula_title": "Formula",
+        "formula": "Original Value = (Known Value × 100) ÷ Percentage",
+        "example": "If $20 is 25% of a value:<br />(20 × 100) ÷ 25 = 2000 ÷ 25 = 80"
+      },
+      "applications": {
+        "title": "Applications",
+        "contexts_title": "Usage Contexts",
+        "contexts": {
+          "commerce": {
+            "title": "Commerce",
+            "description": "Discounts, profit margins, and price increases"
+          },
+          "finance": {
+            "title": "Finance",
+            "description": "Interest, investments, and growth rates"
+          },
+          "statistics": {
+            "title": "Statistics",
+            "description": "Data analysis, population growth"
+          },
+          "science": {
+            "title": "Science",
+            "description": "Concentrations, probabilities, and compositions"
+          },
+          "daily": {
+            "title": "Daily life",
+            "description": "Taxes, tips, and budget control"
+          }
+        }
+      },
+      "useful_conversions": {
+        "title": "Useful Conversions",
+        "divide_by_10": "divide by 10",
+        "divide_by_4": "divide by 4",
+        "divide_by_2": "divide by 2",
+        "original_value": "original value",
+        "multiply_by_2": "multiply by 2"
+      },
+      "calculation_tips": {
+        "title": "Calculation Tips",
+        "decompose": "To mentally calculate percentages, try decomposing: 15% = 10% + 5%",
+        "increase_decrease": "An increase of X% followed by a reduction of X% does <strong>not</strong> return to the original value",
+        "fraction_to_percentage": "To convert a fraction to a percentage, divide the numerator by the denominator and multiply by 100",
+        "decimal_to_percentage": "0.1 = 10%, 0.01 = 1%, 0.001 = 0.1% (move the decimal point two places to the right)"
+      },
+      "fun_fact": {
+        "title": "Mathematical Fun Fact",
+        "description": "The word \"percentage\" comes from the Latin \"per centum\", which means \"per hundred\" or \"for each hundred\". The % symbol we use today was developed from an abbreviation of the expression \"per cento\" (p. cento), which eventually transformed into the symbol we know."
+      }
+    }
+  },
+  "proportion": {
+    "title": "Proportions",
+    "description": "A proportion is an equation stating that two ratios are equal: a/b = c/d. This calculator helps you solve the proportion for any unknown value.",
+    "solve_for": "Solve for",
+    "result_value": "The value of <span class=\"font-bold\">{{variable}}</span> is: <span class=\"font-bold\">{{value}}</span>",
+    "steps": {
+      "intro": "We will solve a proportion of the form a/b = c/d for {{solveFor}}.",
+      "identify_values": "Identify the known values:",
+      "original_equation": "Original equation: a/b = c/d where a={{a}}, b={{b}}, c={{c}}, d={{d}}",
+      "fundamental_property": "To find the unknown value, we use the fundamental property of proportions: a × d = b × c.",
+      "isolate_a": "Isolating the variable a: a = (b × c) ÷ d",
+      "isolate_b": "Isolating the variable b: b = (a × d) ÷ c",
+      "isolate_c": "Isolating the variable c: c = (a × d) ÷ b",
+      "isolate_d": "Isolating the variable d: d = (b × c) ÷ a",
+      "substitute_a": "Substituting the values: a = ({{b}} × {{c}}) ÷ {{d}}",
+      "substitute_b": "Substituting the values: b = ({{a}} × {{d}}) ÷ {{c}}",
+      "substitute_c": "Substituting the values: c = ({{a}} × {{d}}) ÷ {{b}}",
+      "substitute_d": "Substituting the values: d = ({{b}} × {{c}}) ÷ {{a}}",
+      "calculate_a": "Calculating the terms: a = {{product}} ÷ {{d}}",
+      "calculate_b": "Calculating the terms: b = {{product}} ÷ {{c}}",
+      "calculate_c": "Calculating the terms: c = {{product}} ÷ {{b}}",
+      "calculate_d": "Calculating the terms: d = {{product}} ÷ {{a}}",
+      "verification": {
+        "left_side": "Calculating the left side of the proportion: a/b = {{a}}/{{b}} = {{result}}",
+        "right_side": "Calculating the right side of the proportion: c/d = {{c}}/{{d}} = {{result}}",
+        "success": "Verification completed: Since both sides are approximately equal ({{left}} ≈ {{right}}), the proportion is correct.",
+        "rounding_note": "Note: There is a small difference between {{left}} and {{right}} due to rounding."
+      }
+    },
+    "errors": {
+      "missing_values": "Please enter valid values for {{values}}.",
+      "invalid_solve_type": "Invalid solution type."
+    },
+    "concept": {
+      "understanding_title": "Understanding Proportions",
+      "understanding_text": "A proportion is an equality between two ratios, expressed as a:b = c:d or a/b = c/d. When two ratios are equal, we say they are proportional.",
+      "fundamental_property": "Fundamental property: a × d = b × c",
+      "example_text": "In the proportion 2/5 = 4/10, we can verify:",
+      "solving_title": "Solving Proportions",
+      "solving_text": "Using the fundamental property of proportions, we can isolate any unknown variable.",
+      "formulas_title": "Formulas for each variable",
+      "for_a": "For a",
+      "for_b": "For b",
+      "for_c": "For c",
+      "for_d": "For d",
+      "applications_title": "Applications of Proportions",
+      "application1_title": "Scales and Maps",
+      "application1_text": "Proportions are used to represent real distances on maps using a proportional scale.",
+      "application2_title": "Culinary Recipes",
+      "application2_text": "Adjusting ingredient quantities while maintaining the same proportion to get the same result.",
+      "application3_title": "Finance",
+      "application3_text": "Interest calculation, rates, and currency conversions frequently use proportions.",
+      "solution_tip_title": "Solution Tip",
+      "solution_tip_text": "To verify if a proportion is correct, always check if the cross product (a × d = b × c) is true. This works for any valid proportion and is a great way to check your calculations."
+    }
+  },
+  "factorization": {
+    "title": "Prime Factorization",
+    "description": "This calculator decomposes a number into its prime factorization. Prime factorization represents a number as a product of its prime factors.",
+    "input_label": "Number to factorize",
+    "input_placeholder": "Enter an integer greater than 1",
+    "button": "Factorize",
+    "result_text": "The prime factorization of <span>{{number}}</span>",
+    "errors": {
+      "empty_input": "Please enter a positive integer.",
+      "invalid_number": "Please enter a valid positive integer.",
+      "positive_integer_required": "Please enter a positive integer."
+    },
+    "steps": {
+      "number_one_no_factors": "The number 1 has no prime factors.",
+      "invalid_factorization": "The number {{number}} has no valid prime factorization.",
+      "original_equation": "Original equation: Factorization of {{number}} into prime numbers.",
+      "decompose_intro": "Let's decompose the number {{number}} into its prime factors using the method of successive divisions.",
+      "divide_step": "Step {{step}}: We divide {{number}} by {{factor}} and get {{result}}",
+      "prime_number": "Step {{step}}: {{number}} is a prime number, as it is not divisible by any number less than its square root.",
+      "result": "Result: {{number}} = {{factorization}}",
+      "verification_intro": "Verification of the result: We multiply all prime factors to confirm that we get the original number.",
+      "multiply_factor": "Multiplying by {{factor}}^{{exponent}} = {{result}}",
+      "verification_completed": "Verification completed: {{factorization}} = {{product}} {{#if isCorrect}}✓{{else}}✗{{/if}}"
+    },
+    "concept": {
+      "prime_numbers": {
+        "title": "Prime Numbers",
+        "description": "A prime number is a natural number greater than 1 that is only divisible by 1 and itself.",
+        "examples_title": "Examples of prime numbers",
+        "examples": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, ..."
+      },
+      "composite_numbers": {
+        "title": "Composite Numbers",
+        "description": "A composite number is a natural number greater than 1 that has other divisors besides 1 and itself.",
+        "examples_title": "Examples of composite numbers",
+        "examples": "4 = 2 × 2, 6 = 2 × 3, 8 = 2 × 2 × 2, 9 = 3 × 3, 10 = 2 × 5, ..."
+      },
+      "fundamental_theorem": {
+        "title": "Fundamental Theorem of Arithmetic",
+        "statement": "Every integer greater than 1 is either prime or can be written as a product of prime numbers in a unique way (ignoring the order of factors).",
+        "importance": "This is one of the most important theorems in number theory, as it guarantees that prime factorization is unique."
+      },
+      "prime_factorization": {
+        "title": "Prime Factorization",
+        "definition": {
+          "title": "Definition",
+          "description": "Prime factorization is the decomposition of a number into a product of prime factors. Each composite number can be uniquely represented as a multiplication of prime numbers."
+        },
+        "algorithm": {
+          "title": "Algorithm",
+          "steps": "<li>Start with the smallest prime number, 2.</li><li>Check if the number is divisible by the current prime.</li><li>If divisible, divide the number and repeat step 2.</li><li>If not divisible, move to the next prime number.</li><li>Continue until the remaining number is 1.</li>"
+        }
+      },
+      "applications": {
+        "title": "Applications of Factorization",
+        "cryptography": {
+          "title": "Cryptography",
+          "description": "The security of many cryptographic systems, such as RSA, depends on the difficulty of factoring large numbers."
+        },
+        "fractions": {
+          "title": "Simplifying Fractions",
+          "description": "Factorization helps find the GCD to simplify fractions to their lowest terms."
+        },
+        "lcm_gcd": {
+          "title": "Calculating LCM and GCD",
+          "description": "Factorization is used to calculate the least common multiple and greatest common divisor between numbers."
+        }
+      },
+      "calculation_tip": {
+        "title": "Calculation Tip",
+        "description": "When factoring large numbers, first check if they are divisible by the first primes (2, 3, 5, 7, 11, 13). If a number is not divisible by any prime less than or equal to its square root, then it is prime."
+      }
+    }
+  },
+  "gcd_lcm": {
+    "title": "LCM and GCD Calculator",
+    "description": "Calculate the Least Common Multiple (LCM) or Greatest Common Divisor (GCD) of two or more positive integers.",
+    "input_label": "Numbers (separated by commas)",
+    "input_placeholder": "Ex: 12, 18, 24",
+    "calculation_type": "Calculation type",
+    "types": {
+      "lcm": "LCM - Least Common Multiple",
+      "gcd": "GCD - Greatest Common Divisor"
+    },
+    "result_text": {
+      "lcm": "The LCM of <span>{{numbers}}</span> is: <span>{{result}}</span>",
+      "gcd": "The GCD of <span>{{numbers}}</span> is: <span>{{result}}</span>"
+    },
+    "step_by_step": {
+      "lcm": "LCM Calculation step by step",
+      "gcd": "GCD Calculation step by step"
+    },
+    "errors": {
+      "missing_input": "Please enter at least two numbers.",
+      "invalid_number": "The value '{{value}}' is not a valid integer.",
+      "positive_required": "All numbers must be positive integers.",
+      "no_valid_numbers": "No valid numbers were entered.",
+      "need_at_least_two": "Please enter at least two numbers to calculate the GCD or LCM."
+    },
+    "steps": {
+      "gcd": {
+        "calculating": "Calculating the GCD of {{a}} and {{b}} using the Euclidean Algorithm:",
+        "organize_numbers": "Organizing the numbers in descending order: {{num1}} and {{num2}}",
+        "division_step": "Step {{step}}: We divide {{num1}} by {{num2}} and get quotient {{quotient}} and remainder {{remainder}}",
+        "result": "Result: Since the remainder is 0, the GCD is the last non-zero divisor: {{num1}}",
+        "verification_intro": "Verifying the result: The GCD found ({{gcd}}) should divide both original numbers without leaving a remainder.",
+        "verification_step": "{{number}} ÷ {{gcd}} = {{result}} (no remainder)",
+        "single_number": "The GCD of a single number {{number}} is the number itself.",
+        "multiple_numbers_intro": "Calculating the GCD of {{numbers}} step by step:",
+        "start_with_two": "Step {{step}}: We start by calculating the GCD of the first two numbers: {{first}} and {{second}}",
+        "calculate_pair": "Step {{step}}: Calculating GCD({{currentGcd}}, {{nextNumber}}):",
+        "current_result": "Current GCD: {{currentGcd}}",
+        "stop_at_one": "Since the GCD is 1, we can stop here, as the GCD of all numbers will be 1.",
+        "final_result": "Final solution: GCD of {{numbers}} is {{result}}"
+      },
+      "lcm": {
+        "calculating": "Calculating the LCM of {{a}} and {{b}}:",
+        "formula_intro": "Step {{step}}: We use the formula LCM(a,b) = (a × b) / GCD(a,b)",
+        "calculate_gcd_first": "Step {{step}}: First, we calculate the GCD of {{a}} and {{b}}:",
+        "gcd_result": "GCD({{a}}, {{b}}) = {{gcdValue}}",
+        "apply_formula": "Step {{step}}: Applying the LCM formula: LCM({{a}}, {{b}}) = ({{a}} × {{b}}) / {{gcdValue}} = {{product}} / {{gcdValue}} = {{lcmValue}}",
+        "verification_intro": "Verifying the result: The LCM found ({{lcmValue}}) should be divisible by both original numbers.",
+        "verification_step": "{{lcmValue}} ÷ {{number}} = {{result}} (no remainder)",
+        "single_number": "The LCM of a single number {{number}} is the number itself.",
+        "multiple_numbers_intro": "Calculating the LCM of {{numbers}} step by step:",
+        "start_with_two": "Step {{step}}: We start by calculating the LCM of the first two numbers: {{first}} and {{second}}",
+        "calculate_pair": "Step {{step}}: Calculating LCM({{currentLcm}}, {{nextNumber}}):",
+        "current_result": "Current LCM: {{currentLcm}}",
+        "final_result": "Final solution: LCM of {{numbers}} is {{result}}",
+        "final_verification": "Final verification: The LCM found ({{currentLcm}}) should be divisible by all the original numbers."
+      }
+    },
+    "concept": {
+      "lcm": {
+        "title": "Least Common Multiple (LCM)",
+        "description": "The LCM of two or more numbers is the smallest positive number that is a multiple of all of them.",
+        "example1": "<p>• Multiples of 4: 4, 8, 12, 16, 20, 24, 28, ...</p><p>• Multiples of 6: 6, 12, 18, 24, 30, ...</p><p>∴ LCM(4,6) = 12</p>",
+        "example2": "<p>• Multiples of 3: 3, 6, 9, 12, 15, 18, 21, 24, ...</p><p>• Multiples of 5: 5, 10, 15, 20, 25, 30, ...</p><p>∴ LCM(3,5) = 15</p>",
+        "example3": "<p>• Multiples of 8: 8, 16, 24, 32, 40, 48, ...</p><p>• Multiples of 10: 10, 20, 30, 40, 50, ...</p><p>∴ LCM(8,10) = 40</p>",
+        "example4": "<p>• Multiples of 9: 9, 18, 27, 36, 45, 54, ...</p><p>• Multiples of 15: 15, 30, 45, 60, 75, ...</p><p>∴ LCM(9,15) = 45</p>"
+      },
+      "gcd": {
+        "title": "Greatest Common Divisor (GCD)",
+        "description": "The GCD of two or more numbers is the largest number that divides all of them without leaving a remainder.",
+        "example1": "<p>• Divisors of 12: 1, 2, 3, 4, 6, 12</p><p>• Divisors of 18: 1, 2, 3, 6, 9, 18</p><p>∴ GCD(12,18) = 6</p>",
+        "example2": "<p>• Divisors of 24: 1, 2, 3, 4, 6, 8, 12, 24</p><p>• Divisors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36</p><p>∴ GCD(24,36) = 12</p>",
+        "example3": "<p>• Divisors of 15: 1, 3, 5, 15</p><p>• Divisors of 25: 1, 5, 25</p><p>∴ GCD(15,25) = 5</p>",
+        "example4": "<p>• Divisors of 14: 1, 2, 7, 14</p><p>• Divisors of 35: 1, 5, 7, 35</p><p>∴ GCD(14,35) = 7</p>"
+      },
+      "relation": {
+        "title": "Relationship between LCM and GCD",
+        "description": "The GCD and LCM are related by the formula:",
+        "formula": "LCM(a, b) × GCD(a, b) = a × b",
+        "note": "This formula is valid for any two positive integers a and b.",
+        "example1": {
+          "title": "For 12 and 18",
+          "gcd": "GCD(12, 18) = 6",
+          "lcm": "LCM(12, 18) = 36",
+          "verification": "Verifying: 6 × 36 = 12 × 18 = 216 ✓"
+        },
+        "example2": {
+          "title": "For 15 and 25",
+          "gcd": "GCD(15, 25) = 5",
+          "lcm": "LCM(15, 25) = 75",
+          "verification": "Verifying: 5 × 75 = 15 × 25 = 375 ✓"
+        }
+      },
+      "methods": {
+        "title": "Calculation Methods",
+        "prime_factorization": {
+          "title": "Prime Factorization Method",
+          "step1": "Factor each number into its prime factors",
+          "lcm_step2": "For the LCM: multiply each prime factor with the <strong>highest</strong> exponent that appears in any factorization",
+          "gcd_step2": "For the GCD: multiply each prime factor with the <strong>lowest</strong> exponent that appears in all factorizations",
+          "example": {
+            "intro": "Example: For 12 = 2² × 3 and 18 = 2 × 3²",
+            "lcm": "LCM = 2² × 3² = 4 × 9 = 36",
+            "gcd": "GCD = 2¹ × 3¹ = 2 × 3 = 6"
+          },
+          "tip": "This method is more efficient for large numbers and works well for calculating both LCM and GCD.",
+          "coprime_note": "If two numbers have no common factors, their GCD is 1, and they are called coprime or relatively prime."
+        },
+        "euclidean": {
+          "title": "Euclidean Algorithm (for GCD)",
+          "step1": "Divide the larger number by the smaller one and get the remainder",
+          "step2": "If the remainder is zero, the GCD is the second number",
+          "step3": "If not, replace the first number with the second and the second with the remainder, and repeat the process",
+          "example": {
+            "title": "Example: GCD(48, 18)",
+            "step1": "48 = 18 × 2 + 12",
+            "step2": "18 = 12 × 1 + 6",
+            "step3": "12 = 6 × 2 + 0",
+            "conclusion": "Since the remainder is 0, GCD(48, 18) = 6"
+          }
+        },
+        "multiples": {
+          "title": "Method of Multiples (for LCM)",
+          "step1": "List the multiples of each number",
+          "step2": "Identify the smallest multiple that appears in all lists",
+          "example": {
+            "title": "Example: LCM(4, 6)",
+            "multiples1": "Multiples of 4: 4, 8, 12, 16, 20, 24, ...",
+            "multiples2": "Multiples of 6: 6, 12, 18, 24, ...",
+            "conclusion": "The least common multiple is 12"
+          },
+          "tip": "Using prime factorization is generally more efficient for large numbers."
+        }
+      },
+      "solution_tip": {
+        "title": "Solution Tip",
+        "lcm": "To calculate the LCM of multiple numbers, an efficient strategy is to calculate the LCM of the first two numbers, then calculate the LCM of that result with the third number, and so on.",
+        "gcd": "To calculate the GCD of multiple numbers, you can calculate the GCD of the first two numbers, then calculate the GCD of that result with the third number, and so on."
+      }
+    }
+  }
+} 
