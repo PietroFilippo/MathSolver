@@ -1,6 +1,7 @@
-import { useReducer, ReactNode } from 'react';
+import React, { useReducer, ReactNode } from 'react';
 import { gcd } from '../../utils/mathUtils';
 import { simplifyFraction, FractionDisplay } from '../../utils/mathUtilsFracoes';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 interface FractionSimplificationState {
@@ -79,6 +80,7 @@ function fractionSimplificationReducer(
 
 export function useFractionSimplificationSolver() {
   const [state, dispatch] = useReducer(fractionSimplificationReducer, initialState);
+  const { t } = useTranslation('fractions');
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -92,7 +94,7 @@ export function useFractionSimplificationSolver() {
     if (isNaN(num) || isNaN(den)) {
       dispatch({
         type: 'SET_ERROR',
-        message: 'Por favor, preencha todos os campos com valores numéricos.'
+        message: t('simplification.errors.fill_all_fields')
       });
       return;
     }
@@ -100,7 +102,7 @@ export function useFractionSimplificationSolver() {
     if (den === 0) {
       dispatch({
         type: 'SET_ERROR',
-        message: 'O denominador não pode ser zero.'
+        message: t('simplification.errors.denominator_zero')
       });
       return;
     }
@@ -127,55 +129,55 @@ export function useFractionSimplificationSolver() {
     const calculationSteps: (string | ReactNode)[] = [];
     let stepCount = 1;
 
-    calculationSteps.push(`Equação original: Simplificar a fração ${num}/${den}`);
+    calculationSteps.push(t('simplification.steps.original_equation', { num, den }));
     calculationSteps.push(<FractionDisplay numerator={num} denominator={den} />);
     
     if (num === 0) {
-      calculationSteps.push(`Passo ${stepCount}: Quando o numerador é zero, a fração simplificada é 0`);
-      calculationSteps.push(`Simplificando: 0/${den} = 0/1 = 0`);
+      calculationSteps.push(t('simplification.steps.numerator_zero', { step: stepCount }));
+      calculationSteps.push(t('simplification.steps.simplifying_zero', { den }));
       
       // Adicionar verificação
       calculationSteps.push('---VERIFICATION_SEPARATOR---');
-      calculationSteps.push(`Verificação do resultado:`);
-      calculationSteps.push(`Verificação concluída: A fração simplificada é 0`);
+      calculationSteps.push(t('simplification.steps.verification'));
+      calculationSteps.push(t('simplification.steps.verification_completed_zero'));
     } else if (num === simplifiedNum && den === simplifiedDen) {
-      calculationSteps.push(`Passo ${stepCount}: Verificamos se a fração já está simplificada`);
-      calculationSteps.push(`Verificando: precisamos encontrar o MDC de ${Math.abs(num)} e ${Math.abs(den)}`);
+      calculationSteps.push(t('simplification.steps.check_already_simplified', { step: stepCount }));
+      calculationSteps.push(t('simplification.steps.verifying_gcd', { num: Math.abs(num), den: Math.abs(den) }));
       
       const mdcValue = gcd(Math.abs(num), Math.abs(den));
-      calculationSteps.push(`Calculando: MDC(${Math.abs(num)}, ${Math.abs(den)}) = ${mdcValue}`);
-      calculationSteps.push(`Como o MDC é ${mdcValue}, e é igual a 1, a fração já está na forma irredutível.`);
+      calculationSteps.push(t('simplification.steps.calculating_gcd', { num: Math.abs(num), den: Math.abs(den), gcd: mdcValue }));
+      calculationSteps.push(t('simplification.steps.gcd_is_one', { gcd: mdcValue }));
       
       // Adicionar verificação
       calculationSteps.push('---VERIFICATION_SEPARATOR---');
-      calculationSteps.push(`Verificação do resultado:`);
-      calculationSteps.push(`Verificação concluída: A fração ${num}/${den} já está simplificada`);
+      calculationSteps.push(t('simplification.steps.verification'));
+      calculationSteps.push(t('simplification.steps.verification_completed_already_simplified', { num, den }));
     } else {
-      calculationSteps.push(`Passo ${stepCount}: Encontrar o MDC (Máximo Divisor Comum) de ${Math.abs(num)} e ${Math.abs(den)}`);
+      calculationSteps.push(t('simplification.steps.find_gcd', { step: stepCount, num: Math.abs(num), den: Math.abs(den) }));
       stepCount++;
 
       const mdcValue = gcd(Math.abs(num), Math.abs(den));
-      calculationSteps.push(`Calculando: MDC(${Math.abs(num)}, ${Math.abs(den)}) = ${mdcValue}`);
+      calculationSteps.push(t('simplification.steps.calculating_gcd', { num: Math.abs(num), den: Math.abs(den), gcd: mdcValue }));
 
-      calculationSteps.push(`Passo ${stepCount}: Dividir o numerador e o denominador pelo MDC`);
-      calculationSteps.push(`Calculando: Numerador: ${num} ÷ ${mdcValue} = ${simplifiedNum}`);
-      calculationSteps.push(`Calculando: Denominador: ${den} ÷ ${mdcValue} = ${simplifiedDen}`);
+      calculationSteps.push(t('simplification.steps.divide_by_gcd', { step: stepCount }));
+      calculationSteps.push(t('simplification.steps.calculating_numerator', { num, gcd: mdcValue, result: simplifiedNum }));
+      calculationSteps.push(t('simplification.steps.calculating_denominator', { den, gcd: mdcValue, result: simplifiedDen }));
       stepCount++;
 
-      calculationSteps.push(`Passo ${stepCount}: Resultado da fração simplificada`);
-      calculationSteps.push(`Simplificando: ${num}/${den} = ${simplifiedNum}/${simplifiedDen}`);
+      calculationSteps.push(t('simplification.steps.simplified_result', { step: stepCount }));
+      calculationSteps.push(t('simplification.steps.simplifying_fraction', { num, den, result_num: simplifiedNum, result_den: simplifiedDen }));
       calculationSteps.push(<FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />);
 
       if (simplifiedDen === 1) {
-        calculationSteps.push(`Simplificando: Como o denominador é 1, a fração é igual ao número inteiro ${simplifiedNum}`);
+        calculationSteps.push(t('simplification.steps.denominator_is_one', { num: simplifiedNum }));
       }
       
       // Adicionar verificação
       calculationSteps.push('---VERIFICATION_SEPARATOR---');
-      calculationSteps.push(`Verificação do resultado:`);
-      calculationSteps.push(`Verificando: ${num} ÷ ${mdcValue} = ${simplifiedNum}`);
-      calculationSteps.push(`Verificando: ${den} ÷ ${mdcValue} = ${simplifiedDen}`);
-      calculationSteps.push(`Verificação concluída: A fração simplificada é ${simplifiedNum}/${simplifiedDen}`);
+      calculationSteps.push(t('simplification.steps.verification'));
+      calculationSteps.push(t('simplification.steps.verifying_numerator', { num, gcd: mdcValue, result: simplifiedNum }));
+      calculationSteps.push(t('simplification.steps.verifying_denominator', { den, gcd: mdcValue, result: simplifiedDen }));
+      calculationSteps.push(t('simplification.steps.verification_completed', { num: simplifiedNum, den: simplifiedDen }));
     }
 
     return calculationSteps;

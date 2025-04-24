@@ -1,0 +1,627 @@
+{
+  "mixed_fractions": {
+    "title": "Mixed Fractions Conversion",
+    "description": "This calculator allows you to convert between mixed fractions and improper fractions. Select the desired operation and enter the values below.",
+    "operations": {
+      "to_fraction": "Mixed fraction to improper fraction",
+      "to_mixed": "Improper fraction to mixed fraction"
+    },
+    "labels": {
+      "whole_part": "Whole Part",
+      "numerator": "Num",
+      "denominator": "Den",
+      "examples": "Examples",
+      "calculate": "Calculate"
+    },
+    "results": {
+      "to_fraction": "The improper fraction is:",
+      "to_mixed": "The mixed fraction is:"
+    },
+    "steps": {
+      "original_equation": "Original equation: Convert {{operation}} fraction",
+      "whole_multiply": "Step {{step}}: Multiply the whole part by the denominator",
+      "calculating_multiply": "Calculating: {{whole}} × {{den}} = {{result}}",
+      "add_numerator": "Step {{step}}: Add the numerator",
+      "calculating_add": "Calculating: {{whole_times_den}} + {{num}} = {{result}}",
+      "negative_sign": "Step {{step}}: Apply the negative sign to the result",
+      "simplifying_sign": "Simplifying: -{{num}} = {{result}}",
+      "write_fraction": "Step {{step}}: Write the resulting improper fraction",
+      "simplifying_result": "Simplifying: {{whole}} + {{num}}/{{den}} = {{result_num}}/{{result_den}}",
+      "divide_numerator": "Step {{step}}: Divide the numerator by the denominator",
+      "calculating_divide": "Calculating: {{num}} ÷ {{den}} = {{whole}} with remainder {{remainder}}",
+      "apply_negative": "Step {{step}}: Apply the negative sign to the whole part",
+      "simplifying_negative": "Simplifying: -{{whole}}",
+      "write_mixed": "Step {{step}}: Write the resulting mixed fraction",
+      "simplifying_mixed": "Simplifying: {{num}}/{{den}} = {{whole}} + {{remainder}}/{{den}}",
+      "verification": "Verification of the result:",
+      "verifying_to_fraction": "Verifying: ({{whole}} × {{den}}) + {{num}} = {{result}}",
+      "verification_completed_to_fraction": "Verification completed: The improper fraction is {{num}}/{{den}}",
+      "verifying_to_mixed": "Verifying: {{whole}} + ({{num}}/{{den}}) = ({{whole}} × {{den}} + {{num}})/{{den}} = {{result}}/{{den}}",
+      "verification_completed_to_mixed": "Verification completed: The mixed fraction is {{whole}} + {{num}}/{{den}}"
+    },
+    "errors": {
+      "invalid_numbers": "Please enter valid numbers.",
+      "denominator_zero": "The denominator cannot be zero."
+    },
+    "mathematical_concept": {
+      "title": "Mathematical Concept",
+      "definition_title": "Mixed Fractions and Improper Fractions",
+      "definition_text": "Mixed fractions and improper fractions are two different ways to represent fractional quantities:",
+      "definitions": {
+        "title": "Definitions",
+        "mixed_fraction": "Mixed Fraction: Consists of a whole part followed by a proper fraction. Example: 2³/₄ (two and three quarters)",
+        "improper_fraction": "Improper Fraction: Has a numerator greater than or equal to the denominator. Example: ¹¹/₄ (eleven quarters)"
+      },
+      "conversion_title": "Conversion between Fractions",
+      "mixed_to_improper": "Mixed to Improper:",
+      "mixed_to_improper_formula": "a + b/c = (a×c + b)/c",
+      "improper_to_mixed": "Improper to Mixed:",
+      "improper_to_mixed_formula": "n/d = q + r/d",
+      "improper_to_mixed_note": "where q = ⌊n/d⌋ (whole part) and r = n mod d (remainder)",
+      "process_title": "Conversion Process",
+      "mixed_to_improper_process": "Mixed Fraction to Improper",
+      "mixed_to_improper_steps": {
+        "step1": "Multiply the whole part by the denominator of the fraction",
+        "step1_example": "For 2³/₄: 2 × 4 = 8",
+        "step2": "Add the numerator to the result",
+        "step2_example": "8 + 3 = 11",
+        "step3": "Use the result as the new numerator, keeping the same denominator",
+        "step3_example": "Result: ¹¹/₄"
+      },
+      "improper_to_mixed_process": "Improper Fraction to Mixed",
+      "improper_to_mixed_steps": {
+        "step1": "Divide the numerator by the denominator to get the quotient and remainder",
+        "step1_example": "For ¹¹/₄: 11 ÷ 4 = 2 (quotient) with remainder 3",
+        "step2": "The quotient will be the whole part",
+        "step2_example": "Whole part: 2",
+        "step3": "The remainder will be the new numerator, with the same denominator",
+        "step3_example": "Result: 2³/₄"
+      },
+      "special_cases_title": "Special Cases",
+      "zero_numerator": {
+        "title": "Fractions with Zero Numerator",
+        "text": "If the numerator is zero, the mixed fraction will be just the whole part. Example: 5⁰/₄ = 5"
+      },
+      "negative_fractions": {
+        "title": "Negative Fractions",
+        "text": "With negative fractions, the negative sign applies to the entire fraction. Example: -7³/₄ is converted to -³¹/₄ (not -²⁸/₄)"
+      },
+      "zero_remainder": {
+        "title": "Zero Remainder",
+        "text": "If the remainder is zero when converting to a mixed fraction, we have just the whole part. Example: ¹²/₄ = 3⁰/₄ = 3"
+      },
+      "decimal_conversion": {
+        "title": "Conversion to Decimal",
+        "text": "To convert a mixed fraction to decimal, first convert to an improper fraction and then divide. Example: 2³/₄ → ¹¹/₄ → 11 ÷ 4 = 2.75",
+        "tip": "Tip: To convert quickly, add the whole part to the result of dividing the numerator by the denominator (2 + 3/4 = 2 + 0.75 = 2.75)"
+      },
+      "practical_tips_title": "Practical Tips",
+      "practical_tips": [
+        "Mixed fractions are commonly used for measurements in everyday life (2½ cups)",
+        "Improper fractions are more useful in intermediate mathematical calculations",
+        "When converting to an improper fraction, make sure to multiply the whole number by the denominator (not by the numerator)",
+        "Remember that the division to find the whole part is an integer division (the decimal part is ignored)",
+        "Perform verification: the improper fraction, when evaluated, should have the same value as the mixed fraction"
+      ],
+      "practical_applications_title": "Practical Applications",
+      "practical_applications": [
+        "Measurements in cooking recipes (2½ tablespoons)",
+        "Measurements in construction (3¾ meters)",
+        "Time representation (2¼ hours)",
+        "Representation of weights and volumes",
+        "In music, for representing measures"
+      ],
+      "mathematical_importance_title": "Importance in Mathematical Operations",
+      "mathematical_importance_text": "The ability to convert between mixed fractions and improper fractions is fundamental in algebra and calculus. In operations such as addition, subtraction, multiplication, and division of fractions, it is often more convenient to work with improper fractions to perform calculations, and then convert the result to a mixed fraction for easier interpretation."
+    },
+    "examples": {
+      "simple_positive": "Simple positive",
+      "large_integer": "Large integer part",
+      "negative_with_fraction": "Negative with fraction",
+      "near_integer": "Close to integer",
+      "no_integer_part": "No integer part",
+      "simple_improper": "Simple improper fraction",
+      "integer_part_greater_than_one": "Integer part > 1",
+      "negative_improper": "Negative improper fraction",
+      "large_improper": "Large improper fraction",
+      "equal_to_one": "Equal to 1"
+    }
+  },
+  "multiplication_division": {
+    "title": "Multiplication and Division of Fractions",
+    "description": "This calculator helps you solve multiplications and divisions of fractions. Enter the numerator and denominator of each fraction below and choose the desired operation.",
+    "labels": {
+      "fraction1": "Fraction 1",
+      "fraction2": "Fraction 2",
+      "operation": "Operation",
+      "multiplication": "Multiplication (*)",
+      "division": "Division (/)",
+      "examples": "Examples",
+      "calculate": "Calculate"
+    },
+    "results": {
+      "multiplication": "The result of the multiplication is:",
+      "division": "The result of the division is:"
+    },
+    "steps": {
+      "original_equation": "Original equation: {{operation}} the fractions {{num1}}/{{den1}} {{operator}} {{num2}}/{{den2}}",
+      "apply_rule": "Step {{step}}: Apply the rule of {{operation}} of fractions",
+      "multiplication_rule": "Calculating: In multiplication of fractions, we multiply the numerators and denominators separately.",
+      "division_rule": "Calculating: In division of fractions, we multiply the first fraction by the reciprocal of the second.",
+      "calculating_numerator": "Calculating: Numerator: {{num1}} × {{num2}} = {{result}}",
+      "calculating_denominator": "Calculating: Denominator: {{den1}} × {{den2}} = {{result}}",
+      "calculating_numerator_division": "Calculating: Numerator: {{num1}} × {{den2}} = {{result}}",
+      "calculating_denominator_division": "Calculating: Denominator: {{den1}} × {{num2}} = {{result}}",
+      "simplifying_before": "Simplifying: Result before simplification:",
+      "simplify_fraction": "Step {{step}}: Simplify the resulting fraction",
+      "calculating_gcd": "Calculating: GCD({{num}}, {{den}}) = {{gcd}}",
+      "simplifying_numerator": "Simplifying: Numerator: {{num}} ÷ {{gcd}} = {{result}}",
+      "simplifying_denominator": "Simplifying: Denominator: {{den}} ÷ {{gcd}} = {{result}}",
+      "simplifying_final": "Simplifying: Final result:",
+      "verification": "Verification of the result:",
+      "verifying_simplification": "Verifying: {{num}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verification completed: The result of {{operation}} is {{num}}/{{den}}"
+    },
+    "errors": {
+      "fill_all_fields": "Please fill in all fields with numeric values.",
+      "denominator_zero": "The denominators cannot be zero.",
+      "division_by_zero": "It is not possible to divide by zero."
+    },
+    "mathematical_concept": {
+      "title": "Mathematical Concept",
+      "mul_div_title": "Multiplication and Division of Fractions",
+      "mul_div_text": "Multiplication and division of fractions are fundamental operations that follow different rules from addition and subtraction, as they do not require a common denominator to be performed.",
+      "formulas_title": "Formulas",
+      "multiplication_formula": "Multiplication:",
+      "multiplication_formula_text": "a/b × c/d = (a×c)/(b×d)",
+      "division_formula": "Division:",
+      "division_formula_text": "a/b ÷ c/d = a/b × d/c = (a×d)/(b×c)",
+      "fundamental_property": "Fundamental property: To divide by a fraction, we multiply by its reciprocal (inverse). This transforms division into multiplication, which is a simpler operation to perform.",
+      "resolution_steps_title": "Steps for Resolution",
+      "multiplication_steps_title": "For Multiplication",
+      "multiplication_steps": {
+        "step1_title": "Multiply the numerators",
+        "step1_text": "The numerator of the result is the product of the numerators of the original fractions.",
+        "step2_title": "Multiply the denominators",
+        "step2_text": "The denominator of the result is the product of the denominators of the original fractions.",
+        "step3_title": "Simplify the resulting fraction",
+        "step3_text": "Find the GCD (Greatest Common Divisor) between the numerator and denominator of the result, and divide both by it to get the fraction in its simplest form."
+      },
+      "division_steps_title": "For Division",
+      "division_steps": {
+        "step1_title": "Invert the second fraction (the divisor)",
+        "step1_text": "Swap the numerator and denominator of the second fraction.",
+        "step2_title": "Transform division into multiplication",
+        "step2_text": "Multiply the first fraction by the inverted second fraction.",
+        "step3_title": "Follow the multiplication steps",
+        "step3_text": "Multiply the numerators and denominators, and then simplify."
+      },
+      "geometric_visualization_title": "Geometric Visualization",
+      "multiplication_area_title": "Multiplication of Fractions as Area",
+      "multiplication_area_text": "The multiplication 2/3 × 3/4 represents the area of the intersection of a rectangle with width 2/3 and height 3/4",
+      "division_comparison_title": "Division as Size Comparison",
+      "division_comparison_text": "The division 3/4 ÷ 1/2 answers: \"how many times does 1/2 fit into 3/4?\" (answer: 1.5 times)",
+      "detailed_examples_title": "Detailed Examples",
+      "simplified_multiplication": {
+        "title": "Simplified Multiplication: 2/5 × 10/3",
+        "text1": "Simplifying before multiplying:",
+        "text2": "1. Identify and cancel common factors: 2̶/5 × 10/3̶ = 1/5 × 10/1 = 2",
+        "text3": "2. The factor 2 from the numerator cancels with a factor of 10: 2/5 × 10/3 = 1/5 × 10/3 = 2/3",
+        "result": "Simplified result: 2/5 × 10/3 = 4/3 = 1⅓"
+      },
+      "negative_division": {
+        "title": "Division with Negative Numbers: -3/4 ÷ 2/5",
+        "text1": "1. Invert the divisor: -3/4 ÷ 2/5 = -3/4 × 5/2",
+        "text2": "2. Multiply: -3/4 × 5/2 = (-3 × 5)/(4 × 2) = -15/8",
+        "text3": "3. Keep the negative sign: -15/8 = -1⅞",
+        "result": "Result: -3/4 ÷ 2/5 = -15/8 = -1⅞"
+      },
+      "integer_multiplication": {
+        "title": "Multiplication of Fraction by Integer: 3/5 × 15",
+        "text1": "1. Convert the integer to fraction: 15 = 15/1",
+        "text2": "2. Multiply: 3/5 × 15/1 = (3 × 15)/(5 × 1) = 45/5 = 9",
+        "text3": "3. We can also simplify: 3/5 × 15 = 3/5 × 15 = 3 × 3 = 9",
+        "result": "Result: 3/5 × 15 = 9"
+      },
+      "integer_division": {
+        "title": "Division of Integer by Fraction: 4 ÷ 2/3",
+        "text1": "1. Convert the integer to fraction: 4 = 4/1",
+        "text2": "2. Invert the divisor: 4/1 ÷ 2/3 = 4/1 × 3/2",
+        "text3": "3. Multiply: 4/1 × 3/2 = (4 × 3)/(1 × 2) = 12/2 = 6",
+        "result": "Result: 4 ÷ 2/3 = 6"
+      },
+      "recipe_application": {
+        "title": "Application: Recipe for More People",
+        "text1": "Problem: A recipe for 3 people uses 2/3 cup of flour. How much is needed for 8 people?",
+        "text2": "1. Establish the proportion: if 3 people → 2/3 cup, then 8 people → x",
+        "text3": "2. Calculate: x = (8 people × 2/3 cup) ÷ 3 people",
+        "text4": "3. Simplify: x = 8/3 × 2/3 = 16/9 cups ≈ 1.78 cups",
+        "result": "Result: Approximately 1¾ cups of flour"
+      },
+      "mixed_fractions_multiplication": {
+        "title": "Multiplication of Mixed Fractions: 2½ × 1¾",
+        "text1": "1. Convert to improper fractions: 2½ = 5/2 and 1¾ = 7/4",
+        "text2": "2. Multiply: 5/2 × 7/4 = (5 × 7)/(2 × 4) = 35/8",
+        "text3": "3. Cross simplification (alternative):",
+        "text4": "   5/2 × 7/4 = (5 × 7)/(2 × 4) = 35/8",
+        "text5": "4. Convert to mixed number: 35/8 = 4⅜",
+        "result": "Result: 2½ × 1¾ = 4⅜"
+      },
+      "map_scale_application": {
+        "title": "Application: Map Scale",
+        "text1": "Problem: A map is at scale 1:5000. If the distance on the map is 3/4 cm, what is the actual distance?",
+        "text2": "1. Establish the relationship: 1 cm on the map = 5000 cm in reality",
+        "text3": "2. Calculate: Actual distance = 3/4 cm × 5000",
+        "text4": "3. Multiply: 3/4 × 5000 = 3750 cm = 37.5 m",
+        "text5": "4. Convert to more suitable units: 37.5 meters",
+        "result": "Result: The actual distance is 37.5 meters"
+      },
+      "important_properties_title": "Important Properties",
+      "commutative_property": {
+        "title": "Commutative Property of Multiplication",
+        "text1": "a/b × c/d = c/d × a/b",
+        "text2": "Example: 3/4 × 2/5 = 2/5 × 3/4 = 6/20 = 3/10"
+      },
+      "associative_property": {
+        "title": "Associative Property of Multiplication",
+        "text1": "(a/b × c/d) × e/f = a/b × (c/d × e/f)",
+        "text2": "The grouping order does not change the final result"
+      },
+      "identity_element": {
+        "title": "Identity Element of Multiplication",
+        "text1": "a/b × 1 = a/b",
+        "text2": "Multiplying any fraction by 1 does not change its value"
+      },
+      "multiplicative_inverse": {
+        "title": "Reciprocal or Multiplicative Inverse",
+        "text1": "a/b × b/a = 1",
+        "text2": "The product of a fraction by its reciprocal is always 1"
+      },
+      "tips_tricks_title": "Tips and Tricks",
+      "tips_tricks": [
+        "Before multiplying, check if it's possible to simplify cross elements (common factors between the numerator of one fraction and the denominator of another)",
+        "Remember that any number divided by 1 remains unchanged",
+        "Division by a fraction is the same as multiplication by its reciprocal",
+        "When multiplying fractions, the result will always be smaller than the original fractions (except with improper fractions)",
+        "When dividing by a fraction less than 1, the result will be larger than the original fraction"
+      ],
+      "real_world_applications_title": "Real World Applications",
+      "real_world_applications": [
+        "Recipe adjustments (half of 2/3 cup)",
+        "Scale calculations in maps and projects",
+        "Proportional division in finance",
+        "Rate and interest calculations",
+        "Ratio and proportion problems",
+        "Compound probability analyses"
+      ],
+      "special_cases_title": "Special Cases",
+      "multiplication_by_zero": {
+        "title": "Multiplication by Zero",
+        "text": "Any fraction multiplied by zero results in zero:• (a/b) × 0 = 0• (a/b) × (0/c) = 0/bc = 0"
+      },
+      "division_by_zero": {
+        "title": "Division by Zero",
+        "text": "Division by zero is undefined:• (a/b) ÷ 0 → does not exist• (a/b) ÷ (0/c) → does not exist"
+      },
+      "advanced_concepts_title": "Advanced Concepts",
+      "advanced_concepts_text": "Multiplication and division of fractions are the basis for working with fractional algebraic expressions, rational equations, and rational functions. These operations are also essential for understanding concepts such as direct and inverse proportion, rates of change, and integration by substitution in advanced calculus."
+    },
+    "examples": {
+      "simple_fractions": "Simple fractions",
+      "product_with_simplification": "Product with simplification",
+      "simplifiable_before": "Simplifiable before operation",
+      "negative_fraction": "Negative fraction",
+      "improper_fractions": "Improper fractions",
+      "simple_division": "Simple division",
+      "same_numerator": "Same numerator",
+      "same_denominator": "Same denominator"
+    }
+  },
+  "simplification": {
+    "title": "Fraction Simplification",
+    "description": "This calculator helps simplify fractions to their irreducible form. Enter the numerator and denominator of the fraction below.",
+    "labels": {
+      "fraction": "Fraction",
+      "numerator": "Num",
+      "denominator": "Den",
+      "examples": "Examples",
+      "simplify": "Simplify"
+    },
+    "results": {
+      "simplified": "The fraction in irreducible form is: "
+    },
+    "steps": {
+      "original_equation": "Original fraction: {{num}}/{{den}}",
+      "numerator_zero": "Step {{step}}: When the numerator is zero, the simplified fraction is always 0/1 = 0",
+      "simplifying_zero": "Simplifying: {{den}} doesn't matter as long as it's not zero, so 0/{{den}} = 0/1 = 0",
+      "check_already_simplified": "Step {{step}}: Check if the fraction is already in its simplest form",
+      "verifying_gcd": "Verifying: Finding the Greatest Common Divisor (GCD) between {{num}} and {{den}}",
+      "calculating_gcd": "Calculating: GCD({{num}}, {{den}}) = {{gcd}}",
+      "gcd_is_one": "Since the GCD = {{gcd}}, the fraction is already in its simplest form",
+      "find_gcd": "Step {{step}}: Find the Greatest Common Divisor (GCD) between {{num}} and {{den}}",
+      "divide_by_gcd": "Step {{step}}: Divide both numerator and denominator by the GCD",
+      "calculating_numerator": "Calculating: Numerator: {{num}} ÷ {{gcd}} = {{result}}",
+      "calculating_denominator": "Calculating: Denominator: {{den}} ÷ {{gcd}} = {{result}}",
+      "simplified_result": "Step {{step}}: Simplified result",
+      "simplifying_fraction": "Simplifying: {{num}}/{{den}} = {{result_num}}/{{result_den}}",
+      "denominator_is_one": "Since the denominator is 1, the final result is just {{num}}",
+      "verification": "Verification of the result:",
+      "verifying_numerator": "Verifying: {{num}} ÷ {{gcd}} = {{result}}",
+      "verifying_denominator": "Verifying: {{den}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verification completed: The simplified fraction is {{num}}/{{den}}",
+      "verification_completed_zero": "Verification completed: The simplified fraction is 0",
+      "verification_completed_already_simplified": "Verification completed: The fraction {{num}}/{{den}} is already in its simplest form"
+    },
+    "errors": {
+      "fill_all_fields": "Please fill in all fields with numeric values.",
+      "denominator_zero": "The denominator cannot be zero."
+    },
+    "mathematical_concept": {
+      "title": "Fraction Simplification",
+      "explanation": "Fraction simplification is the process of reducing a fraction to its irreducible form while maintaining its original value. A fraction is in irreducible form when the numerator and denominator have no common divisors other than 1.",
+      "how_to_title": "How to simplify a fraction",
+      "how_to": {
+        "step1_title": "Find the GCD",
+        "step1_text": "Determine the Greatest Common Divisor between the numerator and denominator.",
+        "step2_title": "Divide both",
+        "step2_text": "Divide both the numerator and denominator by the GCD found.",
+        "step3_title": "Verify the result",
+        "step3_text": "The resulting fraction should have the same value as the original, but be in the simplest possible form."
+      },
+      "example_title": "Example:",
+      "example_text": "To simplify 18/24, first find GCD(18, 24) = 6. Dividing both by 6: 18÷6 = 3 and 24÷6 = 4. The simplified fraction is 3/4.",
+      "gcd_methods_title": "Methods for Finding the GCD",
+      "factorization_method": {
+        "title": "Factorization Method",
+        "step1_title": "Decompose",
+        "step1_text": "Factor the numerator and denominator into their prime factors.",
+        "step2_title": "Identify",
+        "step2_text": "Determine the prime factors common to both.",
+        "step3_title": "Multiply",
+        "step3_text": "The GCD is the product of all common prime factors, each raised to its lowest power."
+      },
+      "euclid_method": {
+        "title": "Euclidean Algorithm",
+        "step1_title": "Divide",
+        "step1_text": "Divide the larger number by the smaller one and note the remainder.",
+        "step2_title": "Replace",
+        "step2_text": "Replace the larger number with the smaller one, and the smaller one with the remainder obtained.",
+        "step3_title": "Repeat",
+        "step3_text": "Continue the process until the remainder is zero. The last non-zero divisor is the GCD.",
+        "example": "Example: To find GCD(48, 18):\n48 ÷ 18 = 2 remainder 12\n18 ÷ 12 = 1 remainder 6\n12 ÷ 6 = 2 remainder 0\nSince the remainder is 0, the GCD is 6."
+      },
+      "visualization_title": "Process Visualization",
+      "example_12_30": "Example: Simplification of 12/30",
+      "numerator_12": "Numerator: 12",
+      "denominator_30": "Denominator: 30",
+      "factors_12": "Factors of 12: 1, 2, 3, 4, 6, 12",
+      "factors_30": "Factors of 30: 1, 2, 3, 5, 6, 10, 15, 30",
+      "common_factors": "Common factors: 1, 2, 3, 6",
+      "gcd_6": "GCD = 6",
+      "dividing_by_gcd": "Dividing both by the GCD:",
+      "result_2_5": "Result: 2/5",
+      "blocks_visualization": "Blocks Visualization",
+      "original_fraction": "Original Fraction: 6/8",
+      "six_of_eight": "6 filled parts out of 8 total parts",
+      "simplified_fraction": "Simplified Fraction: 3/4",
+      "three_of_four": "3 filled parts out of 4 total parts",
+      "detailed_examples_title": "Detailed Examples",
+      "examples": {
+        "example1_title": "Simplification: 24/36",
+        "example1_steps": [
+          "1. Find GCD(24, 36):",
+          "Factors of 24: 1, 2, 3, 4, 6, 8, 12, 24",
+          "Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36",
+          "Common factors: 1, 2, 3, 4, 6, 12",
+          "GCD = 12",
+          "2. Divide numerator and denominator by GCD:",
+          "24 ÷ 12 = 2",
+          "36 ÷ 12 = 3",
+          "Result: 24/36 = 2/3"
+        ],
+        "example2_title": "Already in Irreducible Form: 7/9",
+        "example2_steps": [
+          "1. Check for common factors between 7 and 9.",
+          "Factors of 7: 1, 7 (prime number)",
+          "Factors of 9: 1, 3, 9",
+          "Common factor: 1",
+          "2. Since the only common factor is 1, the fraction is already in irreducible form.",
+          "Result: 7/9 (fraction is already simplified)"
+        ],
+        "example3_title": "Simplification with Zero: 0/15",
+        "example3_steps": [
+          "When the numerator is zero, the fraction always simplifies to 0/1 = 0",
+          "The denominator doesn't matter (as long as it's not zero)",
+          "Result: 0/15 = 0/1 = 0"
+        ],
+        "example4_title": "Fraction with Negative Numbers: -18/24",
+        "example4_steps": [
+          "1. Ignore the sign and find GCD(18, 24) = 6",
+          "2. Divide numerator and denominator by the GCD:",
+          "-18 ÷ 6 = -3",
+          "24 ÷ 6 = 4",
+          "3. Maintain the sign in the numerator or denominator",
+          "Result: -18/24 = -3/4"
+        ]
+      },
+      "properties_title": "Important Properties",
+      "properties": {
+        "fundamental_title": "Fundamental Property of Fractions",
+        "fundamental_text": "If we multiply or divide both numerator and denominator by the same number (not zero), the value of the fraction remains the same.",
+        "fundamental_formula": "a/b = (a×k)/(b×k), where k ≠ 0",
+        "equivalent_title": "Equivalent Fractions",
+        "equivalent_text": "Equivalent fractions represent the same quantity but are written in different forms.",
+        "equivalent_example": "Example: 1/2, 2/4, 3/6, 4/8 are all equivalent fractions"
+      },
+      "tips_title": "Tips and Tricks",
+      "tips": [
+        "Check first if the numerator or denominator is a multiple of each other (exact division)",
+        "Look for obvious common factors like 2, 3, 5 before calculating the complete GCD",
+        "If both numbers are even, divide both by 2 and continue the process",
+        "A fraction is in irreducible form when the GCD of the numerator and denominator is 1",
+        "Fractions with prime numerators and denominators that aren't multiples of that prime are already in irreducible form"
+      ],
+      "applications_title": "Applications of Simplification",
+      "applications": [
+        "Facilitating calculations and comparisons between fractions",
+        "Expressing statistical data more clearly",
+        "Simplifying results in probability problems",
+        "Reducing the complexity of algebraic expressions",
+        "Facilitating the understanding of ratios and proportions in practical contexts"
+      ]
+    },
+    "examples": {
+      "simplifies_to_1_2": "Simplifies to 1/2",
+      "simplifies_to_3_5": "Simplifies to 3/5",
+      "simplifies_to_3_4": "Simplifies to 3/4",
+      "negative_fraction": "Negative fraction",
+      "already_reduced": "Already in lowest form",
+      "simplifies_to_integer": "Simplifies to 3",
+      "large_gcd": "GCD = 15",
+      "simplifies_to_4_7": "Simplifies to 4/7",
+      "large_numbers": "Large GCD",
+      "negative_signs": "Negative signs"
+    }
+  },
+  "addition_subtraction": {
+    "title": "Addition and Subtraction of Fractions",
+    "description": "This calculator helps solve addition and subtraction of fractions. Enter the numerator and denominator of each fraction below and choose the desired operation.",
+    "labels": {
+      "fraction1": "Fraction 1",
+      "fraction2": "Fraction 2",
+      "numerator": "Num",
+      "denominator": "Den",
+      "operation": "Operation",
+      "addition": "Addition",
+      "subtraction": "Subtraction",
+      "examples": "Examples",
+      "calculate": "Calculate"
+    },
+    "results": {
+      "addition": "The result of the addition is: ",
+      "subtraction": "The result of the subtraction is: "
+    },
+    "operations": {
+      "add": "add",
+      "subtract": "subtract",
+      "addition": "addition",
+      "subtraction": "subtraction"
+    },
+    "steps": {
+      "original_equation": "Original equation: {{operation}} the fractions {{num1}}/{{den1}} {{operator}} {{num2}}/{{den2}}",
+      "find_lcm": "Step {{step}}: Find the Least Common Multiple (LCM) of the denominators {{den1}} and {{den2}}",
+      "calculating_lcm": "Calculating: LCM({{den1}}, {{den2}}) = {{result}}",
+      "convert_to_common_denominator": "Step {{step}}: Convert fractions to equivalent fractions with the common denominator",
+      "calculating_first_fraction": "Calculating: Multiply the first fraction by {{factor}}/{{factor}}",
+      "calculating_second_fraction": "Calculating: Multiply the second fraction by {{factor}}/{{factor}}",
+      "perform_operation": "Step {{step}}: Perform the {{operation}} operation",
+      "calculating_add": "Calculating: {{num1}} + {{num2}} = {{result}}",
+      "calculating_subtract": "Calculating: {{num1}} - {{num2}} = {{result}}",
+      "simplify_fraction": "Step {{step}}: Simplify the resulting fraction",
+      "calculating_gcd": "Calculating: GCD({{num}}, {{den}}) = {{gcd}}",
+      "simplifying_numerator": "Simplifying: Numerator: {{num}} ÷ {{gcd}} = {{result}}",
+      "simplifying_denominator": "Simplifying: Denominator: {{den}} ÷ {{gcd}} = {{result}}",
+      "verification": "Verification of the result:",
+      "verifying_simplification": "Verifying: {{num}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verification completed: The result of the {{operation}} is {{num}}/{{den}}"
+    },
+    "errors": {
+      "fill_all_fields": "Please fill in all fields with numeric values.",
+      "denominator_zero": "The denominators cannot be zero."
+    },
+    "lcm_details": {
+      "title": "LCM Details for {{den1}} and {{den2}}",
+      "method1_title": "Method 1: Finding LCM using Prime Factorization",
+      "decomposition": "Prime Factorization of {{number}}:",
+      "therefore": "Therefore, {{number}} = {{factors}}",
+      "prime_number": "{{number}} is a prime number",
+      "find_lcm_prime": "Finding the LCM using prime factorization:",
+      "step1_prime": "Step 1: Find the prime factorization of each number",
+      "step2_prime": "Step 2: Take each prime factor to its highest power across both numbers",
+      "factors_of": "Factors of {{number}} = {{factors}}",
+      "lcm_formula": "LCM = {{factors}} = {{result}}",
+      "method2_title": "Method 2: Finding LCM using the GCD",
+      "gcd_lcm_relation": "The LCM can be calculated using the relationship between LCM and GCD:",
+      "lcm_gcd_formula": "LCM(a, b) = (a × b) ÷ GCD(a, b)",
+      "euclid_gcd": "Finding GCD({{a}}, {{b}}) using the Euclidean algorithm:",
+      "gcd_result": "GCD({{a}}, {{b}}) = {{gcd}}",
+      "applying_formula": "Applying the formula: LCM(a, b) = (a × b) ÷ GCD(a, b)",
+      "lcm_calculation": "LCM({{a}}, {{b}}) = ({{a}} × {{b}}) ÷ {{gcd}}",
+      "lcm_final": "LCM({{a}}, {{b}}) = {{product}} ÷ {{gcd}} = {{result}}",
+      "why_lcm": "Why do we need the LCM?",
+      "why_lcm_explanation": "To {{operation}} fractions with different denominators, we need to convert them to equivalent fractions with a common denominator. The LCM of the denominators is the smallest common denominator that maintains the values of the original fractions.",
+      "show": "Show LCM calculation details",
+      "hide": "Hide LCM details",
+      "unavailable": "LCM calculation details are not available for this operation."
+    },
+    "mathematical_concept": {
+      "title": "Addition and Subtraction of Fractions",
+      "explanation": "Addition and subtraction of fractions require a common denominator to perform the operation. When the denominators are different, we need to find equivalent fractions with the same denominator.",
+      "formulas_title": "Formulas",
+      "common_denominator": "Fractions with the same denominator:",
+      "common_denominator_formula": "a/c ± b/c = (a ± b)/c",
+      "different_denominators": "Fractions with different denominators:",
+      "different_denominators_formula": "a/b ± c/d = (a×d ± b×c)/(b×d)",
+      "why_lcm_title": "Why use the LCM?",
+      "why_lcm_text": "Although we could use the product of the denominators (b×d) as a common denominator, using the Least Common Multiple (LCM) produces fractions with smaller numbers and simplifies the calculation.",
+      "steps_title": "Resolution Steps",
+      "steps": {
+        "step1_title": "Find the Least Common Multiple (LCM) of the denominators",
+        "step1_text": "This will be the common denominator for our equivalent fractions.",
+        "step2_title": "Convert the fractions to equivalent fractions with the common denominator",
+        "step2_text": "Multiply both the numerator and denominator of each fraction by the factor needed to reach the common denominator.",
+        "step3_title": "Perform the addition or subtraction operation",
+        "step3_text": "Add or subtract the numerators, maintaining the common denominator.",
+        "step4_title": "Simplify the resulting fraction",
+        "step4_text": "If possible, reduce the resulting fraction to its lowest terms by dividing both the numerator and denominator by their Greatest Common Divisor (GCD)."
+      },
+      "visualization_title": "Visual Representation",
+      "visualization": {
+        "same_denominator": "Addition with same denominator:",
+        "finding_common_denominator": "Finding a common denominator:",
+        "use_lcm": "Using LCM for common denominator:"
+      },
+      "examples_title": "Detailed Examples",
+      "examples": {
+        "addition_title": "Addition with Different Denominators: 2/3 + 1/4",
+        "addition_step1": "Find the LCM of 3 and 4: LCM(3, 4) = 12",
+        "addition_step2": "Convert 2/3 to an equivalent fraction with denominator 12: 2/3 = (2×4)/(3×4) = 8/12",
+        "addition_step3": "Convert 1/4 to an equivalent fraction with denominator 12: 1/4 = (1×3)/(4×3) = 3/12",
+        "addition_step4": "Add the numerators: 8/12 + 3/12 = 11/12",
+        "addition_step5": "The result 11/12 is already in its simplest form",
+        "subtraction_title": "Subtraction with Different Denominators: 7/8 - 1/6",
+        "subtraction_step1": "Find the LCM of 8 and 6: LCM(8, 6) = 24",
+        "subtraction_step2": "Convert 7/8 to an equivalent fraction with denominator 24: 7/8 = (7×3)/(8×3) = 21/24",
+        "subtraction_step3": "Convert 1/6 to an equivalent fraction with denominator 24: 1/6 = (1×4)/(6×4) = 4/24",
+        "subtraction_step4": "Subtract the numerators: 21/24 - 4/24 = 17/24",
+        "subtraction_step5": "The result 17/24 is already in its simplest form"
+      },
+      "tips_title": "Tips and Tricks",
+      "tips": [
+        "When adding or subtracting fractions with the same denominator, only the numerators are added or subtracted",
+        "For fractions with different denominators, find the LCM to obtain the smallest common denominator",
+        "When one denominator is a multiple of the other, use the larger one as the common denominator",
+        "After adding or subtracting, always check if the resulting fraction can be simplified",
+        "Remember that a/b - c/b = (a-c)/b, but a/b - c/d requires converting to a common denominator first"
+      ],
+      "relation_title": "Relationship with Other Operations",
+      "relation_text": "Addition and subtraction of fractions are fundamental for understanding algebraic expressions with fractions, solving fractional equations, and working with rational functions in advanced mathematics."
+    },
+    "examples": {
+      "different_denominators": "Different denominators",
+      "same_denominator": "Same denominator",
+      "related_denominators": "Related denominators",
+      "multiple_denominator": "One denominator is a multiple of the other",
+      "coprime_denominators": "Coprime denominators",
+      "negative_result": "Negative result",
+      "simple_result": "Simple result"
+    }
+  },
+  "common": {
+    "result": "Result",
+    "hide_explanation": "Hide detailed explanation",
+    "show_explanation": "Show detailed explanation",
+    "step_by_step": "Step-by-step solution",
+    "mathematical_concept": "Mathematical Concept"
+  }
+} 

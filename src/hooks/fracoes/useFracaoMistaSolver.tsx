@@ -1,5 +1,6 @@
-import { useReducer, ReactNode } from 'react';
+import React, { useReducer, ReactNode } from 'react';
 import { FractionDisplay, getMixedFractionExamples } from '../../utils/mathUtilsFracoes';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 export type Operation = 'toFraction' | 'toMixed';
@@ -103,6 +104,7 @@ function mixedFractionReducer(state: MixedFractionState, action: MixedFractionAc
 
 export function useMixedFractionSolver() {
     const [state, dispatch] = useReducer(mixedFractionReducer, initialState);
+    const { t } = useTranslation('fractions');
 
     // Função principal de resolução
     const handleSolve = () => {
@@ -116,12 +118,12 @@ export function useMixedFractionSolver() {
 
             // Validar entradas
             if (isNaN(integer) || isNaN(num) || isNaN(den)) {
-                dispatch({ type: 'SET_ERROR', message: 'Por favor, insira números válidos.' });
+                dispatch({ type: 'SET_ERROR', message: t('mixed_fractions.errors.invalid_numbers') });
                 return;
             }
 
             if (den === 0) {
-                dispatch({ type: 'SET_ERROR', message: 'O denominador não pode ser zero.' });
+                dispatch({ type: 'SET_ERROR', message: t('mixed_fractions.errors.denominator_zero') });
                 return;
             }
 
@@ -145,12 +147,12 @@ export function useMixedFractionSolver() {
 
             // Validar entradas
             if (isNaN(num) || isNaN(den)) {
-                dispatch({ type: 'SET_ERROR', message: 'Por favor, insira números válidos.' });
+                dispatch({ type: 'SET_ERROR', message: t('mixed_fractions.errors.invalid_numbers') });
                 return;
             }
 
             if (den === 0) {
-                dispatch({ type: 'SET_ERROR', message: 'O denominador não pode ser zero.' });
+                dispatch({ type: 'SET_ERROR', message: t('mixed_fractions.errors.denominator_zero') });
                 return;
             }
 
@@ -182,32 +184,58 @@ export function useMixedFractionSolver() {
     ): (string | ReactNode)[] => {
         const calculationSteps: (string | ReactNode)[] = [];
         let stepCount = 1;
+        const operationType = 'mista';
 
-        calculationSteps.push(`Equação original: Converter a fração mista para fração imprópria`);
+        calculationSteps.push(t('mixed_fractions.steps.original_equation', { operation: operationType }));
         calculationSteps.push(<>
             {integer} + <FractionDisplay numerator={num} denominator={den} />
         </>);
 
-        calculationSteps.push(`Passo ${stepCount++}: Multiplicamos a parte inteira pelo denominador`);
-        calculationSteps.push(`Calculando: ${integer} × ${den} = ${Math.abs(integer) * den}`);
+        calculationSteps.push(t('mixed_fractions.steps.whole_multiply', { step: stepCount++ }));
+        calculationSteps.push(t('mixed_fractions.steps.calculating_multiply', { 
+            whole: integer, 
+            den, 
+            result: Math.abs(integer) * den 
+        }));
 
-        calculationSteps.push(`Passo ${stepCount++}: Adicionamos o numerador`);
-        calculationSteps.push(`Calculando: ${Math.abs(integer) * den} + ${num} = ${novoNumerador}`);
+        calculationSteps.push(t('mixed_fractions.steps.add_numerator', { step: stepCount++ }));
+        calculationSteps.push(t('mixed_fractions.steps.calculating_add', { 
+            whole_times_den: Math.abs(integer) * den, 
+            num, 
+            result: novoNumerador 
+        }));
 
         if (integer < 0) {
-            calculationSteps.push(`Passo ${stepCount++}: Aplicamos o sinal negativo ao resultado`);
-            calculationSteps.push(`Simplificando: -${novoNumerador} = ${novoNumeradorFinal}`);
+            calculationSteps.push(t('mixed_fractions.steps.negative_sign', { step: stepCount++ }));
+            calculationSteps.push(t('mixed_fractions.steps.simplifying_sign', { 
+                num: novoNumerador, 
+                result: novoNumeradorFinal 
+            }));
         }
 
-        calculationSteps.push(`Passo ${stepCount++}: Escrevemos a fração imprópria resultante`);
-        calculationSteps.push(`Simplificando: ${integer} + ${num}/${den} = ${novoNumeradorFinal}/${den}`);
+        calculationSteps.push(t('mixed_fractions.steps.write_fraction', { step: stepCount++ }));
+        calculationSteps.push(t('mixed_fractions.steps.simplifying_result', { 
+            whole: integer, 
+            num, 
+            den, 
+            result_num: novoNumeradorFinal, 
+            result_den: den 
+        }));
         calculationSteps.push(<FractionDisplay numerator={novoNumeradorFinal} denominator={den} />);
         
         // Adicionar verificação
         calculationSteps.push('---VERIFICATION_SEPARATOR---');
-        calculationSteps.push(`Verificação do resultado:`);
-        calculationSteps.push(`Verificando: (${integer} × ${den}) + ${num} = ${novoNumeradorFinal}`);
-        calculationSteps.push(`Verificação concluída: A fração imprópria é ${novoNumeradorFinal}/${den}`);
+        calculationSteps.push(t('mixed_fractions.steps.verification'));
+        calculationSteps.push(t('mixed_fractions.steps.verifying_to_fraction', { 
+            whole: integer, 
+            den, 
+            num, 
+            result: novoNumeradorFinal 
+        }));
+        calculationSteps.push(t('mixed_fractions.steps.verification_completed_to_fraction', { 
+            num: novoNumeradorFinal, 
+            den 
+        }));
 
         return calculationSteps;
     };
@@ -222,29 +250,49 @@ export function useMixedFractionSolver() {
     ): (string | ReactNode)[] => {
         const calculationSteps: (string | ReactNode)[] = [];
         let stepCount = 1;
+        const operationType = 'imprópria';
 
-        calculationSteps.push(`Equação original: Converter a fração imprópria para fração mista`);
+        calculationSteps.push(t('mixed_fractions.steps.original_equation', { operation: operationType }));
         calculationSteps.push(<FractionDisplay numerator={num} denominator={den} />);
 
-        calculationSteps.push(`Passo ${stepCount++}: Dividimos o numerador pelo denominador`);
-        calculationSteps.push(`Calculando: ${Math.abs(num)} ÷ ${den} = ${parteInteira} com resto ${novoNumerador}`);
+        calculationSteps.push(t('mixed_fractions.steps.divide_numerator', { step: stepCount++ }));
+        calculationSteps.push(t('mixed_fractions.steps.calculating_divide', { 
+            num: Math.abs(num), 
+            den, 
+            whole: parteInteira, 
+            remainder: novoNumerador 
+        }));
 
         if (num < 0) {
-            calculationSteps.push(`Passo ${stepCount++}: Aplicamos o sinal negativo à parte inteira`);
-            calculationSteps.push(`Simplificando: -${parteInteira}`);
+            calculationSteps.push(t('mixed_fractions.steps.apply_negative', { step: stepCount++ }));
+            calculationSteps.push(t('mixed_fractions.steps.simplifying_negative', { whole: parteInteira }));
         }
 
-        calculationSteps.push(`Passo ${stepCount++}: Escrevemos a fração mista resultante`);
-        calculationSteps.push(`Simplificando: ${num}/${den} = ${sinal * parteInteira} + ${novoNumerador}/${den}`);
+        calculationSteps.push(t('mixed_fractions.steps.write_mixed', { step: stepCount++ }));
+        calculationSteps.push(t('mixed_fractions.steps.simplifying_mixed', { 
+            num, 
+            den, 
+            whole: sinal * parteInteira, 
+            remainder: novoNumerador 
+        }));
         calculationSteps.push(<>
             {sinal * parteInteira} + <FractionDisplay numerator={novoNumerador} denominator={den} />
         </>);
         
         // Adicionar verificação
         calculationSteps.push('---VERIFICATION_SEPARATOR---');
-        calculationSteps.push(`Verificação do resultado:`);
-        calculationSteps.push(`Verificando: ${sinal * parteInteira} + (${novoNumerador}/${den}) = (${sinal * parteInteira} × ${den} + ${novoNumerador})/${den} = ${num}/${den}`);
-        calculationSteps.push(`Verificação concluída: A fração mista é ${sinal * parteInteira} + ${novoNumerador}/${den}`);
+        calculationSteps.push(t('mixed_fractions.steps.verification'));
+        calculationSteps.push(t('mixed_fractions.steps.verifying_to_mixed', { 
+            whole: sinal * parteInteira, 
+            num: novoNumerador, 
+            den, 
+            result: num 
+        }));
+        calculationSteps.push(t('mixed_fractions.steps.verification_completed_to_mixed', { 
+            whole: sinal * parteInteira, 
+            num: novoNumerador, 
+            den 
+        }));
 
         return calculationSteps;
     };
@@ -265,7 +313,7 @@ export function useMixedFractionSolver() {
 
     // Obter exemplos filtrados com base na operação selecionada
     const getFilteredExamples = () => {
-        return getMixedFractionExamples().filter(example => example.operation === state.operation);
+        return getMixedFractionExamples(t).filter(example => example.operation === state.operation);
     };
 
     // Retornar o estado e as funções

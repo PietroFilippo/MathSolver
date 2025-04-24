@@ -7,15 +7,19 @@ import enTranslation from './locales/en/translation.json';
 import ptTranslation from './locales/pt/translation.json';
 import enArithmetic from './locales/en/arithmetic.json';
 import ptArithmetic from './locales/pt/arithmetic.json';
+import enFractions from './locales/en/fractions.json';
+import ptFractions from './locales/pt/fractions.json';
 
 export const resources = {
   en: {
     translation: enTranslation,
-    arithmetic: enArithmetic
+    arithmetic: enArithmetic,
+    fractions: enFractions
   },
   pt: {
     translation: ptTranslation,
-    arithmetic: ptArithmetic
+    arithmetic: ptArithmetic,
+    fractions: ptFractions
   }
 };
 
@@ -26,7 +30,7 @@ i18n
   .use(initReactI18next)
   // Inicializa o i18next
   .init({
-    debug: process.env.NODE_ENV === 'development',
+    debug: false,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false, // não necessário para react, pois escapa por padrão

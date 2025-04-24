@@ -1,6 +1,7 @@
-import { useReducer, ReactNode } from 'react';
+import React, { useReducer, ReactNode } from 'react';
 import { gcd } from '../../utils/mathUtils';
 import { simplifyFraction, FractionDisplay, getFractionMultDivExamples } from '../../utils/mathUtilsFracoes';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 export type Operation = 'multiply' | 'divide';
@@ -94,6 +95,7 @@ function fractionMultDivReducer(state: FractionMultDivState, action: FractionMul
 
 export function useFractionMultDivSolver() {
     const [state, dispatch] = useReducer(fractionMultDivReducer, initialState);
+    const { t } = useTranslation('fractions');
 
     // Função principal de resolução
     const handleSolve = () => {
@@ -107,18 +109,18 @@ export function useFractionMultDivSolver() {
 
         // Validar entradas
         if (isNaN(num1) || isNaN(den1) || isNaN(num2) || isNaN(den2)) {
-            dispatch({ type: 'SET_ERROR', message: 'Por favor, preencha todos os campos com valores numéricos.' });
+            dispatch({ type: 'SET_ERROR', message: t('multiplication_division.errors.fill_all_fields') });
             return;
         }
 
         if (den1 === 0 || den2 === 0) {
-            dispatch({ type: 'SET_ERROR', message: 'Os denominadores não podem ser zero.' });
+            dispatch({ type: 'SET_ERROR', message: t('multiplication_division.errors.denominator_zero') });
             return;
         }
 
         // Para divisão, verificar se a segunda fração não é zero
         if (state.operation === 'divide' && num2 === 0) {
-            dispatch({ type: 'SET_ERROR', message: 'Não é possível dividir por zero.' });
+            dispatch({ type: 'SET_ERROR', message: t('multiplication_division.errors.division_by_zero') });
             return;
         }
 
@@ -162,53 +164,148 @@ export function useFractionMultDivSolver() {
     ): (string | ReactNode)[] => {
         const calculationSteps: (string | ReactNode)[] = [];
         let stepCount = 1;
+        const operationStr = operation === 'multiply' ? t('multiplication_division.labels.multiplication') : t('multiplication_division.labels.division');
+        const operator = operation === 'multiply' ? '×' : '÷';
 
         // Frações iniciais
-        calculationSteps.push(`Equação original: ${operation === 'multiply' ? 'Multiplicar' : 'Dividir'} as frações ${num1}/${den1} ${operation === 'multiply' ? '×' : '÷'} ${num2}/${den2}`);
+        calculationSteps.push(
+            t('multiplication_division.steps.original_equation', {
+                operation: operationStr,
+                num1,
+                den1,
+                num2,
+                den2,
+                operator
+            })
+        );
         calculationSteps.push(
             <>
                 <FractionDisplay numerator={num1} denominator={den1} /> 
-                {operation === 'multiply' ? ' × ' : ' ÷ '}
+                {operator}
                 <FractionDisplay numerator={num2} denominator={den2} />
             </>
         );
 
         // Regra de multiplicação ou divisão
-        calculationSteps.push(`Passo ${stepCount++}: Aplicar a regra de ${operation === 'multiply' ? 'multiplicação' : 'divisão'} de frações`);
+        calculationSteps.push(
+            t('multiplication_division.steps.apply_rule', {
+                step: stepCount++,
+                operation: operation === 'multiply' ? 'multiplicação' : 'divisão'
+            })
+        );
+        
         if (operation === 'multiply') {
-            calculationSteps.push(`Calculando: Na multiplicação de frações, multiplicamos os numeradores e os denominadores separadamente.`);
-            calculationSteps.push(`Calculando: Numerador: ${num1} × ${num2} = ${resultNumerator}`);
-            calculationSteps.push(`Calculando: Denominador: ${den1} × ${den2} = ${resultDenominator}`);
+            calculationSteps.push(t('multiplication_division.steps.multiplication_rule'));
+            calculationSteps.push(
+                t('multiplication_division.steps.calculating_numerator', {
+                    num1,
+                    num2,
+                    result: resultNumerator
+                })
+            );
+            calculationSteps.push(
+                t('multiplication_division.steps.calculating_denominator', {
+                    den1,
+                    den2,
+                    result: resultDenominator
+                })
+            );
         } else {
-            calculationSteps.push(`Calculando: Na divisão de frações, multiplicamos a primeira fração pelo inverso da segunda.`);
-            calculationSteps.push(`Calculando: Numerador: ${num1} × ${den2} = ${resultNumerator}`);
-            calculationSteps.push(`Calculando: Denominador: ${den1} × ${num2} = ${resultDenominator}`);
+            calculationSteps.push(t('multiplication_division.steps.division_rule'));
+            calculationSteps.push(
+                t('multiplication_division.steps.calculating_numerator_division', {
+                    num1,
+                    den2,
+                    result: resultNumerator
+                })
+            );
+            calculationSteps.push(
+                t('multiplication_division.steps.calculating_denominator_division', {
+                    den1,
+                    num2,
+                    result: resultDenominator
+                })
+            );
         }
 
-        calculationSteps.push(`Simplificando: Resultado antes da simplificação: `);
+        calculationSteps.push(t('multiplication_division.steps.simplifying_before'));
         calculationSteps.push(<FractionDisplay numerator={resultNumerator} denominator={resultDenominator} />);
 
         // Simplificar se necessário
         if (resultNumerator !== simplifiedNum || resultDenominator !== simplifiedDen) {
-            calculationSteps.push(`Passo ${stepCount++}: Simplificar a fração resultante`);
+            calculationSteps.push(
+                t('multiplication_division.steps.simplify_fraction', {
+                    step: stepCount++
+                })
+            );
+            
             const mdcValue = gcd(Math.abs(resultNumerator), Math.abs(resultDenominator));
-            calculationSteps.push(`Calculando: MDC(${Math.abs(resultNumerator)}, ${Math.abs(resultDenominator)}) = ${mdcValue}`);
-            calculationSteps.push(`Simplificando: Numerador: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
-            calculationSteps.push(`Simplificando: Denominador: ${resultDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
-            calculationSteps.push(`Simplificando: Resultado final: `);
+            calculationSteps.push(
+                t('multiplication_division.steps.calculating_gcd', {
+                    num: Math.abs(resultNumerator),
+                    den: Math.abs(resultDenominator),
+                    gcd: mdcValue
+                })
+            );
+            
+            calculationSteps.push(
+                t('multiplication_division.steps.simplifying_numerator', {
+                    num: resultNumerator,
+                    gcd: mdcValue,
+                    result: simplifiedNum
+                })
+            );
+            
+            calculationSteps.push(
+                t('multiplication_division.steps.simplifying_denominator', {
+                    den: resultDenominator,
+                    gcd: mdcValue,
+                    result: simplifiedDen
+                })
+            );
+            
+            calculationSteps.push(t('multiplication_division.steps.simplifying_final'));
             calculationSteps.push(<FractionDisplay numerator={simplifiedNum} denominator={simplifiedDen} />);
             
             // Adicionar verificação
             calculationSteps.push('---VERIFICATION_SEPARATOR---');
-            calculationSteps.push(`Verificação do resultado:`);
-            calculationSteps.push(`Verificando: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
-            calculationSteps.push(`Verificando: ${resultDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
-            calculationSteps.push(`Verificação concluída: O resultado ${operation === 'multiply' ? 'da multiplicação' : 'da divisão'} é ${simplifiedNum}/${simplifiedDen}`);
+            calculationSteps.push(t('multiplication_division.steps.verification'));
+            calculationSteps.push(
+                t('multiplication_division.steps.verifying_simplification', {
+                    num: resultNumerator,
+                    gcd: mdcValue,
+                    result: simplifiedNum
+                })
+            );
+            calculationSteps.push(
+                t('multiplication_division.steps.verifying_simplification', {
+                    num: resultDenominator,
+                    gcd: mdcValue,
+                    result: simplifiedDen
+                })
+            );
+            calculationSteps.push(
+                t('multiplication_division.steps.verification_completed', {
+                    operation: operation === 'multiply' ? 
+                        t('multiplication_division.results.multiplication', {operation: ''}).toLowerCase() : 
+                        t('multiplication_division.results.division', {operation: ''}).toLowerCase(),
+                    num: simplifiedNum,
+                    den: simplifiedDen
+                })
+            );
         } else {
             // Adicionar verificação
             calculationSteps.push('---VERIFICATION_SEPARATOR---');
-            calculationSteps.push(`Verificação do resultado:`);
-            calculationSteps.push(`Verificação concluída: O resultado ${operation === 'multiply' ? 'da multiplicação' : 'da divisão'} é ${resultNumerator}/${resultDenominator}`);
+            calculationSteps.push(t('multiplication_division.steps.verification'));
+            calculationSteps.push(
+                t('multiplication_division.steps.verification_completed', {
+                    operation: operation === 'multiply' ? 
+                        t('multiplication_division.results.multiplication', {operation: ''}).toLowerCase() : 
+                        t('multiplication_division.results.division', {operation: ''}).toLowerCase(),
+                    num: resultNumerator,
+                    den: resultDenominator
+                })
+            );
         }
 
         return calculationSteps;
@@ -231,7 +328,7 @@ export function useFractionMultDivSolver() {
 
     // Obter exemplos filtrados com base na operação selecionada
     const getFilteredExamples = () => {
-        return getFractionMultDivExamples().filter(example => 
+        return getFractionMultDivExamples(t).filter(example => 
             example.operation === state.operation
         );
     };

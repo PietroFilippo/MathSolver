@@ -1,6 +1,7 @@
-import { useReducer, ReactNode } from 'react';
+import React, { useReducer, ReactNode } from 'react';
 import { lcm, gcd } from '../../utils/mathUtils';
 import { simplifyFraction, FractionDisplay, getFractionAddSubExamples } from '../../utils/mathUtilsFracoes';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 export type Operation = 'add' | 'sub';
@@ -113,6 +114,7 @@ function fractionAddSubReducer(state: FractionAddSubState, action: FractionAddSu
 
 export function useFractionAddSubSolver() {
     const [state, dispatch] = useReducer(fractionAddSubReducer, initialState);
+    const { t } = useTranslation('fractions');
 
     // Função principal de resolução
     const handleSolve = () => {
@@ -128,7 +130,7 @@ export function useFractionAddSubSolver() {
         if (isNaN(num1) || isNaN(den1) || isNaN(num2) || isNaN(den2)) {
             dispatch({
                 type: 'SET_ERROR',
-                message: 'Por favor, preencha todos os campos com valores numéricos.'
+                message: t('addition_subtraction.errors.fill_all_fields')
             });
             return;
         }
@@ -136,7 +138,7 @@ export function useFractionAddSubSolver() {
         if (den1 === 0 || den2 === 0) {
             dispatch({
                 type: 'SET_ERROR',
-                message: 'Os denominadores não podem ser zero.'
+                message: t('addition_subtraction.errors.denominator_zero')
             });
             return;
         }
@@ -173,7 +175,7 @@ export function useFractionAddSubSolver() {
 
     // Obter exemplos filtrados com base na operação selecionada
     const getFilteredExamples = () => {
-        return getFractionAddSubExamples().filter(ex => 
+        return getFractionAddSubExamples(t).filter(ex => 
             ex.operation === state.operation
         );
     };
@@ -194,24 +196,29 @@ export function useFractionAddSubSolver() {
         const calculationSteps: (string | ReactNode)[] = [];
         let stepCount = 1;
 
-        calculationSteps.push(`Equação original: ${operacao === 'add' ? 'Adicionar' : 'Subtrair'} as frações ${num1}/${den1} ${operacao === 'add' ? '+' : '-'} ${num2}/${den2}`);
+        calculationSteps.push(t('addition_subtraction.steps.original_equation', { 
+            operation: operacao === 'add' ? t('addition_subtraction.operations.add') : t('addition_subtraction.operations.subtract'),
+            num1, den1, num2, den2,
+            operator: operacao === 'add' ? '+' : '-'
+        }));
+        
         calculationSteps.push(<>
             <FractionDisplay numerator={num1} denominator={den1} /> 
             {operacao === 'add' ? ' + ' : ' - '}
             <FractionDisplay numerator={num2} denominator={den2} />
         </>);
 
-        calculationSteps.push(`Passo ${stepCount++}: Encontrar o denominador comum (MMC) entre ${den1} e ${den2}.`);
+        calculationSteps.push(t('addition_subtraction.steps.find_lcm', { step: stepCount++, den1, den2 }));
 
         // Calcular o MMC de denominadores
         const commonDenominator = lcm(den1, den2);
-        calculationSteps.push(`Calculando: MMC(${den1}, ${den2}) = ${commonDenominator}`);
+        calculationSteps.push(t('addition_subtraction.steps.calculating_lcm', { den1, den2, result: commonDenominator }));
 
         // Armazenar etapas do MMC para exibição opcional detalhada
         const mmcSteps = { den1, den2, mmc: commonDenominator };
 
         // Converter para o denominador comum
-        calculationSteps.push(`Passo ${stepCount++}: Converter as frações para o denominador comum.`);
+        calculationSteps.push(t('addition_subtraction.steps.convert_to_common_denominator', { step: stepCount++ }));
 
         const factor1 = commonDenominator / den1;
         const factor2 = commonDenominator / den2;
@@ -219,26 +226,34 @@ export function useFractionAddSubSolver() {
         const newNumerator1 = num1 * factor1;
         const newNumerator2 = num2 * factor2;
 
-        calculationSteps.push(`Calculando: Para a primeira fração: Multiplique o numerador e o denominador por ${factor1}`);
+        calculationSteps.push(t('addition_subtraction.steps.calculating_first_fraction', { factor: factor1 }));
         calculationSteps.push(<>
             <FractionDisplay numerator={num1} denominator={den1} /> × 
             <FractionDisplay numerator={factor1} denominator={factor1} /> = 
             <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} />
         </>);
 
-        calculationSteps.push(`Calculando: Para a segunda fração: Multiplique o numerador e o denominador por ${factor2}`);
+        calculationSteps.push(t('addition_subtraction.steps.calculating_second_fraction', { factor: factor2 }));
         calculationSteps.push(<>
             <FractionDisplay numerator={num2} denominator={den2} /> × 
             <FractionDisplay numerator={factor2} denominator={factor2} /> = 
             <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} />
         </>);
 
-        calculationSteps.push(`Passo ${stepCount++}: ${operacao === 'add' ? 'Adicionar' : 'Subtrair'} os numeradores, mantendo o denominador comum.`);
+        const operation = operacao === 'add' ? t('addition_subtraction.operations.add') : t('addition_subtraction.operations.subtract');
+        calculationSteps.push(t('addition_subtraction.steps.perform_operation', { 
+            step: stepCount++, 
+            operation: operation 
+        }));
 
         let resultNumerator;
         if (operacao === 'add') {
             resultNumerator = newNumerator1 + newNumerator2;
-            calculationSteps.push(`Calculando: ${newNumerator1} + ${newNumerator2} = ${resultNumerator}`);
+            calculationSteps.push(t('addition_subtraction.steps.calculating_add', { 
+                num1: newNumerator1, 
+                num2: newNumerator2, 
+                result: resultNumerator 
+            }));
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> + 
                 <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
@@ -246,7 +261,11 @@ export function useFractionAddSubSolver() {
             </>);
         } else {
             resultNumerator = newNumerator1 - newNumerator2;
-            calculationSteps.push(`Calculando: ${newNumerator1} - ${newNumerator2} = ${resultNumerator}`);
+            calculationSteps.push(t('addition_subtraction.steps.calculating_subtract', { 
+                num1: newNumerator1, 
+                num2: newNumerator2, 
+                result: resultNumerator 
+            }));
             calculationSteps.push(<>
                 <FractionDisplay numerator={newNumerator1} denominator={commonDenominator} /> - 
                 <FractionDisplay numerator={newNumerator2} denominator={commonDenominator} /> = 
@@ -258,12 +277,27 @@ export function useFractionAddSubSolver() {
         const { numerador: simplifiedNum, denominador: simplifiedDen } = simplifyFraction(resultNumerator, commonDenominator);
 
         if (resultNumerator !== simplifiedNum || commonDenominator !== simplifiedDen) {
-            calculationSteps.push(`Passo ${stepCount++}: Simplificar a fração resultante dividindo o numerador e o denominador pelo MDC (Máximo Divisor Comum).`);
+            calculationSteps.push(t('addition_subtraction.steps.simplify_fraction', { step: stepCount++ }));
 
             const mdcValue = gcd(Math.abs(resultNumerator), commonDenominator);
-            calculationSteps.push(`Calculando: MDC(${Math.abs(resultNumerator)}, ${commonDenominator}) = ${mdcValue}`);
-            calculationSteps.push(`Simplificando: Numerador: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
-            calculationSteps.push(`Simplificando: Denominador: ${commonDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
+            calculationSteps.push(t('addition_subtraction.steps.calculating_gcd', { 
+                num: Math.abs(resultNumerator), 
+                den: commonDenominator, 
+                gcd: mdcValue 
+            }));
+            
+            calculationSteps.push(t('addition_subtraction.steps.simplifying_numerator', { 
+                num: resultNumerator, 
+                gcd: mdcValue, 
+                result: simplifiedNum 
+            }));
+            
+            calculationSteps.push(t('addition_subtraction.steps.simplifying_denominator', { 
+                den: commonDenominator, 
+                gcd: mdcValue, 
+                result: simplifiedDen 
+            }));
+            
             calculationSteps.push(<>
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> = 
                 <FractionDisplay numerator={resultNumerator} denominator={commonDenominator} /> ÷ 
@@ -273,10 +307,18 @@ export function useFractionAddSubSolver() {
             
             // Adicionar verificação
             calculationSteps.push('---VERIFICATION_SEPARATOR---');
-            calculationSteps.push(`Verificação do resultado:`);
-            calculationSteps.push(`Verificando: ${resultNumerator} ÷ ${mdcValue} = ${simplifiedNum}`);
-            calculationSteps.push(`Verificando: ${commonDenominator} ÷ ${mdcValue} = ${simplifiedDen}`);
-            calculationSteps.push(`Verificação concluída: O resultado ${operacao === 'add' ? 'da adição' : 'da subtração'} é ${simplifiedNum}/${simplifiedDen}`);
+            calculationSteps.push(t('addition_subtraction.steps.verification'));
+            calculationSteps.push(t('addition_subtraction.steps.verifying_simplification', { 
+                num: resultNumerator, 
+                gcd: mdcValue, 
+                result: simplifiedNum 
+            }));
+            
+            calculationSteps.push(t('addition_subtraction.steps.verification_completed', { 
+                operation: operacao === 'add' ? t('addition_subtraction.operations.addition') : t('addition_subtraction.operations.subtraction'),
+                num: simplifiedNum, 
+                den: simplifiedDen 
+            }));
 
             return {
                 calculationSteps,
@@ -288,8 +330,12 @@ export function useFractionAddSubSolver() {
         
         // Adicionar verificação
         calculationSteps.push('---VERIFICATION_SEPARATOR---');
-        calculationSteps.push(`Verificação do resultado:`);
-        calculationSteps.push(`Verificação concluída: O resultado ${operacao === 'add' ? 'da adição' : 'da subtração'} é ${resultNumerator}/${commonDenominator}`);
+        calculationSteps.push(t('addition_subtraction.steps.verification'));
+        calculationSteps.push(t('addition_subtraction.steps.verification_completed', { 
+            operation: operacao === 'add' ? t('addition_subtraction.operations.addition') : t('addition_subtraction.operations.subtraction'),
+            num: resultNumerator, 
+            den: commonDenominator 
+        }));
 
         return {
             calculationSteps,

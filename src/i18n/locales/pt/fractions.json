@@ -1,0 +1,627 @@
+{
+  "mixed_fractions": {
+    "title": "Conversão de Frações Mistas",
+    "description": "Essa calculadora permite converter entre frações mistas e frações impróprias. Selecione a operação desejada e insira os valores abaixo.",
+    "operations": {
+      "to_fraction": "Fração mista para fração imprópria",
+      "to_mixed": "Fração imprópria para fração mista"
+    },
+    "labels": {
+      "whole_part": "Parte Inteira",
+      "numerator": "Num",
+      "denominator": "Den",
+      "examples": "Exemplos",
+      "calculate": "Calcular"
+    },
+    "results": {
+      "to_fraction": "A fração imprópria é:",
+      "to_mixed": "A fração mista é:"
+    },
+    "steps": {
+      "original_equation": "Equação original: Converter a fração {{operation}}",
+      "whole_multiply": "Passo {{step}}: Multiplicamos a parte inteira pelo denominador",
+      "calculating_multiply": "Calculando: {{whole}} × {{den}} = {{result}}",
+      "add_numerator": "Passo {{step}}: Adicionamos o numerador",
+      "calculating_add": "Calculando: {{whole_times_den}} + {{num}} = {{result}}",
+      "negative_sign": "Passo {{step}}: Aplicamos o sinal negativo ao resultado",
+      "simplifying_sign": "Simplificando: -{{num}} = {{result}}",
+      "write_fraction": "Passo {{step}}: Escrevemos a fração imprópria resultante",
+      "simplifying_result": "Simplificando: {{whole}} + {{num}}/{{den}} = {{result_num}}/{{result_den}}",
+      "divide_numerator": "Passo {{step}}: Dividimos o numerador pelo denominador",
+      "calculating_divide": "Calculando: {{num}} ÷ {{den}} = {{whole}} com resto {{remainder}}",
+      "apply_negative": "Passo {{step}}: Aplicamos o sinal negativo à parte inteira",
+      "simplifying_negative": "Simplificando: -{{whole}}",
+      "write_mixed": "Passo {{step}}: Escrevemos a fração mista resultante",
+      "simplifying_mixed": "Simplificando: {{num}}/{{den}} = {{whole}} + {{remainder}}/{{den}}",
+      "verification": "Verificação do resultado:",
+      "verifying_to_fraction": "Verificando: ({{whole}} × {{den}}) + {{num}} = {{result}}",
+      "verification_completed_to_fraction": "Verificação concluída: A fração imprópria é {{num}}/{{den}}",
+      "verifying_to_mixed": "Verificando: {{whole}} + ({{num}}/{{den}}) = ({{whole}} × {{den}} + {{num}})/{{den}} = {{result}}/{{den}}",
+      "verification_completed_to_mixed": "Verificação concluída: A fração mista é {{whole}} + {{num}}/{{den}}"
+    },
+    "errors": {
+      "invalid_numbers": "Por favor, insira números válidos.",
+      "denominator_zero": "O denominador não pode ser zero."
+    },
+    "mathematical_concept": {
+      "title": "Conceito Matemático",
+      "definition_title": "Frações Mistas e Impróprias",
+      "definition_text": "As frações mistas e impróprias são duas formas diferentes de representar quantidades fracionárias:",
+      "definitions": {
+        "title": "Definições",
+        "mixed_fraction": "Fração Mista: Consiste em uma parte inteira seguida de uma fração própria. Exemplo: 2³/₄ (dois e três quartos)",
+        "improper_fraction": "Fração Imprópria: Tem o numerador maior ou igual ao denominador. Exemplo: ¹¹/₄ (onze quartos)"
+      },
+      "conversion_title": "Conversão entre Frações",
+      "mixed_to_improper": "Mista para Imprópria:",
+      "mixed_to_improper_formula": "a + b/c = (a×c + b)/c",
+      "improper_to_mixed": "Imprópria para Mista:",
+      "improper_to_mixed_formula": "n/d = q + r/d",
+      "improper_to_mixed_note": "onde q = ⌊n/d⌋ (parte inteira) e r = n mod d (resto)",
+      "process_title": "Processo de Conversão",
+      "mixed_to_improper_process": "Fração Mista para Imprópria",
+      "mixed_to_improper_steps": {
+        "step1": "Multiplique a parte inteira pelo denominador da fração",
+        "step1_example": "Para 2³/₄: 2 × 4 = 8",
+        "step2": "Adicione o numerador ao resultado",
+        "step2_example": "8 + 3 = 11",
+        "step3": "Use o resultado como novo numerador, mantendo o mesmo denominador",
+        "step3_example": "Resultado: ¹¹/₄"
+      },
+      "improper_to_mixed_process": "Fração Imprópria para Mista",
+      "improper_to_mixed_steps": {
+        "step1": "Divida o numerador pelo denominador para obter o quociente e o resto",
+        "step1_example": "Para ¹¹/₄: 11 ÷ 4 = 2 (quociente) com resto 3",
+        "step2": "O quociente será a parte inteira",
+        "step2_example": "Parte inteira: 2",
+        "step3": "O resto será o novo numerador, com o mesmo denominador",
+        "step3_example": "Resultado: 2³/₄"
+      },
+      "special_cases_title": "Casos Especiais",
+      "zero_numerator": {
+        "title": "Frações com Numerador Zero",
+        "text": "Se o numerador for zero, a fração mista será apenas a parte inteira. Exemplo: 5⁰/₄ = 5"
+      },
+      "negative_fractions": {
+        "title": "Frações Negativas",
+        "text": "Com frações negativas, o sinal negativo aplica-se à fração inteira. Exemplo: -7³/₄ é convertido para -³¹/₄ (e não -²⁸/₄)"
+      },
+      "zero_remainder": {
+        "title": "Resto Zero",
+        "text": "Se o resto for zero ao converter para fração mista, temos apenas a parte inteira. Exemplo: ¹²/₄ = 3⁰/₄ = 3"
+      },
+      "decimal_conversion": {
+        "title": "Conversão para Decimal",
+        "text": "Para converter uma fração mista para decimal, primeiro converta para fração imprópria e depois divida. Exemplo: 2³/₄ → ¹¹/₄ → 11 ÷ 4 = 2,75",
+        "tip": "Dica: Para converter rapidamente, some a parte inteira ao resultado da divisão do numerador pelo denominador (2 + 3/4 = 2 + 0,75 = 2,75)"
+      },
+      "practical_tips_title": "Dicas Práticas",
+      "practical_tips": [
+        "Frações mistas são comumente usadas para medidas no cotidiano (2½ xícaras)",
+        "Frações impróprias são mais úteis em cálculos matemáticos intermediários",
+        "Ao converter para fração imprópria, certifique-se de multiplicar o inteiro pelo denominador (não pelo numerador)",
+        "Lembre-se que a divisão para encontrar a parte inteira é uma divisão inteira (ignora-se a parte decimal)",
+        "Realize a verificação: a fração imprópria, quando avaliada, deve ter o mesmo valor da fração mista"
+      ],
+      "practical_applications_title": "Aplicações Práticas",
+      "practical_applications": [
+        "Medidas em receitas culinárias (2½ colheres)",
+        "Medições em construção (3¾ metros)",
+        "Representação de tempo (2¼ horas)",
+        "Representação de pesos e volumes",
+        "Em música, para representação de compassos"
+      ],
+      "mathematical_importance_title": "Importância nas Operações Matemáticas",
+      "mathematical_importance_text": "A capacidade de converter entre frações mistas e impróprias é fundamental em álgebra e cálculo. Em operações como adição, subtração, multiplicação e divisão de frações, muitas vezes é mais conveniente trabalhar com frações impróprias para realizar os cálculos, e depois converter o resultado para uma fração mista para facilitar a interpretação."
+    },
+    "examples": {
+      "simple_positive": "Positivo simples",
+      "large_integer": "Parte inteira grande",
+      "negative_with_fraction": "Negativo com fração",
+      "near_integer": "Próximo de inteiro",
+      "no_integer_part": "Sem parte inteira",
+      "simple_improper": "Imprópria simples",
+      "integer_part_greater_than_one": "Parte inteira > 1",
+      "negative_improper": "Imprópria negativa",
+      "large_improper": "Imprópria grande",
+      "equal_to_one": "Igual a 1"
+    }
+  },
+  "multiplication_division": {
+    "title": "Multiplicação e Divisão de Frações",
+    "description": "Essa calculadora ajuda a resolver multiplicações e divisões de frações. Insira o numerador e o denominador de cada fração abaixo e escolha a operação desejada.",
+    "labels": {
+      "fraction1": "Fração 1",
+      "fraction2": "Fração 2",
+      "operation": "Operação",
+      "multiplication": "Multiplicação (*)",
+      "division": "Divisão (/)",
+      "examples": "Exemplos",
+      "calculate": "Calcular"
+    },
+    "results": {
+      "multiplication": "O resultado da multiplicação é:",
+      "division": "O resultado da divisão é:"
+    },
+    "steps": {
+      "original_equation": "Equação original: {{operation}} as frações {{num1}}/{{den1}} {{operator}} {{num2}}/{{den2}}",
+      "apply_rule": "Passo {{step}}: Aplicar a regra de {{operation}} de frações",
+      "multiplication_rule": "Calculando: Na multiplicação de frações, multiplicamos os numeradores e os denominadores separadamente.",
+      "division_rule": "Calculando: Na divisão de frações, multiplicamos a primeira fração pelo inverso da segunda.",
+      "calculating_numerator": "Calculando: Numerador: {{num1}} × {{num2}} = {{result}}",
+      "calculating_denominator": "Calculando: Denominador: {{den1}} × {{den2}} = {{result}}",
+      "calculating_numerator_division": "Calculando: Numerador: {{num1}} × {{den2}} = {{result}}",
+      "calculating_denominator_division": "Calculando: Denominador: {{den1}} × {{num2}} = {{result}}",
+      "simplifying_before": "Simplificando: Resultado antes da simplificação:",
+      "simplify_fraction": "Passo {{step}}: Simplificar a fração resultante",
+      "calculating_gcd": "Calculando: MDC({{num}}, {{den}}) = {{gcd}}",
+      "simplifying_numerator": "Simplificando: Numerador: {{num}} ÷ {{gcd}} = {{result}}",
+      "simplifying_denominator": "Simplificando: Denominador: {{den}} ÷ {{gcd}} = {{result}}",
+      "simplifying_final": "Simplificando: Resultado final:",
+      "verification": "Verificação do resultado:",
+      "verifying_simplification": "Verificando: {{num}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verificação concluída: O resultado {{operation}} é {{num}}/{{den}}"
+    },
+    "errors": {
+      "fill_all_fields": "Por favor, preencha todos os campos com valores numéricos.",
+      "denominator_zero": "Os denominadores não podem ser zero.",
+      "division_by_zero": "Não é possível dividir por zero."
+    },
+    "mathematical_concept": {
+      "title": "Conceito Matemático",
+      "mul_div_title": "Multiplicação e Divisão de Frações",
+      "mul_div_text": "A multiplicação e divisão de frações são operações fundamentais que seguem regras diferentes da adição e subtração, pois não exigem um denominador comum para serem realizadas.",
+      "formulas_title": "Fórmulas",
+      "multiplication_formula": "Multiplicação:",
+      "multiplication_formula_text": "a/b × c/d = (a×c)/(b×d)",
+      "division_formula": "Divisão:",
+      "division_formula_text": "a/b ÷ c/d = a/b × d/c = (a×d)/(b×c)",
+      "fundamental_property": "Propriedade fundamental: Para dividir por uma fração, multiplicamos pela sua fração invertida (recíproco). Isso transforma a divisão em multiplicação, que é uma operação mais simples de realizar.",
+      "resolution_steps_title": "Passos para a Resolução",
+      "multiplication_steps_title": "Para Multiplicação",
+      "multiplication_steps": {
+        "step1_title": "Multiplique os numeradores",
+        "step1_text": "O numerador do resultado é o produto dos numeradores das frações originais.",
+        "step2_title": "Multiplique os denominadores",
+        "step2_text": "O denominador do resultado é o produto dos denominadores das frações originais.",
+        "step3_title": "Simplifique a fração resultante",
+        "step3_text": "Encontre o MDC (Máximo Divisor Comum) entre o numerador e o denominador do resultado, e divida ambos por ele para obter a fração na forma mais simples."
+      },
+      "division_steps_title": "Para Divisão",
+      "division_steps": {
+        "step1_title": "Inverta a segunda fração (o divisor)",
+        "step1_text": "Troque o numerador e o denominador da segunda fração.",
+        "step2_title": "Transforme a divisão em multiplicação",
+        "step2_text": "Multiplique a primeira fração pela segunda fração invertida.",
+        "step3_title": "Siga os passos da multiplicação",
+        "step3_text": "Multiplique os numeradores e os denominadores, e então simplifique."
+      },
+      "geometric_visualization_title": "Visualização Geométrica",
+      "multiplication_area_title": "Multiplicação de Frações como Área",
+      "multiplication_area_text": "A multiplicação 2/3 × 3/4 representa a área da interseção de um retângulo 2/3 de largura por 3/4 de altura",
+      "division_comparison_title": "Divisão como Comparação de Tamanhos",
+      "division_comparison_text": "A divisão 3/4 ÷ 1/2 responde: \"quantas vezes 1/2 cabe em 3/4?\" (resposta: 1,5 vezes)",
+      "detailed_examples_title": "Exemplos Detalhados",
+      "simplified_multiplication": {
+        "title": "Multiplicação Simplificada: 2/5 × 10/3",
+        "text1": "Simplificando antes de multiplicar:",
+        "text2": "1. Identificar e cancelar fatores comuns: 2̶/5 × 10/3̶ = 1/5 × 10/1 = 2",
+        "text3": "2. O fator 2 do numerador cancela com um fator do 10: 2/5 × 10/3 = 1/5 × 10/3 = 2/3",
+        "result": "Resultado simplificado: 2/5 × 10/3 = 4/3 = 1⅓"
+      },
+      "negative_division": {
+        "title": "Divisão com Números Negativos: -3/4 ÷ 2/5",
+        "text1": "1. Inverter o divisor: -3/4 ÷ 2/5 = -3/4 × 5/2",
+        "text2": "2. Multiplicar: -3/4 × 5/2 = (-3 × 5)/(4 × 2) = -15/8",
+        "text3": "3. Manter o sinal negativo: -15/8 = -1⅞",
+        "result": "Resultado: -3/4 ÷ 2/5 = -15/8 = -1⅞"
+      },
+      "integer_multiplication": {
+        "title": "Multiplicação de Fração por Inteiro: 3/5 × 15",
+        "text1": "1. Converter o inteiro para fração: 15 = 15/1",
+        "text2": "2. Multiplicar: 3/5 × 15/1 = (3 × 15)/(5 × 1) = 45/5 = 9",
+        "text3": "3. Também podemos simplificar: 3/5 × 15 = 3/5 × 15 = 3 × 3 = 9",
+        "result": "Resultado: 3/5 × 15 = 9"
+      },
+      "integer_division": {
+        "title": "Divisão de Inteiro por Fração: 4 ÷ 2/3",
+        "text1": "1. Converter o inteiro para fração: 4 = 4/1",
+        "text2": "2. Inverter o divisor: 4/1 ÷ 2/3 = 4/1 × 3/2",
+        "text3": "3. Multiplicar: 4/1 × 3/2 = (4 × 3)/(1 × 2) = 12/2 = 6",
+        "result": "Resultado: 4 ÷ 2/3 = 6"
+      },
+      "recipe_application": {
+        "title": "Aplicação: Receita para Mais Pessoas",
+        "text1": "Problema: Uma receita para 3 pessoas usa 2/3 de xícara de farinha. Quanto é necessário para 8 pessoas?",
+        "text2": "1. Estabelecer a proporção: se 3 pessoas → 2/3 xícara, então 8 pessoas → x",
+        "text3": "2. Calcular: x = (8 pessoas × 2/3 xícara) ÷ 3 pessoas",
+        "text4": "3. Simplificar: x = 8/3 × 2/3 = 16/9 xícaras ≈ 1,78 xícaras",
+        "result": "Resultado: Aproximadamente 1¾ xícaras de farinha"
+      },
+      "mixed_fractions_multiplication": {
+        "title": "Multiplicação de Frações Mistas: 2½ × 1¾",
+        "text1": "1. Converter para frações impróprias: 2½ = 5/2 e 1¾ = 7/4",
+        "text2": "2. Multiplicar: 5/2 × 7/4 = (5 × 7)/(2 × 4) = 35/8",
+        "text3": "3. Simplificação cruzada (alternativa):",
+        "text4": "   5/2 × 7/4 = (5 × 7)/(2 × 4) = 35/8",
+        "text5": "4. Converter para número misto: 35/8 = 4⅜",
+        "result": "Resultado: 2½ × 1¾ = 4⅜"
+      },
+      "map_scale_application": {
+        "title": "Aplicação: Escala em Mapa",
+        "text1": "Problema: Um mapa está na escala 1:5000. Se a distância no mapa é 3/4 cm, qual é a distância real?",
+        "text2": "1. Estabelecer a relação: 1 cm no mapa = 5000 cm na realidade",
+        "text3": "2. Calcular: Distância real = 3/4 cm × 5000",
+        "text4": "3. Multiplicar: 3/4 × 5000 = 3750 cm = 37,5 m",
+        "text5": "4. Converter para unidades mais adequadas: 37,5 metros",
+        "result": "Resultado: A distância real é 37,5 metros"
+      },
+      "important_properties_title": "Propriedades Importantes",
+      "commutative_property": {
+        "title": "Propriedade Comutativa da Multiplicação",
+        "text1": "a/b × c/d = c/d × a/b",
+        "text2": "Exemplo: 3/4 × 2/5 = 2/5 × 3/4 = 6/20 = 3/10"
+      },
+      "associative_property": {
+        "title": "Propriedade Associativa da Multiplicação",
+        "text1": "(a/b × c/d) × e/f = a/b × (c/d × e/f)",
+        "text2": "A ordem de agrupamento não altera o resultado final"
+      },
+      "identity_element": {
+        "title": "Elemento Neutro da Multiplicação",
+        "text1": "a/b × 1 = a/b",
+        "text2": "Multiplicar qualquer fração por 1 não altera seu valor"
+      },
+      "multiplicative_inverse": {
+        "title": "Recíproco ou Inverso Multiplicativo",
+        "text1": "a/b × b/a = 1",
+        "text2": "O produto de uma fração pelo seu recíproco é sempre 1"
+      },
+      "tips_tricks_title": "Dicas e Truques",
+      "tips_tricks": [
+        "Antes de multiplicar, verifique se é possível simplificar elementos cruzados (fatores comuns entre numerador de uma fração e denominador de outra)",
+        "Lembre-se que qualquer número dividido por 1 permanece inalterado",
+        "Divisão por uma fração é o mesmo que multiplicação pelo seu recíproco",
+        "Ao multiplicar frações, o resultado será sempre menor que as frações originais (exceto com frações impróprias)",
+        "Ao dividir por uma fração menor que 1, o resultado será maior que a fração original"
+      ],
+      "real_world_applications_title": "Aplicações no Mundo Real",
+      "real_world_applications": [
+        "Ajuste de receitas (metade de 2/3 de xícara)",
+        "Cálculos de escala em mapas e projetos",
+        "Divisão proporcional em finanças",
+        "Cálculos de taxas e juros",
+        "Problemas de razão e proporção",
+        "Análises de probabilidades compostas"
+      ],
+      "special_cases_title": "Casos Especiais",
+      "multiplication_by_zero": {
+        "title": "Multiplicação por Zero",
+        "text": "Qualquer fração multiplicada por zero resulta em zero:• (a/b) × 0 = 0• (a/b) × (0/c) = 0/bc = 0"
+      },
+      "division_by_zero": {
+        "title": "Divisão por Zero",
+        "text": "A divisão por zero é indefinida:• (a/b) ÷ 0 → não existe• (a/b) ÷ (0/c) → não existe"
+      },
+      "advanced_concepts_title": "Conceitos Avançados",
+      "advanced_concepts_text": "A multiplicação e divisão de frações são a base para o trabalho com expressões algébricas fracionárias, equações racionais e funções racionais. Essas operações também são essenciais para entender conceitos como proporção direta e inversa, taxas de variação e integração por substituição no cálculo avançado."
+    },
+    "examples": {
+      "simple_fractions": "Frações simples",
+      "product_with_simplification": "Produto com simplificação",
+      "simplifiable_before": "Simplificáveis antes",
+      "negative_fraction": "Fração negativa",
+      "improper_fractions": "Frações impróprias",
+      "simple_division": "Divisão simples",
+      "same_numerator": "Mesmo numerador",
+      "same_denominator": "Mesmo denominador"
+    }
+  },
+  "simplification": {
+    "title": "Simplificação de Frações",
+    "description": "Esta calculadora ajuda a simplificar frações para sua forma irredutível. Digite o numerador e o denominador da fração abaixo.",
+    "labels": {
+      "fraction": "Fração",
+      "numerator": "Num",
+      "denominator": "Den",
+      "examples": "Exemplos",
+      "simplify": "Simplificar"
+    },
+    "results": {
+      "simplified": "A fração na forma irredutível é: "
+    },
+    "steps": {
+      "original_equation": "Fração original: {{num}}/{{den}}",
+      "numerator_zero": "Passo {{step}}: Quando o numerador é zero, a fração simplificada é sempre 0/1 = 0",
+      "simplifying_zero": "Simplificando: {{den}} não importa desde que não seja zero, então 0/{{den}} = 0/1 = 0",
+      "check_already_simplified": "Passo {{step}}: Verificar se a fração já está na forma mais simples",
+      "verifying_gcd": "Verificando: Encontrando o Máximo Divisor Comum (MDC) entre {{num}} e {{den}}",
+      "calculating_gcd": "Calculando: MDC({{num}}, {{den}}) = {{gcd}}",
+      "gcd_is_one": "Como o MDC = {{gcd}}, a fração já está na sua forma mais simples",
+      "find_gcd": "Passo {{step}}: Encontrar o Máximo Divisor Comum (MDC) entre {{num}} e {{den}}",
+      "divide_by_gcd": "Passo {{step}}: Dividir tanto o numerador quanto o denominador pelo MDC",
+      "calculating_numerator": "Calculando: Numerador: {{num}} ÷ {{gcd}} = {{result}}",
+      "calculating_denominator": "Calculando: Denominador: {{den}} ÷ {{gcd}} = {{result}}",
+      "simplified_result": "Passo {{step}}: Resultado simplificado",
+      "simplifying_fraction": "Simplificando: {{num}}/{{den}} = {{result_num}}/{{result_den}}",
+      "denominator_is_one": "Como o denominador é 1, o resultado final é apenas {{num}}",
+      "verification": "Verificação do resultado:",
+      "verifying_numerator": "Verificando: {{num}} ÷ {{gcd}} = {{result}}",
+      "verifying_denominator": "Verificando: {{den}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verificação concluída: A fração simplificada é {{num}}/{{den}}",
+      "verification_completed_zero": "Verificação concluída: A fração simplificada é 0",
+      "verification_completed_already_simplified": "Verificação concluída: A fração {{num}}/{{den}} já está na sua forma mais simples"
+    },
+    "errors": {
+      "fill_all_fields": "Por favor, preencha todos os campos com valores numéricos.",
+      "denominator_zero": "O denominador não pode ser zero."
+    },
+    "mathematical_concept": {
+      "title": "Simplificação de Frações",
+      "explanation": "A simplificação de frações é o processo de reduzir uma fração à sua forma irredutível mantendo seu valor original. Uma fração está na forma irredutível quando o numerador e o denominador não têm divisores comuns além do 1.",
+      "how_to_title": "Como simplificar uma fração",
+      "how_to": {
+        "step1_title": "Encontre o MDC",
+        "step1_text": "Determine o Máximo Divisor Comum entre o numerador e o denominador.",
+        "step2_title": "Divida ambos",
+        "step2_text": "Divida tanto o numerador quanto o denominador pelo MDC encontrado.",
+        "step3_title": "Verifique o resultado",
+        "step3_text": "A fração resultante deve ter o mesmo valor da original, mas estar na forma mais simples possível."
+      },
+      "example_title": "Exemplo:",
+      "example_text": "Para simplificar 18/24, primeiro encontre MDC(18, 24) = 6. Dividindo ambos por 6: 18÷6 = 3 e 24÷6 = 4. A fração simplificada é 3/4.",
+      "gcd_methods_title": "Métodos para Encontrar o MDC",
+      "factorization_method": {
+        "title": "Método de Fatoração",
+        "step1_title": "Decomponha",
+        "step1_text": "Fatore o numerador e o denominador em seus fatores primos.",
+        "step2_title": "Identifique",
+        "step2_text": "Determine os fatores primos comuns a ambos.",
+        "step3_title": "Multiplique",
+        "step3_text": "O MDC é o produto de todos os fatores primos comuns, cada um elevado à sua menor potência."
+      },
+      "euclid_method": {
+        "title": "Algoritmo de Euclides",
+        "step1_title": "Divida",
+        "step1_text": "Divida o número maior pelo menor e anote o resto.",
+        "step2_title": "Substitua",
+        "step2_text": "Substitua o número maior pelo menor, e o menor pelo resto obtido.",
+        "step3_title": "Repita",
+        "step3_text": "Continue o processo até que o resto seja zero. O último divisor não-zero é o MDC.",
+        "example": "Exemplo: Para encontrar MDC(48, 18):\n48 ÷ 18 = 2 com resto 12\n18 ÷ 12 = 1 com resto 6\n12 ÷ 6 = 2 com resto 0\nComo o resto é 0, o MDC é 6."
+      },
+      "visualization_title": "Visualização do Processo",
+      "example_12_30": "Exemplo: Simplificação de 12/30",
+      "numerator_12": "Numerador: 12",
+      "denominator_30": "Denominador: 30",
+      "factors_12": "Fatores de 12: 1, 2, 3, 4, 6, 12",
+      "factors_30": "Fatores de 30: 1, 2, 3, 5, 6, 10, 15, 30",
+      "common_factors": "Fatores comuns: 1, 2, 3, 6",
+      "gcd_6": "MDC = 6",
+      "dividing_by_gcd": "Dividindo ambos pelo MDC:",
+      "result_2_5": "Resultado: 2/5",
+      "blocks_visualization": "Visualização em Blocos",
+      "original_fraction": "Fração Original: 6/8",
+      "six_of_eight": "6 partes preenchidas de um total de 8 partes",
+      "simplified_fraction": "Fração Simplificada: 3/4",
+      "three_of_four": "3 partes preenchidas de um total de 4 partes",
+      "detailed_examples_title": "Exemplos Detalhados",
+      "examples": {
+        "example1_title": "Simplificação: 24/36",
+        "example1_steps": [
+          "1. Encontre MDC(24, 36):",
+          "Fatores de 24: 1, 2, 3, 4, 6, 8, 12, 24",
+          "Fatores de 36: 1, 2, 3, 4, 6, 9, 12, 18, 36",
+          "Fatores comuns: 1, 2, 3, 4, 6, 12",
+          "MDC = 12",
+          "2. Divida o numerador e o denominador pelo MDC:",
+          "24 ÷ 12 = 2",
+          "36 ÷ 12 = 3",
+          "Resultado: 24/36 = 2/3"
+        ],
+        "example2_title": "Já na Forma Irredutível: 7/9",
+        "example2_steps": [
+          "1. Verifique os fatores comuns entre 7 e 9.",
+          "Fatores de 7: 1, 7 (número primo)",
+          "Fatores de 9: 1, 3, 9",
+          "Fator comum: 1",
+          "2. Como o único fator comum é 1, a fração já está na forma irredutível.",
+          "Resultado: 7/9 (fração já está simplificada)"
+        ],
+        "example3_title": "Simplificação com Zero: 0/15",
+        "example3_steps": [
+          "Quando o numerador é zero, a fração sempre se simplifica para 0/1 = 0",
+          "O denominador não importa (desde que não seja zero)",
+          "Resultado: 0/15 = 0/1 = 0"
+        ],
+        "example4_title": "Fração com Números Negativos: -18/24",
+        "example4_steps": [
+          "1. Ignore o sinal e encontre MDC(18, 24) = 6",
+          "2. Divida o numerador e o denominador pelo MDC:",
+          "-18 ÷ 6 = -3",
+          "24 ÷ 6 = 4",
+          "3. Mantenha o sinal no numerador ou denominador",
+          "Resultado: -18/24 = -3/4"
+        ]
+      },
+      "properties_title": "Propriedades Importantes",
+      "properties": {
+        "fundamental_title": "Propriedade Fundamental das Frações",
+        "fundamental_text": "Se multiplicarmos ou dividirmos tanto o numerador quanto o denominador pelo mesmo número (não zero), o valor da fração permanece o mesmo.",
+        "fundamental_formula": "a/b = (a×k)/(b×k), onde k ≠ 0",
+        "equivalent_title": "Frações Equivalentes",
+        "equivalent_text": "Frações equivalentes representam a mesma quantidade, mas são escritas em formas diferentes.",
+        "equivalent_example": "Exemplo: 1/2, 2/4, 3/6, 4/8 são todas frações equivalentes"
+      },
+      "tips_title": "Dicas e Truques",
+      "tips": [
+        "Verifique primeiro se o numerador ou denominador é múltiplo um do outro (divisão exata)",
+        "Procure fatores comuns óbvios como 2, 3, 5 antes de calcular o MDC completo",
+        "Se ambos os números são pares, divida ambos por 2 e continue o processo",
+        "Uma fração está na forma irredutível quando o MDC do numerador e denominador é 1",
+        "Frações com numeradores primos e denominadores que não são múltiplos desse primo já estão na forma irredutível"
+      ],
+      "applications_title": "Aplicações da Simplificação",
+      "applications": [
+        "Facilitar cálculos e comparações entre frações",
+        "Expressar dados estatísticos com mais clareza",
+        "Simplificar resultados em problemas de probabilidade",
+        "Reduzir a complexidade de expressões algébricas",
+        "Facilitar a compreensão de razões e proporções em contextos práticos"
+      ]
+    },
+    "examples": {
+      "simplifies_to_1_2": "Simplifica para 1/2",
+      "simplifies_to_3_5": "Simplifica para 3/5",
+      "simplifies_to_3_4": "Simplifica para 3/4",
+      "negative_fraction": "Fração negativa",
+      "already_reduced": "Fração irredutível",
+      "simplifies_to_integer": "Simplifica para 3",
+      "large_gcd": "MDC = 15",
+      "simplifies_to_4_7": "Simplifica para 4/7",
+      "large_numbers": "MDC grande",
+      "negative_signs": "Sinais negativos"
+    }
+  },
+  "addition_subtraction": {
+    "title": "Adição e Subtração de Frações",
+    "description": "Esta calculadora ajuda a resolver adição e subtração de frações. Digite o numerador e o denominador de cada fração abaixo e escolha a operação desejada.",
+    "labels": {
+      "fraction1": "Fração 1",
+      "fraction2": "Fração 2",
+      "numerator": "Num",
+      "denominator": "Den",
+      "operation": "Operação",
+      "addition": "Adição",
+      "subtraction": "Subtração",
+      "examples": "Exemplos",
+      "calculate": "Calcular"
+    },
+    "results": {
+      "addition": "O resultado da adição é: ",
+      "subtraction": "O resultado da subtração é: "
+    },
+    "operations": {
+      "add": "adicionar",
+      "subtract": "subtrair",
+      "addition": "adição",
+      "subtraction": "subtração"
+    },
+    "steps": {
+      "original_equation": "Equação original: {{operation}} as frações {{num1}}/{{den1}} {{operator}} {{num2}}/{{den2}}",
+      "find_lcm": "Passo {{step}}: Encontrar o Mínimo Múltiplo Comum (MMC) dos denominadores {{den1}} e {{den2}}",
+      "calculating_lcm": "Calculando: MMC({{den1}}, {{den2}}) = {{result}}",
+      "convert_to_common_denominator": "Passo {{step}}: Converter frações para frações equivalentes com o denominador comum",
+      "calculating_first_fraction": "Calculando: Multiplicar a primeira fração por {{factor}}/{{factor}}",
+      "calculating_second_fraction": "Calculando: Multiplicar a segunda fração por {{factor}}/{{factor}}",
+      "perform_operation": "Passo {{step}}: Realizar a operação de {{operation}}",
+      "calculating_add": "Calculando: {{num1}} + {{num2}} = {{result}}",
+      "calculating_subtract": "Calculando: {{num1}} - {{num2}} = {{result}}",
+      "simplify_fraction": "Passo {{step}}: Simplificar a fração resultante",
+      "calculating_gcd": "Calculando: MDC({{num}}, {{den}}) = {{gcd}}",
+      "simplifying_numerator": "Simplificando: Numerador: {{num}} ÷ {{gcd}} = {{result}}",
+      "simplifying_denominator": "Simplificando: Denominador: {{den}} ÷ {{gcd}} = {{result}}",
+      "verification": "Verificação do resultado:",
+      "verifying_simplification": "Verificando: {{num}} ÷ {{gcd}} = {{result}}",
+      "verification_completed": "Verificação concluída: O resultado da {{operation}} é {{num}}/{{den}}"
+    },
+    "errors": {
+      "fill_all_fields": "Por favor, preencha todos os campos com valores numéricos.",
+      "denominator_zero": "Os denominadores não podem ser zero."
+    },
+    "lcm_details": {
+      "title": "Detalhes do MMC para {{den1}} e {{den2}}",
+      "method1_title": "Método 1: Encontrando o MMC usando Fatoração em Primos",
+      "decomposition": "Fatoração em Primos de {{number}}:",
+      "therefore": "Portanto, {{number}} = {{factors}}",
+      "prime_number": "{{number}} é um número primo",
+      "find_lcm_prime": "Encontrando o MMC usando fatoração em primos:",
+      "step1_prime": "Passo 1: Encontrar a fatoração em primos de cada número",
+      "step2_prime": "Passo 2: Tomar cada fator primo à sua maior potência entre os dois números",
+      "factors_of": "Fatores de {{number}} = {{factors}}",
+      "lcm_formula": "MMC = {{factors}} = {{result}}",
+      "method2_title": "Método 2: Encontrando o MMC usando o MDC",
+      "gcd_lcm_relation": "O MMC pode ser calculado usando a relação entre MMC e MDC:",
+      "lcm_gcd_formula": "MMC(a, b) = (a × b) ÷ MDC(a, b)",
+      "euclid_gcd": "Encontrando MDC({{a}}, {{b}}) usando o algoritmo de Euclides:",
+      "gcd_result": "MDC({{a}}, {{b}}) = {{gcd}}",
+      "applying_formula": "Aplicando a fórmula: MMC(a, b) = (a × b) ÷ MDC(a, b)",
+      "lcm_calculation": "MMC({{a}}, {{b}}) = ({{a}} × {{b}}) ÷ {{gcd}}",
+      "lcm_final": "MMC({{a}}, {{b}}) = {{product}} ÷ {{gcd}} = {{result}}",
+      "why_lcm": "Por que precisamos do MMC?",
+      "why_lcm_explanation": "Para {{operation}} frações com denominadores diferentes, precisamos convertê-las em frações equivalentes com um denominador comum. O MMC dos denominadores é o menor denominador comum que mantém os valores das frações originais.",
+      "show": "Mostrar detalhes do cálculo do MMC",
+      "hide": "Ocultar detalhes do MMC",
+      "unavailable": "Detalhes do cálculo do MMC não estão disponíveis para esta operação."
+    },
+    "mathematical_concept": {
+      "title": "Adição e Subtração de Frações",
+      "explanation": "A adição e subtração de frações requerem um denominador comum para realizar a operação. Quando os denominadores são diferentes, precisamos encontrar frações equivalentes com o mesmo denominador.",
+      "formulas_title": "Fórmulas",
+      "common_denominator": "Frações com o mesmo denominador:",
+      "common_denominator_formula": "a/c ± b/c = (a ± b)/c",
+      "different_denominators": "Frações com denominadores diferentes:",
+      "different_denominators_formula": "a/b ± c/d = (a×d ± b×c)/(b×d)",
+      "why_lcm_title": "Por que usar o MMC?",
+      "why_lcm_text": "Embora pudéssemos usar o produto dos denominadores (b×d) como um denominador comum, usar o Mínimo Múltiplo Comum (MMC) produz frações com números menores e simplifica o cálculo.",
+      "steps_title": "Passos para Resolução",
+      "steps": {
+        "step1_title": "Encontrar o Mínimo Múltiplo Comum (MMC) dos denominadores",
+        "step1_text": "Este será o denominador comum para nossas frações equivalentes.",
+        "step2_title": "Converter as frações para frações equivalentes com o denominador comum",
+        "step2_text": "Multiplicar tanto o numerador quanto o denominador de cada fração pelo fator necessário para atingir o denominador comum.",
+        "step3_title": "Realizar a operação de adição ou subtração",
+        "step3_text": "Adicionar ou subtrair os numeradores, mantendo o denominador comum.",
+        "step4_title": "Simplificar a fração resultante",
+        "step4_text": "Se possível, reduzir a fração resultante à sua forma mais simples, dividindo tanto o numerador quanto o denominador pelo seu Máximo Divisor Comum (MDC)."
+      },
+      "visualization_title": "Representação Visual",
+      "visualization": {
+        "same_denominator": "Adição com mesmo denominador:",
+        "finding_common_denominator": "Encontrando um denominador comum:",
+        "use_lcm": "Usando MMC para denominador comum:"
+      },
+      "examples_title": "Exemplos Detalhados",
+      "examples": {
+        "addition_title": "Adição com Denominadores Diferentes: 2/3 + 1/4",
+        "addition_step1": "Encontrar o MMC de 3 e 4: MMC(3, 4) = 12",
+        "addition_step2": "Converter 2/3 para uma fração equivalente com denominador 12: 2/3 = (2×4)/(3×4) = 8/12",
+        "addition_step3": "Converter 1/4 para uma fração equivalente com denominador 12: 1/4 = (1×3)/(4×3) = 3/12",
+        "addition_step4": "Adicionar os numeradores: 8/12 + 3/12 = 11/12",
+        "addition_step5": "O resultado 11/12 já está na sua forma mais simples",
+        "subtraction_title": "Subtração com Denominadores Diferentes: 7/8 - 1/6",
+        "subtraction_step1": "Encontrar o MMC de 8 e 6: MMC(8, 6) = 24",
+        "subtraction_step2": "Converter 7/8 para uma fração equivalente com denominador 24: 7/8 = (7×3)/(8×3) = 21/24",
+        "subtraction_step3": "Converter 1/6 para uma fração equivalente com denominador 24: 1/6 = (1×4)/(6×4) = 4/24",
+        "subtraction_step4": "Subtrair os numeradores: 21/24 - 4/24 = 17/24",
+        "subtraction_step5": "O resultado 17/24 já está na sua forma mais simples"
+      },
+      "tips_title": "Dicas e Truques",
+      "tips": [
+        "Ao adicionar ou subtrair frações com o mesmo denominador, apenas os numeradores são adicionados ou subtraídos",
+        "Para frações com denominadores diferentes, encontre o MMC para obter o menor denominador comum",
+        "Quando um denominador é múltiplo do outro, use o maior como denominador comum",
+        "Depois de adicionar ou subtrair, sempre verifique se a fração resultante pode ser simplificada",
+        "Lembre-se que a/b - c/b = (a-c)/b, mas a/b - c/d requer conversão para um denominador comum primeiro"
+      ],
+      "relation_title": "Relação com Outras Operações",
+      "relation_text": "A adição e subtração de frações são fundamentais para entender expressões algébricas com frações, resolver equações fracionárias e trabalhar com funções racionais na matemática avançada."
+    },
+    "examples": {
+      "different_denominators": "Denominadores diferentes",
+      "same_denominator": "Mesmo denominador",
+      "related_denominators": "Denominadores relacionados",
+      "multiple_denominator": "Um denominador múltiplo do outro",
+      "coprime_denominators": "Denominadores primos entre si",
+      "negative_result": "Resultado negativo",
+      "simple_result": "Resultado simples"
+    }
+  },
+  "common": {
+    "result": "Resultado",
+    "hide_explanation": "Ocultar explicação detalhada",
+    "show_explanation": "Mostrar explicação detalhada",
+    "step_by_step": "Solução passo a passo",
+    "mathematical_concept": "Conceito Matemático"
+  }
+} 

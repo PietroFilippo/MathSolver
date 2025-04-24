@@ -42,6 +42,19 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
     }
 
     // Lidar com o separador para a seção de verificação
+    if (step === '---VERIFICATION_SEPARATOR---') {
+      return (
+        <div key={index} className="flex items-center justify-center my-4">
+          <div className="w-full h-px bg-purple-200 dark:bg-purple-800"></div>
+          <span className="px-3 py-1 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900 rounded-full mx-4">
+            {t('translation:common.verification')}
+          </span>
+          <div className="w-full h-px bg-purple-200 dark:bg-purple-800"></div>
+        </div>
+      );
+    }
+
+    // Lidar com o separador para a seção de verificação
     if (step === 'verification' || step === 'translation:verification' || step === 'common.verification') {
       return (
         <div key={index} className="flex items-center justify-center my-4">
@@ -78,6 +91,7 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
         step.includes('Verifying the result') ||
         step.includes('Verificação final') ||
         step.includes('Final verification') ||
+        step.includes('Verifying') ||
         step.includes('Verificação do resultado') ||
         step.includes('Verification of the result') ||
         (step.startsWith('Verifying') && step.includes('should')) ||
@@ -138,6 +152,11 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
       // Remover a chave de tradução se presente
       if (cleanedStep.includes('verification.completed:')) {
         cleanedStep = cleanedStep.replace(/verification\.completed:\s+/, '');
+      }
+      
+      // Lidar com o texto da operação que não é renderizado corretamente
+      if (cleanedStep.includes('{{operation')) {
+        cleanedStep = cleanedStep.replace(/{{operation.*?}}/, '').trim();
       }
       
       return (
@@ -236,11 +255,19 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
           </div>
         );
       } else if (verificationCompletedMatch) {
+        // Limpar qualquer sintaxe de handlebars restante
+        let cleanedStep = verificationCompletedMatch[2] || step;
+        
+        // Lidar com o texto da operação que não é renderizado corretamente
+        if (cleanedStep.includes('{{operation')) {
+          cleanedStep = cleanedStep.replace(/{{operation.*?}}/, '').trim();
+        }
+        
         return (
           <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
             <div className="flex items-center">
               <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
-              <p className="text-green-700 dark:text-green-300 font-medium">{step}</p>
+              <p className="text-green-700 dark:text-green-300 font-medium">{cleanedStep}</p>
             </div>
           </div>
         );
@@ -1281,11 +1308,18 @@ const StepByStepExplanation: React.FC<StepByStepExplanationProps> = ({
     // Verificar padrão de verificação concluída com chave de tradução no início, que pode ter sido perdida
     if (typeof step === 'string' && step.startsWith('verification.completed:')) {
       const cleanedStep = step.replace(/^verification\.completed:\s+/, '');
+      
+      // Limpar qualquer sintaxe de handlebars restante
+      let displayText = cleanedStep;
+      if (displayText.includes('{{operation')) {
+        displayText = displayText.replace(/{{operation.*?}}/, '').trim();
+      }
+      
       return (
         <div key={index} className="p-3 bg-green-50 dark:bg-green-900/30 rounded-md ml-4 border-l-2 border-green-300 dark:border-green-600 shadow-sm my-2 font-bold">
           <div className="flex items-center">
             <HiOutlineCheck className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0 h-5 w-5" />
-            <p className="text-green-700 dark:text-green-300 font-medium">{cleanedStep}</p>
+            <p className="text-green-700 dark:text-green-300 font-medium">{displayText}</p>
           </div>
         </div>
       );
