@@ -116,10 +116,10 @@ const TrigonometricRenderer: React.FC<TrigonometricRendererProps> = ({ step, ind
       (step.includes('seno') && !step.includes('cosseno')) || 
       (step.includes('sine') && !step.includes('cosine'))) {
     return (
-      <div key={index} className="p-3 bg-red-50 dark:bg-red-900/30 rounded-md ml-4 border-l-2 border-red-300 dark:border-red-600 my-2">
+      <div key={index} className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-md ml-4 border-l-2 border-purple-300 dark:border-purple-600 my-2">
         <div className="flex items-center">
-          <HiOutlineChartPie className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0 h-5 w-5" />
-          <span className="text-red-700 dark:text-red-300 font-medium">{step}</span>
+          <HiOutlineChartPie className="text-purple-600 dark:text-purple-400 mr-2 flex-shrink-0 h-5 w-5" />
+          <span className="text-purple-700 dark:text-purple-300 font-medium">{step}</span>
         </div>
       </div>
     );
@@ -244,7 +244,7 @@ const TrigonometricRenderer: React.FC<TrigonometricRendererProps> = ({ step, ind
   }
 
   // Resultados
-  const resultMatch = step.match(/^(Resultado:|Resultado final:|Solução:|Result:|Final result:|Solution:)(.*)$/);
+  const resultMatch = step.match(/^(Resultado:|Resultado final:|Solução|Result:|Final result:|Solution)(.*)$/);
   if (resultMatch || step.includes('solução') || step.includes('concluído') ||
       step.includes('solution') || step.includes('completed')) {
     return (

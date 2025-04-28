@@ -6,6 +6,7 @@ import {
   parseInterval,
   getTrigonometricGraphExamples
 } from '../../utils/mathUtilsTrigonometria/index';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 export type GraphType = 'seno' | 'cosseno' | 'tangente' | 'personalizado';
@@ -166,10 +167,11 @@ function graficosTrigonometricosReducer(
 
 export function useGraficosTrigonometricosSolver() {
   const [state, dispatch] = useReducer(graficosTrigonometricosReducer, initialState);
+  const { t } = useTranslation(['trigonometry', 'translation']);
 
   // Obter exemplos com base no estado atual
   const getFilteredExamples = () => {
-    return getTrigonometricGraphExamples().filter(example => 
+    return getTrigonometricGraphExamples(t).filter(example => 
       example.type === state.graphType || example.type === 'personalizado'
     );
   };
@@ -189,7 +191,7 @@ export function useGraficosTrigonometricosSolver() {
       if (state.graphType === 'personalizado') {
         // Validar função personalizada
         if (!state.funcao.trim()) {
-          dispatch({ type: 'SET_ERROR', message: 'Por favor, insira uma função trigonométrica.' });
+          dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.empty_function') });
           return;
         }
         
@@ -198,7 +200,7 @@ export function useGraficosTrigonometricosSolver() {
                              /\b(sen|cos|tan|cot|sec|csc|sin|tg|cotg)(\^?\d+)?\s*\(/i.test(state.funcao);
         
         if (!temFuncaoTrig) {
-          dispatch({ type: 'SET_ERROR', message: 'Sua entrada deve conter pelo menos uma função trigonométrica (sen, cos, tan, etc.).' });
+          dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.no_trig_function') });
           return;
         }
       } else {
@@ -211,16 +213,18 @@ export function useGraficosTrigonometricosSolver() {
           const d = processPiValue(state.verticalShift);
           
           if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
-            dispatch({ type: 'SET_ERROR', message: 'Por favor, insira valores numéricos válidos para os parâmetros.' });
+            dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.invalid_parameters') });
             return;
           }
           
           if (b === 0) {
-            dispatch({ type: 'SET_ERROR', message: 'O período não pode ser zero.' });
+            dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.zero_period') });
             return;
           }
         } catch (error) {
-          dispatch({ type: 'SET_ERROR', message: `Erro ao processar parâmetros: ${error instanceof Error ? error.message : String(error)}` });
+          dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.parameter_processing', { 
+            message: error instanceof Error ? error.message : String(error) 
+          })});
           return;
         }
       }
@@ -229,7 +233,7 @@ export function useGraficosTrigonometricosSolver() {
       let [start, end] = parseInterval(state.interval);
       
       if (start >= end) {
-        dispatch({ type: 'SET_ERROR', message: 'O limite inferior do intervalo deve ser menor que o limite superior.' });
+        dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.invalid_interval') });
         return;
       }
       
@@ -250,7 +254,7 @@ export function useGraficosTrigonometricosSolver() {
       );
       
       if (pontosFuncao.length === 0) {
-        dispatch({ type: 'SET_ERROR', message: 'Não foi possível gerar pontos para esta função no intervalo especificado.' });
+        dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.no_points_generated') });
         return;
       }
       
@@ -262,17 +266,30 @@ export function useGraficosTrigonometricosSolver() {
         b,
         c,
         d,
-        state.funcao
+        state.funcao,
+        t
       );
       
       // Formatar o texto do resultado
-      let resultText = `Gráfico da função ${state.graphType === 'personalizado' ? state.funcao : state.graphType} gerado com sucesso.`;
+      let resultText = '';
       
-      if (state.graphType !== 'personalizado') {
-        resultText += ` Parâmetros: Amplitude=${a}, Período=${b}, Defasagem=${c}, Deslocamento Vertical=${d}.`;
+      if (state.graphType === 'personalizado') {
+        resultText = t('trigonometry:trigonometric_graphs.results.custom_function', { 
+          function: state.funcao,
+          interval_start: formatInterval(start),
+          interval_end: formatInterval(end)
+        });
+      } else {
+        resultText = t('trigonometry:trigonometric_graphs.results.standard_function', { 
+          function: t(`trigonometry:trigonometric_graphs.function_names.${state.graphType}`),
+          amplitude: a,
+          period: b,
+          phase_shift: c,
+          vertical_shift: d,
+          interval_start: formatInterval(start),
+          interval_end: formatInterval(end)
+        });
       }
-      
-      resultText += ` Intervalo: [${formatInterval(start)}, ${formatInterval(end)}].`;
       
       dispatch({ 
         type: 'SET_RESULT', 
@@ -282,7 +299,9 @@ export function useGraficosTrigonometricosSolver() {
       });
     } catch (error) {
       console.error("Erro ao gerar gráfico:", error);
-      dispatch({ type: 'SET_ERROR', message: `Erro ao gerar o gráfico: ${error instanceof Error ? error.message : String(error)}` });
+      dispatch({ type: 'SET_ERROR', message: t('trigonometry:trigonometric_graphs.errors.graph_generation', {
+        message: error instanceof Error ? error.message : String(error)
+      })});
     }
   };
 

@@ -6,6 +6,7 @@ import {
   parseInterval,
   getTrigonometricEquationExamples
 } from '../../utils/mathUtilsTrigonometria/index';
+import { useTranslation } from 'react-i18next';
 
 // Definições de tipo
 interface FormattedSolution {
@@ -106,10 +107,11 @@ function equacoesTrigonometricasReducer(
 
 export function useEquacoesTrigonometricasSolver() {
   const [state, dispatch] = useReducer(equacoesTrigonometricasReducer, initialState);
+  const { t } = useTranslation(['trigonometry', 'translation']);
 
   // Obter exemplos com base no estado atual
   const getExamples = () => {
-    return getTrigonometricEquationExamples();
+    return getTrigonometricEquationExamples(t);
   };
 
   // Aplicar um exemplo ao estado atual
@@ -126,7 +128,7 @@ export function useEquacoesTrigonometricasSolver() {
     if (!state.equation.trim()) {
       dispatch({ 
         type: 'SET_ERROR', 
-        message: 'Por favor, insira uma equação trigonométrica.' 
+        message: t('trigonometry:trigonometric_equations.errors.empty_equation')
       });
       return;
     }
@@ -136,7 +138,7 @@ export function useEquacoesTrigonometricasSolver() {
     if (!hasTrigFunction) {
       dispatch({ 
         type: 'SET_ERROR', 
-        message: 'Sua entrada deve conter pelo menos uma função trigonométrica (sen, cos, tan, etc.).' 
+        message: t('trigonometry:trigonometric_equations.errors.no_trig_function')
       });
       return;
     }
@@ -146,15 +148,17 @@ export function useEquacoesTrigonometricasSolver() {
       try {
         const [testStart, testEnd] = parseInterval(state.interval);
         if (isNaN(testStart) || isNaN(testEnd)) {
-          throw new Error('Os limites do intervalo devem ser valores numéricos válidos.');
+          throw new Error(t('trigonometry:trigonometric_equations.errors.invalid_interval_values'));
         }
         if (testStart >= testEnd) {
-          throw new Error('O limite inferior deve ser menor que o limite superior.');
+          throw new Error(t('trigonometry:trigonometric_equations.errors.interval_start_greater'));
         }
       } catch (error) {
         dispatch({ 
           type: 'SET_ERROR', 
-          message: `Erro no intervalo: ${error instanceof Error ? error.message : String(error)}` 
+          message: t('trigonometry:trigonometric_equations.errors.interval_error', { 
+            message: error instanceof Error ? error.message : String(error) 
+          })
         });
         return;
       }
@@ -163,7 +167,7 @@ export function useEquacoesTrigonometricasSolver() {
       if (!state.equation.includes('=')) {
         dispatch({ 
           type: 'SET_ERROR', 
-          message: 'A equação deve conter um sinal de igual (=).' 
+          message: t('trigonometry:trigonometric_equations.errors.missing_equals')
         });
         return;
       }
@@ -190,22 +194,25 @@ export function useEquacoesTrigonometricasSolver() {
         const calculationSteps: string[] = [];
         let stepCount = 1;
 
-        calculationSteps.push(`Passo ${stepCount}: Analisar a equação trigonométrica`);
-        calculationSteps.push(`Equação: ${state.equation}`);
-        calculationSteps.push(`Reescrevendo como: ${left} - (${right}) = 0`);
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.analyze', { step: stepCount }));
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.equation', { equation: state.equation }));
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.rewrite', { left, right }));
         
         stepCount++;
-        calculationSteps.push(`Passo ${stepCount}: Definir o intervalo de busca`);
-        calculationSteps.push(`Intervalo: [${formatInterval(start)}, ${formatInterval(end)}]`);
-        calculationSteps.push(`Valores originais do intervalo: [${start}, ${end}]`);
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.define_interval', { step: stepCount }));
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.interval_format', { 
+          start: formatInterval(start), 
+          end: formatInterval(end) 
+        }));
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.interval_original', { start, end }));
         
         // Método de busca de raiz
         const numSegments = 1000;
         const segmentSize = (end - start) / numSegments;
         
         stepCount++;
-        calculationSteps.push(`Passo ${stepCount}: Buscar soluções no intervalo`);
-        calculationSteps.push(`Método: Busca por mudanças de sinal da função diferença em ${numSegments} segmentos`);
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.find_solutions', { step: stepCount }));
+        calculationSteps.push(t('trigonometry:trigonometric_equations.steps.method', { segments: numSegments }));
         
         const solutions: number[] = [];
         const precisionBisection = 1e-10;
@@ -290,24 +297,28 @@ export function useEquacoesTrigonometricasSolver() {
         
         // Formatar os resultados
         if (solutions.length === 0) {
-          calculationSteps.push(`Não foram encontradas soluções no intervalo especificado.`);
-          calculationSteps.push(`Isso pode ocorrer porque a equação não tem solução no intervalo ou porque a função não muda de sinal.`);
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.no_solutions_found'));
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.no_solutions_reason'));
           
           dispatch({ 
             type: 'SET_RESULT', 
-            result: 'Não foram encontradas soluções no intervalo especificado.',
+            result: t('trigonometry:trigonometric_equations.results.no_solutions'),
             steps: calculationSteps,
             solutions: []
           });
         } else {
-          calculationSteps.push(`Foram encontradas ${solutions.length} soluções no intervalo especificado:`);
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.solutions_found', { count: solutions.length }));
           
           // Formatar as soluções
           const formattedSols: FormattedSolution[] = solutions.map((solution, index) => {
             const solutionRadians = formatInterval(solution);
             const solutionDegrees = roundToDecimals(radiansToDegrees(solution), 4);
             
-            calculationSteps.push(`Solução ${index + 1}: x = ${solutionRadians} rad = ${solutionDegrees}°`);
+            calculationSteps.push(t('trigonometry:trigonometric_equations.steps.solution_value', { 
+              index: index + 1, 
+              radians: solutionRadians, 
+              degrees: solutionDegrees 
+            }));
             
             // Verificar a solução
             try {
@@ -315,17 +326,30 @@ export function useEquacoesTrigonometricasSolver() {
               const rightValue = evaluateTrigonometricExpression(right, solution);
               const difference = Math.abs(leftValue - rightValue);
               
-              calculationSteps.push(`Verificação: ${left} = ${roundToDecimals(leftValue, 6)}, ${right} = ${roundToDecimals(rightValue, 6)}`);
-              calculationSteps.push(`Diferença: ${roundToDecimals(difference, 10)} (deve ser próxima de zero)`);
+              calculationSteps.push(t('trigonometry:trigonometric_equations.steps.verification', { 
+                left, 
+                leftValue: roundToDecimals(leftValue, 6), 
+                right, 
+                rightValue: roundToDecimals(rightValue, 6) 
+              }));
+              calculationSteps.push(t('trigonometry:trigonometric_equations.steps.difference', { 
+                diff: roundToDecimals(difference, 10) 
+              }));
               
               // Adicionar uma nota sobre a periodicidade
               if (state.equation.includes('sen') || state.equation.includes('sin') || state.equation.includes('cos')) {
-                calculationSteps.push(`Observe que ${solutionRadians} + 2nπ também é solução para qualquer inteiro n.`);
+                calculationSteps.push(t('trigonometry:trigonometric_equations.steps.periodicity_sin_cos', { 
+                  solution: solutionRadians 
+                }));
               } else if (state.equation.includes('tan') || state.equation.includes('tg')) {
-                calculationSteps.push(`Observe que ${solutionRadians} + nπ também é solução para qualquer inteiro n.`);
+                calculationSteps.push(t('trigonometry:trigonometric_equations.steps.periodicity_tan', { 
+                  solution: solutionRadians 
+                }));
               }
             } catch (error) {
-              calculationSteps.push(`Não foi possível verificar esta solução: ${error}`);
+              calculationSteps.push(t('trigonometry:trigonometric_equations.steps.verification_error', { 
+                error 
+              }));
             }
             
             return {
@@ -336,16 +360,20 @@ export function useEquacoesTrigonometricasSolver() {
 
           // Adicionar explicação sobre equações trigonométricas
           stepCount++;
-          calculationSteps.push(`Passo ${stepCount}: Entendendo equações trigonométricas`);
-          calculationSteps.push(`As equações trigonométricas geralmente têm infinitas soluções devido à natureza periódica das funções trigonométricas.`);
-          calculationSteps.push(`Por exemplo, se x = α é uma solução de sen(x) = k, então x = α + 2nπ também é uma solução para qualquer inteiro n.`);
-          calculationSteps.push(`Para cos(x) = k, se x = α é uma solução, então x = ±α + 2nπ também é uma solução.`);
-          calculationSteps.push(`Para tan(x) = k, se x = α é uma solução, então x = α + nπ também é uma solução.`);
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.understanding', { step: stepCount }));
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.infinite_solutions'));
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.sin_solutions'));
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.cos_solutions'));
+          calculationSteps.push(t('trigonometry:trigonometric_equations.steps.tan_solutions'));
           
           // Formatar para exibição
-          const resultText = `Soluções encontradas: ${formattedSols.map(sol => 
-            `x = ${sol.radians} rad = ${sol.degrees}°`
-          ).join('; ')}`;
+          const resultText = formattedSols.map((sol, index) => 
+            t('trigonometry:trigonometric_equations.results.solution_format', {
+              index: index + 1,
+              radians: sol.radians,
+              degrees: sol.degrees
+            })
+          ).join('; ');
           
           dispatch({ 
             type: 'SET_RESULT', 
@@ -359,15 +387,24 @@ export function useEquacoesTrigonometricasSolver() {
         console.error("Erro ao analisar intervalo:", error);
         
         // Melhorar a mensagem de erro
-        let errorMessage = `Erro ao processar o intervalo: ${error instanceof Error ? error.message : String(error)}`;
+        let errorMessage;
         
         if (error instanceof Error) {
           if (error.message.includes('Expressão inválida')) {
-            errorMessage = "Formato de intervalo inválido. Use formatos como '0,2π', '-π,π', ou '0,6.28'. " +
-              "Para representar π, use o símbolo π ou 'pi'. Para multiplicar, use por exemplo '2*π' ou '2π'.";
+            errorMessage = t('trigonometry:trigonometric_equations.errors.syntax_error');
           } else if (error.message.includes('Formato de intervalo inválido')) {
-            errorMessage = "O intervalo deve ser especificado como 'início,fim', por exemplo: '0,2π' ou '-π,π'";
+            errorMessage = t('trigonometry:trigonometric_equations.errors.process_error', { 
+              message: error.message 
+            });
+          } else {
+            errorMessage = t('trigonometry:trigonometric_equations.errors.process_error', { 
+              message: error.message 
+            });
           }
+        } else {
+          errorMessage = t('trigonometry:trigonometric_equations.errors.process_error', { 
+            message: String(error) 
+          });
         }
         
         dispatch({ type: 'SET_ERROR', message: errorMessage });
@@ -378,13 +415,22 @@ export function useEquacoesTrigonometricasSolver() {
       console.error("Erro na resolução:", error);
       
       // Mensagens de erro mais amigáveis
-      let errorMessage = `Erro ao resolver a equação: ${error instanceof Error ? error.message : String(error)}`;
+      let errorMessage;
       
-      if (error instanceof Error && error.message.includes('SyntaxError')) {
-        errorMessage = "Há um erro de sintaxe na equação. Verifique se você escreveu corretamente as funções trigonométricas e operadores. " +
-          "Por exemplo, use '2*sen(x)' ou deixe sem espaços entre o número e a função: '2sen(x)'.";
-      } else if (error instanceof Error && error.message.includes('Divisão por zero')) {
-        errorMessage = "Ocorreu uma divisão por zero ao avaliar a equação. Verifique se você está usando funções como tan(x) em pontos onde elas não são definidas.";
+      if (error instanceof Error) {
+        if (error.message.includes('SyntaxError')) {
+          errorMessage = t('trigonometry:trigonometric_equations.errors.syntax_error');
+        } else if (error.message.includes('Divisão por zero')) {
+          errorMessage = t('trigonometry:trigonometric_equations.errors.division_by_zero');
+        } else {
+          errorMessage = t('trigonometry:trigonometric_equations.errors.solve_error', { 
+            message: error.message 
+          });
+        }
+      } else {
+        errorMessage = t('trigonometry:trigonometric_equations.errors.solve_error', { 
+          message: String(error) 
+        });
       }
       
       dispatch({ type: 'SET_ERROR', message: errorMessage });

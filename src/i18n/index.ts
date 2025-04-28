@@ -9,17 +9,21 @@ import enArithmetic from './locales/en/arithmetic.json';
 import ptArithmetic from './locales/pt/arithmetic.json';
 import enFractions from './locales/en/fractions.json';
 import ptFractions from './locales/pt/fractions.json';
+import enTrigonometry from './locales/en/trigonometry.json';
+import ptTrigonometry from './locales/pt/trigonometry.json';
 
 export const resources = {
   en: {
     translation: enTranslation,
     arithmetic: enArithmetic,
-    fractions: enFractions
+    fractions: enFractions,
+    trigonometry: enTrigonometry
   },
   pt: {
     translation: ptTranslation,
     arithmetic: ptArithmetic,
-    fractions: ptFractions
+    fractions: ptFractions,
+    trigonometry: ptTrigonometry
   }
 };
 

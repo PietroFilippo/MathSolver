@@ -1,5 +1,6 @@
 // Utilidades para gerar passos explicativos passo a passo para funções trigonométricas
 import { formatInterval, formatPiValue } from '../mathUtils';
+import { TFunction } from 'i18next';
 
 // Gera passos explicativos para um gráfico de função trigonométrica
 // Fornece uma análise detalhada das propriedades da função (período, amplitude, zeros, etc.)
@@ -10,7 +11,8 @@ export function generateGraphExplanationSteps(
     periodo: number = 1,
     defasagem: number = 0,
     deslocamentoVertical: number = 0,
-    funcaoPersonalizada: string = ''
+    funcaoPersonalizada: string = '',
+    t?: TFunction
 ): string[] {
     const calculationSteps: string[] = [];
     
@@ -20,47 +22,47 @@ export function generateGraphExplanationSteps(
     // Passo 1: Identificar o tipo de função e sua forma geral
     let stepCount = 1;
     
-    calculationSteps.push(`Passo ${stepCount}: Identificar o tipo de função e sua forma geral`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.identify_function', { step: stepCount }) : `Passo ${stepCount}: Identificar o tipo de função e sua forma geral`);
     
     if (tipoGrafico === 'personalizado') {
-        calculationSteps.push(`Função personalizada: ${funcaoPersonalizada}`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.custom_function', { function: funcaoPersonalizada }) : `Função personalizada: ${funcaoPersonalizada}`);
     } else {
         let funcaoBase = '';
         let formula = '';
         
         switch (tipoGrafico) {
             case 'seno':
-                funcaoBase = 'f(x) = sen(x)';
-                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · sen(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
+                funcaoBase = t ? t('trigonometry:trigonometric_graphs.functions.sine_base') : 'f(x) = sen(x)';
+                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · ${t ? t('trigonometry:trigonometric_graphs.functions.sine_func') : 'sen'}(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
                 break;
             case 'cosseno':
-                funcaoBase = 'f(x) = cos(x)';
-                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · cos(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
+                funcaoBase = t ? t('trigonometry:trigonometric_graphs.functions.cosine_base') : 'f(x) = cos(x)';
+                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · ${t ? t('trigonometry:trigonometric_graphs.functions.cosine_func') : 'cos'}(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
                 break;
             case 'tangente':
-                funcaoBase = 'f(x) = tan(x)';
-                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · tan(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
+                funcaoBase = t ? t('trigonometry:trigonometric_graphs.functions.tangent_base') : 'f(x) = tan(x)';
+                formula = `f(x) = ${amplitude !== 1 ? amplitude : ''} · ${t ? t('trigonometry:trigonometric_graphs.functions.tangent_func') : 'tan'}(${periodo !== 1 ? formatarNumero(1/periodo) + ' · ' : ''}(x ${defasagem !== 0 ? (defasagem > 0 ? '- ' + formatarNumero(defasagem) : '+ ' + formatarNumero(-defasagem)) : ''}))${deslocamentoVertical !== 0 ? (deslocamentoVertical > 0 ? ' + ' + formatarNumero(deslocamentoVertical) : ' - ' + formatarNumero(-deslocamentoVertical)) : ''}`;
                 break;
         }
         
-        calculationSteps.push(`Função básica: ${funcaoBase}`);
-        calculationSteps.push(`Função completa: ${formula}`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.basic_function', { function: funcaoBase }) : `Função básica: ${funcaoBase}`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.complete_function', { function: formula }) : `Função completa: ${formula}`);
     }
     
     // Passo 2: Analisar o domínio e intervalo
     stepCount++;
-    calculationSteps.push(`Passo ${stepCount}: Analisar o domínio e o intervalo`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.analyze_domain', { step: stepCount }) : `Passo ${stepCount}: Analisar o domínio e o intervalo`);
     
     const inicioFormatado = formatInterval(intervalo[0]);
     const fimFormatado = formatInterval(intervalo[1]);
     
-    calculationSteps.push(`Intervalo selecionado: [${inicioFormatado}, ${fimFormatado}]`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.selected_interval', { start: inicioFormatado, end: fimFormatado }) : `Intervalo selecionado: [${inicioFormatado}, ${fimFormatado}]`);
     
     if (tipoGrafico === 'tangente') {
-        calculationSteps.push(`A função tangente tem assíntotas verticais em x = (2n+1)π/2, onde n é um inteiro.`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.tangent_asymptotes_info') : `A função tangente tem assíntotas verticais em x = (2n+1)π/2, onde n é um inteiro.`);
         
         // Identificar assíntotas no intervalo
-        const assintotas = [];
+        const assintotas: string[] = [];
         for (let n = -100; n <= 100; n++) {
             const assintota = (n + 0.5) * Math.PI;
             if (assintota >= intervalo[0] && assintota <= intervalo[1]) {
@@ -69,25 +71,25 @@ export function generateGraphExplanationSteps(
         }
         
         if (assintotas.length > 0) {
-            calculationSteps.push(`Assíntotas no intervalo: x = ${assintotas.join(', x = ')}`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.asymptotes_in_interval', { asymptotes: assintotas.join(', x = ') }) : `Assíntotas no intervalo: x = ${assintotas.join(', x = ')}`);
         } else {
-            calculationSteps.push(`Não há assíntotas no intervalo selecionado.`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.no_asymptotes') : `Não há assíntotas no intervalo selecionado.`);
         }
     }
     
     // Passo 3: Analisar as propriedades da função
     stepCount++;
-    calculationSteps.push(`Passo ${stepCount}: Analisar as propriedades da função`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.analyze_properties', { step: stepCount }) : `Passo ${stepCount}: Analisar as propriedades da função`);
     
     if (tipoGrafico !== 'personalizado') {
         // Amplitude
         if (amplitude !== 1) {
-            calculationSteps.push(`Amplitude: |${amplitude}| = ${Math.abs(amplitude)}`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.amplitude_value', { amplitude: amplitude, abs_amplitude: Math.abs(amplitude) }) : `Amplitude: |${amplitude}| = ${Math.abs(amplitude)}`);
             if (amplitude < 0) {
-                calculationSteps.push(`Como a amplitude é negativa, o gráfico está invertido verticalmente (refletido sobre o eixo x).`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.negative_amplitude') : `Como a amplitude é negativa, o gráfico está invertido verticalmente (refletido sobre o eixo x).`);
             }
         } else {
-            calculationSteps.push(`Amplitude: 1 (padrão)`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.default_amplitude') : `Amplitude: 1 (padrão)`);
         }
         
         // Período
@@ -102,46 +104,46 @@ export function generateGraphExplanationSteps(
                 break;
         }
         
-        calculationSteps.push(`Período: ${formatarNumero(periodoReal)}`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.period_value', { period: formatarNumero(periodoReal) }) : `Período: ${formatarNumero(periodoReal)}`);
         
         if (periodo !== 1) {
             if (periodo > 1) {
-                calculationSteps.push(`Como o período é maior que o padrão, o gráfico está esticado horizontalmente.`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.larger_period') : `Como o período é maior que o padrão, o gráfico está esticado horizontalmente.`);
             } else {
-                calculationSteps.push(`Como o período é menor que o padrão, o gráfico está comprimido horizontalmente.`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.smaller_period') : `Como o período é menor que o padrão, o gráfico está comprimido horizontalmente.`);
             }
         }
         
         // Defasagem
         if (defasagem !== 0) {
-            const direcao = defasagem > 0 ? 'direita' : 'esquerda';
-            calculationSteps.push(`Defasagem: ${formatarNumero(Math.abs(defasagem))} para a ${direcao}`);
+            const direcao = defasagem > 0 ? (t ? t('trigonometry:trigonometric_graphs.directions.right') : 'direita') : (t ? t('trigonometry:trigonometric_graphs.directions.left') : 'esquerda');
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.phase_shift', { shift: formatarNumero(Math.abs(defasagem)), direction: direcao }) : `Defasagem: ${formatarNumero(Math.abs(defasagem))} para a ${direcao}`);
         } else {
-            calculationSteps.push(`Defasagem: 0 (não há deslocamento horizontal)`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.no_phase_shift') : `Defasagem: 0 (não há deslocamento horizontal)`);
         }
         
         // Deslocamento vertical
         if (deslocamentoVertical !== 0) {
-            const direcao = deslocamentoVertical > 0 ? 'cima' : 'baixo';
-            calculationSteps.push(`Deslocamento vertical: ${Math.abs(deslocamentoVertical)} para ${direcao}`);
+            const direcao = deslocamentoVertical > 0 ? (t ? t('trigonometry:trigonometric_graphs.directions.up') : 'cima') : (t ? t('trigonometry:trigonometric_graphs.directions.down') : 'baixo');
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.vertical_shift', { shift: Math.abs(deslocamentoVertical), direction: direcao }) : `Deslocamento vertical: ${Math.abs(deslocamentoVertical)} para ${direcao}`);
         } else {
-            calculationSteps.push(`Deslocamento vertical: 0 (não há deslocamento vertical)`);
+            calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.no_vertical_shift') : `Deslocamento vertical: 0 (não há deslocamento vertical)`);
         }
     } else {
-        calculationSteps.push(`Para funções personalizadas, as propriedades dependem da expressão específica.`);
-        calculationSteps.push(`Expressão: ${funcaoPersonalizada}`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.custom_function_properties') : `Para funções personalizadas, as propriedades dependem da expressão específica.`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.custom_expression', { expression: funcaoPersonalizada }) : `Expressão: ${funcaoPersonalizada}`);
     }
     
     // Passo 4: Valores notáveis
     stepCount++;
-    calculationSteps.push(`Passo ${stepCount}: Calcular valores notáveis`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.calculate_notable_values', { step: stepCount }) : `Passo ${stepCount}: Calcular valores notáveis`);
     
     if (tipoGrafico !== 'personalizado') {
         // Para seno e cosseno, calcular zeros, máximos e mínimos no intervalo
         if (tipoGrafico === 'seno' || tipoGrafico === 'cosseno') {
             try {
                 // Zeros (onde f(x) = 0)
-                const zeros = [];
+                const zeros: string[] = [];
                 let k = -100;
                 
                 while (k <= 100) {
@@ -171,11 +173,11 @@ export function generateGraphExplanationSteps(
                 
                 // Verificar se há deslocamento vertical que afeta os zeros
                 if (deslocamentoVertical !== 0) {
-                    calculationSteps.push(`Com o deslocamento vertical de ${deslocamentoVertical}, os zeros da função original não correspondem mais aos zeros da função deslocada.`);
+                    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.vertical_shift_affect_zeros', { shift: deslocamentoVertical }) : `Com o deslocamento vertical de ${deslocamentoVertical}, os zeros da função original não correspondem mais aos zeros da função deslocada.`);
                 } else if (zeros.length > 0) {
-                    calculationSteps.push(`Zeros da função no intervalo: x = ${zeros.join(', x = ')}`);
+                    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.zeros_in_interval', { zeros: zeros.join(', x = ') }) : `Zeros da função no intervalo: x = ${zeros.join(', x = ')}`);
                 } else {
-                    calculationSteps.push(`Não existem zeros da função no intervalo selecionado.`);
+                    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.no_zeros') : `Não existem zeros da função no intervalo selecionado.`);
                 }
                 
                 // Valores máximos e mínimos
@@ -235,19 +237,33 @@ export function generateGraphExplanationSteps(
                 }
                 
                 if (maximos.length > 0) {
-                    calculationSteps.push(`Valores máximos no intervalo: ${maximos.map(max => `f(${max.x}) = ${max.y}`).join(', ')}`);
+                    const maximosFormatted = maximos.map(max => t ? 
+                        t('trigonometry:trigonometric_graphs.steps.formatted_value', { x: max.x, y: max.y }) : 
+                        `f(${max.x}) = ${max.y}`).join(', ');
+                    
+                    calculationSteps.push(t ? 
+                        t('trigonometry:trigonometric_graphs.steps.max_values', { values: maximosFormatted }) : 
+                        `Valores máximos no intervalo: ${maximosFormatted}`);
                 }
                 
                 if (minimos.length > 0) {
-                    calculationSteps.push(`Valores mínimos no intervalo: ${minimos.map(min => `f(${min.x}) = ${min.y}`).join(', ')}`);
+                    const minimosFormatted = minimos.map(min => t ? 
+                        t('trigonometry:trigonometric_graphs.steps.formatted_value', { x: min.x, y: min.y }) : 
+                        `f(${min.x}) = ${min.y}`).join(', ');
+                    
+                    calculationSteps.push(t ? 
+                        t('trigonometry:trigonometric_graphs.steps.min_values', { values: minimosFormatted }) : 
+                        `Valores mínimos no intervalo: ${minimosFormatted}`);
                 }
                 
             } catch (error) {
-                calculationSteps.push(`Não foi possível calcular valores notáveis: ${error}`);
+                calculationSteps.push(t ? 
+                    t('trigonometry:trigonometric_graphs.steps.calculation_error', { error }) : 
+                    `Não foi possível calcular valores notáveis: ${error}`);
             }
         } else if (tipoGrafico === 'tangente') {
             // Para tangente, calcular zeros no intervalo
-            const zeros = [];
+            const zeros: string[] = [];
             let k = -100;
             
             while (k <= 100) {
@@ -266,20 +282,20 @@ export function generateGraphExplanationSteps(
             }
             
             if (deslocamentoVertical !== 0) {
-                calculationSteps.push(`Com o deslocamento vertical de ${deslocamentoVertical}, os zeros da função original não correspondem mais aos zeros da função deslocada.`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.vertical_shift_affect_zeros', { shift: deslocamentoVertical }) : `Com o deslocamento vertical de ${deslocamentoVertical}, os zeros da função original não correspondem mais aos zeros da função deslocada.`);
             } else if (zeros.length > 0) {
-                calculationSteps.push(`Zeros da função no intervalo: x = ${zeros.join(', x = ')}`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.zeros_in_interval', { zeros: zeros.join(', x = ') }) : `Zeros da função no intervalo: x = ${zeros.join(', x = ')}`);
             } else {
-                calculationSteps.push(`Não existem zeros da função no intervalo selecionado.`);
+                calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.no_zeros') : `Não existem zeros da função no intervalo selecionado.`);
             }
         }
     } else {
-        calculationSteps.push(`Para funções personalizadas, é necessária uma análise específica da expressão.`);
+        calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.custom_analysis_needed') : `Para funções personalizadas, é necessária uma análise específica da expressão.`);
     }
     
     // Passo 5: Conclusão
     stepCount++;
-    calculationSteps.push(`Passo ${stepCount}: Conclusão`);
+    calculationSteps.push(t ? t('trigonometry:trigonometric_graphs.steps.conclusion', { step: stepCount }) : `Passo ${stepCount}: Conclusão`);
     
     return calculationSteps;
 } 

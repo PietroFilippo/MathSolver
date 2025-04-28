@@ -1,0 +1,427 @@
+{
+  "trigonometric_equations": {
+    "title": "Equações Trigonométricas",
+    "description": "Esta calculadora ajuda você a resolver equações trigonométricas como sen(x) = 0.5 ou cos(2x) + 1 = 0 dentro de um intervalo específico.",
+    "labels": {
+      "equation": "Equação Trigonométrica",
+      "interval": "Intervalo para Soluções",
+      "examples": "Exemplos",
+      "calculate": "Resolver"
+    },
+    "input_help": {
+      "equation": "Use funções trigonométricas como sen, cos, tan, etc. Você pode usar ^ para potências (ex: sen^2(x)), √ para raiz quadrada (ex: √3/2) e π para representar pi.",
+      "interval": "Especifique o intervalo no formato: início,fim. Use π para representar pi. Lembre-se de que os valores dos ângulos são em radianos (π/6 = 30°, π/4 = 45°, π/3 = 60°, π/2 = 90°)."
+    },
+    "usage": {
+      "title": "Método de Utilização:",
+      "list": [
+        "Use potências com o símbolo ^: sen^2(x) + cos^2(x) = 1",
+        "Use raiz quadrada com o símbolo √: sen(x) = √3/2",
+        "As funções trigonométricas usam radianos: sen(π/6) = 0.5 (30°), sen(π/2) = 1 (90°)",
+        "Para representar pi, use o símbolo π ou 'pi'. Para multiplicar, use por exemplo '2*π' ou '2π'.",
+        "Tome cuidado com a sintaxe de espaços, por exemplo: '2 sen(x)' deve ser escrito como '2sen(x)'."
+      ]
+    },
+    "results": {
+      "title": "Resultado",
+      "solution": "Solução",
+      "solution_format": "Solução {{index}}: x = {{radians}} rad = {{degrees}}°",
+      "no_solutions": "Não foram encontradas soluções no intervalo especificado."
+    },
+    "explanation": {
+      "show": "Mostrar explicação detalhada",
+      "hide": "Ocultar explicação detalhada",
+      "title": "Solução passo a passo"
+    },
+    "errors": {
+      "empty_equation": "Por favor, insira uma equação trigonométrica.",
+      "no_trig_function": "Sua entrada deve conter pelo menos uma função trigonométrica (sen, cos, tan, etc.).",
+      "invalid_interval_values": "Os limites do intervalo devem ser valores numéricos válidos.",
+      "interval_start_greater": "O limite inferior deve ser menor que o limite superior.",
+      "interval_error": "Erro no intervalo: {{message}}",
+      "missing_equals": "A equação deve conter um sinal de igual (=).",
+      "process_error": "Erro ao processar o intervalo: {{message}}",
+      "solve_error": "Erro ao resolver a equação: {{message}}",
+      "syntax_error": "Há um erro de sintaxe na equação. Verifique se você escreveu corretamente as funções trigonométricas e operadores. Por exemplo, use '2*sen(x)' ou deixe sem espaços entre o número e a função: '2sen(x)'.",
+      "division_by_zero": "Ocorreu uma divisão por zero ao avaliar a equação. Verifique se você está usando funções como tan(x) em pontos onde elas não são definidas."
+    },
+    "steps": {
+      "analyze": "Passo {{step}}: Analisar a equação trigonométrica",
+      "equation": "Equação: {{equation}}",
+      "rewrite": "Reescrevendo como: {{left}} - ({{right}}) = 0",
+      "define_interval": "Passo {{step}}: Definir o intervalo de busca",
+      "interval_format": "Intervalo: [{{start}}, {{end}}]",
+      "interval_original": "Valores originais do intervalo: [{{start}}, {{end}}]",
+      "find_solutions": "Passo {{step}}: Buscar soluções no intervalo",
+      "method": "Método: Busca por mudanças de sinal da função diferença em {{segments}} segmentos",
+      "no_solutions_found": "Não foram encontradas soluções no intervalo especificado.",
+      "no_solutions_reason": "Isso pode ocorrer porque a equação não tem solução no intervalo ou porque a função não muda de sinal.",
+      "solutions_found": "Foram encontradas {{count}} soluções no intervalo especificado:",
+      "solution_value": "Solução {{index}}: x = {{radians}} rad = {{degrees}}°",
+      "verification": "Verificação: {{left}} = {{leftValue}}, {{right}} = {{rightValue}}",
+      "difference": "Diferença: {{diff}} (deve ser próxima de zero)",
+      "periodicity_sin_cos": "Observe que {{solution}} + 2nπ também é solução para qualquer inteiro n.",
+      "periodicity_tan": "Observe que {{solution}} + nπ também é solução para qualquer inteiro n.",
+      "verification_error": "Não foi possível verificar esta solução: {{error}}",
+      "understanding": "Passo {{step}}: Entendendo equações trigonométricas",
+      "infinite_solutions": "As equações trigonométricas geralmente têm infinitas soluções devido à natureza periódica das funções trigonométricas.",
+      "sin_solutions": "Por exemplo, se x = α é uma solução de sen(x) = k, então x = α + 2nπ também é uma solução para qualquer inteiro n.",
+      "cos_solutions": "Para cos(x) = k, se x = α é uma solução, então x = ±α + 2nπ também é uma solução.",
+      "tan_solutions": "Para tan(x) = k, se x = α é uma solução, então x = α + nπ também é uma solução."
+    },
+    "mathematical_concept": {
+      "title": "Conceito Matemático",
+      "properties": {
+        "title": "Propriedades",
+        "description": "As equações trigonométricas geralmente possuem infinitas soluções devido à natureza periódica das funções trigonométricas.",
+        "sine": "Seno: Se x = α é solução de sen(x) = k, então x = α + 2nπ também é solução para qualquer inteiro n.",
+        "cosine": "Cosseno: Se x = α é solução de cos(x) = k, então x = ±α + 2nπ também é solução para qualquer inteiro n.",
+        "tangent": "Tangente: Se x = α é solução de tan(x) = k, então x = α + nπ também é solução para qualquer inteiro n."
+      },
+      "solution_method": {
+        "title": "Método de Solução",
+        "description": "As equações trigonométricas podem ser resolvidas através de:",
+        "known_values": "Valores conhecidos: Utilizar ângulos notáveis (30°, 45°, 60°, etc)",
+        "identities": "Identidades: Aplicar identidades trigonométricas para simplificar",
+        "numerical_methods": "Métodos numéricos: Para equações complexas",
+        "reformulation": "Reformulação: Converter para formas mais simples"
+      },
+      "notable_angles": {
+        "title": "Ângulos Notáveis",
+        "angle_degrees": "Ângulo (graus)",
+        "angle_rad": "Ângulo (rad)",
+        "sin": "sen(x)",
+        "cos": "cos(x)",
+        "tan": "tan(x)"
+      },
+      "solution_tip": {
+        "title": "Dica de Resolução",
+        "description": "Ao resolver equações trigonométricas, é fundamental identificar o período da função envolvida (2π para seno e cosseno, π para tangente) para determinar corretamente todas as soluções no intervalo definido."
+      }
+    },
+    "examples": {
+      "sin_zero": "Zeros do seno",
+      "cos_zero": "Zeros do cosseno",
+      "tan_zero": "Zeros da tangente",
+      "sin_half": "sen(x) = 0.5",
+      "cos_half": "cos(x) = 0.5",
+      "sin_2x_zero": "sen(2x) = 0",
+      "cos_half_x_zero": "cos(x/2) = 0",
+      "two_sin_one": "2sen(x) = 1",
+      "sin_squared_quarter": "sen²(x) = 0.25",
+      "cos_plus_one": "cos(x) + 1 = 0"
+    }
+  },
+  "trigonometric_functions": {
+    "title": "Funções Trigonométricas",
+    "description": "Esta calculadora ajuda você a calcular funções trigonométricas (seno, cosseno, tangente) e suas inversas (arco seno, arco cosseno, arco tangente).",
+    "labels": {
+      "function": "Função",
+      "angle": "Ângulo",
+      "value": "Valor",
+      "angle_unit_input": "Unidade de Ângulo da Entrada",
+      "angle_unit_output": "Unidade de Ângulo da Saída",
+      "examples": "Exemplos",
+      "calculate": "Calcular"
+    },
+    "function_names": {
+      "sin": "Seno (sen)",
+      "cos": "Cosseno (cos)",
+      "tan": "Tangente (tan)",
+      "asin": "Arco Seno (arcsen)",
+      "acos": "Arco Cosseno (arccos)",
+      "atan": "Arco Tangente (arctan)"
+    },
+    "placeholders": {
+      "angle": "Digite o ângulo",
+      "value": "Digite o valor"
+    },
+    "units": {
+      "degrees": "Graus (°)",
+      "radians": "Radianos (rad)"
+    },
+    "results": {
+      "title": "Resultado",
+      "format": "{{function}}({{input}}{{unit}}) = {{result}}{{result_unit}}"
+    },
+    "explanation": {
+      "show": "Mostrar explicação detalhada",
+      "hide": "Ocultar explicação detalhada",
+      "title": "Solução passo a passo"
+    },
+    "errors": {
+      "invalid_value": "Por favor, insira um valor numérico válido ou uma expressão como π/6",
+      "undefined_tangent": "Tangente indefinida para este ângulo (cos(x) = 0)",
+      "invalid_arcsin": "O arco seno é definido apenas para valores entre -1 e 1",
+      "invalid_arccos": "O arco cosseno é definido apenas para valores entre -1 e 1",
+      "function_not_recognized": "Função não reconhecida"
+    },
+    "steps": {
+      "convert_to_radians": "Passo {{step}}: Converter o ângulo de graus para radianos",
+      "convert_explanation": "Para calcular funções trigonométricas, primeiro precisamos converter o ângulo para radianos, pois é a unidade padrão para cálculos matemáticos.",
+      "convert_formula": "Fórmula: radians = degrees × (π/180)",
+      "convert_calculation": "{{value}}° = {{value}} × (π/180) = {{result}} radianos",
+      "check_unit": "Passo {{step}}: Verificar a unidade do ângulo",
+      "already_radians": "O valor {{value}} já está em radianos, então não é necessária conversão.",
+      "calculate_function": "Passo {{step}}: Calcular {{function}}({{input}}{{unit}})",
+      "sine_explanation": "O seno de um ângulo representa a razão entre o cateto oposto e a hipotenusa em um triângulo retângulo.",
+      "cosine_explanation": "O cosseno de um ângulo representa a razão entre o cateto adjacente e a hipotenusa em um triângulo retângulo.",
+      "tangent_explanation": "A tangente de um ângulo representa a razão entre o seno e o cosseno, ou entre o cateto oposto e o cateto adjacente.",
+      "calculation_result": "{{function}}({{input}}{{unit}}) = {{result}}",
+      "tangent_undefined": "A tangente é indefinida quando cos(x) = 0, o que ocorre em ângulos de 90°, 270°, etc.",
+      "convert_to_degrees": "Passo {{step}}: Converter o resultado de radianos para graus",
+      "convert_output_formula": "Fórmula: degrees = radians × (180/π)",
+      "convert_output_calculation": "{{radians}} radianos = {{radians}} × (180/π) = {{degrees}}°",
+      "output_unit": "Passo {{step}}: Verificar a unidade do resultado",
+      "already_output_radians": "O resultado já está em radianos, que é a unidade solicitada.",
+      "verify_result": "Passo {{step}}: Verificar o resultado usando identidades trigonométricas",
+      "fundamental_identity": "Identidade fundamental: sen²(x) + cos²(x) = 1",
+      "verify_identity": "Verificação: sen²({{value}}) + cos²({{value}}) = {{result}}",
+      "tangent_identity": "Identidade da tangente: tan(x) = sen(x) / cos(x)",
+      "verify_tangent": "Verificação: sen({{value}}) / cos({{value}}) = {{result}}",
+      "final_solution": "Solução final: {{function}}({{input}}{{unit}}) = {{result}}{{result_unit}}",
+      "calculate_inverse": "Passo {{step}}: Calcular {{function}}({{value}})",
+      "arcsin_explanation": "O arco seno é a função inversa do seno, retornando o ângulo cujo seno é o valor dado.",
+      "arccos_explanation": "O arco cosseno é a função inversa do cosseno, retornando o ângulo cujo cosseno é o valor dado.",
+      "arctan_explanation": "O arco tangente é a função inversa da tangente, retornando o ângulo cuja tangente é o valor dado.",
+      "inverse_result": "{{function}}({{value}}) = {{result}} radianos",
+      "verify_inverse": "Passo {{step}}: Verificar o resultado aplicando a função direta ao resultado",
+      "applying_direct": "Aplicando a função direta ao resultado: {{direct_function}}({{result}}) = {{verification}}",
+      "original_value": "Valor original: {{value}}",
+      "rounding_difference": "A diferença de {{diff}} é devido ao arredondamento."
+    },
+    "mathematical_concept": {
+      "title": "Conceito Matemático",
+      "direct_functions": {
+        "definition_title": "Definição",
+        "definition_text": "Funções Trigonométricas: Relacionam ângulos com as razões dos lados em um triângulo retângulo:",
+        "functions": {
+          "sine": "Seno (sen): Cateto oposto / Hipotenusa",
+          "cosine": "Cosseno (cos): Cateto adjacente / Hipotenusa",
+          "tangent": "Tangente (tan): Cateto oposto / Cateto adjacente (ou sen/cos)"
+        },
+        "relations_title": "Relações Fundamentais",
+        "triangle_title": "Triângulo Retângulo",
+        "triangle_parts": {
+          "hypotenuse": "Hipotenusa:",
+          "hypotenuse_def": "Lado oposto ao ângulo reto",
+          "opposite": "Cateto Oposto:",
+          "opposite_def": "Lado oposto ao ângulo θ",
+          "adjacent": "Cateto Adjacente:",
+          "adjacent_def": "Lado adjacente ao ângulo θ"
+        },
+        "relations_text": "Relações entre lados e ângulos:",
+        "domain_title": "Domínio e Imagem",
+        "domains": {
+          "sin": "sen(x): Domínio: Todos os números reais, Imagem: [-1, 1]",
+          "cos": "cos(x): Domínio: Todos os números reais, Imagem: [-1, 1]",
+          "tan": "tan(x): Domínio: Todos os números reais exceto x = (n + 1/2)π, Imagem: Todos os números reais"
+        }
+      },
+      "inverse_functions": {
+        "definition_title": "Definição",
+        "definition_text": "Funções Trigonométricas Inversas: Encontram o ângulo correspondente a uma razão trigonométrica.",
+        "interpretation_title": "Interpretação",
+        "interpretation_text": "Para cada valor do seno, cosseno ou tangente, as funções inversas retornam o ângulo correspondente.",
+        "domain_title": "Domínio e Imagem",
+        "domains": {
+          "arcsin": "Arco Seno (arcsen): Domínio: [-1, 1], Imagem: [-π/2, π/2] ou [-90°, 90°]",
+          "arccos": "Arco Cosseno (arccos): Domínio: [-1, 1], Imagem: [0, π] ou [0°, 180°]",
+          "arctan": "Arco Tangente (arctan): Domínio: Todos os números reais, Imagem: (-π/2, π/2) ou (-90°, 90°)"
+        },
+        "note_title": "Observação",
+        "note_text": "Funções trigonométricas são multivalentes, mas por convenção, retornam apenas um valor específico no intervalo principal."
+      },
+      "applications_title": "Aplicações",
+      "applications": [
+        "Física (movimento ondulatório, oscilações)",
+        "Engenharia (análise de circuitos, processamento de sinais)",
+        "Astronomia (cálculos de órbita e posição)",
+        "Navegação (GPS, sistemas de posicionamento)"
+      ]
+    },
+    "examples": {
+      "sin_30": "sen(30°) - Ângulo notável",
+      "sin_45_rad": "sen(45°) em radianos",
+      "cos_60": "cos(60°) - Ângulo notável",
+      "cos_pi_3": "cos(π/3) em graus",
+      "tan_45": "tan(45°) = 1",
+      "arcsin_0_5": "arcsen(0.5) = 30°",
+      "arccos_0_5": "arccos(0.5) = π/3",
+      "arctan_1": "arctan(1) = 45°",
+      "sin_pi_6": "sen(π/6) = 0.5",
+      "cos_0": "cos(0°) = 1"
+    }
+  },
+  "trigonometric_graphs": {
+    "title": "Gráficos de Funções Trigonométricas",
+    "description": "Esta calculadora ajuda você a gerar e analisar gráficos de funções trigonométricas, como seno, cosseno e tangente, bem como funções personalizadas que combinam várias funções trigonométricas.",
+    "labels": {
+      "function_type": "Tipo de Função",
+      "custom_function": "Função Trigonométrica",
+      "amplitude": "Amplitude (a)",
+      "period": "Período (b)",
+      "phase_shift": "Defasagem (c)",
+      "vertical_shift": "Deslocamento Vertical (d)",
+      "interval": "Intervalo do Gráfico",
+      "examples": "Exemplos",
+      "generate": "Gerar Gráfico"
+    },
+    "function_names": {
+      "seno": "Seno",
+      "cosseno": "Cosseno",
+      "tangente": "Tangente",
+      "personalizado": "Personalizado"
+    },
+    "placeholders": {
+      "custom_function": "Ex: 2*sen(3*x) + 1 ou cos(x)^2"
+    },
+    "help": {
+      "custom_function": "Use funções como sen(x), cos(x), tan(x) e operadores matemáticos.",
+      "interval": "Especifique o intervalo no formato: início,fim (use π para representar pi)"
+    },
+    "results": {
+      "title": "Resultado",
+      "standard_function": "Gráfico da função {{function}} gerado com sucesso. Parâmetros: Amplitude={{amplitude}}, Período={{period}}, Defasagem={{phase_shift}}, Deslocamento Vertical={{vertical_shift}}. Intervalo: [{{interval_start}}, {{interval_end}}].",
+      "custom_function": "Gráfico da função {{function}} gerado com sucesso. Intervalo: [{{interval_start}}, {{interval_end}}]."
+    },
+    "chart": {
+      "title": "Gráfico da Função",
+      "expand": "Expandir gráfico",
+      "compress": "Comprimir gráfico",
+      "x_value": "x",
+      "y_value": "f(x)"
+    },
+    "equation": {
+      "title": "Equação da Função"
+    },
+    "explanation": {
+      "title": "Análise passo a passo",
+      "show": "Mostrar explicação detalhada",
+      "hide": "Ocultar explicação detalhada",
+      "no_steps": "Não há passos detalhados disponíveis para esta função."
+    },
+    "errors": {
+      "empty_function": "Por favor, insira uma função trigonométrica.",
+      "no_trig_function": "Sua entrada deve conter pelo menos uma função trigonométrica (sen, cos, tan, etc.).",
+      "invalid_parameters": "Por favor, insira valores numéricos válidos para os parâmetros.",
+      "zero_period": "O período não pode ser zero.",
+      "parameter_processing": "Erro ao processar parâmetros: {{message}}",
+      "invalid_interval": "O limite inferior do intervalo deve ser menor que o limite superior.",
+      "no_points_generated": "Não foi possível gerar pontos para esta função no intervalo especificado.",
+      "graph_generation": "Erro ao gerar o gráfico: {{message}}"
+    },
+    "mathematical_concept": {
+      "title": "Conceito Matemático",
+      "transformations": {
+        "title": "Transformações",
+        "amplitude": "Amplitude",
+        "amplitude_desc": "Afeta a altura da curva",
+        "period": "Período",
+        "period_desc": "Afeta a compressão horizontal",
+        "phase": "Defasagem",
+        "phase_desc": "Desloca a curva horizontalmente",
+        "vertical": "Deslocamento Vertical",
+        "vertical_desc": "Move a curva verticalmente"
+      },
+      "general_form": {
+        "title": "Forma Geral",
+        "description": "As funções trigonométricas podem ser escritas na forma geral:"
+      },
+      "parameters": {
+        "a": "amplitude",
+        "b": "fator do período",
+        "c": "defasagem horizontal",
+        "d": "deslocamento vertical"
+      },
+      "properties": {
+        "title": "Propriedades das Funções",
+        "sine": "Seno",
+        "sine_domain": "Domínio: Todos os números reais",
+        "sine_range": "Imagem: [-a, a]",
+        "sine_period": "Período: 2π/b",
+        "sine_odd": "Função ímpar: sen(-x) = -sen(x)",
+        "cosine": "Cosseno",
+        "cosine_domain": "Domínio: Todos os números reais",
+        "cosine_range": "Imagem: [-a, a]",
+        "cosine_period": "Período: 2π/b",
+        "cosine_even": "Função par: cos(-x) = cos(x)",
+        "tangent": "Tangente",
+        "tangent_domain": "Domínio: Todos os x onde cos(x) ≠ 0",
+        "tangent_range": "Imagem: Todos os números reais",
+        "tangent_period": "Período: π/b",
+        "tangent_odd": "Função ímpar: tan(-x) = -tan(x)"
+      },
+      "applications": {
+        "title": "Aplicações",
+        "list": [
+          "Física (movimento ondulatório, oscilações)",
+          "Engenharia elétrica (sinais AC)",
+          "Acústica e engenharia de som",
+          "Astronomia e mecânica orbital",
+          "Qualquer campo envolvendo fenômenos periódicos"
+        ]
+      }
+    },
+    "functions": {
+      "sine_base": "f(x) = sen(x)",
+      "cosine_base": "f(x) = cos(x)",
+      "tangent_base": "f(x) = tan(x)",
+      "sine_func": "sen",
+      "cosine_func": "cos",
+      "tangent_func": "tan"
+    },
+    "directions": {
+      "right": "direita",
+      "left": "esquerda",
+      "up": "cima",
+      "down": "baixo"
+    },
+    "steps": {
+      "identify_function": "Passo {{step}}: Identificar o tipo de função e sua forma geral",
+      "custom_function": "Função personalizada: {{function}}",
+      "basic_function": "Função básica: {{function}}",
+      "complete_function": "Função completa: {{function}}",
+      "analyze_domain": "Passo {{step}}: Analisar o domínio e o intervalo",
+      "selected_interval": "Intervalo selecionado: [{{start}}, {{end}}]",
+      "tangent_asymptotes_info": "A função tangente tem assíntotas verticais em x = (2n+1)π/2, onde n é um inteiro.",
+      "asymptotes_in_interval": "Assíntotas no intervalo: x = {{asymptotes}}",
+      "no_asymptotes": "Não há assíntotas no intervalo selecionado.",
+      "analyze_properties": "Passo {{step}}: Analisar as propriedades da função",
+      "amplitude_value": "Amplitude: |{{amplitude}}| = {{abs_amplitude}}",
+      "negative_amplitude": "Como a amplitude é negativa, o gráfico está invertido verticalmente (refletido sobre o eixo x).",
+      "default_amplitude": "Amplitude: 1 (padrão)",
+      "period_value": "Período: {{period}}",
+      "larger_period": "Como o período é maior que o padrão, o gráfico está esticado horizontalmente.",
+      "smaller_period": "Como o período é menor que o padrão, o gráfico está comprimido horizontalmente.",
+      "phase_shift": "Defasagem: {{shift}} para a {{direction}}",
+      "no_phase_shift": "Defasagem: 0 (não há deslocamento horizontal)",
+      "vertical_shift": "Deslocamento vertical: {{shift}} para {{direction}}",
+      "no_vertical_shift": "Deslocamento vertical: 0 (não há deslocamento vertical)",
+      "custom_function_properties": "Para funções personalizadas, as propriedades dependem da expressão específica.",
+      "custom_expression": "Expressão: {{expression}}",
+      "calculate_notable_values": "Passo {{step}}: Calcular valores notáveis",
+      "vertical_shift_affect_zeros": "Com o deslocamento vertical de {{shift}}, os zeros da função original não correspondem mais aos zeros da função deslocada.",
+      "zeros_in_interval": "Zeros da função no intervalo: x = {{zeros}}",
+      "no_zeros": "Não existem zeros da função no intervalo selecionado.",
+      "formatted_value": "f({{x}}) = {{y}}",
+      "max_values": "Valores máximos no intervalo: {{values}}",
+      "min_values": "Valores mínimos no intervalo: {{values}}",
+      "calculation_error": "Não foi possível calcular valores notáveis: {{error}}",
+      "custom_analysis_needed": "Para funções personalizadas, é necessária uma análise específica da expressão.",
+      "conclusion": "Passo {{step}}: Conclusão"
+    },
+    "examples": {
+      "basic_sine": "Seno básico: f(x) = sen(x)",
+      "basic_cosine": "Cosseno básico: f(x) = cos(x)",
+      "basic_tangent": "Tangente básica: f(x) = tan(x)",
+      "sine_amplitude_2": "Seno com amplitude 2: f(x) = 2sen(x)",
+      "cosine_amplitude_half": "Cosseno com amplitude 0.5: f(x) = 0.5cos(x)",
+      "sine_period_4pi": "Seno com período 4π: f(x) = sen(x/2)",
+      "cosine_period_pi": "Cosseno com período π: f(x) = cos(2x)",
+      "sine_phase_pi_2": "Seno com defasagem π/2: f(x) = sen(x-π/2)",
+      "sine_vertical_shift": "Seno com deslocamento vertical: f(x) = sen(x) + 2",
+      "custom_sine_cosine": "Personalizada: f(x) = sen(x)cos(x)"
+    }
+  }
+} 

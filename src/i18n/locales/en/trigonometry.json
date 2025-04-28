@@ -1,0 +1,427 @@
+{
+  "trigonometric_equations": {
+    "title": "Trigonometric Equations",
+    "description": "This calculator helps you solve trigonometric equations like sin(x) = 0.5 or cos(2x) + 1 = 0 within a specific interval.",
+    "labels": {
+      "equation": "Trigonometric Equation",
+      "interval": "Solution Interval",
+      "examples": "Examples",
+      "calculate": "Solve"
+    },
+    "input_help": {
+      "equation": "Use trigonometric functions such as sin, cos, tan, etc. You can use ^ for powers (e.g., sin^2(x)), √ for square root (e.g., √3/2) and π to represent pi.",
+      "interval": "Specify the interval in the format: start,end. Use π to represent pi. Remember that angle values are in radians (π/6 = 30°, π/4 = 45°, π/3 = 60°, π/2 = 90°)."
+    },
+    "usage": {
+      "title": "Usage Guide:",
+      "list": [
+        "Use powers with the symbol ^: sin^2(x) + cos^2(x) = 1",
+        "Use square root with the symbol √: sin(x) = √3/2",
+        "Trigonometric functions use radians: sin(π/6) = 0.5 (30°), sin(π/2) = 1 (90°)",
+        "To represent pi, use the symbol π or 'pi'. To multiply, use for example '2*π' or '2π'.",
+        "Be careful with spacing syntax, for example: '2 sin(x)' should be written as '2sin(x)'."
+      ]
+    },
+    "results": {
+      "title": "Result",
+      "solution": "Solution",
+      "solution_format": "Solution {{index}}: x = {{radians}} rad = {{degrees}}°",
+      "no_solutions": "No solutions found in the specified interval."
+    },
+    "explanation": {
+      "show": "Show detailed explanation",
+      "hide": "Hide detailed explanation",
+      "title": "Step-by-step solution"
+    },
+    "errors": {
+      "empty_equation": "Please enter a trigonometric equation.",
+      "no_trig_function": "Your input must contain at least one trigonometric function (sin, cos, tan, etc.).",
+      "invalid_interval_values": "The interval limits must be valid numeric values.",
+      "interval_start_greater": "The lower limit must be less than the upper limit.",
+      "interval_error": "Error in interval: {{message}}",
+      "missing_equals": "The equation must contain an equals sign (=).",
+      "process_error": "Error processing the interval: {{message}}",
+      "solve_error": "Error solving the equation: {{message}}",
+      "syntax_error": "There is a syntax error in the equation. Check that you have written the trigonometric functions and operators correctly. For example, use '2*sin(x)' or leave without spaces between the number and the function: '2sin(x)'.",
+      "division_by_zero": "A division by zero occurred when evaluating the equation. Check if you are using functions like tan(x) at points where they are not defined."
+    },
+    "steps": {
+      "analyze": "Step {{step}}: Analyze the trigonometric equation",
+      "equation": "Equation: {{equation}}",
+      "rewrite": "Rewriting as: {{left}} - ({{right}}) = 0",
+      "define_interval": "Step {{step}}: Define the search interval",
+      "interval_format": "Interval: [{{start}}, {{end}}]",
+      "interval_original": "Original interval values: [{{start}}, {{end}}]",
+      "find_solutions": "Step {{step}}: Find solutions in the interval",
+      "method": "Method: Search for sign changes of the difference function in {{segments}} segments",
+      "no_solutions_found": "No solutions were found in the specified interval.",
+      "no_solutions_reason": "This can occur because the equation has no solution in the interval or because the function does not change sign.",
+      "solutions_found": "{{count}} solutions were found in the specified interval:",
+      "solution_value": "Solution {{index}}: x = {{radians}} rad = {{degrees}}°",
+      "verification": "Verification: {{left}} = {{leftValue}}, {{right}} = {{rightValue}}",
+      "difference": "Difference: {{diff}} (should be close to zero)",
+      "periodicity_sin_cos": "Note that {{solution}} + 2nπ is also a solution for any integer n.",
+      "periodicity_tan": "Note that {{solution}} + nπ is also a solution for any integer n.",
+      "verification_error": "Could not verify this solution: {{error}}",
+      "understanding": "Step {{step}}: Understanding trigonometric equations",
+      "infinite_solutions": "Trigonometric equations usually have infinite solutions due to the periodic nature of trigonometric functions.",
+      "sin_solutions": "For example, if x = α is a solution of sin(x) = k, then x = α + 2nπ is also a solution for any integer n.",
+      "cos_solutions": "For cos(x) = k, if x = α is a solution, then x = ±α + 2nπ is also a solution.",
+      "tan_solutions": "For tan(x) = k, if x = α is a solution, then x = α + nπ is also a solution."
+    },
+    "mathematical_concept": {
+      "title": "Mathematical Concept",
+      "properties": {
+        "title": "Properties",
+        "description": "Trigonometric equations usually have infinite solutions due to the periodic nature of trigonometric functions.",
+        "sine": "Sine: If x = α is a solution of sin(x) = k, then x = α + 2nπ is also a solution for any integer n.",
+        "cosine": "Cosine: If x = α is a solution of cos(x) = k, then x = ±α + 2nπ is also a solution for any integer n.",
+        "tangent": "Tangent: If x = α is a solution of tan(x) = k, then x = α + nπ is also a solution for any integer n."
+      },
+      "solution_method": {
+        "title": "Solution Method",
+        "description": "Trigonometric equations can be solved through:",
+        "known_values": "Known values: Use notable angles (30°, 45°, 60°, etc.)",
+        "identities": "Identities: Apply trigonometric identities to simplify",
+        "numerical_methods": "Numerical methods: For complex equations",
+        "reformulation": "Reformulation: Convert to simpler forms"
+      },
+      "notable_angles": {
+        "title": "Notable Angles",
+        "angle_degrees": "Angle (degrees)",
+        "angle_rad": "Angle (rad)",
+        "sin": "sin(x)",
+        "cos": "cos(x)",
+        "tan": "tan(x)"
+      },
+      "solution_tip": {
+        "title": "Solution Tip",
+        "description": "When solving trigonometric equations, it is essential to identify the period of the function involved (2π for sine and cosine, π for tangent) to correctly determine all solutions in the defined interval."
+      }
+    },
+    "examples": {
+      "sin_zero": "Zeros of sine",
+      "cos_zero": "Zeros of cosine",
+      "tan_zero": "Zeros of tangent",
+      "sin_half": "sin(x) = 0.5",
+      "cos_half": "cos(x) = 0.5",
+      "sin_2x_zero": "sin(2x) = 0",
+      "cos_half_x_zero": "cos(x/2) = 0",
+      "two_sin_one": "2sin(x) = 1",
+      "sin_squared_quarter": "sin²(x) = 0.25",
+      "cos_plus_one": "cos(x) + 1 = 0"
+    }
+  },
+  "trigonometric_functions": {
+    "title": "Trigonometric Functions",
+    "description": "This calculator helps you calculate trigonometric functions (sine, cosine, tangent) and their inverse functions (arcsine, arccosine, arctangent).",
+    "labels": {
+      "function": "Function",
+      "angle": "Angle",
+      "value": "Value",
+      "angle_unit_input": "Angle Unit of Input",
+      "angle_unit_output": "Angle Unit of Output",
+      "examples": "Examples",
+      "calculate": "Calculate"
+    },
+    "function_names": {
+      "sin": "Sine (sin)",
+      "cos": "Cosine (cos)",
+      "tan": "Tangent (tan)",
+      "asin": "Arcsine (arcsin)",
+      "acos": "Arccosine (arccos)",
+      "atan": "Arctangent (arctan)"
+    },
+    "placeholders": {
+      "angle": "Enter the angle",
+      "value": "Enter the value"
+    },
+    "units": {
+      "degrees": "Degrees (°)",
+      "radians": "Radians (rad)"
+    },
+    "results": {
+      "title": "Result",
+      "format": "{{function}}({{input}}{{unit}}) = {{result}}{{result_unit}}"
+    },
+    "explanation": {
+      "show": "Show detailed explanation",
+      "hide": "Hide detailed explanation",
+      "title": "Step-by-step solution"
+    },
+    "errors": {
+      "invalid_value": "Please enter a valid numeric value or an expression like π/6",
+      "undefined_tangent": "Tangent is undefined for this angle (cos(x) = 0)",
+      "invalid_arcsin": "Arcsine is defined only for values between -1 and 1",
+      "invalid_arccos": "Arccosine is defined only for values between -1 and 1",
+      "function_not_recognized": "Function not recognized"
+    },
+    "steps": {
+      "convert_to_radians": "Step {{step}}: Convert the angle from degrees to radians",
+      "convert_explanation": "To calculate trigonometric functions, we first need to convert the angle to radians, as it is the standard unit for mathematical calculations.",
+      "convert_formula": "Formula: radians = degrees × (π/180)",
+      "convert_calculation": "{{value}}° = {{value}} × (π/180) = {{result}} radians",
+      "check_unit": "Step {{step}}: Check the angle unit",
+      "already_radians": "The value {{value}} is already in radians, so no conversion is needed.",
+      "calculate_function": "Step {{step}}: Calculate {{function}}({{input}}{{unit}})",
+      "sine_explanation": "The sine of an angle represents the ratio of the opposite side to the hypotenuse in a right triangle.",
+      "cosine_explanation": "The cosine of an angle represents the ratio of the adjacent side to the hypotenuse in a right triangle.",
+      "tangent_explanation": "The tangent of an angle represents the ratio of sine to cosine, or the opposite side to the adjacent side.",
+      "calculation_result": "{{function}}({{input}}{{unit}}) = {{result}}",
+      "tangent_undefined": "Tangent is undefined when cos(x) = 0, which occurs at angles of 90°, 270°, etc.",
+      "convert_to_degrees": "Step {{step}}: Convert the result from radians to degrees",
+      "convert_output_formula": "Formula: degrees = radians × (180/π)",
+      "convert_output_calculation": "{{radians}} radians = {{radians}} × (180/π) = {{degrees}}°",
+      "output_unit": "Step {{step}}: Check the unit of the result",
+      "already_output_radians": "The result is already in radians, which is the requested unit.",
+      "verify_result": "Step {{step}}: Verify the result using trigonometric identities",
+      "fundamental_identity": "Fundamental identity: sin²(x) + cos²(x) = 1",
+      "verify_identity": "Verification: sin²({{value}}) + cos²({{value}}) = {{result}}",
+      "tangent_identity": "Tangent identity: tan(x) = sin(x) / cos(x)",
+      "verify_tangent": "Verification: sin({{value}}) / cos({{value}}) = {{result}}",
+      "final_solution": "Final solution: {{function}}({{input}}{{unit}}) = {{result}}{{result_unit}}",
+      "calculate_inverse": "Step {{step}}: Calculate {{function}}({{value}})",
+      "arcsin_explanation": "Arcsine is the inverse function of sine, returning the angle whose sine is the given value.",
+      "arccos_explanation": "Arccosine is the inverse function of cosine, returning the angle whose cosine is the given value.",
+      "arctan_explanation": "Arctangent is the inverse function of tangent, returning the angle whose tangent is the given value.",
+      "inverse_result": "{{function}}({{value}}) = {{result}} radians",
+      "verify_inverse": "Step {{step}}: Verify the result by applying the direct function to the result",
+      "applying_direct": "Applying the direct function to the result: {{direct_function}}({{result}}) = {{verification}}",
+      "original_value": "Original value: {{value}}",
+      "rounding_difference": "The difference of {{diff}} is due to rounding."
+    },
+    "mathematical_concept": {
+      "title": "Mathematical Concept",
+      "direct_functions": {
+        "definition_title": "Definition",
+        "definition_text": "Trigonometric Functions: Relate angles to the ratios of sides in a right triangle:",
+        "functions": {
+          "sine": "Sine (sin): Opposite side / Hypotenuse",
+          "cosine": "Cosine (cos): Adjacent side / Hypotenuse",
+          "tangent": "Tangent (tan): Opposite side / Adjacent side (or sin/cos)"
+        },
+        "relations_title": "Fundamental Relations",
+        "triangle_title": "Right Triangle",
+        "triangle_parts": {
+          "hypotenuse": "Hypotenuse:",
+          "hypotenuse_def": "Side opposite to the right angle",
+          "opposite": "Opposite Side:",
+          "opposite_def": "Side opposite to angle θ",
+          "adjacent": "Adjacent Side:",
+          "adjacent_def": "Side adjacent to angle θ"
+        },
+        "relations_text": "Relations between sides and angles:",
+        "domain_title": "Domain and Range",
+        "domains": {
+          "sin": "sin(x): Domain: All real numbers, Range: [-1, 1]",
+          "cos": "cos(x): Domain: All real numbers, Range: [-1, 1]",
+          "tan": "tan(x): Domain: All real numbers except x = (n + 1/2)π, Range: All real numbers"
+        }
+      },
+      "inverse_functions": {
+        "definition_title": "Definition",
+        "definition_text": "Inverse Trigonometric Functions: Find the angle corresponding to a trigonometric ratio.",
+        "interpretation_title": "Interpretation",
+        "interpretation_text": "For each value of sine, cosine, or tangent, the inverse functions return the corresponding angle.",
+        "domain_title": "Domain and Range",
+        "domains": {
+          "arcsin": "Arcsine (arcsin): Domain: [-1, 1], Range: [-π/2, π/2] or [-90°, 90°]",
+          "arccos": "Arccosine (arccos): Domain: [-1, 1], Range: [0, π] or [0°, 180°]",
+          "arctan": "Arctangent (arctan): Domain: All real numbers, Range: (-π/2, π/2) or (-90°, 90°)"
+        },
+        "note_title": "Observation",
+        "note_text": "Trigonometric functions are multivalued, but by convention, they return only a specific value in the principal interval."
+      },
+      "applications_title": "Applications",
+      "applications": [
+        "Physics (wave motion, oscillations)",
+        "Engineering (circuit analysis, signal processing)",
+        "Astronomy (orbit and position calculations)",
+        "Navigation (GPS, positioning systems)"
+      ]
+    },
+    "examples": {
+      "sin_30": "sin(30°) - Notable angle",
+      "sin_45_rad": "sin(45°) in radians",
+      "cos_60": "cos(60°) - Notable angle",
+      "cos_pi_3": "cos(π/3) in degrees",
+      "tan_45": "tan(45°) = 1",
+      "arcsin_0_5": "arcsin(0.5) = 30°",
+      "arccos_0_5": "arccos(0.5) = π/3",
+      "arctan_1": "arctan(1) = 45°",
+      "sin_pi_6": "sin(π/6) = 0.5",
+      "cos_0": "cos(0°) = 1"
+    }
+  },
+  "trigonometric_graphs": {
+    "title": "Trigonometric Function Graphs",
+    "description": "This calculator helps you generate and analyze graphs of trigonometric functions such as sine, cosine, and tangent, as well as custom functions that combine various trigonometric functions.",
+    "labels": {
+      "function_type": "Function Type",
+      "custom_function": "Trigonometric Function",
+      "amplitude": "Amplitude (a)",
+      "period": "Period (b)",
+      "phase_shift": "Phase Shift (c)",
+      "vertical_shift": "Vertical Shift (d)",
+      "interval": "Graph Interval",
+      "examples": "Examples",
+      "generate": "Generate Graph"
+    },
+    "function_names": {
+      "seno": "Sine",
+      "cosseno": "Cosine",
+      "tangente": "Tangent",
+      "personalizado": "Custom"
+    },
+    "placeholders": {
+      "custom_function": "E.g., 2*sin(3*x) + 1 or cos(x)^2"
+    },
+    "help": {
+      "custom_function": "Use functions like sin(x), cos(x), tan(x) and mathematical operators.",
+      "interval": "Specify the interval in the format: start,end (use π to represent pi)"
+    },
+    "results": {
+      "title": "Result",
+      "standard_function": "Graph of the {{function}} function generated successfully. Parameters: Amplitude={{amplitude}}, Period={{period}}, Phase Shift={{phase_shift}}, Vertical Shift={{vertical_shift}}. Interval: [{{interval_start}}, {{interval_end}}].",
+      "custom_function": "Graph of the function {{function}} generated successfully. Interval: [{{interval_start}}, {{interval_end}}]."
+    },
+    "chart": {
+      "title": "Function Graph",
+      "expand": "Expand graph",
+      "compress": "Compress graph",
+      "x_value": "x",
+      "y_value": "f(x)"
+    },
+    "equation": {
+      "title": "Function Equation"
+    },
+    "explanation": {
+      "title": "Step-by-step Analysis",
+      "show": "Show detailed explanation",
+      "hide": "Hide detailed explanation",
+      "no_steps": "No detailed steps available for this function."
+    },
+    "errors": {
+      "empty_function": "Please enter a trigonometric function.",
+      "no_trig_function": "Your input must contain at least one trigonometric function (sin, cos, tan, etc.).",
+      "invalid_parameters": "Please enter valid numeric values for the parameters.",
+      "zero_period": "The period cannot be zero.",
+      "parameter_processing": "Error processing parameters: {{message}}",
+      "invalid_interval": "The lower limit of the interval must be less than the upper limit.",
+      "no_points_generated": "Could not generate points for this function in the specified interval.",
+      "graph_generation": "Error generating the graph: {{message}}"
+    },
+    "mathematical_concept": {
+      "title": "Mathematical Concept",
+      "transformations": {
+        "title": "Transformations",
+        "amplitude": "Amplitude",
+        "amplitude_desc": "Affects the height of the curve",
+        "period": "Period",
+        "period_desc": "Affects horizontal compression",
+        "phase": "Phase Shift",
+        "phase_desc": "Shifts the curve horizontally",
+        "vertical": "Vertical Shift",
+        "vertical_desc": "Moves the curve vertically"
+      },
+      "general_form": {
+        "title": "General Form",
+        "description": "Trigonometric functions can be written in the general form:"
+      },
+      "parameters": {
+        "a": "amplitude",
+        "b": "period factor",
+        "c": "horizontal phase shift",
+        "d": "vertical shift"
+      },
+      "properties": {
+        "title": "Function Properties",
+        "sine": "Sine",
+        "sine_domain": "Domain: All real numbers",
+        "sine_range": "Range: [-a, a]",
+        "sine_period": "Period: 2π/b",
+        "sine_odd": "Odd function: sin(-x) = -sin(x)",
+        "cosine": "Cosine",
+        "cosine_domain": "Domain: All real numbers",
+        "cosine_range": "Range: [-a, a]",
+        "cosine_period": "Period: 2π/b",
+        "cosine_even": "Even function: cos(-x) = cos(x)",
+        "tangent": "Tangent",
+        "tangent_domain": "Domain: All x where cos(x) ≠ 0",
+        "tangent_range": "Range: All real numbers",
+        "tangent_period": "Period: π/b",
+        "tangent_odd": "Odd function: tan(-x) = -tan(x)"
+      },
+      "applications": {
+        "title": "Applications",
+        "list": [
+          "Physics (wave motion, oscillations)",
+          "Electrical engineering (AC signals)",
+          "Acoustics and sound engineering",
+          "Astronomy and orbital mechanics",
+          "Any field involving periodic phenomena"
+        ]
+      }
+    },
+    "functions": {
+      "sine_base": "f(x) = sin(x)",
+      "cosine_base": "f(x) = cos(x)",
+      "tangent_base": "f(x) = tan(x)",
+      "sine_func": "sin",
+      "cosine_func": "cos",
+      "tangent_func": "tan"
+    },
+    "directions": {
+      "right": "right",
+      "left": "left",
+      "up": "up",
+      "down": "down"
+    },
+    "steps": {
+      "identify_function": "Step {{step}}: Identify the function type and its general form",
+      "custom_function": "Custom function: {{function}}",
+      "basic_function": "Basic function: {{function}}",
+      "complete_function": "Complete function: {{function}}",
+      "analyze_domain": "Step {{step}}: Analyze the domain and interval",
+      "selected_interval": "Selected interval: [{{start}}, {{end}}]",
+      "tangent_asymptotes_info": "The tangent function has vertical asymptotes at x = (2n+1)π/2, where n is an integer.",
+      "asymptotes_in_interval": "Asymptotes in the interval: x = {{asymptotes}}",
+      "no_asymptotes": "There are no asymptotes in the selected interval.",
+      "analyze_properties": "Step {{step}}: Analyze the function properties",
+      "amplitude_value": "Amplitude: |{{amplitude}}| = {{abs_amplitude}}",
+      "negative_amplitude": "Since the amplitude is negative, the graph is inverted vertically (reflected across the x-axis).",
+      "default_amplitude": "Amplitude: 1 (default)",
+      "period_value": "Period: {{period}}",
+      "larger_period": "Since the period is larger than the standard, the graph is stretched horizontally.",
+      "smaller_period": "Since the period is smaller than the standard, the graph is compressed horizontally.",
+      "phase_shift": "Phase shift: {{shift}} to the {{direction}}",
+      "no_phase_shift": "Phase shift: 0 (no horizontal shift)",
+      "vertical_shift": "Vertical shift: {{shift}} {{direction}}",
+      "no_vertical_shift": "Vertical shift: 0 (no vertical shift)",
+      "custom_function_properties": "For custom functions, the properties depend on the specific expression.",
+      "custom_expression": "Expression: {{expression}}",
+      "calculate_notable_values": "Step {{step}}: Calculate notable values",
+      "vertical_shift_affect_zeros": "With the vertical shift of {{shift}}, the zeros of the original function no longer correspond to the zeros of the shifted function.",
+      "zeros_in_interval": "Zeros of the function in the interval: x = {{zeros}}",
+      "no_zeros": "There are no zeros of the function in the selected interval.",
+      "formatted_value": "f({{x}}) = {{y}}",
+      "max_values": "Maximum values in the interval: {{values}}",
+      "min_values": "Minimum values in the interval: {{values}}",
+      "calculation_error": "Could not calculate notable values: {{error}}",
+      "custom_analysis_needed": "For custom functions, a specific analysis of the expression is needed.",
+      "conclusion": "Step {{step}}: Conclusion"
+    },
+    "examples": {
+      "basic_sine": "Basic sine: f(x) = sin(x)",
+      "basic_cosine": "Basic cosine: f(x) = cos(x)",
+      "basic_tangent": "Basic tangent: f(x) = tan(x)",
+      "sine_amplitude_2": "Sine with amplitude 2: f(x) = 2sin(x)",
+      "cosine_amplitude_half": "Cosine with amplitude 0.5: f(x) = 0.5cos(x)",
+      "sine_period_4pi": "Sine with period 4π: f(x) = sin(x/2)",
+      "cosine_period_pi": "Cosine with period π: f(x) = cos(2x)",
+      "sine_phase_pi_2": "Sine with phase shift π/2: f(x) = sin(x-π/2)",
+      "sine_vertical_shift": "Sine with vertical shift: f(x) = sin(x) + 2",
+      "custom_sine_cosine": "Custom: f(x) = sin(x)cos(x)"
+    }
+  }
+} 
