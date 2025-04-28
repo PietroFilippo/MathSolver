@@ -11,7 +11,7 @@ const ResolvedorMMCMDC: React.FC = () => {
     const { t } = useTranslation(['arithmetic', 'translation']);
     const { state, dispatch, handleSolve, applyExample, setCalculationType } = useGcdLcmSolver();
     
-    // Set default calculation type to MMC when component mounts
+    // Define o tipo de cálculo padrão como MMC quando o componente é montado
     React.useEffect(() => {
         setCalculationType('mmc');
     }, []);
@@ -77,7 +77,7 @@ const ResolvedorMMCMDC: React.FC = () => {
                                 onClick={() => applyExample(example)}
                                 className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
                             >
-                                {example.description}
+                                {t(example.description)}
                             </button>
                         ))}
                     </div>

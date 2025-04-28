@@ -208,63 +208,63 @@ export const generatePrimesUpTo = (limite: number): number[] => {
 // Função para obter exemplos de números para fatoração
 export const getFactorizationExamples = (): Array<{ number: number, description: string }> => {
     return [
-        { number: 12, description: "12 = 2² × 3" },
-        { number: 60, description: "60 = 2² × 3 × 5" },
-        { number: 84, description: "84 = 2² × 3 × 7" },
-        { number: 100, description: "100 = 2² × 5²" },
-        { number: 36, description: "36 = 2² × 3²" },
-        { number: 17, description: "17 (número primo)" },
-        { number: 45, description: "45 = 3² × 5" },
-        { number: 144, description: "144 = 2⁴ × 3²" },
-        { number: 210, description: "210 = 2 × 3 × 5 × 7" },
-        { number: 64, description: "64 = 2⁶" }
+        { number: 12, description: "arithmetic:number_theory.examples.factorization.12" },
+        { number: 60, description: "arithmetic:number_theory.examples.factorization.60" },
+        { number: 84, description: "arithmetic:number_theory.examples.factorization.84" },
+        { number: 100, description: "arithmetic:number_theory.examples.factorization.100" },
+        { number: 36, description: "arithmetic:number_theory.examples.factorization.36" },
+        { number: 17, description: "arithmetic:number_theory.examples.factorization.17" },
+        { number: 45, description: "arithmetic:number_theory.examples.factorization.45" },
+        { number: 144, description: "arithmetic:number_theory.examples.factorization.144" },
+        { number: 210, description: "arithmetic:number_theory.examples.factorization.210" },
+        { number: 64, description: "arithmetic:number_theory.examples.factorization.64" }
     ];
 };
 
 // Função para obter exemplos de números para MMC/MDC
 export const getMMCMDCExamples = (): Array<{ numbers: number[], description: string, type: 'lcm' | 'gcd' }> => {
     return [
-        { numbers: [12, 18], description: "12, 18", type: 'lcm' },
-        { numbers: [24, 36, 48], description: "24, 36, 48", type: 'lcm' },
-        { numbers: [7, 13], description: "7, 13", type: 'lcm' },
-        { numbers: [15, 25, 35], description: "15, 25, 35", type: 'lcm' },
-        { numbers: [16, 24, 36], description: "16, 24, 36", type: 'lcm' },
-        { numbers: [17, 34, 51], description: "17, 34, 51", type: 'gcd' },
-        { numbers: [100, 80, 60], description: "100, 80, 60", type: 'gcd' },
-        { numbers: [35, 49, 63], description: "35, 49, 63", type: 'gcd' },
-        { numbers: [8, 12, 20, 24], description: "8, 12, 20, 24", type: 'gcd' },
-        { numbers: [9, 27, 81], description: "9, 27, 81", type: 'gcd' }
+        { numbers: [12, 18], description: "arithmetic:number_theory.examples.lcm_gcd.12_18", type: 'lcm' },
+        { numbers: [24, 36, 48], description: "arithmetic:number_theory.examples.lcm_gcd.24_36_48", type: 'lcm' },
+        { numbers: [7, 13], description: "arithmetic:number_theory.examples.lcm_gcd.7_13", type: 'lcm' },
+        { numbers: [15, 25, 35], description: "arithmetic:number_theory.examples.lcm_gcd.15_25_35", type: 'lcm' },
+        { numbers: [16, 24, 36], description: "arithmetic:number_theory.examples.lcm_gcd.16_24_36", type: 'lcm' },
+        { numbers: [17, 34, 51], description: "arithmetic:number_theory.examples.lcm_gcd.17_34_51", type: 'gcd' },
+        { numbers: [100, 80, 60], description: "arithmetic:number_theory.examples.lcm_gcd.100_80_60", type: 'gcd' },
+        { numbers: [35, 49, 63], description: "arithmetic:number_theory.examples.lcm_gcd.35_49_63", type: 'gcd' },
+        { numbers: [8, 12, 20, 24], description: "arithmetic:number_theory.examples.lcm_gcd.8_12_20_24", type: 'gcd' },
+        { numbers: [9, 27, 81], description: "arithmetic:number_theory.examples.lcm_gcd.9_27_81", type: 'gcd' }
     ];
 };
 
 // Função para obter exemplos de cálculo de porcentagem
 export const getPercentageExamples = (): Array<{ value: number, percentage: number, type: 'percentage' | 'percentageChange' | 'reversePercentage', description: string }> => {
     return [
-        { value: 200, percentage: 15, type: 'percentage', description: "15% de 200" },
-        { value: 50, percentage: 25, type: 'percentage', description: "25% de 50" },
-        { value: 80, percentage: 120, type: 'percentage', description: "120% de 80" },
-        { value: 1000, percentage: 7.5, type: 'percentage', description: "7.5% de 1000" },
-        { value: 60, percentage: 80, type: 'percentageChange', description: "Variação de 60 para 80" },
-        { value: 100, percentage: 75, type: 'percentageChange', description: "Variação de 100 para 75" },
-        { value: 40, percentage: 55, type: 'percentageChange', description: "Variação de 40 para 55" },
-        { value: 200, percentage: 250, type: 'percentageChange', description: "Variação de 200 para 250" },
-        { value: 25, percentage: 20, type: 'reversePercentage', description: "25 é 20% de X" },
-        { value: 75, percentage: 30, type: 'reversePercentage', description: "75 é 30% de X" }
+        { value: 200, percentage: 15, type: 'percentage', description: "arithmetic:number_theory.examples.percentage.15_of_200" },
+        { value: 50, percentage: 25, type: 'percentage', description: "arithmetic:number_theory.examples.percentage.25_of_50" },
+        { value: 80, percentage: 120, type: 'percentage', description: "arithmetic:number_theory.examples.percentage.120_of_80" },
+        { value: 1000, percentage: 7.5, type: 'percentage', description: "arithmetic:number_theory.examples.percentage.7_5_of_1000" },
+        { value: 60, percentage: 80, type: 'percentageChange', description: "arithmetic:number_theory.examples.percentage.change_60_to_80" },
+        { value: 100, percentage: 75, type: 'percentageChange', description: "arithmetic:number_theory.examples.percentage.change_100_to_75" },
+        { value: 40, percentage: 55, type: 'percentageChange', description: "arithmetic:number_theory.examples.percentage.change_40_to_55" },
+        { value: 200, percentage: 250, type: 'percentageChange', description: "arithmetic:number_theory.examples.percentage.change_200_to_250" },
+        { value: 25, percentage: 20, type: 'reversePercentage', description: "arithmetic:number_theory.examples.percentage.25_is_20_percent" },
+        { value: 75, percentage: 30, type: 'reversePercentage', description: "arithmetic:number_theory.examples.percentage.75_is_30_percent" }
     ];
 };
 
 // Função para obter exemplos de proporções
 export const getProportionExamples = (): Array<{ a: number, b: number, c: number, d: number, solveFor: 'a' | 'b' | 'c' | 'd', description: string }> => {
     return [
-        { a: 2, b: 4, c: 3, d: 6, solveFor: 'd', description: "2:4 = 3:?" },
-        { a: 3, b: 9, c: 5, d: 15, solveFor: 'd', description: "3:9 = 5:?" },
-        { a: 4, b: 5, c: 8, d: 10, solveFor: 'd', description: "4:5 = 8:?" },
-        { a: 100, b: 25, c: 80, d: 20, solveFor: 'd', description: "100:25 = 80:?" },
-        { a: 5, b: 8, c: 0, d: 16, solveFor: 'c', description: "5:8 = ?:16" },
-        { a: 6, b: 18, c: 0, d: 30, solveFor: 'c', description: "6:18 = ?:30" },
-        { a: 0, b: 3, c: 10, d: 15, solveFor: 'a', description: "?:3 = 10:15" },
-        { a: 0, b: 12, c: 7, d: 84, solveFor: 'a', description: "?:12 = 7:84" },
-        { a: 10, b: 0, c: 15, d: 30, solveFor: 'b', description: "10:? = 15:30" },
-        { a: 8, b: 0, c: 4, d: 16, solveFor: 'b', description: "8:? = 4:16" }
+        { a: 2, b: 4, c: 3, d: 6, solveFor: 'd', description: "arithmetic:number_theory.examples.proportion.2_4_3_x" },
+        { a: 3, b: 9, c: 5, d: 15, solveFor: 'd', description: "arithmetic:number_theory.examples.proportion.3_9_5_x" },
+        { a: 4, b: 5, c: 8, d: 10, solveFor: 'd', description: "arithmetic:number_theory.examples.proportion.4_5_8_x" },
+        { a: 100, b: 25, c: 80, d: 20, solveFor: 'd', description: "arithmetic:number_theory.examples.proportion.100_25_80_x" },
+        { a: 5, b: 8, c: 0, d: 16, solveFor: 'c', description: "arithmetic:number_theory.examples.proportion.5_8_x_16" },
+        { a: 6, b: 18, c: 0, d: 30, solveFor: 'c', description: "arithmetic:number_theory.examples.proportion.6_18_x_30" },
+        { a: 0, b: 3, c: 10, d: 15, solveFor: 'a', description: "arithmetic:number_theory.examples.proportion.x_3_10_15" },
+        { a: 0, b: 12, c: 7, d: 84, solveFor: 'a', description: "arithmetic:number_theory.examples.proportion.x_12_7_84" },
+        { a: 10, b: 0, c: 15, d: 30, solveFor: 'b', description: "arithmetic:number_theory.examples.proportion.10_x_15_30" },
+        { a: 8, b: 0, c: 4, d: 16, solveFor: 'b', description: "arithmetic:number_theory.examples.proportion.8_x_4_16" }
     ];
 };

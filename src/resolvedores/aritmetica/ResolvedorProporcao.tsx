@@ -125,7 +125,7 @@ const ResolvedorProporcao: React.FC = () => {
                                 onClick={() => applyExample(example)}
                                 className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
                             >
-                                {example.description}
+                                {t(example.description)}
                             </button>
                         ))}
                     </div>
