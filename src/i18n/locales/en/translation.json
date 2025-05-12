@@ -207,7 +207,7 @@
     "error": "Error",
     "loading": "Loading...",
     "please_wait": "Please wait",
-    "input_value": "Enter a value",
+    "input_value": "Input a value",
     "verify": "Verify",
     "explanation": "Explanation",
     "show_explanation": "Show detailed explanation",
@@ -215,6 +215,60 @@
     "step_by_step": "Step-by-step solution",
     "mathematical_concept": "Mathematical Concept",
     "tip": "Tip",
+    "sum": "sum",
+    "difference": "difference",
+    "addition": "addition",
+    "subtraction": "subtraction",
+    "linear_systems": "Linear Systems",
+    "physics": "Physics: In quantum mechanics and electromagnetic theory",
+    "engineering": "Engineering: Structural analysis and geometric transformations",
+    "signal_processing": "Signal Processing: In operations like convolution and correlation",
+    "optimization": "Optimization: In linear and non-linear programming problems",
+    "computer_graphics": "Computer Graphics: For calculating areas and geometric transformations",
+    "statistics": "Statistics: In variance analysis and multivariate correlation",
+    "quantum_physics": "Quantum Physics: In quantum mechanics and electromagnetic theory",
+    "economics": "Economics: In econometric and equilibrium models",
+    "machine_learning": "Machine Learning: For checking singularity in covariance matrices",
+    "cryptography": "Cryptography: In matrix-based cryptographic systems",
+    "robotics": "Robotics: For calculating transformations and detecting singularities in robotic manipulators",
+    "image_processing": "Image Processing: For edge detection and morphological transformations",
+    "advanced_matrix_concepts": {
+      "title": "Advanced Concepts of Matrix Transposition",
+      "alternative_notations": {
+        "title": "Alternative Notations",
+        "description": "Different mathematical disciplines use various notations for the transpose:",
+        "standard": "A<sup>T</sup> - Standard notation",
+        "prime": "A′ - Prime notation (common in statistics)",
+        "left_superscript": "<sup>t</sup>A - Left superscript (used in some European literature)",
+        "abbreviated": "A<sup>tr</sup> - Abbreviated form"
+      },
+      "inner_products": {
+        "title": "Relationship to Inner Products",
+        "description": "For vectors u and v, the inner product can be expressed using transpose: ⟨u,v⟩ = u<sup>T</sup>v. This relationship extends to matrices where A<sup>T</sup>B represents a generalization of the dot product."
+      },
+      "computational": {
+        "title": "Computational Performance",
+        "description": "Matrix transposition has O(n²) time complexity for n×n matrices. However, modern libraries often use cache-optimized algorithms and lazy evaluation techniques to improve performance. In many numerical libraries, transposition is implemented as a \"view\" rather than physically rearranging data in memory."
+      },
+      "special_classes": {
+        "title": "Special Matrix Classes",
+        "description": "Several matrix classes have special transpose properties:",
+        "symmetric": "Symmetric matrices: A = A<sup>T</sup>",
+        "skew_symmetric": "Skew-symmetric matrices: A = -A<sup>T</sup>",
+        "orthogonal": "Orthogonal matrices: A<sup>T</sup> = A<sup>-1</sup>",
+        "hermitian": "Hermitian matrices: A = A<sup>H</sup> (complex conjugate transpose)"
+      }
+    },
+    "matrix_examples": {
+      "matrices_2x2": "2×2 Matrices",
+      "matrices_2x3_3x2": "2×3 and 3×2 Matrices",
+      "identity_matrix": "Identity Matrix",
+      "matrices_3x2_2x3": "3×2 and 2×3 Matrices",
+      "matrix_2x2_by_2": "2×2 Matrix multiplied by 2",
+      "matrix_2x3_by_neg1": "2×3 Matrix multiplied by -1",
+      "identity_matrix_by_3": "Identity Matrix multiplied by 3",
+      "matrix_with_decimals": "Matrix with decimal values"
+    },
     "errors": {
       "unknown": "Unknown error."
     }

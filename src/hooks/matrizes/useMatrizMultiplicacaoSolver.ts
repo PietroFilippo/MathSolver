@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   parseMatrixFromString, 
   multiplyMatrices,
@@ -125,18 +126,21 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-// Gera os passos de cálculo para multiplicação de matrizes
+// Gera os passos de cálculo para multiplicação de matrizes com tradução
 const generateMatrixMultiplicationSteps = (
   matrixA: number[][],
   matrixB: number[][],
+  t: (key: string, params?: Record<string, any>) => string
 ): string[] => {
   const steps: string[] = [];
   let stepCount = 1;
   
   // Verifica se as dimensões são compatíveis para multiplicação
   if (!isValidForMultiplication(matrixA, matrixB)) {
-    steps.push(`As dimensões das matrizes são incompatíveis para multiplicação. A matriz A tem dimensão ${matrixA.length}×${matrixA[0].length} e a matriz B tem dimensão ${matrixB.length}×${matrixB[0].length}.`);
-    steps.push(`Para multiplicar matrizes, o número de colunas da primeira matriz deve ser igual ao número de linhas da segunda matriz.`);
+    steps.push(t('matrices:matrix_operations.multiplication.errors.incompatible_dimensions', {
+      dimA: `${matrixA.length}×${matrixA[0].length}`,
+      dimB: `${matrixB.length}×${matrixB[0].length}`
+    }));
     return steps;
   }
   
@@ -144,48 +148,50 @@ const generateMatrixMultiplicationSteps = (
   const colsA = matrixA[0].length;
   const colsB = matrixB[0].length;
   
-  // Adiciona informações iniciais
-  steps.push(`Passo ${stepCount++}: Identificar as matrizes e a operação.`);
-  steps.push(`Forma inicial: A × B`);
+  // Adiciona informações iniciais - Step 1
+  steps.push(t('matrices:matrix_operations.steps.identify_matrices', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.steps.initial_form', { operation: 'A × B' }));
   
   // Adiciona a representação das matrizes
-  steps.push(`Matriz A (${rowsA}×${colsA}):`);
+  steps.push(t('matrices:matrix_operations.steps.matrix_a_representation', { rows: rowsA, cols: colsA }));
   matrixA.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
   
-  steps.push(`Matriz B (${colsA}×${colsB}):`);
+  steps.push(t('matrices:matrix_operations.steps.matrix_b_representation', { rows: colsA, cols: colsB }));
   matrixB.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
   
-  // Explica a compatibilidade das dimensões
-  steps.push(`Passo ${stepCount++}: Verificar a compatibilidade das dimensões.`);
-  steps.push(`Verificando dimensões: A matriz A tem ${colsA} colunas e a matriz B tem ${colsA} linhas.`);
-  steps.push(`Como o número de colunas de A é igual ao número de linhas de B, a multiplicação é possível.`);
-  steps.push(`A matriz resultante terá dimensão ${rowsA}×${colsB}.`);
+  // Explica a compatibilidade das dimensões - Step 2
+  steps.push(t('matrices:matrix_operations.steps.matrix_dimensions', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.multiplication.steps.dimensions_verification', { colsA: colsA, rowsB: colsA }));
+  steps.push(t('matrices:matrix_operations.multiplication.steps.dimensions_compatible'));
+  steps.push(t('matrices:matrix_operations.multiplication.steps.result_dimension', { rowsA: rowsA, colsB: colsB }));
   
-  // Explica o processo de multiplicação
-  steps.push(`Passo ${stepCount++}: Aplicar o processo de multiplicação.`);
-  steps.push(`Aplicando a fórmula: (A × B)ᵢⱼ = Σ(Aᵢₖ × Bₖⱼ) para k de 1 até ${colsA}`);
-  steps.push(`Para cada elemento (i,j) da matriz resultante, calculamos o produto escalar da linha i da matriz A pela coluna j da matriz B.`);
+  // Explica o processo de multiplicação - Step 3
+  steps.push(t('matrices:matrix_operations.steps.element_operation', { step: stepCount++ }));
+  // Adiciona a fórmula de multiplicação de matrizes
+  steps.push(t('matrices:matrix_operations.multiplication.steps.matrix_formula', { colsA: colsA }));
+  // Adiciona a explicação do cálculo dos elementos
+  steps.push(t('matrices:matrix_operations.multiplication.steps.element_calculation_description'));
   
   // Calcula o resultado
   const result = multiplyMatrices(matrixA, matrixB);
   
   if (!result) {
-    steps.push('Erro ao calcular o resultado.');
+    steps.push(t('matrices:matrix_operations.multiplication.steps.calculation_error'));
     return steps;
   }
   
-  // Mostra o cálculo detalhado para cada elemento da matriz resultante
-  steps.push(`Passo ${stepCount++}: Cálculo detalhado para cada elemento da matriz resultante.`);
+  // Mostra o cálculo detalhado para cada elemento da matriz resultante - Step 4
+  steps.push(t('matrices:matrix_operations.steps.calculating_element', { step: stepCount++ }));
   
   for (let i = 0; i < rowsA; i++) {
     for (let j = 0; j < colsB; j++) {
-      steps.push(`Calculando: Elemento (${i+1},${j+1}) da matriz resultante:`);
+      steps.push(t('matrices:matrix_operations.multiplication.steps.calculating_element', { i: i+1, j: j+1 }));
       
-      let calculation = [];
+      let calculation: string[] = [];
       let sum = 0;
       
       for (let k = 0; k < colsA; k++) {
@@ -198,9 +204,9 @@ const generateMatrixMultiplicationSteps = (
     }
   }
   
-  // Mostra o resultado final
-  steps.push(`Passo ${stepCount++}: Matriz resultado.`);
-  steps.push(`Resultado: Matriz produto ${rowsA}×${colsB}`);
+  // Mostra o resultado final - Step 5
+  steps.push(t('matrices:matrix_operations.steps.result_matrix', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.steps.result_description', { operation: 'A × B', rows: rowsA, cols: colsB }));
   result.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
@@ -209,26 +215,27 @@ const generateMatrixMultiplicationSteps = (
   steps.push(`---VERIFICATION_SEPARATOR---`);
   
   // Adiciona verificações e propriedades
-  steps.push(`Verificação: Propriedades da multiplicação de matrizes`);
-  steps.push(`Verificando a propriedade não-comutativa: A × B ≠ B × A (em geral)`);
-  steps.push(`A multiplicação de matrizes não é comutativa. Geralmente, trocar a ordem das matrizes resulta em um produto diferente, ou até mesmo uma operação impossível devido a incompatibilidade de dimensões.`);
+  steps.push(t('matrices:matrix_operations.steps.verification_properties', { operation: t('matrices:matrix_operations.multiplication.title') }));
+  steps.push(t('matrices:matrix_operations.steps.checking_non_commutative'));
+  steps.push(t('matrices:matrix_operations.steps.non_commutative_explanation'));
   
-  steps.push(`Verificando propriedade associativa: (A × B) × C = A × (B × C)`);
-  steps.push(`A multiplicação de matrizes é associativa. A maneira como agrupamos as multiplicações não altera o resultado final, desde que a ordem das matrizes seja mantida.`);
+  steps.push(t('matrices:matrix_operations.steps.checking_associative'));
+  steps.push(t('matrices:matrix_operations.steps.associative_explanation'));
   
-  steps.push(`Verificando propriedade distributiva: A × (B + C) = A × B + A × C`);
-  steps.push(`A multiplicação de matrizes é distributiva em relação à adição. Multiplicar A por uma soma de matrizes é o mesmo que somar os produtos individuais.`);
+  steps.push(t('matrices:matrix_operations.steps.relation_with_addition'));
+  steps.push(t('matrices:matrix_operations.steps.relation_explanation'));
   
   // Conclui com as propriedades e aplicações
-  steps.push(`Resultado final: Multiplicação de matrizes ${rowsA}×${colsA} por ${colsA}×${colsB} concluída com sucesso.`);
+  steps.push(t('matrices:matrix_operations.steps.final_result', { operation: t('matrices:matrix_operations.multiplication.title'), rows: rowsA, cols: colsB }));
   
   return steps;
 };
 
-// Gera os passos de cálculo para multiplicação por escalar
+// Gera os passos de cálculo para multiplicação por escalar com tradução
 const generateScalarMultiplicationSteps = (
   matrix: number[][],
   scalar: number,
+  t: (key: string, params?: Record<string, any>) => string
 ): string[] => {
   const steps: string[] = [];
   let stepCount = 1;
@@ -236,38 +243,50 @@ const generateScalarMultiplicationSteps = (
   const rows = matrix.length;
   const cols = matrix[0].length;
   
-  // Adiciona informações iniciais
-  steps.push(`Passo ${stepCount++}: Identificar a matriz e o escalar.`);
-  steps.push(`Forma inicial: ${scalar} × A`);
+  // Adiciona informações iniciais - Step 1
+  steps.push(t('matrices:matrix_operations.steps.identify_matrices', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.multiplication.steps.initial_form_scalar', { scalar: scalar }));
   
   // Adiciona a representação da matriz
-  steps.push(`Matriz A (${rows}×${cols}):`);
+  steps.push(t('matrices:matrix_operations.multiplication.steps.matrix_a', { rows: rows, cols: cols }));
   matrix.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
   
-  steps.push(`Escalar: ${scalar}`);
+  // Adiciona informações sobre o escalar
+  steps.push(t('matrices:matrix_operations.multiplication.steps.scalar', { scalar: scalar }));
   
-  // Explica o processo
-  steps.push(`Passo ${stepCount++}: Aplicar a multiplicação por escalar.`);
-  steps.push(`Aplicando a fórmula: (k × A)ᵢⱼ = k × Aᵢⱼ`);
-  steps.push(`Para multiplicar uma matriz por um escalar, multiplicamos cada elemento da matriz pelo escalar.`);
+  // Explica o processo de multiplicação por escalar - Step 2
+  steps.push(t('matrices:matrix_operations.steps.element_operation', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_formula_description'));
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_formula_explanation'));
   
   // Calcula o resultado
   const result = multiplyMatrixByScalar(matrix, scalar);
   
-  // Mostra o cálculo detalhado para cada elemento
-  steps.push(`Passo ${stepCount++}: Cálculo detalhado para cada elemento da matriz resultante.`);
+  if (!result) {
+    steps.push(t('matrices:matrix_operations.multiplication.steps.calculation_error'));
+    return steps;
+  }
+  
+  // Mostra o cálculo detalhado para cada elemento da matriz resultante - Step 3
+  steps.push(t('matrices:matrix_operations.steps.calculating_element', { step: stepCount++ }));
   
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      steps.push(`Calculando: Elemento (${i+1},${j+1}): ${scalar} × ${matrix[i][j]} = ${result[i][j]}`);
+      steps.push(t('matrices:matrix_operations.multiplication.steps.calculating_scalar_element', { 
+        i: i+1, 
+        j: j+1,
+        scalar: scalar,
+        value: matrix[i][j],
+        result: scalar * matrix[i][j]
+      }));
     }
   }
   
-  // Mostra o resultado final
-  steps.push(`Passo ${stepCount++}: Matriz resultado.`);
-  steps.push(`Resultado: Matriz escalada ${rows}×${cols}`);
+  // Mostra o resultado final - Step 4
+  steps.push(t('matrices:matrix_operations.steps.result_matrix', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.steps.result_description', { operation: `${scalar} × A`, rows: rows, cols: cols }));
   result.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
@@ -276,25 +295,25 @@ const generateScalarMultiplicationSteps = (
   steps.push(`---VERIFICATION_SEPARATOR---`);
   
   // Adiciona verificações e propriedades
-  steps.push(`Verificação: Propriedades da multiplicação por escalar`);
+  steps.push(t('matrices:matrix_operations.steps.verification_properties', { operation: t('matrices:matrix_operations.multiplication.scalar_title') }));
   
-  steps.push(`Verificando a propriedade distributiva: k × (A + B) = k × A + k × B`);
-  steps.push(`A multiplicação por escalar é distributiva em relação à adição de matrizes. Multiplicar um escalar por uma soma de matrizes é o mesmo que somar as multiplicações individuais.`);
+  // Propriedade distributiva
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_property1_title'));
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_property1_explanation'));
   
-  steps.push(`Verificando propriedade associativa: (k × m) × A = k × (m × A)`);
-  steps.push(`A multiplicação por escalar é associativa em relação à multiplicação de escalares. A maneira como agrupamos os escalares não altera o resultado final.`);
-  
-  steps.push(`Verificando elemento neutro: 1 × A = A`);
-  steps.push(`O escalar 1 é o elemento neutro da multiplicação. Multiplicar uma matriz por 1 não altera a matriz.`);
+  // Propriedade associativa
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_property3_title'));
+  steps.push(t('matrices:matrix_operations.multiplication.concept.scalar_property3_explanation'));
   
   // Conclui com as propriedades e aplicações
-  steps.push(`Resultado final: Multiplicação por escalar concluída com sucesso.`);
+  steps.push(t('matrices:matrix_operations.multiplication.steps.scalar_final_result'));
   
   return steps;
 };
 
 export function useMatrizMultiplicationSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['matrices', 'translation']);
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -303,7 +322,7 @@ export function useMatrizMultiplicationSolver() {
     try {
       // Verificações comuns para ambos os tipos de operação
       if (!state.matrixA.trim()) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira a Matriz A.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.empty_matrix_a') });
         return;
       }
       
@@ -311,31 +330,31 @@ export function useMatrizMultiplicationSolver() {
       const matrixA = parseMatrixFromString(state.matrixA);
       
       if (!matrixA) {
-        dispatch({ type: 'SET_ERROR', message: 'Não foi possível interpretar a Matriz A. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.invalid_matrix_a') });
         return;
       }
       
       if (!isValidMatrix(matrixA)) {
-        dispatch({ type: 'SET_ERROR', message: 'A Matriz A é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.invalid_matrix_a_rows') });
         return;
       }
       
       // Verificações específicas para multiplicação de matrizes
       if (state.operationType === 'matrix') {
         if (!state.matrixB.trim()) {
-          dispatch({ type: 'SET_ERROR', message: 'Por favor, insira a Matriz B.' });
+          dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.empty_matrix_b') });
           return;
         }
         
         const matrixB = parseMatrixFromString(state.matrixB);
         
         if (!matrixB) {
-          dispatch({ type: 'SET_ERROR', message: 'Não foi possível interpretar a Matriz B. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+          dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.invalid_matrix_b') });
           return;
         }
         
         if (!isValidMatrix(matrixB)) {
-          dispatch({ type: 'SET_ERROR', message: 'A Matriz B é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+          dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.invalid_matrix_b_rows') });
           return;
         }
         
@@ -345,7 +364,7 @@ export function useMatrizMultiplicationSolver() {
           const dimB = `${matrixB.length}×${matrixB[0].length}`;
           dispatch({ 
             type: 'SET_ERROR', 
-            message: `As matrizes não podem ser multiplicadas. A matriz A é ${dimA} e a matriz B é ${dimB}. Para multiplicar A×B, o número de colunas de A deve ser igual ao número de linhas de B.` 
+            message: t('matrices:matrix_operations.multiplication.errors.incompatible_dimensions', { dimA, dimB })
           });
           return;
         }
@@ -356,13 +375,13 @@ export function useMatrizMultiplicationSolver() {
         if (!result) {
           dispatch({ 
             type: 'SET_ERROR', 
-            message: 'Erro ao calcular o produto das matrizes.' 
+            message: t('matrices:matrix_operations.multiplication.errors.calculation_error')
           });
           return;
         }
         
         // Gerar os passos para a solução
-        const steps = generateMatrixMultiplicationSteps(matrixA, matrixB);
+        const steps = generateMatrixMultiplicationSteps(matrixA, matrixB, t);
         
         dispatch({
           type: 'SET_RESULT',
@@ -373,14 +392,14 @@ export function useMatrizMultiplicationSolver() {
       // Verificações específicas para multiplicação por escalar
       else {
         if (!state.scalar.trim()) {
-          dispatch({ type: 'SET_ERROR', message: 'Por favor, insira o valor escalar.' });
+          dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.empty_scalar') });
           return;
         }
         
         const scalar = parseFloat(state.scalar.replace(',', '.'));
         
         if (isNaN(scalar)) {
-          dispatch({ type: 'SET_ERROR', message: 'O valor escalar não é um número válido.' });
+          dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.multiplication.errors.invalid_scalar') });
           return;
         }
         
@@ -388,7 +407,7 @@ export function useMatrizMultiplicationSolver() {
         const result = multiplyMatrixByScalar(matrixA, scalar);
         
         // Gerar os passos para a solução
-        const steps = generateScalarMultiplicationSteps(matrixA, scalar);
+        const steps = generateScalarMultiplicationSteps(matrixA, scalar, t);
         
         dispatch({
           type: 'SET_RESULT',
@@ -398,13 +417,13 @@ export function useMatrizMultiplicationSolver() {
       }
       
     } catch (error) {
-      let errorMessage = 'Erro desconhecido ao processar as matrizes.';
+      let errorMessage = t('matrices:matrix_operations.multiplication.errors.unknown_error');
       
       if (error instanceof Error) {
         if (error.message.includes('valores inválidos')) {
-          errorMessage = 'A matriz contém valores inválidos. Use apenas números.';
+          errorMessage = t('matrices:matrix_operations.multiplication.errors.invalid_matrix_a');
         } else if (error.message.includes('mesmo número de colunas')) {
-          errorMessage = 'Todas as linhas de uma matriz devem ter o mesmo número de colunas.';
+          errorMessage = t('matrices:matrix_operations.multiplication.errors.invalid_matrix_a_rows');
         } else {
           errorMessage = error.message;
         }

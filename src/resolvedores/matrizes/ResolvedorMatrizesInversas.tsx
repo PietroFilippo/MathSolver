@@ -12,7 +12,8 @@ const ResolvedorInverseMatrizes: React.FC = () => {
     state, 
     dispatch, 
     handleSolve, 
-    applyExample
+    applyExample,
+    t
   } = useMatrizInverseSolver();
 
   // Renderiza a matriz como uma tabela HTML
@@ -47,7 +48,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
       <div className="flex flex-col items-center justify-center my-4 space-y-4">
         <div className="flex items-center space-x-6 flex-wrap justify-center">
           <div className="text-center">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matriz A</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('inverse.matrix')}</p>
             {renderMatrix(state.parsedMatrix)}
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               {state.parsedMatrix.length}×{state.parsedMatrix[0]?.length}
@@ -57,14 +58,14 @@ const ResolvedorInverseMatrizes: React.FC = () => {
           <div className="flex items-center justify-center">
             <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">→</span>
             <div className="mx-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <p>Inversa</p>
+              <p>{t('inverse.title')}</p>
               <p className="text-xs italic">A<sup>-1</sup></p>
             </div>
             <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">→</span>
           </div>
           
           <div className="text-center">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matriz A<sup>-1</sup></p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('inverse.inverse_matrix')}</p>
             {renderMatrix(state.result)}
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               {state.result.length}×{state.result[0]?.length}
@@ -80,20 +81,19 @@ const ResolvedorInverseMatrizes: React.FC = () => {
       <div className="flex items-center mb-6">
         <HiCalculator className="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" />
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-          Matriz Inversa
+          {t('inverse.title')}
         </h2>
       </div>
 
       <div className="resolver-container p-6 mb-8">
         <p className="text-gray-700 dark:text-gray-300 mb-6">
-          Esta calculadora permite calcular a matriz inversa de uma matriz quadrada,
-          mostrando o passo a passo do processo e o resultado final.
+          {t('inverse.description')}
         </p>
 
         <div className="mb-6">
           <div className="mb-4">
             <label htmlFor="matrix" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Matriz
+              {t('inverse.matrix_input')}
             </label>
             <textarea
               id="matrix"
@@ -101,20 +101,24 @@ const ResolvedorInverseMatrizes: React.FC = () => {
               value={state.matrix}
               onChange={(e) => dispatch({ type: 'SET_MATRIX', value: e.target.value })}
               className="block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400"
-              placeholder="Ex: 1 2; 3 4"
+              placeholder={t('inverse.matrix_placeholder')}
             />
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Insira os elementos separados por espaço e as linhas separadas por ponto e vírgula. 
-              Exemplo: 1 2; 3 4 para uma matriz 2x2.
+              {t('inverse.input_instructions')}
             </p>
             
             {state.parsedMatrix && (
               <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-md">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pré-visualização:</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('inverse.preview')}:</p>
                 {renderMatrix(state.parsedMatrix)}
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Dimensão: {state.parsedMatrix.length}×{state.parsedMatrix[0]?.length}
+                  {t('inverse.dimensions', { rows: state.parsedMatrix.length, cols: state.parsedMatrix[0]?.length })}
                 </p>
+                {state.parsedMatrix.length !== state.parsedMatrix[0]?.length && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {t('inverse.not_square_warning')}
+                  </p>
+                )}
               </div>
             )}
             
@@ -123,11 +127,10 @@ const ResolvedorInverseMatrizes: React.FC = () => {
                 <HiInformationCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    <span className="font-medium">Matriz inversa A<sup>-1</sup>:</span> Uma matriz quadrada A tem inversa 
-                    A<sup>-1</sup> se e somente se A×A<sup>-1</sup> = A<sup>-1</sup>×A = I, onde I é a matriz identidade.
+                    <span className="font-medium">{t('inverse.title')} A<sup>-1</sup>:</span> {t('inverse.inverse_explanation')}
                   </p>
                   <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                    Para existir a inversa, o determinante da matriz deve ser diferente de zero.
+                    {t('inverse.non_zero_determinant')}
                   </p>
                 </div>
               </div>
@@ -136,7 +139,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
           
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Exemplos
+              {t('inverse.examples')}
             </label>
             <div className="flex flex-wrap gap-2">
               {getInverseMatrixExamples().map((example, index) => (
@@ -145,7 +148,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
                   onClick={() => applyExample(example)}
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
                 >
-                  {example.description}
+                  {t(`inverse.examples_matrix.${example.translationKey || example.description}`, { defaultValue: example.description })}
                 </button>
               ))}
             </div>
@@ -155,7 +158,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
             onClick={handleSolve}
             className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
           >
-            Calcular
+            {t('inverse.calculate_button')}
           </button>
         </div>
         
@@ -169,7 +172,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
       {state.result && (
         <div className="space-y-6">
           <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
-            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-4">Resultado</h3>
+            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-4">{t('inverse.steps.result', { rows: state.result.length, cols: state.result[0]?.length })}</h3>
             
             <div className="bg-white dark:bg-gray-800 p-4 rounded-md border border-gray-200 dark:border-gray-700">
               {renderInverseNotation()}
@@ -180,7 +183,7 @@ const ResolvedorInverseMatrizes: React.FC = () => {
               className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
             >
               <HiCalculator className="h-5 w-5 mr-1" />
-              {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+              {state.showExplanation ? t('inverse.hide_explanation') : t('inverse.show_explanation')}
             </button>
           </div>
           
@@ -189,235 +192,184 @@ const ResolvedorInverseMatrizes: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
                   <HiCalculator className="h-6 w-6 mr-2 text-indigo-600 dark:text-indigo-400" />
-                  Solução passo a passo
+                  {t('inverse.step_by_step')}
                 </h3>
               </div>
               
               <StepByStepExplanation steps={state.steps} stepType="matrices" />
               
               <ConceitoMatematico
-                title="Conceito Matemático" 
+                title={t('inverse.mathematical_concept.title')} 
                 isOpen={state.showConceitoMatematico} 
                 onToggle={() => dispatch({ type: 'TOGGLE_CONCEITO_MATEMATICO' })}
               >
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Definição</h5>
+                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('inverse.mathematical_concept.definition_title')}</h5>
                     
                     <p className="text-gray-700 dark:text-gray-300 mb-2">
-                      A inversa de uma matriz quadrada A é uma matriz A<sup>-1</sup> tal que A×A<sup>-1</sup> = A<sup>-1</sup>×A = I, 
-                      onde I é a matriz identidade. Nem toda matriz quadrada possui inversa.
+                      {t('inverse.mathematical_concept.definition_text')}
                     </p>
                     
                     <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm">
-                      <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">Condição para Existência</h6>
+                      <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">{t('inverse.mathematical_concept.important_requirements')}</h6>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Uma matriz quadrada A possui inversa se e somente se seu determinante é diferente de zero:
+                        {t('inverse.mathematical_concept.square_requirement')}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-mono">
-                        A<sup>-1</sup> existe ⟺ det(A) ≠ 0
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Uma matriz com determinante diferente de zero é chamada de "não-singular" ou "inversível".
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {t('inverse.mathematical_concept.determinant_requirement')}
                       </p>
                     </div>
 
-                    <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">Cálculo da Matriz Inversa</h6>
+                    <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">{t('inverse.mathematical_concept.calculation_methods')}</h6>
                     <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                      Para uma matriz A, a inversa A<sup>-1</sup> pode ser calculada usando a fórmula:
+                      {t('inverse.mathematical_concept.adjoint_method')}:
                     </p>
                     <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-md text-center">
                       <p className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                        A<sup>-1</sup> = (1/det(A)) × adj(A)
+                        {t('inverse.mathematical_concept.adjoint_formula')}
                       </p>
                     </div>
                     <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
-                      Onde adj(A) é a matriz adjunta de A, calculada como a transposta da matriz de cofatores.
+                      {t('inverse.mathematical_concept.adjoint_explanation')}
                     </p>
 
                     <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 my-3">
-                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Passos para Calcular a Inversa</h6>
-                      <ol className="text-sm text-gray-700 dark:text-gray-300 list-decimal list-inside space-y-1">
-                        <li>Calcular o determinante da matriz A</li>
-                        <li>Verificar se det(A) ≠ 0 (caso contrário, não existe inversa)</li>
-                        <li>Calcular a matriz de cofatores de A</li>
-                        <li>Calcular a matriz adjunta (transposta da matriz de cofatores)</li>
-                        <li>Multiplicar a adjunta por 1/det(A)</li>
-                      </ol>
+                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('inverse.mathematical_concept.gaussian_method')}</h6>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {t('inverse.mathematical_concept.gaussian_explanation')}
+                      </p>
                     </div>
 
                     <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 my-3">
-                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Exemplo Visual</h6>
+                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('determinant.mathematical_concept.visual_example')}</h6>
                       <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                        Para a matriz A = [1 2; 3 4]:
-                      </p>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        1. Determinante = 1×4 - 2×3 = 4 - 6 = -2
-                      </p>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        2. Matriz de cofatores = [4 -3; -2 1]
-                      </p>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        3. Matriz adjunta = [4 -2; -3 1]
-                      </p>
-                      <p className="text-sm text-blue-800 dark:text-blue-200">
-                        4. A<sup>-1</sup> = (-1/2) × [4 -2; -3 1] = [-2 1; 1.5 -0.5]
+                        {t('inverse.mathematical_concept.special_cases.diagonal_formula')}
                       </p>
                     </div>
 
                     <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md border-l-2 border-indigo-300 dark:border-indigo-700 my-3">
-                      <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">Aplicações Específicas</h6>
+                      <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">{t('inverse.mathematical_concept.applications.title')}</h6>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li><span className="font-medium">Resolução de sistemas lineares:</span> Para sistemas na forma Ax = b, podemos encontrar x = A<sup>-1</sup>b</li>
-                        <li><span className="font-medium">Transformações lineares:</span> Para encontrar a transformação inversa</li>
-                        <li><span className="font-medium">Cálculo de matrizes de mudança de base:</span> Em álgebra linear</li>
-                        <li><span className="font-medium">Análise de circuitos elétricos:</span> No método dos nós e das malhas</li>
-                        <li><span className="font-medium">Ajuste de curvas e regressão:</span> Na estimação de parâmetros em modelos de regressão linear múltipla</li>
-                        <li><span className="font-medium">Teoria de controle:</span> No cálculo de ganhos de controladores e estabilidade de sistemas</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.linear_systems')}:</span> {t('inverse.mathematical_concept.applications.linear_systems_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.transformations')}:</span> {t('inverse.mathematical_concept.applications.transformations_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.least_squares')}:</span> {t('inverse.mathematical_concept.applications.least_squares_formula')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.markov_chains')}:</span> {t('inverse.mathematical_concept.applications.markov_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.computer_graphics')}:</span> {t('inverse.mathematical_concept.applications.graphics_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.economics')}:</span> {t('inverse.mathematical_concept.applications.economics_explanation')}</li>
                       </ul>
                     </div>
                     
                     <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 mb-3">
-                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Aplicações Práticas</h6>
+                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('inverse.mathematical_concept.applications.title')}</h6>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li><span className="font-medium">Econometria:</span> Em regressão linear multivariada e estimação de parâmetros</li>
-                        <li><span className="font-medium">Computação Gráfica:</span> Em transformações geométricas e projeções</li>
-                        <li><span className="font-medium">Robótica:</span> Na cinemática direta e inversa de manipuladores</li>
-                        <li><span className="font-medium">Criptografia:</span> Em sistemas criptográficos baseados em matrizes</li>
-                        <li><span className="font-medium">Problemas de Otimização:</span> No método dos multiplicadores de Lagrange</li>
-                        <li><span className="font-medium">Análise Estatística:</span> Em matrizes de covariância e correlação</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.control_theory')}:</span> {t('inverse.mathematical_concept.applications.control_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.applications.quantum_mechanics')}:</span> {t('inverse.mathematical_concept.applications.quantum_explanation')}</li>
                       </ul>
                     </div>
 
                     <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md border-l-2 border-purple-300 dark:border-purple-700 mb-3">
-                      <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">Métodos Numéricos para Cálculo da Inversa</h6>
+                      <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">{t('inverse.mathematical_concept.numerical_considerations.title')}</h6>
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                        Para matrizes grandes, outros métodos mais eficientes são utilizados:
+                        {t('inverse.mathematical_concept.numerical_considerations.computational_cost')}:
                       </p>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li><span className="font-medium">Eliminação de Gauss-Jordan:</span> Transformando [A|I] em [I|A<sup>-1</sup>]</li>
-                        <li><span className="font-medium">Fatoração LU:</span> Decompondo A = LU e resolvendo sistemas para cada coluna</li>
-                        <li><span className="font-medium">Decomposição QR:</span> Para matrizes bem condicionadas</li>
-                        <li><span className="font-medium">Métodos iterativos:</span> Como Newton-Raphson para matrizes muito grandes</li>
-                        <li><span className="font-medium">Fatoração de Cholesky:</span> Para matrizes simétricas positivas definidas, mais eficiente que LU</li>
-                        <li><span className="font-medium">Decomposição em Valores Singulares (SVD):</span> Para calcular pseudo-inversas de matrizes singulares ou retangulares</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.numerical_considerations.conditioning')}:</span> {t('inverse.mathematical_concept.numerical_considerations.conditioning_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.numerical_considerations.computational_cost')}:</span> {t('inverse.mathematical_concept.numerical_considerations.cost_explanation')}</li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.numerical_considerations.alternatives')}:</span> {t('inverse.mathematical_concept.numerical_considerations.alternative_explanation')}</li>
                       </ul>
                     </div>
                   </div>
                   
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Propriedades</h5>
+                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('inverse.mathematical_concept.properties.title')}</h5>
                     
                     <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-md border-l-2 border-green-300 dark:border-green-700 mb-3">
-                      <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">Propriedades da Matriz Inversa</h6>
+                      <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">{t('inverse.mathematical_concept.properties.title')}</h6>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside mb-2 space-y-1">
-                        <li><span className="font-medium">Unicidade:</span> A inversa de uma matriz, quando existe, é única</li>
-                        <li><span className="font-medium">Inversa da inversa:</span> (A<sup>-1</sup>)<sup>-1</sup> = A<br/>
-                          <span className="text-xs ml-6">A inversa da inversa é a matriz original.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.identity_property')}:</span> {t('inverse.mathematical_concept.properties.identity_formula')}<br/>
                         </li>
-                        <li><span className="font-medium">Determinante da inversa:</span> det(A<sup>-1</sup>) = 1/det(A)<br/>
-                          <span className="text-xs ml-6">O determinante da inversa é o recíproco do determinante da matriz original.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.inverse_uniqueness')}:</span><br/>
+                          <span className="text-xs ml-6">{t('inverse.mathematical_concept.properties.uniqueness_explanation')}</span>
                         </li>
-                        <li><span className="font-medium">Inversa do produto:</span> (AB)<sup>-1</sup> = B<sup>-1</sup>A<sup>-1</sup><br/>
-                          <span className="text-xs ml-6">A inversa do produto é o produto das inversas em ordem inversa.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.inverse_of_inverse')}:</span> {t('inverse.mathematical_concept.properties.inverse_of_inverse_formula')}<br/>
                         </li>
-                        <li><span className="font-medium">Inversa da transposta:</span> (A<sup>T</sup>)<sup>-1</sup> = (A<sup>-1</sup>)<sup>T</sup><br/>
-                          <span className="text-xs ml-6">A inversa da transposta é igual à transposta da inversa.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.product_inverse')}:</span> {t('inverse.mathematical_concept.properties.product_inverse_formula')}<br/>
+                          <span className="text-xs ml-6">{t('inverse.mathematical_concept.properties.product_inverse_explanation')}</span>
                         </li>
-                        <li><span className="font-medium">Inversa do escalar:</span> (kA)<sup>-1</sup> = (1/k)A<sup>-1</sup>, k ≠ 0<br/>
-                          <span className="text-xs ml-6">A inversa de uma matriz multiplicada por um escalar é a inversa multiplicada pelo recíproco do escalar.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.scalar_inverse')}:</span> {t('inverse.mathematical_concept.properties.scalar_inverse_formula')}<br/>
+                        </li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.transpose_inverse')}:</span> {t('inverse.mathematical_concept.properties.transpose_inverse_formula')}<br/>
+                        </li>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.properties.power_inverse')}:</span> {t('inverse.mathematical_concept.properties.power_inverse_formula')}<br/>
                         </li>
                       </ul>
                     </div>
 
                     <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md border-l-2 border-purple-300 dark:border-purple-700 mb-3">
-                      <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">Tipos Especiais de Matrizes e suas Inversas</h6>
+                      <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">{t('inverse.mathematical_concept.special_cases.title')}</h6>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li><span className="font-medium">Matriz identidade:</span> I<sup>-1</sup> = I<br/>
-                          <span className="text-xs ml-6">A inversa da matriz identidade é ela mesma.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.special_cases.identity_matrix')}:</span> {t('inverse.mathematical_concept.special_cases.identity_inverse')}<br/>
                         </li>
-                        <li><span className="font-medium">Matriz diagonal:</span> Se A = diag(a₁, a₂, ..., aₙ), então A<sup>-1</sup> = diag(1/a₁, 1/a₂, ..., 1/aₙ), desde que aᵢ ≠ 0 para todo i<br/>
-                          <span className="text-xs ml-6">A inversa de uma matriz diagonal é a matriz diagonal dos recíprocos.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.special_cases.diagonal_matrix')}:</span> {t('inverse.mathematical_concept.special_cases.diagonal_inverse')}<br/>
                         </li>
-                        <li><span className="font-medium">Matriz triangular:</span> A inversa de uma matriz triangular é triangular do mesmo tipo<br/>
-                          <span className="text-xs ml-6">Se A é triangular superior, A<sup>-1</sup> também é triangular superior.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.special_cases.orthogonal_matrix')}:</span> {t('inverse.mathematical_concept.special_cases.orthogonal_inverse')}<br/>
                         </li>
-                        <li><span className="font-medium">Matriz ortogonal:</span> Se A é ortogonal (AA<sup>T</sup> = I), então A<sup>-1</sup> = A<sup>T</sup><br/>
-                          <span className="text-xs ml-6">A inversa de uma matriz ortogonal é sua transposta.</span>
+                        <li><span className="font-medium">{t('inverse.mathematical_concept.special_cases.triangular_matrix')}:</span> {t('inverse.mathematical_concept.special_cases.triangular_inverse')}<br/>
                         </li>
-                        <li><span className="font-medium">Matriz simétrica positiva definida:</span> Possui inversa e a inversa também é simétrica positiva definida</li>
                       </ul>
                     </div>
 
                     <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border-l-2 border-amber-300 dark:border-amber-700 mb-3">
-                      <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">Casos Especiais e Exemplos</h6>
+                      <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">{t('determinant.mathematical_concept.calculation_methods')}</h6>
                       <div className="space-y-2">
                         <div>
-                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 1: Matriz 2×2</p>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                            <div>A = [a b]</div>
-                            <div>    [c d]</div>
-                            <div className="mt-1">det(A) = ad - bc</div>
-                            <div className="mt-1">A<sup>-1</sup> = (1/det(A)) × [d -b]</div>
-                            <div>                         [-c a]</div>
-                          </div>
+                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('inverse.mathematical_concept.gaussian_method')}</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-2">
-                            Fórmula fechada para inversa de matriz 2×2.
+                            {t('inverse.mathematical_concept.gaussian_explanation')}
                           </p>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 2: Matriz Diagonal</p>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                            <div>A = [a 0 0]</div>
-                            <div>    [0 b 0]</div>
-                            <div>    [0 0 c]</div>
-                            <div className="mt-1">A<sup>-1</sup> = [1/a 0   0  ]</div>
-                            <div>            [0   1/b 0  ]</div>
-                            <div>            [0   0   1/c]</div>
-                          </div>
+                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('inverse.mathematical_concept.adjoint_method')}</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-2">
-                            A inversa de uma matriz diagonal é a diagonal dos recíprocos.
+                            {t('inverse.mathematical_concept.adjoint_explanation')}
                           </p>
                         </div>
                       </div>
                     </div>
                     
                     <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-md border-l-2 border-red-300 dark:border-red-700 mb-3">
-                      <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">Erros Comuns</h6>
+                      <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">{t('determinant.mathematical_concept.common_errors')}</h6>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li>Tentar calcular a inversa de uma matriz não-quadrada</li>
-                        <li>Calcular a inversa de uma matriz com determinante zero</li>
-                        <li>Inverter a ordem ao calcular a inversa do produto: (AB)<sup>-1</sup> ≠ A<sup>-1</sup>B<sup>-1</sup></li>
-                        <li>Confundir a inversa com a transposta (exceto para matrizes ortogonais)</li>
-                        <li>Ignorar problemas de instabilidade numérica ao calcular a inversa de matrizes mal-condicionadas</li>
+                        <li>{t('inverse.errors.not_square_matrix')}</li>
+                        <li>{t('inverse.errors.zero_determinant')}</li>
+                        <li>{t('inverse.verification.product_inverse_explanation')}</li>
                       </ul>
                     </div>
 
                     <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 mb-3">
-                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Condicionamento de Matrizes</h6>
+                      <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('inverse.verification.properties_title')}</h6>
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                        O número de condição de uma matriz mede a sensibilidade da solução de sistemas lineares:
+                        {t('inverse.verification.identity_property')}
                       </p>
                       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                        <li><span className="font-medium">Número de condição:</span> κ(A) = ||A|| · ||A<sup>-1</sup>||</li>
-                        <li><span className="font-medium">Matriz bem-condicionada:</span> κ(A) próximo de 1</li>
-                        <li><span className="font-medium">Matriz mal-condicionada:</span> κ(A) muito grande</li>
-                        <li><span className="font-medium">Consequência:</span> Pequenas perturbações nos dados podem causar grandes variações na solução</li>
+                        <li>{t('inverse.verification.identity_explanation')}</li>
+                        <li>{t('inverse.verification.inverse_of_inverse')} - {t('inverse.verification.inverse_of_inverse_explanation')}</li>
+                        <li>{t('inverse.verification.product_inverse')} - {t('inverse.verification.product_inverse_explanation')}</li>
+                        <li>{t('inverse.verification.scalar_inverse')} - {t('inverse.verification.scalar_inverse_explanation')}</li>
+                        <li>{t('inverse.verification.transpose_inverse')} - {t('inverse.verification.transpose_inverse_explanation')}</li>
                       </ul>
                     </div>
                     
                     <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md border-l-2 border-indigo-300 dark:border-indigo-700 mb-3">
-                      <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">Aplicações em Sistemas Lineares</h6>
+                      <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">{t('inverse.mathematical_concept.applications.linear_systems')}</h6>
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                        O uso da matriz inversa na resolução de sistemas lineares:
+                        {t('inverse.mathematical_concept.applications.linear_systems_explanation')}:
                       </p>
                       <div className="text-sm text-gray-700 dark:text-gray-300">
-                        <p>Para um sistema Ax = b:</p>
+                        <p>{t('inverse.mathematical_concept.applications.linear_systems_explanation')}</p>
                         <ul className="list-disc list-inside space-y-1 mt-1">
-                          <li><span className="font-medium">Solução:</span> x = A<sup>-1</sup>b</li>
-                          <li><span className="font-medium">Entretanto:</span> Na prática, raramente se calcula explicitamente A<sup>-1</sup></li>
-                          <li><span className="font-medium">Alternativas mais eficientes:</span> Eliminação Gaussiana, Decomposição LU, etc.</li>
-                          <li><span className="font-medium">Motivo:</span> Calcular a inversa tem complexidade O(n³), e resolução direta de sistemas pode ser mais eficiente</li>
+                          <li>{t('inverse.mathematical_concept.numerical_considerations.alternatives')}: {t('inverse.mathematical_concept.numerical_considerations.alternative_explanation')}</li>
                         </ul>
                       </div>
                     </div>

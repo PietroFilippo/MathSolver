@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   parseMatrixFromString, 
   isValidMatrix,
@@ -9,6 +10,7 @@ import {
 export interface TransposeExample {
   matrix: number[][];
   description: string;
+  translationKey?: string;
 }
 
 // Função para obter a matriz transposta
@@ -37,7 +39,8 @@ export const getTransposeExamples = (): TransposeExample[] => {
         [1, 2, 3],
         [4, 5, 6]
       ],
-      description: 'Matriz 2×3'
+      description: 'Matriz 2×3',
+      translationKey: 'matrix_2x3'
     },
     {
       matrix: [
@@ -45,7 +48,8 @@ export const getTransposeExamples = (): TransposeExample[] => {
         [3, 4],
         [5, 6]
       ],
-      description: 'Matriz 3×2'
+      description: 'Matriz 3×2',
+      translationKey: 'matrix_3x2'
     },
     {
       matrix: [
@@ -53,14 +57,16 @@ export const getTransposeExamples = (): TransposeExample[] => {
         [0, 1, 0],
         [0, 0, 1]
       ],
-      description: 'Matriz identidade 3×3'
+      description: 'Matriz identidade 3×3',
+      translationKey: 'identity_matrix_3x3'
     },
     {
       matrix: [
         [1, 2, 3],
         [1, 2, 3]
       ],
-      description: 'Matriz com linhas iguais'
+      description: 'Matriz com linhas iguais',
+      translationKey: 'matrix_equal_rows'
     },
     {
       matrix: [
@@ -68,18 +74,19 @@ export const getTransposeExamples = (): TransposeExample[] => {
         [2, 2],
         [3, 3]
       ],
-      description: 'Matriz com colunas iguais'
+      description: 'Matriz com colunas iguais',
+      translationKey: 'matrix_equal_columns'
     }
   ];
 };
 
 // Gera os passos detalhados do cálculo da transposição
-const generateTransposeSteps = (matrix: number[][]): string[] => {
+const generateTransposeSteps = (matrix: number[][], t: any): string[] => {
   const steps: string[] = [];
   let stepCount = 1;
   
   if (!isValidMatrix(matrix)) {
-    steps.push(`A matriz não é válida. Não é possível calcular a transposta.`);
+    steps.push(t('matrices:matrix_operations.transpose.steps.invalid_matrix'));
     return steps;
   }
   
@@ -87,28 +94,28 @@ const generateTransposeSteps = (matrix: number[][]): string[] => {
   const cols = matrix[0].length;
   
   // Passo 1: Identificar a matriz de entrada
-  steps.push(`Passo ${stepCount++}: Identificar a matriz de entrada.`);
-  steps.push(`Matriz original (${rows}×${cols}):`);
+  steps.push(t('matrices:matrix_operations.steps.identify_matrices', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.original_matrix', { rows, cols }));
   matrix.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
   
   // Passo 2: Explicar o conceito de transposição
-  steps.push(`Passo ${stepCount++}: Compreender o conceito de matriz transposta.`);
-  steps.push(`A transposta de uma matriz é obtida transformando suas linhas em colunas e vice-versa.`);
-  steps.push(`Se A é uma matriz de dimensão m×n, então A^T será uma matriz de dimensão n×m.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.understand_concept', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.concept_description'));
+  steps.push(t('matrices:matrix_operations.transpose.steps.dimension_change', { rows, cols }));
   
   // Passo 3: Processo de transposição
-  steps.push(`Passo ${stepCount++}: Aplicar o processo de transposição.`);
-  steps.push(`Forma inicial: A = matriz ${rows}×${cols}`);
-  steps.push(`Aplicando a transposição: A^T = matriz ${cols}×${rows}`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.apply_transposition', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.initial_form', { rows, cols }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.applying_transpose', { cols, rows }));
   
   // Calculando a transposta
   const transposed = transposeMatrix(matrix);
   
   // Mostrar o processo para cada elemento
-  steps.push(`Passo ${stepCount++}: Mapeamento detalhado dos elementos.`);
-  steps.push(`Para cada elemento A[i,j] da matriz original, o elemento correspondente na transposta será A^T[j,i].`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.element_mapping_detail', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.element_mapping'));
   
   // Exemplos específicos de mapeamento
   const examples = Math.min(3, rows * cols); // Limitar a quantidade de exemplos
@@ -116,18 +123,24 @@ const generateTransposeSteps = (matrix: number[][]): string[] => {
   
   for (let i = 0; i < rows && exampleCount < examples; i++) {
     for (let j = 0; j < cols && exampleCount < examples; j++) {
-      steps.push(`Elemento A[${i+1},${j+1}] = ${matrix[i][j]} → A^T[${j+1},${i+1}] = ${matrix[i][j]}`);
+      steps.push(t('matrices:matrix_operations.transpose.steps.element_example', {
+        row: i+1,
+        col: j+1,
+        value: matrix[i][j],
+        newRow: j+1,
+        newCol: i+1
+      }));
       exampleCount++;
     }
   }
   
   if (rows * cols > examples) {
-    steps.push(`... e assim por diante para todos os elementos.`);
+    steps.push(t('matrices:matrix_operations.transpose.steps.and_so_on'));
   }
   
   // Apresentar o resultado
-  steps.push(`Passo ${stepCount++}: Matriz transposta resultante.`);
-  steps.push(`Resultado: Matriz transposta (${cols}×${rows}):`);
+  steps.push(t('matrices:matrix_operations.steps.result_matrix', { step: stepCount++ }));
+  steps.push(t('matrices:matrix_operations.transpose.steps.resulting_transpose', { cols, rows }));
   transposed.forEach(row => {
     steps.push(`[${row.join(', ')}]`);
   });
@@ -136,19 +149,19 @@ const generateTransposeSteps = (matrix: number[][]): string[] => {
   steps.push(`---VERIFICATION_SEPARATOR---`);
   
   // Verificação de propriedades
-  steps.push(`Verificação: Propriedades da transposição`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.verification_properties'));
   
-  steps.push(`1. (A^T)^T = A`);
-  steps.push(`   A transposta da transposta de uma matriz é a própria matriz original.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop1_title'));
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop1_description'));
   
-  steps.push(`2. (A + B)^T = A^T + B^T`);
-  steps.push(`   A transposta da soma de duas matrizes é igual à soma das transpostas.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop2_title'));
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop2_description'));
   
-  steps.push(`3. (c×A)^T = c×A^T`);
-  steps.push(`   A transposta de uma matriz multiplicada por um escalar é igual à transposta multiplicada pelo mesmo escalar.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop3_title'));
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop3_description'));
   
-  steps.push(`4. (A×B)^T = B^T×A^T`);
-  steps.push(`   A transposta do produto de duas matrizes é igual ao produto das transpostas na ordem inversa.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop4_title'));
+  steps.push(t('matrices:matrix_operations.transpose.steps.prop4_description'));
   
   // Casos especiais
   if (rows === cols) {
@@ -164,14 +177,14 @@ const generateTransposeSteps = (matrix: number[][]): string[] => {
     }
     
     if (isSymmetric) {
-      steps.push(`Verificação especial: Esta matriz é simétrica (A = A^T).`);
-      steps.push(`Uma matriz é simétrica quando ela é igual à sua transposta.`);
+      steps.push(t('matrices:matrix_operations.transpose.steps.symmetric_true'));
+      steps.push(t('matrices:matrix_operations.transpose.steps.symmetric_explanation'));
     } else {
-      steps.push(`Verificação especial: Esta matriz não é simétrica (A ≠ A^T).`);
+      steps.push(t('matrices:matrix_operations.transpose.steps.symmetric_false'));
     }
   }
   
-  steps.push(`Resultado final: Transposição concluída com sucesso.`);
+  steps.push(t('matrices:matrix_operations.transpose.steps.final_result'));
   
   return steps;
 };
@@ -257,6 +270,7 @@ function reducer(state: State, action: Action): State {
 
 export function useMatrizTransposeSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['matrices', 'translation']);
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -265,7 +279,7 @@ export function useMatrizTransposeSolver() {
     try {
       // Verificar se a matriz foi fornecida
       if (!state.matrix.trim()) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira a matriz.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.transpose.errors.enter_matrix') });
         return;
       }
       
@@ -273,18 +287,18 @@ export function useMatrizTransposeSolver() {
       const matrix = parseMatrixFromString(state.matrix);
       
       if (!matrix) {
-        dispatch({ type: 'SET_ERROR', message: 'Não foi possível interpretar a matriz. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.transpose.errors.invalid_format') });
         return;
       }
       
       if (!isValidMatrix(matrix)) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:matrix_operations.transpose.errors.invalid_matrix') });
         return;
       }
       
       // Calcular a transposta e gerar os passos
       const transposed = transposeMatrix(matrix);
-      const steps = generateTransposeSteps(matrix);
+      const steps = generateTransposeSteps(matrix, t);
       
       dispatch({
         type: 'SET_RESULT',
@@ -293,13 +307,13 @@ export function useMatrizTransposeSolver() {
       });
       
     } catch (error) {
-      let errorMessage = 'Erro desconhecido ao processar a matriz.';
+      let errorMessage = t('matrices:matrix_operations.transpose.errors.unknown_error');
       
       if (error instanceof Error) {
         if (error.message.includes('valores inválidos')) {
-          errorMessage = 'A matriz contém valores inválidos. Use apenas números.';
+          errorMessage = t('matrices:matrix_operations.transpose.errors.invalid_values');
         } else if (error.message.includes('mesmo número de colunas')) {
-          errorMessage = 'Todas as linhas de uma matriz devem ter o mesmo número de colunas.';
+          errorMessage = t('matrices:matrix_operations.transpose.errors.same_columns');
         } else {
           errorMessage = error.message;
         }

@@ -11,6 +11,7 @@ import {
 import { useMatrizMultiplicationSolver } from '../../hooks/matrizes/useMatrizMultiplicacaoSolver';
 import StepByStepExplanation from '../../components/StepByStepExplanation';
 import ConceitoMatematico from '../../components/ConceitoMatematico';
+import { useTranslation } from 'react-i18next';
 
 const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
   const { 
@@ -20,6 +21,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
     applyMatrixExample, 
     applyScalarExample 
   } = useMatrizMultiplicationSolver();
+  const { t } = useTranslation(['matrices', 'translation']);
 
   // Renderiza a matriz como uma tabela HTML
   const renderMatrix = (matrix: number[][]) => {
@@ -55,7 +57,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
         <div className="flex flex-col items-center justify-center my-4 space-y-2">
           <div className="flex items-center space-x-4 flex-wrap justify-center">
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matriz A</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.matrix_a')}</p>
               {renderMatrix(state.parsedMatrixA!)}
             </div>
             
@@ -64,7 +66,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
             </div>
             
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matriz B</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.matrix_b')}</p>
               {renderMatrix(state.parsedMatrixB!)}
             </div>
             
@@ -73,7 +75,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
             </div>
             
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Resultado</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.result')}</p>
               {state.result && renderMatrix(state.result)}
             </div>
           </div>
@@ -84,7 +86,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
         <div className="flex flex-col items-center justify-center my-4 space-y-2">
           <div className="flex items-center space-x-4 flex-wrap justify-center">
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Escalar</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.scalar_value')}</p>
               <div className="flex items-center justify-center h-12 w-12 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700">
                 <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">{state.scalar}</span>
               </div>
@@ -95,7 +97,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
             </div>
             
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matriz A</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.matrix_a')}</p>
               {renderMatrix(state.parsedMatrixA!)}
             </div>
             
@@ -104,7 +106,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
             </div>
             
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Resultado</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.result')}</p>
               {state.result && renderMatrix(state.result)}
             </div>
           </div>
@@ -118,20 +120,19 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
       <div className="flex items-center mb-6">
         <HiCalculator className="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-2" />
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-          Multiplicação de Matrizes
+          {t('matrices:matrix_operations.multiplication.title')}
         </h2>
       </div>
 
       <div className="resolver-container p-6 mb-8">
         <p className="text-gray-700 dark:text-gray-300 mb-6">
-          Esta calculadora permite realizar operações de multiplicação de matrizes e multiplicação por escalar,
-          mostrando os passos do cálculo e o resultado final.
+          {t('matrices:matrix_operations.multiplication.description')}
         </p>
 
         <div className="mb-6">
           <div className="mb-4">
             <label htmlFor="matrixA" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Matriz A
+              {t('matrices:matrix_operations.multiplication.matrix_a')}
             </label>
             <textarea
               id="matrixA"
@@ -142,16 +143,15 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
               placeholder="Ex: 1 2 3; 4 5 6; 7 8 9"
             />
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Insira os elementos separados por espaço e as linhas separadas por ponto e vírgula. 
-              Exemplo: 1 2 3; 4 5 6; 7 8 9 para uma matriz 3x3.
+              {t('matrices:matrix_operations.multiplication.input_format')}
             </p>
             
             {state.parsedMatrixA && (
               <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-md">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pré-visualização:</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.preview')}:</p>
                 {renderMatrix(state.parsedMatrixA)}
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Dimensão: {state.parsedMatrixA.length}×{state.parsedMatrixA[0]?.length}
+                  {t('matrices:matrix_operations.multiplication.dimension')}: {state.parsedMatrixA.length}×{state.parsedMatrixA[0]?.length}
                 </p>
               </div>
             )}
@@ -160,7 +160,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
           {state.operationType === 'matrix' ? (
             <div className="mb-4">
               <label htmlFor="matrixB" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Matriz B
+                {t('matrices:matrix_operations.multiplication.matrix_b')}
               </label>
               <textarea
                 id="matrixB"
@@ -173,10 +173,10 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
               
               {state.parsedMatrixB && (
                 <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-md">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pré-visualização:</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('matrices:matrix_operations.multiplication.preview')}:</p>
                   {renderMatrix(state.parsedMatrixB)}
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Dimensão: {state.parsedMatrixB.length}×{state.parsedMatrixB[0]?.length}
+                    {t('matrices:matrix_operations.multiplication.dimension')}: {state.parsedMatrixB.length}×{state.parsedMatrixB[0]?.length}
                   </p>
                 </div>
               )}
@@ -186,14 +186,19 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                   <HiInformationCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      <span className="font-medium">Requisito para multiplicação de matrizes:</span> O número de colunas 
-                      da matriz A deve ser igual ao número de linhas da matriz B.
+                      <span className="font-medium">{t('matrices:matrix_operations.multiplication.compatibility_requirement.title')}:</span> {t('matrices:matrix_operations.multiplication.compatibility_requirement.description')}
                     </p>
                     {state.parsedMatrixA && state.parsedMatrixB && (
                       <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
                         {state.parsedMatrixA[0]?.length === state.parsedMatrixB.length
-                          ? `✓ Compatível: ${state.parsedMatrixA[0]?.length} colunas (A) = ${state.parsedMatrixB.length} linhas (B)`
-                          : `✗ Incompatível: ${state.parsedMatrixA[0]?.length} colunas (A) ≠ ${state.parsedMatrixB.length} linhas (B)`
+                          ? t('matrices:matrix_operations.multiplication.compatibility_requirement.compatible', {
+                              columnsA: state.parsedMatrixA[0]?.length,
+                              rowsB: state.parsedMatrixB.length
+                            })
+                          : t('matrices:matrix_operations.multiplication.compatibility_requirement.incompatible', {
+                              columnsA: state.parsedMatrixA[0]?.length,
+                              rowsB: state.parsedMatrixB.length
+                            })
                         }
                       </p>
                     )}
@@ -204,7 +209,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
           ) : (
             <div className="mb-4">
               <label htmlFor="scalar" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Valor Escalar
+                {t('matrices:matrix_operations.multiplication.scalar_value')}
               </label>
               <input
                 id="scalar"
@@ -219,7 +224,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                 <div className="flex items-start">
                   <HiInformationCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Na multiplicação por escalar, cada elemento da matriz é multiplicado pelo valor escalar.
+                    {t('matrices:matrix_operations.multiplication.scalar_info')}
                   </p>
                 </div>
               </div>
@@ -228,7 +233,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
           
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Operação
+              {t('matrices:matrix_operations.multiplication.operation_type')}
             </label>
             <div className="flex space-x-6 mb-2">
               <label className="inline-flex items-center">
@@ -238,7 +243,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                   checked={state.operationType === 'matrix'}
                   onChange={() => dispatch({ type: 'SET_OPERATION_TYPE', value: 'matrix' })}
                 />
-                <span className="ml-2 text-gray-700 dark:text-gray-300">Matriz × Matriz</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.matrix_multiplication')}</span>
               </label>
               <label className="inline-flex items-center">
                 <input
@@ -247,14 +252,14 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                   checked={state.operationType === 'scalar'}
                   onChange={() => dispatch({ type: 'SET_OPERATION_TYPE', value: 'scalar' })}
                 />
-                <span className="ml-2 text-gray-700 dark:text-gray-300">Escalar × Matriz</span>
+                <span className="ml-2 text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.scalar_multiplication')}</span>
               </label>
             </div>
           </div>
           
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Exemplos
+              {t('matrices:matrix_operations.multiplication.examples')}
             </label>
             <div className="flex flex-wrap gap-2">
               {state.operationType === 'matrix' 
@@ -264,7 +269,9 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                       onClick={() => applyMatrixExample(example)}
                       className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
                     >
-                      {example.description}
+                      {example.translationKey 
+                        ? t(`translation:common.matrix_examples.${example.translationKey}`) 
+                        : example.description}
                     </button>
                   ))
                 : getScalarMultiplicationExamples().map((example, index) => (
@@ -273,7 +280,9 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                       onClick={() => applyScalarExample(example)}
                       className="px-3 py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-full transition-colors"
                     >
-                      {example.description}
+                      {example.translationKey 
+                        ? t(`translation:common.matrix_examples.${example.translationKey}`) 
+                        : example.description}
                     </button>
                   ))
               }
@@ -284,7 +293,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
             onClick={handleSolve}
             className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 mt-4"
           >
-            Calcular
+            {t('matrices:matrix_operations.multiplication.calculate')}
           </button>
         </div>
         
@@ -298,7 +307,7 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
       {state.result && (
         <div className="space-y-6">
           <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-5">
-            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-4">Resultado</h3>
+            <h3 className="text-lg font-medium text-green-800 dark:text-green-300 mb-4">{t('matrices:matrix_operations.multiplication.result')}</h3>
             
             <div className="bg-white dark:bg-gray-800 p-4 rounded-md border border-gray-200 dark:border-gray-700">
               {renderMatrixOperation()}
@@ -309,8 +318,8 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                 <HiInformationCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0" />
                 <p className="text-blue-700 dark:text-blue-300 font-medium">
                   {state.operationType === 'matrix' 
-                    ? 'Na multiplicação de matrizes A×B, cada elemento do resultado é o produto escalar da linha correspondente de A com a coluna correspondente de B.'
-                    : 'Na multiplicação por escalar k×A, cada elemento da matriz é multiplicado pelo escalar k.'}
+                    ? t('matrices:matrix_operations.multiplication.explanation.matrix_description')
+                    : t('matrices:matrix_operations.multiplication.explanation.scalar_description')}
                 </p>
               </div>
             </div>
@@ -320,7 +329,9 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
               className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium flex items-center"
             >
               <HiCalculator className="h-5 w-5 mr-1" />
-              {state.showExplanation ? "Ocultar explicação detalhada" : "Mostrar explicação detalhada"}
+              {state.showExplanation 
+                ? t('matrices:matrix_operations.multiplication.explanation.hide') 
+                : t('matrices:matrix_operations.multiplication.explanation.show')}
             </button>
           </div>
           
@@ -329,162 +340,151 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
                   <HiCalculator className="h-6 w-6 mr-2 text-indigo-600 dark:text-indigo-400" />
-                  Solução passo a passo
+                  {t('translation:common.step_by_step')}
                 </h3>
               </div>
               
               <StepByStepExplanation steps={state.steps} stepType="matrices" />
               
               <ConceitoMatematico
-                title="Conceito Matemático" 
+                title={t('translation:common.mathematical_concept')}
                 isOpen={state.showConceitoMatematico} 
                 onToggle={() => dispatch({ type: 'TOGGLE_CONCEITO_MATEMATICO' })}
               >
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Definição</h5>
+                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('matrices:matrix_operations.mathematical_concept.definition_title')}</h5>
                     
                     {state.operationType === 'matrix' ? (
                       <>
                         <p className="text-gray-700 dark:text-gray-300 mb-2">
-                          A multiplicação de matrizes é uma operação binária que produz uma única matriz a partir de duas matrizes. 
-                          Para duas matrizes A e B poderem ser multiplicadas, o número de colunas da matriz A deve ser igual ao número de linhas da matriz B.
+                          {t('matrices:matrix_operations.multiplication.concept.definition')}
                         </p>
                         
                         <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md border-l-2 border-yellow-300 dark:border-yellow-600 mb-3">
                           <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                            <span className="font-semibold">Requisito importante:</span> Se A é uma matriz m×n e B é uma matriz n×p, então o produto AB é uma matriz m×p.
+                            <span className="font-semibold">{t('matrices:matrix_operations.multiplication.concept.important_requirement')}:</span> {t('matrices:matrix_operations.multiplication.concept.dimension_requirement')}
                           </p>
                         </div>
                         
                         <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm">
-                          <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">Fórmula</h6>
+                          <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">{t('matrices:matrix_operations.multiplication.concept.formula_title')}</h6>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Se A = [aᵢⱼ] é uma matriz m×n e B = [bᵢⱼ] é uma matriz n×p, então o produto C = AB é a matriz m×p cujos elementos são dados por:
+                            {t('matrices:matrix_operations.multiplication.concept.formula_description')}
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-mono">
-                            cᵢⱼ = Σ aᵢₖ × bₖⱼ (para k de 1 até n)
+                            {t('matrices:matrix_operations.multiplication.concept.formula_expression')}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Ou seja, o elemento cᵢⱼ é o produto escalar da i-ésima linha de A com a j-ésima coluna de B.
+                            {t('matrices:matrix_operations.multiplication.concept.formula_explanation')}
                           </p>
                         </div>
 
-                        <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">Interpretação Visual</h6>
+                        <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">{t('matrices:matrix_operations.multiplication.concept.visual_interpretation')}</h6>
                         <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                          Para calcular o elemento na posição (i,j) da matriz resultante:
+                          {t('matrices:matrix_operations.multiplication.concept.calculation_explanation')}
                         </p>
                         <ol className="text-sm text-gray-700 dark:text-gray-300 list-decimal list-inside space-y-1 ml-2">
-                          <li>Pegue a i-ésima linha da matriz A</li>
-                          <li>Pegue a j-ésima coluna da matriz B</li>
-                          <li>Multiplique os elementos correspondentes</li>
-                          <li>Some os produtos obtidos</li>
+                          <li>{t('matrices:matrix_operations.multiplication.concept.step1')}</li>
+                          <li>{t('matrices:matrix_operations.multiplication.concept.step2')}</li>
+                          <li>{t('matrices:matrix_operations.multiplication.concept.step3')}</li>
+                          <li>{t('matrices:matrix_operations.multiplication.concept.step4')}</li>
                         </ol>
 
                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 my-3">
-                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Exemplo Visual</h6>
+                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.visual_example_title')}</h6>
                           <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                            Para calcular o elemento c₁₁ do produto C = A×B:
+                            {t('matrices:matrix_operations.multiplication.concept.example_description')}
                           </p>
                           <p className="text-sm text-blue-800 dark:text-blue-200">
-                            c₁₁ = a₁₁×b₁₁ + a₁₂×b₂₁ + ... + a₁ₙ×bₙ₁
+                            {t('matrices:matrix_operations.multiplication.concept.example_formula')}
                           </p>
                         </div>
 
                         <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md border-l-2 border-indigo-300 dark:border-indigo-700 my-3">
-                          <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">Aplicações Específicas</h6>
+                          <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.specific_applications_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">Composição de transformações lineares:</span> Se A e B representam transformações lineares, AB representa a composição dessas transformações</li>
-                            <li><span className="font-medium">Sistemas de equações lineares:</span> Ax = b, onde A é a matriz de coeficientes, x é o vetor de incógnitas e b é o vetor de termos independentes</li>
-                            <li><span className="font-medium">Cadeias de Markov:</span> Onde a matriz de transição representa as probabilidades de mudança entre estados</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.application1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.application1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.application2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.application2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.application3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.application3_description')}</li>
                           </ul>
                         </div>
                         
                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 mb-3">
-                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Aplicações Práticas</h6>
+                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.practical_applications_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">Sistemas de Equações Lineares:</span> Para resolver sistemas de equações</li>
-                            <li><span className="font-medium">Transformações Geométricas:</span> Para rotações, reflexões e projeções</li>
-                            <li><span className="font-medium">Computação Gráfica:</span> Para transformações 3D e renderização</li>
-                            <li><span className="font-medium">Criptografia:</span> Em algoritmos como o Hill cipher</li>
-                            <li><span className="font-medium">Economia:</span> Em modelos de entrada-saída e análise de Leontief</li>
-                            <li><span className="font-medium">Física:</span> Para transformações de coordenadas e mecânica quântica</li>
-                            <li><span className="font-medium">Machine Learning:</span> Em operações com redes neurais e matrizes de pesos</li>
-                            <li><span className="font-medium">Teoria dos Grafos:</span> Na representação de grafos através de matrizes de adjacência</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical3_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical4_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical5_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical5_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical6_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical6_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical7_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical7_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical8_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical8_description')}</li>
                           </ul>
                         </div>
                       </>
                     ) : (
                       <>
                         <p className="text-gray-700 dark:text-gray-300 mb-2">
-                          A multiplicação por escalar é uma operação que multiplica cada elemento de uma matriz por um número (escalar).
-                          É uma das operações fundamentais da álgebra linear.
+                          {t('matrices:matrix_operations.multiplication.concept.scalar_definition')}
                         </p>
                         
                         <div className="bg-white dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600 shadow-sm">
-                          <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">Fórmula</h6>
+                          <h6 className="text-lg font-medium text-indigo-700 dark:text-indigo-300 mb-1">{t('matrices:matrix_operations.multiplication.concept.formula_title')}</h6>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Se A = [aᵢⱼ] é uma matriz m×n e k é um escalar, então o produto kA é a matriz m×n cujos elementos são dados por:
+                            {t('matrices:matrix_operations.multiplication.concept.scalar_formula_description')}
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-mono">
-                            (kA)ᵢⱼ = k × aᵢⱼ
+                            {t('matrices:matrix_operations.multiplication.concept.scalar_formula_expression')}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Ou seja, cada elemento da matriz resultante é k vezes o elemento correspondente da matriz original.
+                            {t('matrices:matrix_operations.multiplication.concept.scalar_formula_explanation')}
                           </p>
                         </div>
 
-                        <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">Interpretação Geométrica</h6>
+                        <h6 className="text-base font-medium text-gray-800 dark:text-gray-100 mt-4 mb-2">{t('matrices:matrix_operations.multiplication.concept.geometric_interpretation')}</h6>
                         <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                          A multiplicação de uma matriz por um escalar pode ser interpretada geometricamente como:
+                          {t('matrices:matrix_operations.multiplication.concept.geometric_description')}
                         </p>
                         <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1 ml-2">
-                          <li>Um <span className="font-medium">redimensionamento</span> quando |k| &gt; 1 (ampliação)</li>
-                          <li>Um <span className="font-medium">redimensionamento</span> quando 0 &lt; |k| &lt; 1 (redução)</li>
-                          <li>Uma <span className="font-medium">reflexão</span> quando k &lt; 0, além do redimensionamento</li>
-                          <li>Uma <span className="font-medium">projeção no zero</span> quando k = 0</li>
+                          <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.geometric1_title')}</span> {t('matrices:matrix_operations.multiplication.concept.geometric1_description')}</li>
+                          <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.geometric2_title')}</span> {t('matrices:matrix_operations.multiplication.concept.geometric2_description')}</li>
+                          <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.geometric3_title')}</span> {t('matrices:matrix_operations.multiplication.concept.geometric3_description')}</li>
+                          <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.geometric4_title')}</span> {t('matrices:matrix_operations.multiplication.concept.geometric4_description')}</li>
                         </ul>
 
                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 my-3">
-                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Exemplo Visual</h6>
+                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.visual_example_title')}</h6>
                           <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                            Para a matriz A = [1 2; 3 4] e o escalar k = 2:
+                            {t('matrices:matrix_operations.multiplication.concept.scalar_example_description')}
                           </p>
                           <div className="flex items-center justify-center text-blue-800 dark:text-blue-200 font-mono">
-                            <div>2 ×</div>
-                            <div className="mx-2">
-                              <div>[1 2]</div>
-                              <div>[3 4]</div>
-                            </div>
-                            <div>=</div>
-                            <div className="mx-2">
-                              <div>[2 4]</div>
-                              <div>[6 8]</div>
-                            </div>
+                            <div>{t('matrices:matrix_operations.multiplication.concept.scalar_example_expression')}</div>
                           </div>
                         </div>
 
                         <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-md border-l-2 border-indigo-300 dark:border-indigo-700 my-3">
-                          <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">Aplicações Específicas</h6>
+                          <h6 className="text-indigo-700 dark:text-indigo-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.specific_applications_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">Transformações de escala:</span> Em computação gráfica para redimensionar objetos</li>
-                            <li><span className="font-medium">Normalização:</span> Multiplicação por 1/||v|| para normalizar um vetor v</li>
-                            <li><span className="font-medium">Mudança de unidades:</span> Conversão entre diferentes sistemas de medida</li>
-                            <li><span className="font-medium">Ajuste de intensidade:</span> Em processamento de imagens para alterar brilho/contraste</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_application1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_application1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_application2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_application2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_application3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_application3_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_application4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_application4_description')}</li>
                           </ul>
                         </div>
                         
                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border-l-2 border-blue-300 dark:border-blue-700 mb-3">
-                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">Aplicações Práticas</h6>
+                          <h6 className="text-blue-700 dark:text-blue-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.practical_applications_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">Sistemas de Equações Lineares:</span> Para resolver sistemas de equações</li>
-                            <li><span className="font-medium">Transformações Geométricas:</span> Para rotações, reflexões e projeções</li>
-                            <li><span className="font-medium">Computação Gráfica:</span> Para transformações 3D e renderização</li>
-                            <li><span className="font-medium">Criptografia:</span> Em algoritmos como o Hill cipher</li>
-                            <li><span className="font-medium">Economia:</span> Em modelos de entrada-saída e análise de Leontief</li>
-                            <li><span className="font-medium">Física:</span> Para transformações de coordenadas e mecânica quântica</li>
-                            <li><span className="font-medium">Machine Learning:</span> Em operações com redes neurais e matrizes de pesos</li>
-                            <li><span className="font-medium">Teoria dos Grafos:</span> Na representação de grafos através de matrizes de adjacência</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical3_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical4_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical5_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical5_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical6_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical6_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical7_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical7_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.practical8_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.practical8_description')}</li>
                           </ul>
                         </div>
                       </>
@@ -492,168 +492,165 @@ const ResolvedorMultiplicacaoMatrizes: React.FC = () => {
                   </div>
                   
                   <div className="flex-1">
-                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">Propriedades</h5>
+                    <h5 className="font-medium text-gray-800 dark:text-gray-100 mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">{t('matrices:matrix_operations.mathematical_concept.properties_title')}</h5>
                     
                     {state.operationType === 'matrix' ? (
                       <>
                         <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-md border-l-2 border-green-300 dark:border-green-700 mb-3">
-                          <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">Propriedades da Multiplicação de Matrizes</h6>
+                          <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.properties_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside mb-2 space-y-1">
-                            <li><span className="font-medium">Não comutativa:</span> Em geral, AB ≠ BA<br/>
-                              <span className="text-xs ml-6">A ordem das matrizes na multiplicação importa.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property1_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property1_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Associativa:</span> (AB)C = A(BC)<br/>
-                              <span className="text-xs ml-6">A forma como agrupamos as multiplicações não altera o resultado.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property2_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property2_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Distributiva em relação à adição:</span> A(B+C) = AB + AC<br/>
-                              <span className="text-xs ml-6">A multiplicação distribui sobre a adição.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property3_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property3_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Multiplicação por matriz identidade:</span> AI = IA = A<br/>
-                              <span className="text-xs ml-6">A matriz identidade é o elemento neutro da multiplicação.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property4_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property4_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Multiplicação por matriz nula:</span> A0 = 0A = 0<br/>
-                              <span className="text-xs ml-6">O produto com a matriz nula é sempre a matriz nula.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property5_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property5_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property5_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Transposição do produto:</span> (AB)ᵀ = BᵀAᵀ<br/>
-                              <span className="text-xs ml-6">A transposta de um produto é o produto das transpostas em ordem inversa.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property6_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property6_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property6_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Determinante do produto:</span> det(AB) = det(A) × det(B)<br/>
-                              <span className="text-xs ml-6">O determinante do produto é o produto dos determinantes.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.property7_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.property7_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.property7_explanation')}</span>
                             </li>
                           </ul>
                         </div>
 
                         <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md border-l-2 border-purple-300 dark:border-purple-700 mb-3">
-                          <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">Multiplicação de Tipos Especiais de Matrizes</h6>
+                          <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.special_matrices_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">Matrizes diagonais:</span> O produto de duas matrizes diagonais é uma matriz diagonal cujos elementos são os produtos dos elementos correspondentes</li>
-                            <li><span className="font-medium">Matrizes triangulares:</span> O produto de duas matrizes triangulares superiores (ou inferiores) é também uma matriz triangular superior (ou inferior)</li>
-                            <li><span className="font-medium">Matrizes ortogonais:</span> Se Q é uma matriz ortogonal, então QᵀQ = QQᵀ = I</li>
-                            <li><span className="font-medium">Matrizes simétricas:</span> O produto de uma matriz simétrica por si mesma é também simétrico: AAᵀ é sempre simétrico para qualquer matriz A</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.special1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.special1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.special2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.special2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.special3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.special3_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.special4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.special4_description')}</li>
                           </ul>
                         </div>
 
                         <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border-l-2 border-amber-300 dark:border-amber-700 mb-3">
-                          <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">Casos Especiais e Exemplos</h6>
+                          <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.examples_title')}</h6>
                           <div className="space-y-2">
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 1: Multiplicação de matriz 2×2 por 2×2</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.example1_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                                <div>[a b] × [e f] = [ae+bg af+bh]</div>
-                                <div>[c d]   [g h]   [ce+dg cf+dh]</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example1_formula')}</div>
                               </div>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 2: Matriz linha por matriz coluna</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.example2_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                                <div>[a b c] × [d] = [ad+be+cf]</div>
-                                <div>         [e]</div>
-                                <div>         [f]</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example2_formula1')}</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example2_formula2')}</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example2_formula3')}</div>
                               </div>
                               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-2">
-                                Resulta em um escalar (matriz 1×1)
+                                {t('matrices:matrix_operations.multiplication.concept.example2_explanation')}
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 3: Matriz coluna por matriz linha</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.example3_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                                <div>[a] × [d e f] = [ad ae af]</div>
-                                <div>[b]             [bd be bf]</div>
-                                <div>[c]             [cd ce cf]</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example3_formula1')}</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example3_formula2')}</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.example3_formula3')}</div>
                               </div>
                               <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-2">
-                                Resulta em uma matriz de posto 1
+                                {t('matrices:matrix_operations.multiplication.concept.example3_explanation')}
                               </p>
                             </div>
                           </div>
                         </div>
                         
                         <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-md border-l-2 border-red-300 dark:border-red-700 mb-3">
-                          <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">Erros Comuns</h6>
+                          <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.common_errors_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li>Assumir que a multiplicação de matrizes é comutativa (AB = BA)</li>
-                            <li>Tentar multiplicar matrizes com dimensões incompatíveis</li>
-                            <li>Confundir multiplicação de matrizes com multiplicação elemento a elemento</li>
-                            <li>Esquecer que a ordem dos fatores afeta o resultado e pode até mesmo tornar a operação impossível</li>
-                            <li>Distribuir erroneamente um escalar em expressões com multiplicação de matrizes</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error1')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error2')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error3')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error4')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error5')}</li>
                           </ul>
                         </div>
                       </>
                     ) : (
                       <>
                         <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-md border-l-2 border-green-300 dark:border-green-700 mb-3">
-                          <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">Propriedades da Multiplicação por Escalar</h6>
+                          <h6 className="text-green-700 dark:text-green-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.scalar_properties_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside mb-2 space-y-1">
-                            <li><span className="font-medium">Distributiva em relação à adição de matrizes:</span> k(A+B) = kA + kB<br/>
-                              <span className="text-xs ml-6">O escalar distribui sobre a adição de matrizes.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property1_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property1_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Distributiva em relação à adição de escalares:</span> (k+m)A = kA + mA<br/>
-                              <span className="text-xs ml-6">A soma de escalares distribui sobre a matriz.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property2_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property2_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Associativa com multiplicação de escalares:</span> (km)A = k(mA)<br/>
-                              <span className="text-xs ml-6">A multiplicação de escalares associa sobre matrizes.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property3_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property3_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Elemento neutro:</span> 1A = A<br/>
-                              <span className="text-xs ml-6">O escalar 1 é o elemento neutro da multiplicação.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property4_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property4_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Multiplicação por zero:</span> 0A = 0<br/>
-                              <span className="text-xs ml-6">Multiplicar por zero resulta na matriz nula.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property5_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property5_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property5_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Comportamento com a transposta:</span> (kA)ᵀ = kAᵀ<br/>
-                              <span className="text-xs ml-6">Transpor e multiplicar por escalar são operações comutativas.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property6_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property6_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property6_explanation')}</span>
                             </li>
-                            <li><span className="font-medium">Efeito no determinante:</span> det(kA) = kⁿ·det(A)<br/>
-                              <span className="text-xs ml-6">Para uma matriz A de ordem n×n.</span>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_property7_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_property7_description')}<br/>
+                              <span className="text-xs ml-6">{t('matrices:matrix_operations.multiplication.concept.scalar_property7_explanation')}</span>
                             </li>
                           </ul>
                         </div>
 
                         <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md border-l-2 border-purple-300 dark:border-purple-700 mb-3">
-                          <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">Tipos Especiais de Escalares</h6>
+                          <h6 className="text-purple-700 dark:text-purple-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.scalar_special_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li><span className="font-medium">k = -1:</span> Inverte o sinal de todos os elementos, equivalente a uma reflexão</li>
-                            <li><span className="font-medium">k = 0:</span> Transforma qualquer matriz na matriz nula (colapso)</li>
-                            <li><span className="font-medium">k = 1:</span> Mantém a matriz inalterada (identidade escalar)</li>
-                            <li><span className="font-medium">k = 1/n:</span> Divide todos os elementos por n (normalmente usado em médias ou normalizações)</li>
-                            <li><span className="font-medium">k imaginário:</span> Em matrizes complexas, multiplica por números imaginários (rotação no plano complexo)</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_special1_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_special1_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_special2_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_special2_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_special3_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_special3_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_special4_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_special4_description')}</li>
+                            <li><span className="font-medium">{t('matrices:matrix_operations.multiplication.concept.scalar_special5_title')}:</span> {t('matrices:matrix_operations.multiplication.concept.scalar_special5_description')}</li>
                           </ul>
                         </div>
 
                         <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md border-l-2 border-amber-300 dark:border-amber-700 mb-3">
-                          <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">Casos Especiais e Exemplos</h6>
+                          <h6 className="text-amber-700 dark:text-amber-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.examples_title')}</h6>
                           <div className="space-y-2">
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 1: Multiplicação por -1 (Inversão)</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.scalar_example1_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                                <div>-1 × [1 2] = [-1 -2]</div>
-                                <div>     [3 4]   [-3 -4]</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.scalar_example1_formula')}</div>
                               </div>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 2: Multiplicação por 0.5 (Redução pela metade)</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.scalar_example2_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 font-mono mt-1 ml-2">
-                                <div>0.5 × [10 20] = [5 10]</div>
-                                <div>      [30 40]   [15 20]</div>
+                                <div>{t('matrices:matrix_operations.multiplication.concept.scalar_example2_formula')}</div>
                               </div>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Exemplo 3: Efeito no determinante</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('matrices:matrix_operations.multiplication.concept.scalar_example3_title')}</p>
                               <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-2">
-                                <p>Para uma matriz 2×2: det([a b; c d]) = ad - bc</p>
-                                <p>Multiplicando por k: det(k[a b; c d]) = det([ka kb; kc kd]) = (ka)(kd) - (kb)(kc) = k²(ad - bc) = k²·det(A)</p>
+                                <p>{t('matrices:matrix_operations.multiplication.concept.scalar_example3_description')}</p>
+                                <p>{t('matrices:matrix_operations.multiplication.concept.scalar_example3_formula')}</p>
                               </div>
                             </div>
                           </div>
                         </div>
                         
                         <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-md border-l-2 border-red-300 dark:border-red-700 mb-3">
-                          <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">Erros Comuns</h6>
+                          <h6 className="text-red-700 dark:text-red-300 font-medium mb-1">{t('matrices:matrix_operations.multiplication.concept.common_errors_title')}</h6>
                           <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc list-inside space-y-1">
-                            <li>Assumir que a multiplicação de matrizes é comutativa (AB = BA)</li>
-                            <li>Tentar multiplicar matrizes com dimensões incompatíveis</li>
-                            <li>Confundir multiplicação de matrizes com multiplicação elemento a elemento</li>
-                            <li>Esquecer que a ordem dos fatores afeta o resultado e pode até mesmo tornar a operação impossível</li>
-                            <li>Distribuir erroneamente um escalar em expressões com multiplicação de matrizes</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error1')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error2')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error3')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error4')}</li>
+                            <li>{t('matrices:matrix_operations.multiplication.concept.error5')}</li>
                           </ul>
                         </div>
                       </>

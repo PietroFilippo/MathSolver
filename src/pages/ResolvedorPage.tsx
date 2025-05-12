@@ -65,11 +65,11 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     'arithmetic': false,
     'fractions': false,
     'algebra': false,
-    'matrizes': false,
-    'trigonometria': false,
-    'geometria': false,
-    'estatistica': false,
-    'calculo': false
+    'matrices': false,
+    'trigonometry': false,
+    'geometry': false,
+    'statistics': false,
+    'calculus': false
   });
   const [filterMode, setFilterMode] = useState<'subject' | 'level' | 'search'>('subject');
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
@@ -104,14 +104,14 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
     const normalizedSearchTerm = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const results: Array<{id: string; name: string; category: string}> = [];
 
-    Object.entries(solvers).forEach(([_categoryId, categoryData]) => {
+    Object.entries(solvers).forEach(([categoryId, categoryData]) => {
       categoryData.solvers.forEach(solver => {
         const normalizedSolverName = solver.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         if (normalizedSolverName.includes(normalizedSearchTerm)) {
           results.push({
             id: solver.id,
             name: solver.name,
-            category: categoryData.name
+            category: categoryId
           });
         }
       });
@@ -257,9 +257,9 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
               className={`w-full text-left py-2 px-3 rounded-md transition-colors duration-200
                 ${selectedSolver === result.id ? 'bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-blue-100' : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200'}`}
             >
-              <span>{result.name}</span>
+              <span>{t(`solvers.${result.id.replace(/-/g, '_')}`)}</span>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {t('solver_page.search.in_category')} <span className="font-medium">{result.category}</span>
+                {t('solver_page.search.in_category')} <span className="font-medium">{t(`categories.${result.category}`)}</span>
               </div>
             </button>
           </div>
@@ -278,7 +278,9 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
           >
             <div className="flex items-center">
               {getIconComponent(category.icon)}
-              <span className="ml-2 font-medium text-gray-700 dark:text-gray-200">{category.name}</span>
+              <span className="ml-2 font-medium text-gray-700 dark:text-gray-200">
+                {t(`categories.${categoryId}`)}
+              </span>
             </div>
             {expandedCategories[categoryId] ? <HiChevronUp className="h-5 w-5 text-gray-500" /> : <HiChevronDown className="h-5 w-5 text-gray-500" />}
           </button>
@@ -347,7 +349,7 @@ const SolverPage: React.FC<SolverPageProps> = ({ initialCategory }) => {
                   >
                     <div className="flex items-center">
                       <span>{t(`solvers.${solver.id.replace(/-/g, '_')}`)}</span>
-                      <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">({category.name})</span>
+                      <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">({t(`categories.${categoryId}`)})</span>
                     </div>
                   </button>
                 ))

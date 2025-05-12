@@ -206,8 +206,8 @@
     "solution": "Solução",
     "error": "Erro",
     "loading": "Carregando...",
-    "please_wait": "Aguarde",
-    "input_value": "Digite um valor",
+    "please_wait": "Por favor, aguarde",
+    "input_value": "Insira um valor",
     "verify": "Verificar",
     "explanation": "Explicação",
     "show_explanation": "Mostrar explicação detalhada",
@@ -215,6 +215,60 @@
     "step_by_step": "Solução passo a passo",
     "mathematical_concept": "Conceito Matemático",
     "tip": "Dica",
+    "sum": "soma",
+    "difference": "diferença",
+    "addition": "adição",
+    "subtraction": "subtração",
+    "linear_systems": "Sistemas Lineares",
+    "physics": "Física: Em mecânica quântica e teoria eletromagnética",
+    "engineering": "Engenharia: Análise estrutural e transformações geométricas",
+    "signal_processing": "Processamento de Sinais: Em operações como convolução e correlação",
+    "optimization": "Otimização: Em problemas de programação linear e não-linear",
+    "computer_graphics": "Computação Gráfica: Para calcular áreas e transformações geométricas",
+    "statistics": "Estatística: Em análise de variância e correlação multivariada",
+    "quantum_physics": "Física Quântica: Na mecânica quântica e teoria eletromagnética",
+    "economics": "Economia: Em modelos econométricos e de equilíbrio",
+    "machine_learning": "Aprendizado de Máquina: Para verificar singularidade em matrizes de covariância",
+    "cryptography": "Criptografia: Em sistemas criptográficos baseados em matrizes",
+    "robotics": "Robótica: Para calcular transformações e detectar singularidades em manipuladores robóticos",
+    "image_processing": "Processamento de Imagem: Para detecção de bordas e transformações morfológicas",
+    "advanced_matrix_concepts": {
+      "title": "Conceitos Avançados de Transposição de Matrizes",
+      "alternative_notations": {
+        "title": "Notações Alternativas",
+        "description": "Diferentes disciplinas matemáticas usam várias notações para a transposta:",
+        "standard": "A<sup>T</sup> - Notação padrão",
+        "prime": "A′ - Notação linha (comum em estatística)",
+        "left_superscript": "<sup>t</sup>A - Sobrescrito à esquerda (usado em literatura europeia)",
+        "abbreviated": "A<sup>tr</sup> - Forma abreviada"
+      },
+      "inner_products": {
+        "title": "Relação com Produtos Internos",
+        "description": "Para vetores u e v, o produto interno pode ser expresso usando a transposta: ⟨u,v⟩ = u<sup>T</sup>v. Esta relação se estende às matrizes onde A<sup>T</sup>B representa uma generalização do produto escalar."
+      },
+      "computational": {
+        "title": "Desempenho Computacional",
+        "description": "A transposição de matrizes tem complexidade de tempo O(n²) para matrizes n×n. No entanto, bibliotecas modernas frequentemente usam algoritmos otimizados para cache e técnicas de avaliação preguiçosa para melhorar o desempenho. Em muitas bibliotecas numéricas, a transposição é implementada como uma \"visão\" em vez de rearranjar fisicamente os dados na memória."
+      },
+      "special_classes": {
+        "title": "Classes Especiais de Matrizes",
+        "description": "Várias classes de matrizes têm propriedades especiais de transposição:",
+        "symmetric": "Matrizes simétricas: A = A<sup>T</sup>",
+        "skew_symmetric": "Matrizes anti-simétricas: A = -A<sup>T</sup>",
+        "orthogonal": "Matrizes ortogonais: A<sup>T</sup> = A<sup>-1</sup>",
+        "hermitian": "Matrizes hermitianas: A = A<sup>H</sup> (transposição conjugada complexa)"
+      }
+    },
+    "matrix_examples": {
+      "matrices_2x2": "Matrizes 2×2",
+      "matrices_2x3_3x2": "Matrizes 2×3 e 3×2",
+      "identity_matrix": "Matriz Identidade",
+      "matrices_3x2_2x3": "Matrizes 3×2 e 2×3",
+      "matrix_2x2_by_2": "Matriz 2×2 multiplicada por 2",
+      "matrix_2x3_by_neg1": "Matriz 2×3 multiplicada por -1",
+      "identity_matrix_by_3": "Matriz Identidade multiplicada por 3",
+      "matrix_with_decimals": "Matriz com valores decimais"
+    },
     "errors": {
       "unknown": "Erro desconhecido."
     }

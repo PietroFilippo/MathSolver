@@ -33,7 +33,7 @@ export const solvers = {
         { id: 'exponential-equations', name: 'Equações Exponenciais' }
       ]
     },
-    'matrizes': {
+    'matrices': {
       name: 'Matrizes',
       icon: 'Table',
       solvers: [
@@ -44,7 +44,7 @@ export const solvers = {
         { id: 'matrix-inverse', name: 'Matriz Inversa' }
       ]
     },
-    'trigonometria': {
+    'trigonometry': {
       name: 'Trigonometria',
       icon: 'TrendingUp',
       solvers: [
@@ -53,7 +53,7 @@ export const solvers = {
         { id: 'trigonometric-graphs', name: 'Gráficos Trigonométricos' }
       ]
     },
-    'geometria': {
+    'geometry': {
       name: 'Geometria',
       icon: 'Square',
       solvers: [
@@ -66,7 +66,7 @@ export const solvers = {
         { id: 'analytic-geometry', name: 'Geometria Analítica' }
       ]
     },
-    'estatistica': {
+    'statistics': {
       name: 'Estatística',
       icon: 'BarChart',
       solvers: [
@@ -76,7 +76,7 @@ export const solvers = {
         { id: 'variation-coefficient', name: 'Coeficiente de Variação' }
       ]
     },
-    'calculo': {
+    'calculus': {
       name: 'Cálculo',
       icon: 'ChartLine',
       solvers: [

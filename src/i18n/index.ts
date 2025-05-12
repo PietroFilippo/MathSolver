@@ -11,19 +11,23 @@ import enFractions from './locales/en/fractions.json';
 import ptFractions from './locales/pt/fractions.json';
 import enTrigonometry from './locales/en/trigonometry.json';
 import ptTrigonometry from './locales/pt/trigonometry.json';
+import enMatrices from './locales/en/matrices.json';
+import ptMatrices from './locales/pt/matrices.json';
 
 export const resources = {
   en: {
     translation: enTranslation,
     arithmetic: enArithmetic,
     fractions: enFractions,
-    trigonometry: enTrigonometry
+    trigonometry: enTrigonometry,
+    matrices: enMatrices
   },
   pt: {
     translation: ptTranslation,
     arithmetic: ptArithmetic,
     fractions: ptFractions,
-    trigonometry: ptTrigonometry
+    trigonometry: ptTrigonometry,
+    matrices: ptMatrices
   }
 };
 

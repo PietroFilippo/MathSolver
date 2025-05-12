@@ -348,11 +348,14 @@ export interface MatrizExample {
   matrixA: number[][];
   matrixB: number[][];
   description: string;
+  translationKey?: string;
 }
 
 export const getMatrixAddSubExamples = (): MatrizExample[] => {
   return [
     {
+      description: "Números pequenos (2×2)",
+      translationKey: "small_integers",
       matrixA: [
         [1, 2],
         [3, 4]
@@ -360,54 +363,73 @@ export const getMatrixAddSubExamples = (): MatrizExample[] => {
       matrixB: [
         [5, 6],
         [7, 8]
-      ],
-      description: '2×2 Inteiros'
+      ]
     },
     {
+      description: "Números grandes (3×3)",
+      translationKey: "large_integers",
       matrixA: [
-        [1.5, 2.5, 3.5],
-        [4.5, 5.5, 6.5]
+        [10, 20, 30],
+        [40, 50, 60],
+        [70, 80, 90]
       ],
       matrixB: [
-        [0.5, 1.5, 2.5],
-        [3.5, 4.5, 5.5]
-      ],
-      description: '2×3 Decimais'
+        [90, 80, 70],
+        [60, 50, 40],
+        [30, 20, 10]
+      ]
     },
     {
+      description: "Números negativos (2×2)",
+      translationKey: "negative_numbers",
+      matrixA: [
+        [-1, -2],
+        [-3, -4]
+      ],
+      matrixB: [
+        [-5, -6],
+        [-7, -8]
+      ]
+    },
+    {
+      description: "Números mistos (3×3)",
+      translationKey: "mixed_numbers",
+      matrixA: [
+        [1, -2, 3],
+        [-4, 5, -6],
+        [7, -8, 9]
+      ],
+      matrixB: [
+        [-9, 8, -7],
+        [6, -5, 4],
+        [-3, 2, -1]
+      ]
+    },
+    {
+      description: "Matriz identidade (3×3)",
+      translationKey: "identity_matrix",
       matrixA: [
         [1, 0, 0],
         [0, 1, 0],
         [0, 0, 1]
       ],
       matrixB: [
-        [2, 3, 4],
-        [5, 6, 7],
-        [8, 9, 10]
-      ],
-      description: '3×3 com Identidade'
+        [4, 5, 6],
+        [7, 8, 9],
+        [10, 11, 12]
+      ]
     },
     {
+      description: "Matriz nula (2×2)",
+      translationKey: "zero_matrix",
       matrixA: [
-        [-1, -2],
-        [-3, -4]
+        [0, 0],
+        [0, 0]
       ],
       matrixB: [
-        [1, 2],
-        [3, 4]
-      ],
-      description: '2×2 Negativos'
-    },
-    {
-      matrixA: [
-        [10, 20, 30, 40],
-        [50, 60, 70, 80]
-      ],
-      matrixB: [
-        [5, 10, 15, 20],
-        [25, 30, 35, 40]
-      ],
-      description: '2×4 Grandes'
+        [5, 10],
+        [15, 20]
+      ]
     }
   ];
 };
@@ -417,6 +439,7 @@ export interface MatrizMultiplicationExample {
   matrixA: number[][];
   matrixB: number[][];
   description: string;
+  translationKey?: string;
 }
 
 // Interface para exemplos de multiplicação por escalar
@@ -424,6 +447,7 @@ export interface ScalarMultiplicationExample {
   matrix: number[][];
   scalar: number;
   description: string;
+  translationKey?: string;
 }
 
 // Retorna exemplos de multiplicação de matrizes
@@ -438,7 +462,8 @@ export const getMatrixMultiplicationExamples = (): MatrizMultiplicationExample[]
         [2, 0],
         [1, 3]
       ],
-      description: 'Matrizes 2×2'
+      description: 'Matrizes 2×2',
+      translationKey: 'matrices_2x2'
     },
     {
       matrixA: [
@@ -450,7 +475,8 @@ export const getMatrixMultiplicationExamples = (): MatrizMultiplicationExample[]
         [2, 0],
         [1, 2]
       ],
-      description: 'Matrizes 2×3 e 3×2'
+      description: 'Matrizes 2×3 e 3×2',
+      translationKey: 'matrices_2x3_3x2'
     },
     {
       matrixA: [
@@ -463,7 +489,8 @@ export const getMatrixMultiplicationExamples = (): MatrizMultiplicationExample[]
         [7, 8, 9],
         [10, 11, 12]
       ],
-      description: 'Matriz identidade'
+      description: 'Matriz identidade',
+      translationKey: 'identity_matrix'
     },
     {
       matrixA: [
@@ -475,7 +502,8 @@ export const getMatrixMultiplicationExamples = (): MatrizMultiplicationExample[]
         [7, 8, 9],
         [10, 11, 12]
       ],
-      description: 'Matrizes 3×2 e 2×3'
+      description: 'Matrizes 3×2 e 2×3',
+      translationKey: 'matrices_3x2_2x3'
     }
   ];
 };
@@ -489,7 +517,8 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
         [3, 4]
       ],
       scalar: 2,
-      description: 'Matriz 2×2 por 2'
+      description: 'Matriz 2×2 por 2',
+      translationKey: 'matrix_2x2_by_2'
     },
     {
       matrix: [
@@ -497,7 +526,8 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
         [-4, 5, -6]
       ],
       scalar: -1,
-      description: 'Matriz 2×3 por -1'
+      description: 'Matriz 2×3 por -1',
+      translationKey: 'matrix_2x3_by_neg1'
     },
     {
       matrix: [
@@ -506,7 +536,8 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
         [0, 0, 1]
       ],
       scalar: 3,
-      description: 'Matriz identidade por 3'
+      description: 'Matriz identidade por 3',
+      translationKey: 'identity_matrix_by_3'
     },
     {
       matrix: [
@@ -514,7 +545,8 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
         [3.5, 4.5]
       ],
       scalar: 2,
-      description: 'Matriz com decimais'
+      description: 'Matriz com decimais',
+      translationKey: 'matrix_with_decimals'
     }
   ];
 };
@@ -523,6 +555,7 @@ export const getScalarMultiplicationExamples = (): ScalarMultiplicationExample[]
 export interface DeterminantExample {
   matrix: number[][];
   description: string;
+  translationKey?: string;
 }
 
 // Retorna exemplos de cálculo de determinante
@@ -533,14 +566,16 @@ export const getDeterminantExamples = (): DeterminantExample[] => {
         [1, 2],
         [3, 4]
       ],
-      description: 'Matriz 2×2 simples'
+      description: 'Matriz 2×2 simples',
+      translationKey: 'simple_2x2'
     },
     {
       matrix: [
         [2, 0],
         [0, 2]
       ],
-      description: 'Matriz diagonal 2×2'
+      description: 'Matriz diagonal 2×2',
+      translationKey: 'diagonal_2x2'
     },
     {
       matrix: [
@@ -548,7 +583,8 @@ export const getDeterminantExamples = (): DeterminantExample[] => {
         [0, 1, 0],
         [0, 0, 1]
       ],
-      description: 'Matriz identidade 3×3'
+      description: 'Matriz identidade 3×3',
+      translationKey: 'identity_3x3'
     },
     {
       matrix: [
@@ -556,7 +592,8 @@ export const getDeterminantExamples = (): DeterminantExample[] => {
         [1, 3, 1],
         [2, 1, 5]
       ],
-      description: 'Matriz 3×3 completa'
+      description: 'Matriz 3×3 completa',
+      translationKey: 'standard_3x3'
     },
     {
       matrix: [
@@ -564,7 +601,8 @@ export const getDeterminantExamples = (): DeterminantExample[] => {
         [4, 5, 6],
         [7, 8, 9]
       ],
-      description: 'Matriz 3×3 singular'
+      description: 'Matriz 3×3 singular',
+      translationKey: 'singular_3x3'
     }
   ];
 };
@@ -573,6 +611,7 @@ export const getDeterminantExamples = (): DeterminantExample[] => {
 export interface InverseMatrixExample {
   matrix: number[][];
   description: string;
+  translationKey?: string;
 }
 
 // Retorna exemplos de cálculo de matriz inversa
@@ -583,14 +622,16 @@ export const getInverseMatrixExamples = (): InverseMatrixExample[] => {
         [1, 0],
         [0, 1]
       ],
-      description: 'Matriz identidade 2×2'
+      description: 'Matriz identidade 2×2',
+      translationKey: 'identity_2x2'
     },
     {
       matrix: [
         [4, 7],
         [2, 6]
       ],
-      description: 'Matriz 2×2 simples'
+      description: 'Matriz 2×2 simples',
+      translationKey: 'simple_2x2'
     },
     {
       matrix: [
@@ -598,7 +639,8 @@ export const getInverseMatrixExamples = (): InverseMatrixExample[] => {
         [0, 1, 4],
         [5, 6, 0]
       ],
-      description: 'Matriz 3×3 inversível'
+      description: 'Matriz 3×3 inversível',
+      translationKey: 'integer_3x3'
     },
     {
       matrix: [
@@ -606,7 +648,8 @@ export const getInverseMatrixExamples = (): InverseMatrixExample[] => {
         [0, 2, 0],
         [0, 0, 4]
       ],
-      description: 'Matriz diagonal 3×3'
+      description: 'Matriz diagonal 3×3',
+      translationKey: 'diagonal_3x3'
     },
     {
       matrix: [
@@ -614,7 +657,8 @@ export const getInverseMatrixExamples = (): InverseMatrixExample[] => {
         [1, 2, 1],
         [1, 1, 2]
       ],
-      description: 'Matriz simétrica 3×3'
+      description: 'Matriz simétrica 3×3',
+      translationKey: 'fractional_3x3'
     }
   ];
 }; 

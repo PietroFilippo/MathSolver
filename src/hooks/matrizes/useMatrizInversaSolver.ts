@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   parseMatrixFromString, 
   isValidMatrix,
@@ -132,6 +133,126 @@ const generateInverseSteps = (matrix: number[][]): string[] => {
   return steps;
 };
 
+// Cria uma função que gera os passos com tradução
+export const generateInverseStepsWithTranslation = (
+  matrix: number[][],
+  t: (key: string, options?: any) => string
+): string[] => {
+  const steps: string[] = [];
+  let stepCount = 1;
+  
+  if (!isValidMatrix(matrix)) {
+    steps.push(t('inverse.steps.not_square_matrix'));
+    return steps;
+  }
+  
+  if (!isSquareMatrix(matrix)) {
+    steps.push(t('inverse.steps.not_square_matrix'));
+    return steps;
+  }
+  
+  const n = matrix.length;
+  
+  // Passo 1: Identificar a matriz de entrada
+  steps.push(t('inverse.steps.identify_input_matrix', { step: stepCount++ }));
+  steps.push(t('inverse.steps.input_matrix', { rows: n, cols: n }));
+  matrix.forEach(row => {
+    steps.push(`[${row.join(', ')}]`);
+  });
+  
+  // Passo 2: Calcular o determinante
+  steps.push(t('inverse.steps.calculate_determinant', { step: stepCount++ }));
+  const determinant = calculateDeterminant(matrix);
+  
+  if (determinant === null) {
+    steps.push(t('inverse.errors.calculation_error'));
+    return steps;
+  }
+  
+  steps.push(t('inverse.steps.determinant_value', { value: determinant }));
+  
+  // Verificar se a matriz é inversível
+  if (determinant === 0) {
+    steps.push(t('inverse.steps.zero_determinant'));
+    return steps;
+  }
+  
+  // Passo 3: Calcular a matriz de cofatores
+  steps.push(t('inverse.steps.cofactor_matrix', { step: stepCount++ }));
+  steps.push(t('inverse.steps.cofactor_explanation'));
+  steps.push(t('inverse.steps.cofactor_formula'));
+  
+  const cofactorMatrix = calculateCofactorMatrix(matrix);
+  
+  if (!cofactorMatrix) {
+    steps.push(t('inverse.errors.calculation_error'));
+    return steps;
+  }
+  
+  steps.push(t('inverse.steps.cofactor_matrix_result'));
+  cofactorMatrix.forEach(row => {
+    steps.push(`[${row.join(', ')}]`);
+  });
+  
+  // Passo 4: Calcular a matriz adjunta
+  steps.push(t('inverse.steps.adjoint_matrix', { step: stepCount++ }));
+  const adjointMatrix = calculateAdjointMatrix(matrix);
+  
+  if (!adjointMatrix) {
+    steps.push(t('inverse.errors.calculation_error'));
+    return steps;
+  }
+  
+  steps.push(t('inverse.steps.adjoint_matrix_result'));
+  adjointMatrix.forEach(row => {
+    steps.push(`[${row.join(', ')}]`);
+  });
+  
+  // Passo 5: Calcular a matriz inversa
+  steps.push(t('inverse.steps.inverse_formula', { step: stepCount++ }));
+  const inverseMatrix = calculateInverseMatrix(matrix);
+  
+  if (!inverseMatrix) {
+    steps.push(t('inverse.errors.calculation_error'));
+    return steps;
+  }
+  
+  steps.push(t('inverse.steps.result', { rows: n, cols: n }));
+  inverseMatrix.forEach(row => {
+    steps.push(`[${row.join(', ')}]`);
+  });
+  
+  // Passo 6: Verificação
+  steps.push(t('inverse.steps.verification', { step: stepCount++ }));
+  steps.push(t('inverse.steps.verification_explanation'));
+  steps.push(t('inverse.steps.verification_identity'));
+  
+  // Adiciona um separador para verificação
+  steps.push(`---VERIFICATION_SEPARATOR---`);
+  
+  // Verificação de propriedades
+  steps.push(t('inverse.verification.properties_title'));
+  
+  steps.push(t('inverse.verification.identity_property'));
+  steps.push(`   ${t('inverse.verification.identity_explanation')}`);
+  
+  steps.push(t('inverse.verification.inverse_of_inverse'));
+  steps.push(`   ${t('inverse.verification.inverse_of_inverse_explanation')}`);
+  
+  steps.push(t('inverse.verification.product_inverse'));
+  steps.push(`   ${t('inverse.verification.product_inverse_explanation')}`);
+  
+  steps.push(t('inverse.verification.scalar_inverse'));
+  steps.push(`   ${t('inverse.verification.scalar_inverse_explanation')}`);
+  
+  steps.push(t('inverse.verification.transpose_inverse'));
+  steps.push(`   ${t('inverse.verification.transpose_inverse_explanation')}`);
+  
+  steps.push(`${t('inverse.steps.final_conclusion')}`);
+  
+  return steps;
+};
+
 // Interface de estado
 type State = {
   matrix: string;
@@ -213,6 +334,7 @@ function reducer(state: State, action: Action): State {
 
 export function useMatrizInverseSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation('matrices');
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -221,7 +343,7 @@ export function useMatrizInverseSolver() {
     try {
       // Verificar se a matriz foi fornecida
       if (!state.matrix.trim()) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira a matriz.' });
+        dispatch({ type: 'SET_ERROR', message: t('inverse.errors.enter_matrix') });
         return;
       }
       
@@ -229,29 +351,29 @@ export function useMatrizInverseSolver() {
       const matrix = parseMatrixFromString(state.matrix);
       
       if (!matrix) {
-        dispatch({ type: 'SET_ERROR', message: 'Não foi possível interpretar a matriz. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', message: t('inverse.errors.invalid_matrix_format') });
         return;
       }
       
       if (!isValidMatrix(matrix)) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', message: t('inverse.errors.invalid_matrix') });
         return;
       }
       
       if (!isSquareMatrix(matrix)) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz não é quadrada. Apenas matrizes quadradas podem ter inversa.' });
+        dispatch({ type: 'SET_ERROR', message: t('inverse.errors.not_square_matrix') });
         return;
       }
       
       const determinant = calculateDeterminant(matrix);
       if (determinant === 0) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz tem determinante zero e, portanto, não possui inversa.' });
+        dispatch({ type: 'SET_ERROR', message: t('inverse.errors.zero_determinant') });
         return;
       }
       
       // Calcular a inversa e gerar os passos
       const inverse = calculateInverseMatrix(matrix);
-      const steps = generateInverseSteps(matrix);
+      const steps = generateInverseStepsWithTranslation(matrix, t);
       
       dispatch({
         type: 'SET_RESULT',
@@ -260,13 +382,13 @@ export function useMatrizInverseSolver() {
       });
       
     } catch (error) {
-      let errorMessage = 'Erro desconhecido ao processar a matriz.';
+      let errorMessage = t('inverse.errors.unknown_error');
       
       if (error instanceof Error) {
         if (error.message.includes('valores inválidos')) {
-          errorMessage = 'A matriz contém valores inválidos. Use apenas números.';
+          errorMessage = t('inverse.errors.invalid_values');
         } else if (error.message.includes('mesmo número de colunas')) {
-          errorMessage = 'Todas as linhas de uma matriz devem ter o mesmo número de colunas.';
+          errorMessage = t('inverse.errors.same_columns');
         } else {
           errorMessage = error.message;
         }
@@ -292,6 +414,7 @@ export function useMatrizInverseSolver() {
     state,
     dispatch,
     handleSolve,
-    applyExample
+    applyExample,
+    t
   };
 } 

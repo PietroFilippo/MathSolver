@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   parseMatrixFromString, 
   addMatrices, 
@@ -106,110 +107,132 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-// Gera os passos de cálculo para adição ou subtração de matrizes
-const generateMatrixAddSubSteps = (
-  matrixA: number[][],
-  matrixB: number[][],
-  operation: 'soma' | 'subtracao'
-): string[] => {
-  const steps: string[] = [];
-  let stepCount = 1;
-  
-  // Verifica se as matrizes têm as mesmas dimensões
-  if (!haveSameDimensions(matrixA, matrixB)) {
-    steps.push('As matrizes não têm as mesmas dimensões. Não é possível realizar a operação.');
-    return steps;
-  }
-  
-  const rows = matrixA.length;
-  const cols = matrixA[0].length;
-  
-  // Adiciona informações iniciais
-  steps.push(`Passo ${stepCount++}: Identificar as matrizes e a operação.`);
-  steps.push(`Forma inicial: ${operation === 'soma' ? 'A + B' : 'A - B'}`);
-  
-  // Adiciona a representação das matrizes
-  steps.push(`Matriz A (${rows}×${cols}):`);
-  matrixA.forEach(row => {
-    steps.push(`[${row.join(', ')}]`);
-  });
-  
-  steps.push(`Matriz B (${rows}×${cols}):`);
-  matrixB.forEach(row => {
-    steps.push(`[${row.join(', ')}]`);
-  });
-  
-  // Explica o processo
-  steps.push(`Passo ${stepCount++}: Analisar as dimensões das matrizes.`);
-  steps.push(`Verificando dimensões: Ambas as matrizes são de dimensão ${rows}×${cols}.`);
-  
-  if (operation === 'soma') {
-    steps.push(`Para somar duas matrizes, elas precisam ter as mesmas dimensões. Esta condição é satisfeita.`);
-  } else {
-    steps.push(`Para subtrair duas matrizes, elas precisam ter as mesmas dimensões. Esta condição é satisfeita.`);
-  }
-  
-  steps.push(`Passo ${stepCount++}: Aplicar a operação elemento por elemento.`);
-  steps.push(`Aplicando a fórmula: ${operation === 'soma' ? '(A + B)ᵢⱼ = Aᵢⱼ + Bᵢⱼ' : '(A - B)ᵢⱼ = Aᵢⱼ - Bᵢⱼ'}`);
-  
-  // Calcula o resultado
-  const result = operation === 'soma' 
-    ? addMatrices(matrixA, matrixB) 
-    : subtractMatrices(matrixA, matrixB);
-  
-  if (!result) {
-    steps.push('Erro ao calcular o resultado.');
-    return steps;
-  }
-  
-  // Mostra o cálculo detalhado para cada elemento
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (operation === 'soma') {
-        steps.push(`Calculando: Elemento (${i+1},${j+1}): ${matrixA[i][j]} + ${matrixB[i][j]} = ${result[i][j]}`);
-      } else {
-        steps.push(`Calculando: Elemento (${i+1},${j+1}): ${matrixA[i][j]} - ${matrixB[i][j]} = ${result[i][j]}`);
-      }
-    }
-  }
-  
-  // Mostra o resultado final
-  steps.push(`Passo ${stepCount++}: Matriz resultado.`);
-  steps.push(`Resultado: Matriz ${operation === 'soma' ? 'soma' : 'diferença'} ${rows}×${cols}`);
-  result.forEach(row => {
-    steps.push(`[${row.join(', ')}]`);
-  });
-  
-  // Adiciona um separador para verificação
-  steps.push(`---VERIFICATION_SEPARATOR---`);
-  
-  // Adiciona verificações das propriedades
-  steps.push(`Verificação: Propriedades da ${operation === 'soma' ? 'adição' : 'subtração'} de matrizes`);
-  
-  if (operation === 'soma') {
-    steps.push(`Verificando a propriedade comutativa: A + B = B + A`);
-    steps.push(`Para adição de matrizes, a ordem das operações não importa. O resultado seria o mesmo se calculássemos B + A.`);
-    
-    // Adiciona também outras propriedades
-    steps.push(`Verificando propriedade associativa: (A + B) + C = A + (B + C)`);
-    steps.push(`Para adição de matrizes, a forma como agrupamos as matrizes não altera o resultado final.`);
-  } else {
-    steps.push(`Verificando a propriedade não-comutativa: A - B ≠ B - A (em geral)`);
-    steps.push(`Para subtração de matrizes, a ordem importa. Se fizéssemos B - A, teríamos um resultado diferente.`);
-    
-    // Menciona relação com adição
-    steps.push(`Relação com a adição: A - B = A + (-B)`);
-    steps.push(`A subtração pode ser vista como a adição da matriz oposta de B.`);
-  }
-  
-  // Conclui com as propriedades e aplicações
-  steps.push(`Resultado final: ${operation === 'soma' ? 'Soma' : 'Subtração'} de matrizes ${rows}×${cols} concluída com sucesso.`);
-  
-  return steps;
-};
-
 export function useMatrizAddSubSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['matrices', 'translation']);
+
+  // Gera os passos de cálculo para adição ou subtração de matrizes
+  const generateMatrixAddSubSteps = (
+    matrixA: number[][],
+    matrixB: number[][],
+    operation: 'soma' | 'subtracao'
+  ): string[] => {
+    const steps: string[] = [];
+    let stepCount = 1;
+    
+    // Verifica se as matrizes têm as mesmas dimensões
+    if (!haveSameDimensions(matrixA, matrixB)) {
+      steps.push(t('matrices:matrix_operations.steps.different_dimensions'));
+      return steps;
+    }
+    
+    const rows = matrixA.length;
+    const cols = matrixA[0].length;
+    
+    // Adiciona informações iniciais
+    steps.push(t('matrices:matrix_operations.steps.identify_matrices', { step: stepCount++ }));
+    steps.push(t('matrices:matrix_operations.steps.initial_form', { 
+      operation: operation === 'soma' ? 'A + B' : 'A - B' 
+    }));
+    
+    // Adiciona a representação das matrizes
+    steps.push(`${t('matrices:matrix_operations.add_sub.matrix_a')} (${rows}×${cols}):`);
+    matrixA.forEach(row => {
+      steps.push(`[${row.join(', ')}]`);
+    });
+    
+    steps.push(`${t('matrices:matrix_operations.add_sub.matrix_b')} (${rows}×${cols}):`);
+    matrixB.forEach(row => {
+      steps.push(`[${row.join(', ')}]`);
+    });
+    
+    // Explica o processo
+    steps.push(t('matrices:matrix_operations.steps.matrix_dimensions', { step: stepCount++ }));
+    steps.push(t('matrices:matrix_operations.steps.checking_dimensions', { rows, cols }));
+    
+    // Pega o nome da operação com a primeira letra maiúscula
+    const operationName = operation === 'soma' 
+      ? t('translation:common.addition').charAt(0).toUpperCase() + t('translation:common.addition').slice(1)
+      : t('translation:common.subtraction').charAt(0).toUpperCase() + t('translation:common.subtraction').slice(1);
+    
+    // Use uma mensagem completamente traduzida em vez de misturar idiomas
+    steps.push(t('matrices:matrix_operations.steps.dimension_requirement', { operation: operationName }));
+    
+    steps.push(t('matrices:matrix_operations.steps.element_operation', { step: stepCount++ }));
+    
+    if (operation === 'soma') {
+      steps.push(t('matrices:matrix_operations.mathematical_concept.addition_formula'));
+    } else {
+      steps.push(t('matrices:matrix_operations.mathematical_concept.subtraction_formula'));
+    }
+    
+    // Calcula o resultado
+    const result = operation === 'soma' 
+      ? addMatrices(matrixA, matrixB) 
+      : subtractMatrices(matrixA, matrixB);
+    
+    if (!result) {
+      steps.push(t('translation:common.error_calculating'));
+      return steps;
+    }
+    
+    // Adiciona o passo de cálculo com alguns exemplos de cálculos em vez de todos os elementos
+    steps.push(t('matrices:matrix_operations.steps.calculating_element', { step: stepCount++ }));
+    
+    // Adiciona alguns exemplos de cálculos de elementos (primeiro e último elemento)
+    const i1 = 0, j1 = 0;
+    steps.push(`${t('translation:common.element')} (${i1+1},${j1+1}): ${matrixA[i1][j1]} ${operation === 'soma' ? '+' : '-'} ${matrixB[i1][j1]} = ${result[i1][j1]}`);
+    
+    if (rows > 1 && cols > 1) {
+      const i2 = rows-1, j2 = cols-1;
+      steps.push(`${t('translation:common.element')} (${i2+1},${j2+1}): ${matrixA[i2][j2]} ${operation === 'soma' ? '+' : '-'} ${matrixB[i2][j2]} = ${result[i2][j2]}`);
+    }
+    
+    // Mostra o resultado final
+    steps.push(t('matrices:matrix_operations.steps.result_matrix', { step: stepCount++ }));
+    steps.push(t('matrices:matrix_operations.steps.result_description', { 
+      operation: operation === 'soma' ? t('translation:common.sum') : t('translation:common.difference'),
+      rows,
+      cols
+    }));
+    
+    result.forEach(row => {
+      steps.push(`[${row.join(', ')}]`);
+    });
+    
+    // Adiciona um separador para verificação
+    steps.push(`---VERIFICATION_SEPARATOR---`);
+    
+    // Adiciona verificações das propriedades
+    steps.push(t('matrices:matrix_operations.steps.verification_properties', { 
+      operation: operation === 'soma' ? t('translation:common.addition') : t('translation:common.subtraction')
+    }));
+    
+    if (operation === 'soma') {
+      steps.push(t('matrices:matrix_operations.steps.checking_commutative'));
+      steps.push(t('matrices:matrix_operations.steps.commutative_explanation'));
+      
+      // Adiciona também outras propriedades
+      steps.push(t('matrices:matrix_operations.steps.checking_associative'));
+      steps.push(t('matrices:matrix_operations.steps.associative_explanation'));
+    } else {
+      steps.push(t('matrices:matrix_operations.steps.checking_non_commutative'));
+      steps.push(t('matrices:matrix_operations.steps.non_commutative_explanation'));
+      
+      // Menciona relação com adição
+      steps.push(t('matrices:matrix_operations.steps.relation_with_addition'));
+      steps.push(t('matrices:matrix_operations.steps.relation_explanation'));
+    }
+    
+    // Conclui com as propriedades e aplicações
+    steps.push(t('matrices:matrix_operations.steps.final_result', {
+      operation: operation === 'soma' ? t('translation:common.addition') : t('translation:common.subtraction'),
+      rows,
+      cols
+    }));
+    
+    return steps;
+  };
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -218,12 +241,12 @@ export function useMatrizAddSubSolver() {
     try {
       // Verificar se os valores foram fornecidos
       if (!state.matrizA.trim()) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'Por favor, insira a Matriz A.' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.enter_matrix_a') });
         return;
       }
       
       if (!state.matrizB.trim()) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'Por favor, insira a Matriz B.' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.enter_matrix_b') });
         return;
       }
       
@@ -233,22 +256,22 @@ export function useMatrizAddSubSolver() {
       
       // Validar as matrizes
       if (!matrizA) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'Não foi possível interpretar a Matriz A. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.invalid_matrix_a_format') });
         return;
       }
       
       if (!matrizB) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'Não foi possível interpretar a Matriz B. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.invalid_matrix_b_format') });
         return;
       }
       
       if (!isValidMatrix(matrizA)) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'A Matriz A é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.invalid_matrix_a') });
         return;
       }
       
       if (!isValidMatrix(matrizB)) {
-        dispatch({ type: 'SET_ERROR', mensagem: 'A Matriz B é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', mensagem: t('matrices:matrix_operations.add_sub.errors.invalid_matrix_b') });
         return;
       }
       
@@ -257,7 +280,7 @@ export function useMatrizAddSubSolver() {
         const dimB = `${matrizB.length}×${matrizB[0].length}`;
         dispatch({ 
           type: 'SET_ERROR', 
-          mensagem: `As matrizes A e B têm dimensões diferentes (A: ${dimA}, B: ${dimB}). Para realizar adição ou subtração, as matrizes precisam ter as mesmas dimensões.` 
+          mensagem: t('matrices:matrix_operations.add_sub.errors.different_dimensions', { dimA, dimB })
         });
         return;
       }
@@ -273,7 +296,7 @@ export function useMatrizAddSubSolver() {
       if (!resultado) {
         dispatch({ 
           type: 'SET_ERROR', 
-          mensagem: 'Ocorreu um erro ao calcular o resultado. Verifique se as matrizes são válidas.' 
+          mensagem: t('translation:common.calculation_error')
         });
         return;
       }
@@ -285,13 +308,13 @@ export function useMatrizAddSubSolver() {
       });
       
     } catch (error) {
-      let errorMessage = 'Erro desconhecido ao processar as matrizes.';
+      let errorMessage = t('matrices:matrix_operations.add_sub.errors.unknown_error');
       
       if (error instanceof Error) {
         if (error.message.includes('valores inválidos')) {
-          errorMessage = 'A matriz contém valores inválidos. Use apenas números.';
+          errorMessage = t('matrices:matrix_operations.add_sub.errors.invalid_values');
         } else if (error.message.includes('mesmo número de colunas')) {
-          errorMessage = 'Todas as linhas de uma matriz devem ter o mesmo número de colunas.';
+          errorMessage = t('matrices:matrix_operations.add_sub.errors.same_columns');
         } else {
           errorMessage = error.message;
         }

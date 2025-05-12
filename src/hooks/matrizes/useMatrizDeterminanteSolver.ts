@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   parseMatrixFromString, 
   calculateDeterminant,
@@ -67,7 +68,7 @@ const generateDeterminantSteps = (matrix: number[][]): string[] => {
   steps.push(`Aplicando a fórmula: Expansão por cofatores pela primeira linha da matriz.`);
   
   let expandedForm = '';
-  let signTerms = [];
+  let signTerms: {sign: number, element: number, col: number}[] = [];
   
   for (let j = 0; j < n; j++) {
     const sign = Math.pow(-1, j);
@@ -224,8 +225,165 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function useMatrizDeterminantSolver() {
+export function useMatrizDeterminanteSolver() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { t } = useTranslation(['matrices', 'translation']);
+
+  // Gera os passos detalhados do cálculo do determinante com tradução
+  const generateDeterminantStepsWithTranslation = (matrix: number[][]): string[] => {
+    const steps: string[] = [];
+    let stepCount = 1;
+    
+    // Verifica se a matriz é quadrada
+    if (!isSquareMatrix(matrix)) {
+      steps.push(t('matrices:determinant.steps.not_square_matrix'));
+      return steps;
+    }
+    
+    const n = matrix.length;
+    
+    // Passo 1: Identificar a matriz de entrada
+    steps.push(t('matrices:determinant.steps.identify_input_matrix', { step: stepCount++ }));
+    steps.push(t('matrices:determinant.steps.input_matrix', { rows: n, cols: n }));
+    matrix.forEach(row => {
+      steps.push(`[${row.join(', ')}]`);
+    });
+    
+    // Caso especial: matriz 1x1
+    if (n === 1) {
+      steps.push(t('matrices:determinant.steps.matrix_1x1', { step: stepCount++ }));
+      steps.push(t('matrices:determinant.steps.formula_1x1'));
+      steps.push(t('matrices:determinant.steps.calculating_1x1', { value: matrix[0][0] }));
+      steps.push(t('matrices:determinant.steps.final_result', { value: matrix[0][0] }));
+      return steps;
+    }
+    
+    // Caso especial: matriz 2x2
+    if (n === 2) {
+      steps.push(t('matrices:determinant.steps.matrix_2x2', { step: stepCount++ }));
+      steps.push(t('matrices:determinant.steps.formula_2x2'));
+      steps.push(t('matrices:determinant.steps.calculating_2x2', { 
+        a11: matrix[0][0], 
+        a22: matrix[1][1], 
+        a12: matrix[0][1], 
+        a21: matrix[1][0],
+        prod1: matrix[0][0] * matrix[1][1],
+        prod2: matrix[0][1] * matrix[1][0]
+      }));
+      
+      const det2x2 = calculateDeterminant(matrix)!;
+      steps.push(t('matrices:determinant.steps.final_result', { value: det2x2 }));
+      
+      // Adiciona um separador para verificação
+      steps.push(`---VERIFICATION_SEPARATOR---`);
+      
+      steps.push(t('matrices:determinant.verification.properties_title'));
+      steps.push(t('matrices:determinant.verification.area_representation'));
+      
+      if (det2x2 === 0) {
+        steps.push(t('matrices:determinant.verification.zero_determinant'));
+      } else {
+        steps.push(t('matrices:determinant.verification.non_zero_determinant'));
+      }
+      
+      return steps;
+    }
+    
+    // Para matrizes maiores, utilizamos o método de expansão por cofatores (Laplace)
+    steps.push(t('matrices:determinant.steps.larger_matrix', { step: stepCount++, size: n }));
+    steps.push(t('matrices:determinant.steps.laplace_expansion'));
+    
+    let expandedForm = '';
+    let signTerms: {sign: number, element: number, col: number}[] = [];
+    
+    for (let j = 0; j < n; j++) {
+      const sign = Math.pow(-1, j);
+      const signStr = sign > 0 ? '+' : '-';
+      const element = matrix[0][j];
+      const absElement = Math.abs(element);
+      
+      if (j === 0) {
+        expandedForm += `${element} × M₀${j}`;
+      } else {
+        expandedForm += ` ${signStr} ${absElement} × M₀${j}`;
+      }
+      
+      signTerms.push({sign, element, col: j});
+    }
+    
+    steps.push(t('matrices:determinant.steps.calculating_expanded_form', { formula: expandedForm }));
+    steps.push(t('matrices:determinant.steps.minor_explanation'));
+    
+    // Calcular os cofatores para cada elemento da primeira linha
+    let resultSum = 0;
+    
+    for (let j = 0; j < n; j++) {
+      const {sign, element, col} = signTerms[j];
+      steps.push(t('matrices:determinant.steps.calculate_cofactor', { step: stepCount++, col }));
+      
+      const submatrix = getSubmatrix(matrix, 0, col);
+      steps.push(t('matrices:determinant.steps.submatrix', { rows: n-1, cols: n-1, row: 0, col }));
+      submatrix.forEach(row => {
+        steps.push(`[${row.join(', ')}]`);
+      });
+      
+      const minorDet = calculateDeterminant(submatrix)!;
+      const cofactor = sign * minorDet;
+      const term = element * cofactor;
+      resultSum += term;
+      
+      if (n === 3) { // Para matriz 3x3, mostramos o cálculo completo do menor
+        if (submatrix.length === 2) {
+          steps.push(t('matrices:determinant.steps.calculating_submatrix_det', { 
+            a11: submatrix[0][0], 
+            a22: submatrix[1][1], 
+            a12: submatrix[0][1], 
+            a21: submatrix[1][0]
+          }));
+          steps.push(t('matrices:determinant.steps.calculating_submatrix_result', { 
+            prod1: submatrix[0][0] * submatrix[1][1], 
+            prod2: submatrix[0][1] * submatrix[1][0], 
+            result: minorDet
+          }));
+        }
+      } else {
+        steps.push(t('matrices:determinant.steps.submatrix_determinant', { value: minorDet }));
+      }
+      
+      steps.push(t('matrices:determinant.steps.calculating_cofactor', { 
+        col,
+        sign: sign > 0 ? '+' : '-',
+        minorDet,
+        cofactor
+      }));
+      steps.push(t('matrices:determinant.steps.expansion_term', { element, cofactor, term }));
+    }
+    
+    steps.push(t('matrices:determinant.steps.sum_terms', { step: stepCount++ }));
+    steps.push(t('matrices:determinant.steps.calculating_sum', { result: resultSum }));
+    steps.push(t('matrices:determinant.steps.final_result', { value: resultSum }));
+    
+    // Adiciona um separador para verificação
+    steps.push(`---VERIFICATION_SEPARATOR---`);
+    
+    steps.push(t('matrices:determinant.verification.properties_title'));
+    if (resultSum === 0) {
+      steps.push(t('matrices:determinant.verification.zero_determinant'));
+      steps.push(t('matrices:determinant.verification.zero_system_implications'));
+    } else {
+      steps.push(t('matrices:determinant.verification.non_zero_determinant'));
+      steps.push(t('matrices:determinant.verification.non_zero_system_implications'));
+    }
+    
+    // Adicionar informações sobre o determinante e seu significado
+    if (n === 3) {
+      steps.push(t('matrices:determinant.verification.volume_interpretation'));
+    } else {
+      steps.push(t('matrices:determinant.verification.higher_order_interpretation'));
+    }
+    
+    return steps;
+  };
 
   // Função principal de resolução
   const handleSolve = () => {
@@ -234,7 +392,7 @@ export function useMatrizDeterminantSolver() {
     try {
       // Verificar se a matriz foi fornecida
       if (!state.matrix.trim()) {
-        dispatch({ type: 'SET_ERROR', message: 'Por favor, insira a matriz.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.enter_matrix') });
         return;
       }
       
@@ -242,24 +400,24 @@ export function useMatrizDeterminantSolver() {
       const matrix = parseMatrixFromString(state.matrix);
       
       if (!matrix) {
-        dispatch({ type: 'SET_ERROR', message: 'Não foi possível interpretar a matriz. Verifique o formato (valores separados por espaço, linhas separadas por ponto e vírgula).' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.invalid_matrix_format') });
         return;
       }
       
       if (!isValidMatrix(matrix)) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz é inválida. Certifique-se de que todas as linhas têm o mesmo número de colunas.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.invalid_matrix') });
         return;
       }
       
       // Verificar se a matriz é quadrada
       if (!isSquareMatrix(matrix)) {
-        dispatch({ type: 'SET_ERROR', message: 'A matriz não é quadrada. Para calcular o determinante, a matriz deve ter o mesmo número de linhas e colunas.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.not_square_matrix') });
         return;
       }
       
       // Verificar tamanho máximo para evitar cálculos muito complexos
       if (matrix.length > 5) {
-        dispatch({ type: 'SET_ERROR', message: 'Por razões de desempenho, o cálculo de determinantes está limitado a matrizes de no máximo 5×5.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.matrix_too_large') });
         return;
       }
       
@@ -267,11 +425,11 @@ export function useMatrizDeterminantSolver() {
       const determinant = calculateDeterminant(matrix);
       
       if (determinant === null) {
-        dispatch({ type: 'SET_ERROR', message: 'Erro ao calcular o determinante. Verifique se a matriz é válida.' });
+        dispatch({ type: 'SET_ERROR', message: t('matrices:determinant.errors.calculation_error') });
         return;
       }
       
-      const steps = generateDeterminantSteps(matrix);
+      const steps = generateDeterminantStepsWithTranslation(matrix);
       
       dispatch({
         type: 'SET_RESULT',
@@ -280,13 +438,13 @@ export function useMatrizDeterminantSolver() {
       });
       
     } catch (error) {
-      let errorMessage = 'Erro desconhecido ao processar a matriz.';
+      let errorMessage = t('matrices:determinant.errors.unknown_error');
       
       if (error instanceof Error) {
         if (error.message.includes('valores inválidos')) {
-          errorMessage = 'A matriz contém valores inválidos. Use apenas números.';
+          errorMessage = t('matrices:determinant.errors.invalid_values');
         } else if (error.message.includes('mesmo número de colunas')) {
-          errorMessage = 'Todas as linhas de uma matriz devem ter o mesmo número de colunas.';
+          errorMessage = t('matrices:determinant.errors.same_columns');
         } else {
           errorMessage = error.message;
         }
